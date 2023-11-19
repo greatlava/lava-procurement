@@ -29,7 +29,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * @date 2023-11-19
  */
 @RestController
-@RequestMapping("/tender")
+@RequestMapping("/tenderFile")
 public class BidGetTenderController extends BaseController
 {
     @Autowired
