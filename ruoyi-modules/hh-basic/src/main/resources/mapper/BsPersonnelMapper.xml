@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsPersonnelMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsPersonnel" id="BsPersonnelResult">
+        <result property="jsId" column="js_id"/>
+        <result property="hid" column="hid"/>
+        <result property="jsName" column="js_name"/>
+        <result property="jsPosition" column="js_position"/>
+        <result property="jsEducation" column="js_education"/>
+        <result property="jsTitle" column="js_title"/>
+    </resultMap>
+
+    <sql id="selectBsPersonnelVo">
+        select js_id, hid, js_name, js_position, js_education, js_title
+        from bs_personnel
+    </sql>
+
+    <select id="selectBsPersonnelList" parameterType="com.hh.pms.sae.domain.BsPersonnel" resultMap="BsPersonnelResult">
+        <include refid="selectBsPersonnelVo"/>
+        <where>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="jsName != null  and jsName != ''">and js_name like concat('%', #{jsName}, '%')</if>
+            <if test="jsPosition != null  and jsPosition != ''">and js_position = #{jsPosition}</if>
+            <if test="jsEducation != null  and jsEducation != ''">and js_education = #{jsEducation}</if>
+            <if test="jsTitle != null  and jsTitle != ''">and js_title = #{jsTitle}</if>
+        </where>
+    </select>
+
+    <select id="selectBsPersonnelByJsId" parameterType="Long" resultMap="BsPersonnelResult">
+        <include refid="selectBsPersonnelVo"/>
+        where js_id = #{jsId}
+    </select>
+
+    <insert id="insertBsPersonnel" parameterType="com.hh.pms.sae.domain.BsPersonnel">
+        insert into bs_personnel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jsId != null">js_id,</if>
+            <if test="hid != null">hid,</if>
+            <if test="jsName != null">js_name,</if>
+            <if test="jsPosition != null">js_position,</if>
+            <if test="jsEducation != null">js_education,</if>
+            <if test="jsTitle != null">js_title,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jsId != null">#{jsId},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="jsName != null">#{jsName},</if>
+            <if test="jsPosition != null">#{jsPosition},</if>
+            <if test="jsEducation != null">#{jsEducation},</if>
+            <if test="jsTitle != null">#{jsTitle},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsPersonnel" parameterType="com.hh.pms.sae.domain.BsPersonnel">
+        update bs_personnel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="jsName != null">js_name = #{jsName},</if>
+            <if test="jsPosition != null">js_position = #{jsPosition},</if>
+            <if test="jsEducation != null">js_education = #{jsEducation},</if>
+            <if test="jsTitle != null">js_title = #{jsTitle},</if>
+        </trim>
+        where js_id = #{jsId}
+    </update>
+
+    <delete id="deleteBsPersonnelByJsId" parameterType="Long">
+        delete
+        from bs_personnel
+        where js_id = #{jsId}
+    </delete>
+
+    <delete id="deleteBsPersonnelByJsIds" parameterType="String">
+        delete from bs_personnel where js_id in
+        <foreach item="jsId" collection="array" open="(" separator="," close=")">
+            #{jsId}
+        </foreach>
+    </delete>
+</mapper>

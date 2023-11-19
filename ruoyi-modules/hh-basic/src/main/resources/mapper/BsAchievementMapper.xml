@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsAchievementMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsAchievement" id="BsAchievementResult">
+        <result property="yjId" column="yj_id"/>
+        <result property="hid" column="hid"/>
+        <result property="yjUnit" column="yj_unit"/>
+        <result property="yjPartner" column="yj_partner"/>
+        <result property="yjDate" column="yj_date"/>
+        <result property="yjRmb" column="yj_rmb"/>
+        <result property="yjBbr" column="yj_bbr"/>
+        <result property="yjPhone" column="yj_phone"/>
+        <result property="yjScanContract" column="yj_scan_contract"/>
+        <result property="yjContent" column="yj_content"/>
+    </resultMap>
+
+    <sql id="selectBsAchievementVo">
+        select yj_id,
+               hid,
+               yj_unit,
+               yj_partner,
+               yj_date,
+               yj_rmb,
+               yj_bbr,
+               yj_phone,
+               yj_scan_contract,
+               yj_content
+        from bs_achievement
+    </sql>
+
+    <select id="selectBsAchievementList" parameterType="com.hh.pms.sae.domain.BsAchievement"
+            resultMap="BsAchievementResult">
+        <include refid="selectBsAchievementVo"/>
+        <where>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="yjUnit != null  and yjUnit != ''">and yj_unit = #{yjUnit}</if>
+            <if test="yjPartner != null  and yjPartner != ''">and yj_partner = #{yjPartner}</if>
+            <if test="yjDate != null ">and yj_date = #{yjDate}</if>
+            <if test="yjRmb != null ">and yj_rmb = #{yjRmb}</if>
+            <if test="yjBbr != null  and yjBbr != ''">and yj_bbr = #{yjBbr}</if>
+            <if test="yjPhone != null  and yjPhone != ''">and yj_phone = #{yjPhone}</if>
+            <if test="yjScanContract != null  and yjScanContract != ''">and yj_scan_contract = #{yjScanContract}</if>
+            <if test="yjContent != null  and yjContent != ''">and yj_content = #{yjContent}</if>
+        </where>
+    </select>
+
+    <select id="selectBsAchievementByYjId" parameterType="Long" resultMap="BsAchievementResult">
+        <include refid="selectBsAchievementVo"/>
+        where yj_id = #{yjId}
+    </select>
+
+    <insert id="insertBsAchievement" parameterType="com.hh.pms.sae.domain.BsAchievement">
+        insert into bs_achievement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="yjId != null">yj_id,</if>
+            <if test="hid != null">hid,</if>
+            <if test="yjUnit != null">yj_unit,</if>
+            <if test="yjPartner != null">yj_partner,</if>
+            <if test="yjDate != null">yj_date,</if>
+            <if test="yjRmb != null">yj_rmb,</if>
+            <if test="yjBbr != null">yj_bbr,</if>
+            <if test="yjPhone != null">yj_phone,</if>
+            <if test="yjScanContract != null">yj_scan_contract,</if>
+            <if test="yjContent != null">yj_content,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="yjId != null">#{yjId},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="yjUnit != null">#{yjUnit},</if>
+            <if test="yjPartner != null">#{yjPartner},</if>
+            <if test="yjDate != null">#{yjDate},</if>
+            <if test="yjRmb != null">#{yjRmb},</if>
+            <if test="yjBbr != null">#{yjBbr},</if>
+            <if test="yjPhone != null">#{yjPhone},</if>
+            <if test="yjScanContract != null">#{yjScanContract},</if>
+            <if test="yjContent != null">#{yjContent},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsAchievement" parameterType="com.hh.pms.sae.domain.BsAchievement">
+        update bs_achievement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="yjUnit != null">yj_unit = #{yjUnit},</if>
+            <if test="yjPartner != null">yj_partner = #{yjPartner},</if>
+            <if test="yjDate != null">yj_date = #{yjDate},</if>
+            <if test="yjRmb != null">yj_rmb = #{yjRmb},</if>
+            <if test="yjBbr != null">yj_bbr = #{yjBbr},</if>
+            <if test="yjPhone != null">yj_phone = #{yjPhone},</if>
+            <if test="yjScanContract != null">yj_scan_contract = #{yjScanContract},</if>
+            <if test="yjContent != null">yj_content = #{yjContent},</if>
+        </trim>
+        where yj_id = #{yjId}
+    </update>
+
+    <delete id="deleteBsAchievementByYjId" parameterType="Long">
+        delete
+        from bs_achievement
+        where yj_id = #{yjId}
+    </delete>
+
+    <delete id="deleteBsAchievementByYjIds" parameterType="String">
+        delete from bs_achievement where yj_id in
+        <foreach item="yjId" collection="array" open="(" separator="," close=")">
+            #{yjId}
+        </foreach>
+    </delete>
+</mapper>

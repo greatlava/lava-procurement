@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsCommitteeMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsCommittee" id="BsCommitteeResult">
+        <result property="pbId" column="pb_id"/>
+        <result property="xid" column="xid"/>
+        <result property="pbName" column="pb_name"/>
+        <result property="pbSex" column="pb_sex"/>
+        <result property="pbIdcard" column="pb_idcard"/>
+        <result property="pbPhone" column="pb_phone"/>
+        <result property="pbGenre" column="pb_genre"/>
+        <result property="pbTypes" column="pb_types"/>
+    </resultMap>
+
+    <sql id="selectBsCommitteeVo">
+        select pb_id,
+               xid,
+               pb_name,
+               pb_sex,
+               pb_idcard,
+               pb_phone,
+               pb_genre,
+               pb_types
+        from bs_committee
+    </sql>
+
+    <select id="selectBsCommitteeList" parameterType="com.hh.pms.sae.domain.BsCommittee" resultMap="BsCommitteeResult">
+        <include refid="selectBsCommitteeVo"/>
+        <where>
+            <if test="xid != null ">and xid = #{xid}</if>
+            <if test="pbName != null  and pbName != ''">and pb_name like concat('%', #{pbName}, '%')</if>
+            <if test="pbSex != null  and pbSex != ''">and pb_sex = #{pbSex}</if>
+            <if test="pbIdcard != null  and pbIdcard != ''">and pb_idcard = #{pbIdcard}</if>
+            <if test="pbPhone != null  and pbPhone != ''">and pb_phone = #{pbPhone}</if>
+            <if test="pbGenre != null  and pbGenre != ''">and pb_genre = #{pbGenre}</if>
+            <if test="pbTypes != null  and pbTypes != ''">and pb_types = #{pbTypes}</if>
+        </where>
+    </select>
+
+    <select id="selectBsCommitteeByPbId" parameterType="Long" resultMap="BsCommitteeResult">
+        <include refid="selectBsCommitteeVo"/>
+        where pb_id = #{pbId}
+    </select>
+
+    <insert id="insertBsCommittee" parameterType="com.hh.pms.sae.domain.BsCommittee">
+        insert into bs_committee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pbId != null">pb_id,</if>
+            <if test="xid != null">xid,</if>
+            <if test="pbName != null">pb_name,</if>
+            <if test="pbSex != null">pb_sex,</if>
+            <if test="pbIdcard != null">pb_idcard,</if>
+            <if test="pbPhone != null">pb_phone,</if>
+            <if test="pbGenre != null">pb_genre,</if>
+            <if test="pbTypes != null">pb_types,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pbId != null">#{pbId},</if>
+            <if test="xid != null">#{xid},</if>
+            <if test="pbName != null">#{pbName},</if>
+            <if test="pbSex != null">#{pbSex},</if>
+            <if test="pbIdcard != null">#{pbIdcard},</if>
+            <if test="pbPhone != null">#{pbPhone},</if>
+            <if test="pbGenre != null">#{pbGenre},</if>
+            <if test="pbTypes != null">#{pbTypes},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsCommittee" parameterType="com.hh.pms.sae.domain.BsCommittee">
+        update bs_committee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="xid != null">xid = #{xid},</if>
+            <if test="pbName != null">pb_name = #{pbName},</if>
+            <if test="pbSex != null">pb_sex = #{pbSex},</if>
+            <if test="pbIdcard != null">pb_idcard = #{pbIdcard},</if>
+            <if test="pbPhone != null">pb_phone = #{pbPhone},</if>
+            <if test="pbGenre != null">pb_genre = #{pbGenre},</if>
+            <if test="pbTypes != null">pb_types = #{pbTypes},</if>
+        </trim>
+        where pb_id = #{pbId}
+    </update>
+
+    <delete id="deleteBsCommitteeByPbId" parameterType="Long">
+        delete
+        from bs_committee
+        where pb_id = #{pbId}
+    </delete>
+
+    <delete id="deleteBsCommitteeByPbIds" parameterType="String">
+        delete from bs_committee where pb_id in
+        <foreach item="pbId" collection="array" open="(" separator="," close=")">
+            #{pbId}
+        </foreach>
+    </delete>
+</mapper>

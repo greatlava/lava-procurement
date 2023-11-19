@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsAccessoriesMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsAccessories" id="BsAccessoriesResult">
+        <result property="fjId" column="fj_id"/>
+        <result property="fjName" column="fj_name"/>
+        <result property="fjAnnex" column="fj_annex"/>
+    </resultMap>
+
+    <sql id="selectBsAccessoriesVo">
+        select fj_id, fj_name, fj_annex
+        from bs_accessories
+    </sql>
+
+    <select id="selectBsAccessoriesList" parameterType="com.hh.pms.sae.domain.BsAccessories"
+            resultMap="BsAccessoriesResult">
+        <include refid="selectBsAccessoriesVo"/>
+        <where>
+            <if test="fjName != null  and fjName != ''">and fj_name like concat('%', #{fjName}, '%')</if>
+            <if test="fjAnnex != null  and fjAnnex != ''">and fj_annex = #{fjAnnex}</if>
+        </where>
+    </select>
+
+    <select id="selectBsAccessoriesByFjId" parameterType="Long" resultMap="BsAccessoriesResult">
+        <include refid="selectBsAccessoriesVo"/>
+        where fj_id = #{fjId}
+    </select>
+
+    <insert id="insertBsAccessories" parameterType="com.hh.pms.sae.domain.BsAccessories">
+        insert into bs_accessories
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fjId != null">fj_id,</if>
+            <if test="fjName != null">fj_name,</if>
+            <if test="fjAnnex != null">fj_annex,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fjId != null">#{fjId},</if>
+            <if test="fjName != null">#{fjName},</if>
+            <if test="fjAnnex != null">#{fjAnnex},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsAccessories" parameterType="com.hh.pms.sae.domain.BsAccessories">
+        update bs_accessories
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fjName != null">fj_name = #{fjName},</if>
+            <if test="fjAnnex != null">fj_annex = #{fjAnnex},</if>
+        </trim>
+        where fj_id = #{fjId}
+    </update>
+
+    <delete id="deleteBsAccessoriesByFjId" parameterType="Long">
+        delete
+        from bs_accessories
+        where fj_id = #{fjId}
+    </delete>
+
+    <delete id="deleteBsAccessoriesByFjIds" parameterType="String">
+        delete from bs_accessories where fj_id in
+        <foreach item="fjId" collection="array" open="(" separator="," close=")">
+            #{fjId}
+        </foreach>
+    </delete>
+</mapper>

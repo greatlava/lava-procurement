@@ -8,17 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Hello world!
- *
  */
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
 @SpringBootApplication
-public class HhBasicApplication
-{
-    public static void main( String[] args )
-    {
+public class HhBasicApplication {
+    public static void main(String[] args) {
         SpringApplication.run(HhBasicApplication.class, args);
-        System.out.println( "Hello World!" );
+        System.out.println("Hello World!");
     }
 }

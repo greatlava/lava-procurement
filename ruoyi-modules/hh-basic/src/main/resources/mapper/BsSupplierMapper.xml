@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsSupplierMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsSupplier" id="BsSupplierResult">
+        <result property="hid" column="hid"/>
+        <result property="zrId" column="zr_id"/>
+        <result property="hName" column="h_name"/>
+        <result property="hCreditCode" column="h_credit_code"/>
+        <result property="hIncorporation" column="h_incorporation"/>
+        <result property="hInstitution" column="h_institution"/>
+        <result property="hQuality" column="h_quality"/>
+        <result property="hStartTime" column="h_start_time"/>
+        <result property="hJuridical" column="h_juridical"/>
+        <result property="hJuridicalIdentity" column="h_juridical_identity"/>
+        <result property="hAddress" column="h_address"/>
+        <result property="hRange" column="h_range"/>
+        <result property="hDesc" column="h_desc"/>
+        <result property="hCopies" column="h_copies"/>
+        <result property="hJuridicalCopies" column="h_juridical_copies"/>
+        <result property="hExpiration" column="h_expiration"/>
+        <result property="hBank" column="h_bank"/>
+        <result property="hAccount" column="h_account"/>
+        <result property="hBankAddress" column="h_bank_address"/>
+        <result property="hSignPhone" column="h_sign_phone"/>
+        <result property="hSignAddress" column="h_sign_address"/>
+        <result property="hCapital" column="h_capital"/>
+        <result property="hActualCapital" column="h_actual_capital"/>
+        <result property="hProve" column="h_prove"/>
+        <result property="fStatus" column="f_status"/>
+        <result property="fOpinion" column="f_opinion"/>
+        <result property="fState" column="f_state"/>
+        <result property="fClassify" column="f_classify"/>
+    </resultMap>
+
+    <sql id="selectBsSupplierVo">
+        select hid,
+               zr_id,
+               h_name,
+               h_credit_code,
+               h_incorporation,
+               h_institution,
+               h_quality,
+               h_start_time,
+               h_juridical,
+               h_juridical_identity,
+               h_address,
+               h_range,
+               h_desc,
+               h_copies,
+               h_juridical_copies,
+               h_expiration,
+               h_bank,
+               h_account,
+               h_bank_address,
+               h_sign_phone,
+               h_sign_address,
+               h_capital,
+               h_actual_capital,
+               h_prove,
+               f_status,
+               f_opinion,
+               f_state,
+               f_classify
+        from bs_supplier
+    </sql>
+
+    <select id="selectBsSupplierList" parameterType="com.hh.pms.sae.domain.BsSupplier" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        <where>
+            <if test="zrId != null ">and zr_id = #{zrId}</if>
+            <if test="hName != null  and hName != ''">and h_name like concat('%', #{hName}, '%')</if>
+            <if test="hCreditCode != null  and hCreditCode != ''">and h_credit_code = #{hCreditCode}</if>
+            <if test="hIncorporation != null  and hIncorporation != ''">and h_incorporation = #{hIncorporation}</if>
+            <if test="hInstitution != null  and hInstitution != ''">and h_institution = #{hInstitution}</if>
+            <if test="hQuality != null  and hQuality != ''">and h_quality = #{hQuality}</if>
+            <if test="hStartTime != null ">and h_start_time = #{hStartTime}</if>
+            <if test="hJuridical != null  and hJuridical != ''">and h_juridical = #{hJuridical}</if>
+            <if test="hJuridicalIdentity != null  and hJuridicalIdentity != ''">and h_juridical_identity =
+                #{hJuridicalIdentity}
+            </if>
+            <if test="hAddress != null  and hAddress != ''">and h_address = #{hAddress}</if>
+            <if test="hRange != null  and hRange != ''">and h_range = #{hRange}</if>
+            <if test="hDesc != null  and hDesc != ''">and h_desc = #{hDesc}</if>
+            <if test="hCopies != null  and hCopies != ''">and h_copies = #{hCopies}</if>
+            <if test="hJuridicalCopies != null  and hJuridicalCopies != ''">and h_juridical_copies =
+                #{hJuridicalCopies}
+            </if>
+            <if test="hExpiration != null ">and h_expiration = #{hExpiration}</if>
+            <if test="hBank != null  and hBank != ''">and h_bank = #{hBank}</if>
+            <if test="hAccount != null  and hAccount != ''">and h_account = #{hAccount}</if>
+            <if test="hBankAddress != null  and hBankAddress != ''">and h_bank_address = #{hBankAddress}</if>
+            <if test="hSignPhone != null  and hSignPhone != ''">and h_sign_phone = #{hSignPhone}</if>
+            <if test="hSignAddress != null  and hSignAddress != ''">and h_sign_address = #{hSignAddress}</if>
+            <if test="hCapital != null ">and h_capital = #{hCapital}</if>
+            <if test="hActualCapital != null ">and h_actual_capital = #{hActualCapital}</if>
+            <if test="hProve != null  and hProve != ''">and h_prove = #{hProve}</if>
+            <if test="fStatus != null ">and f_status = #{fStatus}</if>
+            <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
+            <if test="fState != null ">and f_state = #{fState}</if>
+            <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+        </where>
+    </select>
+
+    <select id="selectBsSupplierByHid" parameterType="Long" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        where hid = #{hid}
+    </select>
+
+    <insert id="insertBsSupplier" parameterType="com.hh.pms.sae.domain.BsSupplier">
+        insert into bs_supplier
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hid != null">hid,</if>
+            <if test="zrId != null">zr_id,</if>
+            <if test="hName != null">h_name,</if>
+            <if test="hCreditCode != null">h_credit_code,</if>
+            <if test="hIncorporation != null">h_incorporation,</if>
+            <if test="hInstitution != null">h_institution,</if>
+            <if test="hQuality != null">h_quality,</if>
+            <if test="hStartTime != null">h_start_time,</if>
+            <if test="hJuridical != null">h_juridical,</if>
+            <if test="hJuridicalIdentity != null">h_juridical_identity,</if>
+            <if test="hAddress != null">h_address,</if>
+            <if test="hRange != null">h_range,</if>
+            <if test="hDesc != null">h_desc,</if>
+            <if test="hCopies != null">h_copies,</if>
+            <if test="hJuridicalCopies != null">h_juridical_copies,</if>
+            <if test="hExpiration != null">h_expiration,</if>
+            <if test="hBank != null">h_bank,</if>
+            <if test="hAccount != null">h_account,</if>
+            <if test="hBankAddress != null">h_bank_address,</if>
+            <if test="hSignPhone != null">h_sign_phone,</if>
+            <if test="hSignAddress != null">h_sign_address,</if>
+            <if test="hCapital != null">h_capital,</if>
+            <if test="hActualCapital != null">h_actual_capital,</if>
+            <if test="hProve != null">h_prove,</if>
+            <if test="fStatus != null">f_status,</if>
+            <if test="fOpinion != null">f_opinion,</if>
+            <if test="fState != null">f_state,</if>
+            <if test="fClassify != null">f_classify,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hid != null">#{hid},</if>
+            <if test="zrId != null">#{zrId},</if>
+            <if test="hName != null">#{hName},</if>
+            <if test="hCreditCode != null">#{hCreditCode},</if>
+            <if test="hIncorporation != null">#{hIncorporation},</if>
+            <if test="hInstitution != null">#{hInstitution},</if>
+            <if test="hQuality != null">#{hQuality},</if>
+            <if test="hStartTime != null">#{hStartTime},</if>
+            <if test="hJuridical != null">#{hJuridical},</if>
+            <if test="hJuridicalIdentity != null">#{hJuridicalIdentity},</if>
+            <if test="hAddress != null">#{hAddress},</if>
+            <if test="hRange != null">#{hRange},</if>
+            <if test="hDesc != null">#{hDesc},</if>
+            <if test="hCopies != null">#{hCopies},</if>
+            <if test="hJuridicalCopies != null">#{hJuridicalCopies},</if>
+            <if test="hExpiration != null">#{hExpiration},</if>
+            <if test="hBank != null">#{hBank},</if>
+            <if test="hAccount != null">#{hAccount},</if>
+            <if test="hBankAddress != null">#{hBankAddress},</if>
+            <if test="hSignPhone != null">#{hSignPhone},</if>
+            <if test="hSignAddress != null">#{hSignAddress},</if>
+            <if test="hCapital != null">#{hCapital},</if>
+            <if test="hActualCapital != null">#{hActualCapital},</if>
+            <if test="hProve != null">#{hProve},</if>
+            <if test="fStatus != null">#{fStatus},</if>
+            <if test="fOpinion != null">#{fOpinion},</if>
+            <if test="fState != null">#{fState},</if>
+            <if test="fClassify != null">#{fClassify},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsSupplier" parameterType="com.hh.pms.sae.domain.BsSupplier">
+        update bs_supplier
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="zrId != null">zr_id = #{zrId},</if>
+            <if test="hName != null">h_name = #{hName},</if>
+            <if test="hCreditCode != null">h_credit_code = #{hCreditCode},</if>
+            <if test="hIncorporation != null">h_incorporation = #{hIncorporation},</if>
+            <if test="hInstitution != null">h_institution = #{hInstitution},</if>
+            <if test="hQuality != null">h_quality = #{hQuality},</if>
+            <if test="hStartTime != null">h_start_time = #{hStartTime},</if>
+            <if test="hJuridical != null">h_juridical = #{hJuridical},</if>
+            <if test="hJuridicalIdentity != null">h_juridical_identity = #{hJuridicalIdentity},</if>
+            <if test="hAddress != null">h_address = #{hAddress},</if>
+            <if test="hRange != null">h_range = #{hRange},</if>
+            <if test="hDesc != null">h_desc = #{hDesc},</if>
+            <if test="hCopies != null">h_copies = #{hCopies},</if>
+            <if test="hJuridicalCopies != null">h_juridical_copies = #{hJuridicalCopies},</if>
+            <if test="hExpiration != null">h_expiration = #{hExpiration},</if>
+            <if test="hBank != null">h_bank = #{hBank},</if>
+            <if test="hAccount != null">h_account = #{hAccount},</if>
+            <if test="hBankAddress != null">h_bank_address = #{hBankAddress},</if>
+            <if test="hSignPhone != null">h_sign_phone = #{hSignPhone},</if>
+            <if test="hSignAddress != null">h_sign_address = #{hSignAddress},</if>
+            <if test="hCapital != null">h_capital = #{hCapital},</if>
+            <if test="hActualCapital != null">h_actual_capital = #{hActualCapital},</if>
+            <if test="hProve != null">h_prove = #{hProve},</if>
+            <if test="fStatus != null">f_status = #{fStatus},</if>
+            <if test="fOpinion != null">f_opinion = #{fOpinion},</if>
+            <if test="fState != null">f_state = #{fState},</if>
+            <if test="fClassify != null">f_classify = #{fClassify},</if>
+        </trim>
+        where hid = #{hid}
+    </update>
+
+    <delete id="deleteBsSupplierByHid" parameterType="Long">
+        delete
+        from bs_supplier
+        where hid = #{hid}
+    </delete>
+
+    <delete id="deleteBsSupplierByHids" parameterType="String">
+        delete from bs_supplier where hid in
+        <foreach item="hid" collection="array" open="(" separator="," close=")">
+            #{hid}
+        </foreach>
+    </delete>
+</mapper>
