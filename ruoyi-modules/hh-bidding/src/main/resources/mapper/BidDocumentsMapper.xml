@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.BidDocumentsMapper">
+    
+    <resultMap type="com.hh.pms.domain.BidDocuments" id="BidDocumentsResult">
+        <result property="wid"    column="wid"    />
+        <result property="sid"    column="sid"    />
+        <result property="wTitle"    column="w_title"    />
+        <result property="wSize"    column="w_size"    />
+        <result property="wUploadTime"    column="w_upload_time"    />
+    </resultMap>
+
+    <sql id="selectBidDocumentsVo">
+        select wid, sid, w_title, w_size, w_upload_time from bid_documents
+    </sql>
+
+    <select id="selectBidDocumentsList" parameterType="com.hh.pms.domain.BidDocuments" resultMap="BidDocumentsResult">
+        <include refid="selectBidDocumentsVo"/>
+        <where>  
+            <if test="sid != null "> and sid = #{sid}</if>
+            <if test="wTitle != null  and wTitle != ''"> and w_title = #{wTitle}</if>
+            <if test="wSize != null "> and w_size = #{wSize}</if>
+            <if test="wUploadTime != null "> and w_upload_time = #{wUploadTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBidDocumentsByWid" parameterType="Long" resultMap="BidDocumentsResult">
+        <include refid="selectBidDocumentsVo"/>
+        where wid = #{wid}
+    </select>
+        
+    <insert id="insertBidDocuments" parameterType="com.hh.pms.domain.BidDocuments">
+        insert into bid_documents
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wid != null">wid,</if>
+            <if test="sid != null">sid,</if>
+            <if test="wTitle != null">w_title,</if>
+            <if test="wSize != null">w_size,</if>
+            <if test="wUploadTime != null">w_upload_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wid != null">#{wid},</if>
+            <if test="sid != null">#{sid},</if>
+            <if test="wTitle != null">#{wTitle},</if>
+            <if test="wSize != null">#{wSize},</if>
+            <if test="wUploadTime != null">#{wUploadTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBidDocuments" parameterType="com.hh.pms.domain.BidDocuments">
+        update bid_documents
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sid != null">sid = #{sid},</if>
+            <if test="wTitle != null">w_title = #{wTitle},</if>
+            <if test="wSize != null">w_size = #{wSize},</if>
+            <if test="wUploadTime != null">w_upload_time = #{wUploadTime},</if>
+        </trim>
+        where wid = #{wid}
+    </update>
+
+    <delete id="deleteBidDocumentsByWid" parameterType="Long">
+        delete from bid_documents where wid = #{wid}
+    </delete>
+
+    <delete id="deleteBidDocumentsByWids" parameterType="String">
+        delete from bid_documents where wid in 
+        <foreach item="wid" collection="array" open="(" separator="," close=")">
+            #{wid}
+        </foreach>
+    </delete>
+</mapper>

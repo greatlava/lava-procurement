@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.BidWinningResultsMapper">
+    
+    <resultMap type="com.hh.pms.domain.BidWinningResults" id="BidWinningResultsResult">
+        <result property="gsId"    column="gs_id"    />
+        <result property="sid"    column="sid"    />
+        <result property="gsName"    column="gs_name"    />
+        <result property="gsState"    column="gs_state"    />
+        <result property="gsRelease"    column="gs_release"    />
+    </resultMap>
+
+    <sql id="selectBidWinningResultsVo">
+        select gs_id, sid, gs_name, gs_state, gs_release from bid_winning_results
+    </sql>
+
+    <select id="selectBidWinningResultsList" parameterType="com.hh.pms.domain.BidWinningResults" resultMap="BidWinningResultsResult">
+        <include refid="selectBidWinningResultsVo"/>
+        <where>  
+            <if test="sid != null "> and sid = #{sid}</if>
+            <if test="gsName != null  and gsName != ''"> and gs_name like concat('%', #{gsName}, '%')</if>
+            <if test="gsState != null "> and gs_state = #{gsState}</if>
+            <if test="gsRelease != null "> and gs_release = #{gsRelease}</if>
+        </where>
+    </select>
+    
+    <select id="selectBidWinningResultsByGsId" parameterType="Long" resultMap="BidWinningResultsResult">
+        <include refid="selectBidWinningResultsVo"/>
+        where gs_id = #{gsId}
+    </select>
+        
+    <insert id="insertBidWinningResults" parameterType="com.hh.pms.domain.BidWinningResults">
+        insert into bid_winning_results
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gsId != null">gs_id,</if>
+            <if test="sid != null">sid,</if>
+            <if test="gsName != null">gs_name,</if>
+            <if test="gsState != null">gs_state,</if>
+            <if test="gsRelease != null">gs_release,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gsId != null">#{gsId},</if>
+            <if test="sid != null">#{sid},</if>
+            <if test="gsName != null">#{gsName},</if>
+            <if test="gsState != null">#{gsState},</if>
+            <if test="gsRelease != null">#{gsRelease},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBidWinningResults" parameterType="com.hh.pms.domain.BidWinningResults">
+        update bid_winning_results
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sid != null">sid = #{sid},</if>
+            <if test="gsName != null">gs_name = #{gsName},</if>
+            <if test="gsState != null">gs_state = #{gsState},</if>
+            <if test="gsRelease != null">gs_release = #{gsRelease},</if>
+        </trim>
+        where gs_id = #{gsId}
+    </update>
+
+    <delete id="deleteBidWinningResultsByGsId" parameterType="Long">
+        delete from bid_winning_results where gs_id = #{gsId}
+    </delete>
+
+    <delete id="deleteBidWinningResultsByGsIds" parameterType="String">
+        delete from bid_winning_results where gs_id in 
+        <foreach item="gsId" collection="array" open="(" separator="," close=")">
+            #{gsId}
+        </foreach>
+    </delete>
+</mapper>
