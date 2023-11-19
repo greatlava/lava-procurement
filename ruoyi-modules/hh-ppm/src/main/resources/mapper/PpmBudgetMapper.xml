@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PpmBudgetMapper">
+    
+    <resultMap type="PpmBudget" id="PpmBudgetResult">
+        <result property="duId"    column="du_id"    />
+        <result property="aid"    column="aid"    />
+        <result property="duDept"    column="du_dept"    />
+        <result property="duCode"    column="du_code"    />
+        <result property="duName"    column="du_name"    />
+        <result property="duTotal"    column="du_total"    />
+        <result property="duUsedMoney"    column="du_used_money"    />
+        <result property="duHaveMoney"    column="du_have_money"    />
+    </resultMap>
+
+    <sql id="selectPpmBudgetVo">
+        select du_id, aid, du_dept, du_code, du_name, du_total, du_used_money, du_have_money from ppm_budget
+    </sql>
+
+    <select id="selectPpmBudgetList" parameterType="PpmBudget" resultMap="PpmBudgetResult">
+        <include refid="selectPpmBudgetVo"/>
+        <where>  
+            <if test="aid != null "> and aid = #{aid}</if>
+            <if test="duDept != null  and duDept != ''"> and du_dept = #{duDept}</if>
+            <if test="duCode != null  and duCode != ''"> and du_code = #{duCode}</if>
+            <if test="duName != null  and duName != ''"> and du_name like concat('%', #{duName}, '%')</if>
+            <if test="duTotal != null "> and du_total = #{duTotal}</if>
+            <if test="duUsedMoney != null "> and du_used_money = #{duUsedMoney}</if>
+            <if test="duHaveMoney != null "> and du_have_money = #{duHaveMoney}</if>
+        </where>
+    </select>
+    
+    <select id="selectPpmBudgetByDuId" parameterType="Long" resultMap="PpmBudgetResult">
+        <include refid="selectPpmBudgetVo"/>
+        where du_id = #{duId}
+    </select>
+        
+    <insert id="insertPpmBudget" parameterType="PpmBudget">
+        insert into ppm_budget
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="duId != null">du_id,</if>
+            <if test="aid != null">aid,</if>
+            <if test="duDept != null">du_dept,</if>
+            <if test="duCode != null">du_code,</if>
+            <if test="duName != null">du_name,</if>
+            <if test="duTotal != null">du_total,</if>
+            <if test="duUsedMoney != null">du_used_money,</if>
+            <if test="duHaveMoney != null">du_have_money,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="duId != null">#{duId},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="duDept != null">#{duDept},</if>
+            <if test="duCode != null">#{duCode},</if>
+            <if test="duName != null">#{duName},</if>
+            <if test="duTotal != null">#{duTotal},</if>
+            <if test="duUsedMoney != null">#{duUsedMoney},</if>
+            <if test="duHaveMoney != null">#{duHaveMoney},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePpmBudget" parameterType="PpmBudget">
+        update ppm_budget
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="duDept != null">du_dept = #{duDept},</if>
+            <if test="duCode != null">du_code = #{duCode},</if>
+            <if test="duName != null">du_name = #{duName},</if>
+            <if test="duTotal != null">du_total = #{duTotal},</if>
+            <if test="duUsedMoney != null">du_used_money = #{duUsedMoney},</if>
+            <if test="duHaveMoney != null">du_have_money = #{duHaveMoney},</if>
+        </trim>
+        where du_id = #{duId}
+    </update>
+
+    <delete id="deletePpmBudgetByDuId" parameterType="Long">
+        delete from ppm_budget where du_id = #{duId}
+    </delete>
+
+    <delete id="deletePpmBudgetByDuIds" parameterType="String">
+        delete from ppm_budget where du_id in 
+        <foreach item="duId" collection="array" open="(" separator="," close=")">
+            #{duId}
+        </foreach>
+    </delete>
+</mapper>
