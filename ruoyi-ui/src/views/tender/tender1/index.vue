@@ -42,6 +42,8 @@
     </el-table>
     <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width"/>
+    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+                @pagination="getList" />
   </div>
 </template>
 
