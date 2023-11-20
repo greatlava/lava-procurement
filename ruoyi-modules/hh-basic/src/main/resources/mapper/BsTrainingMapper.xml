@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsTrainingMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsTraining" id="BsTrainingResult">
+        <result property="lid" column="lid"/>
+        <result property="jid" column="jid"/>
+        <result property="lTraining" column="l_training"/>
+        <result property="lSpecialized" column="l_specialized"/>
+        <result property="lStartDate" column="l_start_date"/>
+        <result property="lEndDate" column="l_end_date"/>
+    </resultMap>
+
+    <sql id="selectBsTrainingVo">
+        select lid, jid, l_training, l_specialized, l_start_date, l_end_date
+        from bs_training
+    </sql>
+
+    <select id="selectBsTrainingList" parameterType="com.hh.pms.sae.domain.BsTraining" resultMap="BsTrainingResult">
+        <include refid="selectBsTrainingVo"/>
+        <where>
+            <if test="jid != null ">and jid = #{jid}</if>
+            <if test="lTraining != null  and lTraining != ''">and l_training = #{lTraining}</if>
+            <if test="lSpecialized != null  and lSpecialized != ''">and l_specialized = #{lSpecialized}</if>
+            <if test="lStartDate != null ">and l_start_date = #{lStartDate}</if>
+            <if test="lEndDate != null ">and l_end_date = #{lEndDate}</if>
+        </where>
+    </select>
+
+    <select id="selectBsTrainingByLid" parameterType="Long" resultMap="BsTrainingResult">
+        <include refid="selectBsTrainingVo"/>
+        where lid = #{lid}
+    </select>
+
+    <insert id="insertBsTraining" parameterType="com.hh.pms.sae.domain.BsTraining">
+        insert into bs_training
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="lid != null">lid,</if>
+            <if test="jid != null">jid,</if>
+            <if test="lTraining != null">l_training,</if>
+            <if test="lSpecialized != null">l_specialized,</if>
+            <if test="lStartDate != null">l_start_date,</if>
+            <if test="lEndDate != null">l_end_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="lid != null">#{lid},</if>
+            <if test="jid != null">#{jid},</if>
+            <if test="lTraining != null">#{lTraining},</if>
+            <if test="lSpecialized != null">#{lSpecialized},</if>
+            <if test="lStartDate != null">#{lStartDate},</if>
+            <if test="lEndDate != null">#{lEndDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsTraining" parameterType="com.hh.pms.sae.domain.BsTraining">
+        update bs_training
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jid != null">jid = #{jid},</if>
+            <if test="lTraining != null">l_training = #{lTraining},</if>
+            <if test="lSpecialized != null">l_specialized = #{lSpecialized},</if>
+            <if test="lStartDate != null">l_start_date = #{lStartDate},</if>
+            <if test="lEndDate != null">l_end_date = #{lEndDate},</if>
+        </trim>
+        where lid = #{lid}
+    </update>
+
+    <delete id="deleteBsTrainingByLid" parameterType="Long">
+        delete
+        from bs_training
+        where lid = #{lid}
+    </delete>
+
+    <delete id="deleteBsTrainingByLids" parameterType="String">
+        delete from bs_training where lid in
+        <foreach item="lid" collection="array" open="(" separator="," close=")">
+            #{lid}
+        </foreach>
+    </delete>
+</mapper>

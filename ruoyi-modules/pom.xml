@@ -13,6 +13,10 @@
         <module>ruoyi-gen</module>
         <module>ruoyi-job</module>
         <module>ruoyi-file</module>
+        <module>hh-ppm</module>
+        <module>hh-bidding</module>
+        <module>hh-basic</module>
+        <module>hh-nonbidding</module>
     </modules>
 
     <artifactId>ruoyi-modules</artifactId>

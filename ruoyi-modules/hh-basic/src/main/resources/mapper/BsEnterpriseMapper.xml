@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsEnterpriseMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsEnterprise" id="BsEnterpriseResult">
+        <result property="zzId" column="zz_id"/>
+        <result property="zzCertName" column="zz_cert_name"/>
+        <result property="zzCertNo" column="zz_cert_no"/>
+        <result property="zzUnit" column="zz_unit"/>
+        <result property="zzDate" column="zz_date"/>
+        <result property="zzExpirationDate" column="zz_expiration_date"/>
+        <result property="zzScan" column="zz_scan"/>
+        <result property="zzCertContent" column="zz_cert_content"/>
+        <result property="hid" column="hid"/>
+    </resultMap>
+
+    <sql id="selectBsEnterpriseVo">
+        select zz_id,
+               zz_cert_name,
+               zz_cert_no,
+               zz_unit,
+               zz_date,
+               zz_expiration_date,
+               zz_scan,
+               zz_cert_content,
+               hid
+        from bs_enterprise
+    </sql>
+
+    <select id="selectBsEnterpriseList" parameterType="com.hh.pms.sae.domain.BsEnterprise" resultMap="BsEnterpriseResult">
+        <include refid="selectBsEnterpriseVo"/>
+        <where>
+            <if test="zzCertName != null  and zzCertName != ''">and zz_cert_name like concat('%', #{zzCertName}, '%')
+            </if>
+            <if test="zzCertNo != null  and zzCertNo != ''">and zz_cert_no = #{zzCertNo}</if>
+            <if test="zzUnit != null  and zzUnit != ''">and zz_unit = #{zzUnit}</if>
+            <if test="zzDate != null ">and zz_date = #{zzDate}</if>
+            <if test="zzExpirationDate != null ">and zz_expiration_date = #{zzExpirationDate}</if>
+            <if test="zzScan != null  and zzScan != ''">and zz_scan = #{zzScan}</if>
+            <if test="zzCertContent != null  and zzCertContent != ''">and zz_cert_content = #{zzCertContent}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
+        </where>
+    </select>
+
+    <select id="selectBsEnterpriseByZzId" parameterType="Long" resultMap="BsEnterpriseResult">
+        <include refid="selectBsEnterpriseVo"/>
+        where zz_id = #{zzId}
+    </select>
+
+    <insert id="insertBsEnterprise" parameterType="com.hh.pms.sae.domain.BsEnterprise">
+        insert into bs_enterprise
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="zzId != null">zz_id,</if>
+            <if test="zzCertName != null">zz_cert_name,</if>
+            <if test="zzCertNo != null">zz_cert_no,</if>
+            <if test="zzUnit != null">zz_unit,</if>
+            <if test="zzDate != null">zz_date,</if>
+            <if test="zzExpirationDate != null">zz_expiration_date,</if>
+            <if test="zzScan != null">zz_scan,</if>
+            <if test="zzCertContent != null">zz_cert_content,</if>
+            <if test="hid != null">hid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="zzId != null">#{zzId},</if>
+            <if test="zzCertName != null">#{zzCertName},</if>
+            <if test="zzCertNo != null">#{zzCertNo},</if>
+            <if test="zzUnit != null">#{zzUnit},</if>
+            <if test="zzDate != null">#{zzDate},</if>
+            <if test="zzExpirationDate != null">#{zzExpirationDate},</if>
+            <if test="zzScan != null">#{zzScan},</if>
+            <if test="zzCertContent != null">#{zzCertContent},</if>
+            <if test="hid != null">#{hid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsEnterprise" parameterType="com.hh.pms.sae.domain.BsEnterprise">
+        update bs_enterprise
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="zzCertName != null">zz_cert_name = #{zzCertName},</if>
+            <if test="zzCertNo != null">zz_cert_no = #{zzCertNo},</if>
+            <if test="zzUnit != null">zz_unit = #{zzUnit},</if>
+            <if test="zzDate != null">zz_date = #{zzDate},</if>
+            <if test="zzExpirationDate != null">zz_expiration_date = #{zzExpirationDate},</if>
+            <if test="zzScan != null">zz_scan = #{zzScan},</if>
+            <if test="zzCertContent != null">zz_cert_content = #{zzCertContent},</if>
+            <if test="hid != null">hid = #{hid},</if>
+        </trim>
+        where zz_id = #{zzId}
+    </update>
+
+    <delete id="deleteBsEnterpriseByZzId" parameterType="Long">
+        delete
+        from bs_enterprise
+        where zz_id = #{zzId}
+    </delete>
+
+    <delete id="deleteBsEnterpriseByZzIds" parameterType="String">
+        delete from bs_enterprise where zz_id in
+        <foreach item="zzId" collection="array" open="(" separator="," close=")">
+            #{zzId}
+        </foreach>
+    </delete>
+</mapper>

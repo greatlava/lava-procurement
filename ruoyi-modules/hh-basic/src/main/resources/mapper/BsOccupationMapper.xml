@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsOccupationMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsOccupation" id="BsOccupationResult">
+        <result property="nid" column="nid"/>
+        <result property="jid" column="jid"/>
+        <result property="nCertificate" column="n_certificate"/>
+        <result property="nAcquireDate" column="n_acquire_date"/>
+        <result property="nCode" column="n_code"/>
+        <result property="nInstitution" column="n_institution"/>
+        <result property="nExpirationDate" column="n_expiration_date"/>
+    </resultMap>
+
+    <sql id="selectBsOccupationVo">
+        select nid, jid, n_certificate, n_acquire_date, n_code, n_institution, n_expiration_date
+        from bs_occupation
+    </sql>
+
+    <select id="selectBsOccupationList" parameterType="com.hh.pms.sae.domain.BsOccupation" resultMap="BsOccupationResult">
+        <include refid="selectBsOccupationVo"/>
+        <where>
+            <if test="jid != null ">and jid = #{jid}</if>
+            <if test="nCertificate != null  and nCertificate != ''">and n_certificate = #{nCertificate}</if>
+            <if test="nAcquireDate != null ">and n_acquire_date = #{nAcquireDate}</if>
+            <if test="nCode != null  and nCode != ''">and n_code = #{nCode}</if>
+            <if test="nInstitution != null  and nInstitution != ''">and n_institution = #{nInstitution}</if>
+            <if test="nExpirationDate != null ">and n_expiration_date = #{nExpirationDate}</if>
+        </where>
+    </select>
+
+    <select id="selectBsOccupationByNid" parameterType="Long" resultMap="BsOccupationResult">
+        <include refid="selectBsOccupationVo"/>
+        where nid = #{nid}
+    </select>
+
+    <insert id="insertBsOccupation" parameterType="com.hh.pms.sae.domain.BsOccupation">
+        insert into bs_occupation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nid != null">nid,</if>
+            <if test="jid != null">jid,</if>
+            <if test="nCertificate != null">n_certificate,</if>
+            <if test="nAcquireDate != null">n_acquire_date,</if>
+            <if test="nCode != null">n_code,</if>
+            <if test="nInstitution != null">n_institution,</if>
+            <if test="nExpirationDate != null">n_expiration_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nid != null">#{nid},</if>
+            <if test="jid != null">#{jid},</if>
+            <if test="nCertificate != null">#{nCertificate},</if>
+            <if test="nAcquireDate != null">#{nAcquireDate},</if>
+            <if test="nCode != null">#{nCode},</if>
+            <if test="nInstitution != null">#{nInstitution},</if>
+            <if test="nExpirationDate != null">#{nExpirationDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsOccupation" parameterType="com.hh.pms.sae.domain.BsOccupation">
+        update bs_occupation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jid != null">jid = #{jid},</if>
+            <if test="nCertificate != null">n_certificate = #{nCertificate},</if>
+            <if test="nAcquireDate != null">n_acquire_date = #{nAcquireDate},</if>
+            <if test="nCode != null">n_code = #{nCode},</if>
+            <if test="nInstitution != null">n_institution = #{nInstitution},</if>
+            <if test="nExpirationDate != null">n_expiration_date = #{nExpirationDate},</if>
+        </trim>
+        where nid = #{nid}
+    </update>
+
+    <delete id="deleteBsOccupationByNid" parameterType="Long">
+        delete
+        from bs_occupation
+        where nid = #{nid}
+    </delete>
+
+    <delete id="deleteBsOccupationByNids" parameterType="String">
+        delete from bs_occupation where nid in
+        <foreach item="nid" collection="array" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </delete>
+</mapper>

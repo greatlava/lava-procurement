@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PpmDeviceMapper">
+    
+    <resultMap type="PpmDevice" id="PpmDeviceResult">
+        <result property="tid"    column="tid"    />
+        <result property="vid"    column="vid"    />
+        <result property="tDa"    column="t_da"    />
+        <result property="tZhong"    column="t_zhong"    />
+        <result property="tXiao"    column="t_xiao"    />
+        <result property="tUnit"    column="t_unit"    />
+        <result property="shui"    column="shui"    />
+        <result property="tPrice"    column="t_price"    />
+        <result property="tTotalPrice"    column="t_total_price"    />
+        <result property="tDate"    column="t_date"    />
+        <result property="tAddress"    column="t_address"    />
+        <result property="tIllustrate"    column="t_illustrate"    />
+        <result property="tPurchaser"    column="t_purchaser"    />
+        <result property="duCode"    column="du_code"    />
+        <result property="tNotes"    column="t_notes"    />
+        <result property="aWay"    column="a_way"    />
+        <result property="aState"    column="a_state"    />
+    </resultMap>
+
+    <sql id="selectPpmDeviceVo">
+        select tid, vid, t_da, t_zhong, t_xiao, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
+    </sql>
+
+    <select id="selectPpmDeviceList" parameterType="PpmDevice" resultMap="PpmDeviceResult">
+        <include refid="selectPpmDeviceVo"/>
+        <where>  
+            <if test="vid != null "> and vid = #{vid}</if>
+            <if test="tDa != null  and tDa != ''"> and t_da = #{tDa}</if>
+            <if test="tZhong != null  and tZhong != ''"> and t_zhong = #{tZhong}</if>
+            <if test="tXiao != null  and tXiao != ''"> and t_xiao = #{tXiao}</if>
+            <if test="tUnit != null "> and t_unit = #{tUnit}</if>
+            <if test="shui != null "> and shui = #{shui}</if>
+            <if test="tPrice != null "> and t_price = #{tPrice}</if>
+            <if test="tTotalPrice != null "> and t_total_price = #{tTotalPrice}</if>
+            <if test="tDate != null "> and t_date = #{tDate}</if>
+            <if test="tAddress != null  and tAddress != ''"> and t_address = #{tAddress}</if>
+            <if test="tIllustrate != null  and tIllustrate != ''"> and t_illustrate = #{tIllustrate}</if>
+            <if test="tPurchaser != null  and tPurchaser != ''"> and t_purchaser = #{tPurchaser}</if>
+            <if test="duCode != null  and duCode != ''"> and du_code = #{duCode}</if>
+            <if test="tNotes != null  and tNotes != ''"> and t_notes = #{tNotes}</if>
+            <if test="aWay != null "> and a_way = #{aWay}</if>
+            <if test="aState != null "> and a_state = #{aState}</if>
+        </where>
+    </select>
+    
+    <select id="selectPpmDeviceByTid" parameterType="Long" resultMap="PpmDeviceResult">
+        <include refid="selectPpmDeviceVo"/>
+        where tid = #{tid}
+    </select>
+        
+    <insert id="insertPpmDevice" parameterType="PpmDevice">
+        insert into ppm_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tid != null">tid,</if>
+            <if test="vid != null">vid,</if>
+            <if test="tDa != null">t_da,</if>
+            <if test="tZhong != null">t_zhong,</if>
+            <if test="tXiao != null">t_xiao,</if>
+            <if test="tUnit != null">t_unit,</if>
+            <if test="shui != null">shui,</if>
+            <if test="tPrice != null">t_price,</if>
+            <if test="tTotalPrice != null">t_total_price,</if>
+            <if test="tDate != null">t_date,</if>
+            <if test="tAddress != null">t_address,</if>
+            <if test="tIllustrate != null">t_illustrate,</if>
+            <if test="tPurchaser != null">t_purchaser,</if>
+            <if test="duCode != null">du_code,</if>
+            <if test="tNotes != null">t_notes,</if>
+            <if test="aWay != null">a_way,</if>
+            <if test="aState != null">a_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tid != null">#{tid},</if>
+            <if test="vid != null">#{vid},</if>
+            <if test="tDa != null">#{tDa},</if>
+            <if test="tZhong != null">#{tZhong},</if>
+            <if test="tXiao != null">#{tXiao},</if>
+            <if test="tUnit != null">#{tUnit},</if>
+            <if test="shui != null">#{shui},</if>
+            <if test="tPrice != null">#{tPrice},</if>
+            <if test="tTotalPrice != null">#{tTotalPrice},</if>
+            <if test="tDate != null">#{tDate},</if>
+            <if test="tAddress != null">#{tAddress},</if>
+            <if test="tIllustrate != null">#{tIllustrate},</if>
+            <if test="tPurchaser != null">#{tPurchaser},</if>
+            <if test="duCode != null">#{duCode},</if>
+            <if test="tNotes != null">#{tNotes},</if>
+            <if test="aWay != null">#{aWay},</if>
+            <if test="aState != null">#{aState},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePpmDevice" parameterType="PpmDevice">
+        update ppm_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vid != null">vid = #{vid},</if>
+            <if test="tDa != null">t_da = #{tDa},</if>
+            <if test="tZhong != null">t_zhong = #{tZhong},</if>
+            <if test="tXiao != null">t_xiao = #{tXiao},</if>
+            <if test="tUnit != null">t_unit = #{tUnit},</if>
+            <if test="shui != null">shui = #{shui},</if>
+            <if test="tPrice != null">t_price = #{tPrice},</if>
+            <if test="tTotalPrice != null">t_total_price = #{tTotalPrice},</if>
+            <if test="tDate != null">t_date = #{tDate},</if>
+            <if test="tAddress != null">t_address = #{tAddress},</if>
+            <if test="tIllustrate != null">t_illustrate = #{tIllustrate},</if>
+            <if test="tPurchaser != null">t_purchaser = #{tPurchaser},</if>
+            <if test="duCode != null">du_code = #{duCode},</if>
+            <if test="tNotes != null">t_notes = #{tNotes},</if>
+            <if test="aWay != null">a_way = #{aWay},</if>
+            <if test="aState != null">a_state = #{aState},</if>
+        </trim>
+        where tid = #{tid}
+    </update>
+
+    <delete id="deletePpmDeviceByTid" parameterType="Long">
+        delete from ppm_device where tid = #{tid}
+    </delete>
+
+    <delete id="deletePpmDeviceByTids" parameterType="String">
+        delete from ppm_device where tid in 
+        <foreach item="tid" collection="array" open="(" separator="," close=")">
+            #{tid}
+        </foreach>
+    </delete>
+</mapper>
