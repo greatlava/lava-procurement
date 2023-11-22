@@ -9,32 +9,36 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 设备信息对象 ppm_device
- * 
+ *
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-21
  */
 public class PpmDevice extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 信息ID */
+    /** 产品编码 */
     private Long tid;
 
-    /** 行项目ID */
-    @Excel(name = "行项目ID")
-    private Long vid;
+    /** 行项目编号 */
+    @Excel(name = "行项目编号")
+    private String vCode;
+
+    /** 产品名称 */
+    @Excel(name = "产品名称")
+    private String tName;
 
     /** 大类 */
     @Excel(name = "大类")
-    private String tDa;
+    private Long tDa;
 
     /** 中类 */
     @Excel(name = "中类")
-    private String tZhong;
+    private Long tZhong;
 
     /** 小类 */
     @Excel(name = "小类")
-    private String tXiao;
+    private Long tXiao;
 
     /** 数量 */
     @Excel(name = "数量")
@@ -85,156 +89,165 @@ public class PpmDevice extends BaseEntity
     @Excel(name = "采购计划状态")
     private Long aState;
 
-    public void setTid(Long tid) 
+    public void setTid(Long tid)
     {
         this.tid = tid;
     }
 
-    public Long getTid() 
+    public Long getTid()
     {
         return tid;
     }
-    public void setVid(Long vid) 
+    public void setvCode(String vCode)
     {
-        this.vid = vid;
+        this.vCode = vCode;
     }
 
-    public Long getVid() 
+    public String getvCode()
     {
-        return vid;
+        return vCode;
     }
-    public void settDa(String tDa) 
+    public void settName(String tName)
+    {
+        this.tName = tName;
+    }
+
+    public String gettName()
+    {
+        return tName;
+    }
+    public void settDa(Long tDa)
     {
         this.tDa = tDa;
     }
 
-    public String gettDa() 
+    public Long gettDa()
     {
         return tDa;
     }
-    public void settZhong(String tZhong) 
+    public void settZhong(Long tZhong)
     {
         this.tZhong = tZhong;
     }
 
-    public String gettZhong() 
+    public Long gettZhong()
     {
         return tZhong;
     }
-    public void settXiao(String tXiao) 
+    public void settXiao(Long tXiao)
     {
         this.tXiao = tXiao;
     }
 
-    public String gettXiao() 
+    public Long gettXiao()
     {
         return tXiao;
     }
-    public void settUnit(Long tUnit) 
+    public void settUnit(Long tUnit)
     {
         this.tUnit = tUnit;
     }
 
-    public Long gettUnit() 
+    public Long gettUnit()
     {
         return tUnit;
     }
-    public void setShui(Long shui) 
+    public void setShui(Long shui)
     {
         this.shui = shui;
     }
 
-    public Long getShui() 
+    public Long getShui()
     {
         return shui;
     }
-    public void settPrice(Long tPrice) 
+    public void settPrice(Long tPrice)
     {
         this.tPrice = tPrice;
     }
 
-    public Long gettPrice() 
+    public Long gettPrice()
     {
         return tPrice;
     }
-    public void settTotalPrice(Long tTotalPrice) 
+    public void settTotalPrice(Long tTotalPrice)
     {
         this.tTotalPrice = tTotalPrice;
     }
 
-    public Long gettTotalPrice() 
+    public Long gettTotalPrice()
     {
         return tTotalPrice;
     }
-    public void settDate(Date tDate) 
+    public void settDate(Date tDate)
     {
         this.tDate = tDate;
     }
 
-    public Date gettDate() 
+    public Date gettDate()
     {
         return tDate;
     }
-    public void settAddress(String tAddress) 
+    public void settAddress(String tAddress)
     {
         this.tAddress = tAddress;
     }
 
-    public String gettAddress() 
+    public String gettAddress()
     {
         return tAddress;
     }
-    public void settIllustrate(String tIllustrate) 
+    public void settIllustrate(String tIllustrate)
     {
         this.tIllustrate = tIllustrate;
     }
 
-    public String gettIllustrate() 
+    public String gettIllustrate()
     {
         return tIllustrate;
     }
-    public void settPurchaser(String tPurchaser) 
+    public void settPurchaser(String tPurchaser)
     {
         this.tPurchaser = tPurchaser;
     }
 
-    public String gettPurchaser() 
+    public String gettPurchaser()
     {
         return tPurchaser;
     }
-    public void setDuCode(String duCode) 
+    public void setDuCode(String duCode)
     {
         this.duCode = duCode;
     }
 
-    public String getDuCode() 
+    public String getDuCode()
     {
         return duCode;
     }
-    public void settNotes(String tNotes) 
+    public void settNotes(String tNotes)
     {
         this.tNotes = tNotes;
     }
 
-    public String gettNotes() 
+    public String gettNotes()
     {
         return tNotes;
     }
-    public void setaWay(Long aWay) 
+    public void setaWay(Long aWay)
     {
         this.aWay = aWay;
     }
 
-    public Long getaWay() 
+    public Long getaWay()
     {
         return aWay;
     }
-    public void setaState(Long aState) 
+    public void setaState(Long aState)
     {
         this.aState = aState;
     }
 
-    public Long getaState() 
+    public Long getaState()
     {
         return aState;
     }
@@ -242,23 +255,23 @@ public class PpmDevice extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("tid", getTid())
-            .append("vid", getVid())
-            .append("tDa", gettDa())
-            .append("tZhong", gettZhong())
-            .append("tXiao", gettXiao())
-            .append("tUnit", gettUnit())
-            .append("shui", getShui())
-            .append("tPrice", gettPrice())
-            .append("tTotalPrice", gettTotalPrice())
-            .append("tDate", gettDate())
-            .append("tAddress", gettAddress())
-            .append("tIllustrate", gettIllustrate())
-            .append("tPurchaser", gettPurchaser())
-            .append("duCode", getDuCode())
-            .append("tNotes", gettNotes())
-            .append("aWay", getaWay())
-            .append("aState", getaState())
-            .toString();
+                .append("tid", getTid())
+                .append("vCode", getvCode())
+                .append("tDa", gettDa())
+                .append("tZhong", gettZhong())
+                .append("tXiao", gettXiao())
+                .append("tUnit", gettUnit())
+                .append("shui", getShui())
+                .append("tPrice", gettPrice())
+                .append("tTotalPrice", gettTotalPrice())
+                .append("tDate", gettDate())
+                .append("tAddress", gettAddress())
+                .append("tIllustrate", gettIllustrate())
+                .append("tPurchaser", gettPurchaser())
+                .append("duCode", getDuCode())
+                .append("tNotes", gettNotes())
+                .append("aWay", getaWay())
+                .append("aState", getaState())
+                .toString();
     }
 }

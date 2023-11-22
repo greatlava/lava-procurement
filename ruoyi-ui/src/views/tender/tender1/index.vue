@@ -28,7 +28,6 @@
               </el-col>
             </el-row>
           </el-col>
-
         </el-form>
       </el-row>
     </div>
@@ -43,12 +42,14 @@
     <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width"/>
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList" />
+                @pagination="getList"
+    />
   </div>
 </template>
 
 <script>
 import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender'
+
 
 export default {
   name: 'Tender',
@@ -141,12 +142,6 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.handleQuery()
-    },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.sid)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
     }
   }
 }
