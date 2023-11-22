@@ -1,9 +1,25 @@
 import request from '@/utils/request'
 
-// 查询供应商列表
+// 查询合格供应商列表
 export function listSupplier(query) {
   return request({
     url: '/basic/supplier/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function listSupplier1(query) {
+  return request({
+    url: '/basic/supplier/noSupplierList',
+    method: 'get',
+    params: query
+  })
+}
+
+export function listSupplier2(query) {
+  return request({
+    url: '/basic/supplier/supplierBadList',
     method: 'get',
     params: query
   })

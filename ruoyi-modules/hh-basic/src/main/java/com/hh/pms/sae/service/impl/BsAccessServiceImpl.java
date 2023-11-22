@@ -6,6 +6,7 @@ import com.hh.pms.sae.domain.BsAccess;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsAccessMapper;
 import com.hh.pms.sae.service.IBsAccessService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 

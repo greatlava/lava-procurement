@@ -35,13 +35,35 @@ public class BsSupplierController extends BaseController {
     private IBsSupplierService bsSupplierService;
 
     /**
-     * 查询供应商列表
+     * 查询合格供应商列表
      */
     @RequiresPermissions("system:supplier:list")
     @GetMapping("/list")
     public TableDataInfo list(BsSupplier bsSupplier) {
         startPage();
         List<BsSupplier> list = bsSupplierService.selectBsSupplierList(bsSupplier);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询不合格供应商列表
+     */
+    @RequiresPermissions("system:supplier:list")
+    @GetMapping("/noSupplierList")
+    public TableDataInfo noSupplierList(BsSupplier bsSupplier) {
+        startPage();
+        List<BsSupplier> list = bsSupplierService.selectNoBsSupplierList(bsSupplier);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询供应商不良记录列表
+     */
+    @RequiresPermissions("system:supplier:list")
+    @GetMapping("/supplierBadList")
+    public TableDataInfo supplierBadList(BsSupplier bsSupplier) {
+        startPage();
+        List<BsSupplier> list = bsSupplierService.selectBsSupplierBadList(bsSupplier);
         return getDataTable(list);
     }
 
