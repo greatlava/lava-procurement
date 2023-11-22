@@ -108,7 +108,6 @@
       </el-tabs>
     </div>
 
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -283,7 +282,7 @@ export default {
         this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
-    },
+    }
   }
 }
 </script>
