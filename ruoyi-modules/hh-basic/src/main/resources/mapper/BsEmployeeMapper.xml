@@ -78,4 +78,11 @@
             #{pid}
         </foreach>
     </delete>
+
+    <select id="loginEmp" parameterType="com.hh.pms.cm.domain.BsEmployee" resultMap="BsEmployeeResult">
+        select *
+        from bs_employee
+        where p_name = #{username}
+          and p_password = #{password}
+    </select>
 </mapper>

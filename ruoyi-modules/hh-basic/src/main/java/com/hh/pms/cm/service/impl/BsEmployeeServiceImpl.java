@@ -3,6 +3,7 @@ package com.hh.pms.cm.service.impl;
 import java.util.List;
 
 import com.hh.pms.cm.domain.BsEmployee;
+import com.ruoyi.common.core.domain.R;
 import org.springframework.stereotype.Service;
 import com.hh.pms.cm.mapper.BsEmployeeMapper;
 import com.hh.pms.cm.service.IBsEmployeeService;
@@ -84,5 +85,10 @@ public class BsEmployeeServiceImpl implements IBsEmployeeService {
     @Override
     public int deleteBsEmployeeByPid(Long pid) {
         return bsEmployeeMapper.deleteBsEmployeeByPid(pid);
+    }
+
+    @Override
+    public R<BsEmployee> loginEmp(String username, String password) {
+        return bsEmployeeMapper.loginEmp(username, password);
     }
 }

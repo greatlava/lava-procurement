@@ -3,6 +3,7 @@ package com.hh.pms.cm.mapper;
 import java.util.List;
 
 import com.hh.pms.cm.domain.BsEmployee;
+import com.ruoyi.common.core.domain.R;
 
 /**
  * 员工Mapper接口
@@ -58,4 +59,13 @@ public interface BsEmployeeMapper {
      * @return 结果
      */
     public int deleteBsEmployeeByPids(Long[] pids);
+
+    /**
+     * 员工登录
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    public R<BsEmployee> loginEmp(String username, String password);
 }
