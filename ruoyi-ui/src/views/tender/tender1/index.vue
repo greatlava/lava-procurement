@@ -28,6 +28,7 @@
               </el-col>
             </el-row>
           </el-col>
+
         </el-form>
       </el-row>
     </div>
@@ -35,23 +36,63 @@
       <el-table-column label="序号" align="center" prop="orderNum" width="80"/>
       <el-table-column label="项目编号" align="center" prop="sCode"/>
       <el-table-column label="项目名称" align="center" prop="sName"/>
-      <el-table-column label="招标方式" align="center" prop="sWay"/>
-      <el-table-column label="项目状态" align="center" prop="sProjectState"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width"/>
+      <el-table-column prop="sWay" label="招标方式" align="center">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.bid_tender_biddingmethod" :value="scope.row.sWay"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="项目负责人" align="center" prop="sLeader"/>
+      <el-table-column label="项目状态" align="center" prop="sProjectState">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.bid_tender_state" :value="scope.row.sProjectState"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.sProjectState === 2"
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+          >修改</el-button>
+          <el-button v-if="scope.row.sProjectState === 2"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+          >删除</el-button>
+          <el-button v-if="scope.row.sProjectState === 1"
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click=""
+          >进入项目</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click=""
+          >查看</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
     </el-table>
-    <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
-    <el-table-column label="操作" align="center" class-name="small-padding fixed-width"/>
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList"
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
     />
   </div>
 </template>
 
 <script>
 import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender'
-
+import item from '@/layout/components/Sidebar/Item.vue'
 
 export default {
+  dicts:["bid_tender_biddingmethod","bid_tender_state"],
   name: 'Tender',
   data() {
     return {
@@ -76,14 +117,19 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
-        orderNum: 0,
         pageNum: 1,
         pageSize: 10,
         sCode: null,
         sName: null,
         sWay: null,
+        sLeader: null,
         sProjectState: null,
-        sDeadline: null
+        sDeadline: null,
+        sid:null,
+        orderNum:0,
+        createTime:null,
+        rangeStartTime:null,
+        rangeEndTime:null
       },
       // 表单参数
       formData: {
@@ -98,28 +144,42 @@ export default {
     }
   },
   created() {
-    this.getList()
+    this.getList();
   },
   methods: {
     query() {
-
+      this.queryParams.sName = this.formData.field108;//项目名称
+      let range = this.formData.field101;//查询时间范围
+     if(range != null || range != ''){
+       this.queryParams.rangeStartTime= range[0];//时间范围开始
+       this.queryParams.rangeEndTime = range[1];//时间范围截至
+     }
+      this.handleQuery();//搜索按钮点击方法
+      this.reset();//清空查询条件
     },
+    /**
+     * 重置
+     */
     resetForm() {
-
+      this.$refs.elForm.resetFields();
     },
     /** 查询招标项目列表 */
     getList() {
-      this.loading = false
-      // listTender(this.queryParams).then(response => {
-      //   this.tenderList = response.rows;
-      //   this.total = response.total;
-      //   this.loading = false;
-      // });
+      this.loading = false;
+      this.tenderList=[];
+      listTender(this.queryParams).then(response => {
+        response.rows.forEach((e,i)=>{
+          e.orderNum = i+1;
+          this.tenderList.push(e);
+        })
+        this.total = response.total;
+        this.loading = false;
+      });
     },
     // 取消按钮
     cancel() {
-      this.open = false
-      this.reset()
+      this.open = false;
+      this.reset();
     },
     // 表单重置
     reset() {
@@ -128,6 +188,7 @@ export default {
         sCode: null,
         sName: null,
         sWay: null,
+        sLeader: null,
         sProjectState: null,
         sDeadline: null
       }
@@ -135,14 +196,37 @@ export default {
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
+      this.queryParams.pageNum = 1;
+      this.getList();
     },
     /** 重置按钮操作 */
     resetQuery() {
       this.resetForm('queryForm')
       this.handleQuery()
-    }
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.sid)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const sid = row.sid || this.ids
+
+
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const sids = row.sid || this.ids;
+      this.$modal.confirm('是否确认删除招标项目编号为"' + sids + '"的数据项？').then(function() {
+        return delTender(sids);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
+    },
   }
 }
 </script>

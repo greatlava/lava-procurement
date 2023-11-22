@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询招标项目列表
 export function listTender(query) {
   return request({
-    url: '/system/tender/list',
+    url: '/bidding/tender/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listTender(query) {
 // 查询招标项目详细
 export function getTender(sid) {
   return request({
-    url: '/system/tender/' + sid,
+    url: '/bidding/tender/' + sid,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getTender(sid) {
 // 新增招标项目
 export function addTender(data) {
   return request({
-    url: '/system/tender',
+    url: '/bidding/tender',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addTender(data) {
 // 修改招标项目
 export function updateTender(data) {
   return request({
-    url: '/system/tender',
+    url: '/bidding/tender',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateTender(data) {
 // 删除招标项目
 export function delTender(sid) {
   return request({
-    url: '/system/tender/' + sid,
+    url: '/bidding/tender/' + sid,
     method: 'delete'
   })
 }

@@ -10,6 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sCode"    column="s_code"    />
         <result property="sName"    column="s_name"    />
         <result property="sWay"    column="s_way"    />
+        <result property="sLeader"    column="s_leader"    />
         <result property="sMust"    column="s_must"    />
         <result property="sSway"    column="s_sway"    />
         <result property="sType"    column="s_type"    />
@@ -27,10 +28,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sEndTime"    column="s_end_time"    />
         <result property="sProjectState"    column="s_project_state"    />
         <result property="sDeadline"    column="s_deadline"    />
+        <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectBidTenderVo">
-        select sid, xy_id, s_code, s_name, s_way, s_must, s_sway, s_type, s_budget, s_unit, s_person, s_phone, email, s_address, create_by, create_time, update_by, update_time, s_start_time, s_end_time, s_project_state, s_deadline from bid_tender
+        select sid, xy_id, s_code, s_name, s_way,s_leader, s_must, s_sway, s_type, s_budget, s_unit, s_person, s_phone, email, s_address, create_by, create_time, update_by, update_time, s_start_time, s_end_time, s_project_state, s_deadline from bid_tender
     </sql>
 
     <select id="selectBidTenderList" parameterType="com.hh.pms.domain.BidTender" resultMap="BidTenderResult">
@@ -40,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null  and sCode != ''"> and s_code = #{sCode}</if>
             <if test="sName != null  and sName != ''"> and s_name like concat('%', #{sName}, '%')</if>
             <if test="sWay != null "> and s_way = #{sWay}</if>
+            <if test="sLeader != null "> and s_leader = #{sLeader}</if>
             <if test="sMust != null "> and s_must = #{sMust}</if>
             <if test="sSway != null "> and s_sway = #{sSway}</if>
             <if test="sType != null "> and s_type = #{sType}</if>
@@ -48,12 +51,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sPerson != null  and sPerson != ''"> and s_person = #{sPerson}</if>
             <if test="sPhone != null  and sPhone != ''"> and s_phone = #{sPhone}</if>
             <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="sAddress != null  and sAddress != ''"> and s_address = #{sAddress}</if>
+            <if test="sAddress != null  and sAddress != ''"> and s_address = #{s
+             Address}</if>
             <if test="sStartTime != null "> and s_start_time = #{sStartTime}</if>
             <if test="sEndTime != null "> and s_end_time = #{sEndTime}</if>
             <if test="sProjectState != null "> and s_project_state = #{sProjectState}</if>
-            <if test="sDeadline != null "> and s_deadline = #{sDeadline}</if>
+            <if test="rangeStartTime != null and rangeEndTime != null"> and create_time between #{rangeStartTime} and #{rangeEndTime}</if>
         </where>
+        order by s_way
     </select>
     
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
@@ -69,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null">s_code,</if>
             <if test="sName != null">s_name,</if>
             <if test="sWay != null">s_way,</if>
+            <if test="sLeader != null "> s_leader,</if>
             <if test="sMust != null">s_must,</if>
             <if test="sSway != null">s_sway,</if>
             <if test="sType != null">s_type,</if>
@@ -93,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null">#{sCode},</if>
             <if test="sName != null">#{sName},</if>
             <if test="sWay != null">#{sWay},</if>
+            <if test="sLeader != null ">#{sLeader}</if>
             <if test="sMust != null">#{sMust},</if>
             <if test="sSway != null">#{sSway},</if>
             <if test="sType != null">#{sType},</if>
@@ -120,6 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null">s_code = #{sCode},</if>
             <if test="sName != null">s_name = #{sName},</if>
             <if test="sWay != null">s_way = #{sWay},</if>
+            <if test="sLeader != null "> and s_leader = #{sLeader}</if>
             <if test="sMust != null">s_must = #{sMust},</if>
             <if test="sSway != null">s_sway = #{sSway},</if>
             <if test="sType != null">s_type = #{sType},</if>

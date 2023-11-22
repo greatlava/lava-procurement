@@ -36,6 +36,10 @@ public class BidTender extends BaseEntity
     @Excel(name = "招标方式")
     private Long sWay;
 
+    /** 项目负责人 */
+    @Excel(name = "项目负责人")
+    private String sLeader;
+
     /** 是否必招 */
     @Excel(name = "是否必招")
     private Long sMust;
@@ -91,6 +95,26 @@ public class BidTender extends BaseEntity
     @Excel(name = "报价截止时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date sDeadline;
 
+    /** 创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date createTime;
+
+
+    /** 查询日期范围 开始 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "范围开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date rangeStartTime;
+
+    /** 查询日期范围 截至 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "范围截至时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date rangeEndTime;
+
+
+
+
+
     public void setSid(Long sid) 
     {
         this.sid = sid;
@@ -136,6 +160,17 @@ public class BidTender extends BaseEntity
     {
         return sWay;
     }
+
+    public void setsLeader(String sLeader)
+    {
+        this.sLeader = sLeader;
+    }
+
+    public String getsLeader()
+    {
+        return sLeader;
+    }
+
     public void setsMust(Long sMust) 
     {
         this.sMust = sMust;
@@ -154,6 +189,7 @@ public class BidTender extends BaseEntity
     {
         return sSway;
     }
+
     public void setsType(Long sType) 
     {
         this.sType = sType;
@@ -252,6 +288,37 @@ public class BidTender extends BaseEntity
     public Date getsDeadline() 
     {
         return sDeadline;
+    }
+
+
+    public void setCreatetime(Date CreateTime)
+    {
+        this.createTime = createTime;
+    }
+
+    public Date getCreateTime()
+    {
+        return createTime;
+    }
+
+    public void setRangeStartTime(Date rangeStartTime)
+    {
+        this.rangeStartTime = rangeStartTime;
+    }
+
+    public Date getRangeStartTime()
+    {
+        return rangeStartTime;
+    }
+
+    public void setRangeEndTime(Date rangeEndTime)
+    {
+        this.rangeEndTime = rangeEndTime;
+    }
+
+    public Date getRangeEndTime()
+    {
+        return rangeEndTime;
     }
 
     @Override
