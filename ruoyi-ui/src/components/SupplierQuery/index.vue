@@ -19,10 +19,14 @@
   </div>
 </template>
 <script>
+import sqe from '@/views/supplier/sqe/index.vue';
+
 export default {
   name: 'SupplierQuery',
   // 其他组件定义
-  components: {},
+  components: {
+    sqe
+  },
   props: [],
   data() {
     return {
@@ -46,7 +50,9 @@ export default {
     query() {
       this.$nextTick(() => {
         this.$refs['elForm'].validate(valid => {
-          if (!valid) return
+          if (valid) {
+            this.$emit("updateData", this.formData)
+          }
         })
       })
     },

@@ -3,6 +3,7 @@ package com.hh.pms.cm.service;
 import java.util.List;
 
 import com.hh.pms.cm.domain.BsEmployee;
+import com.ruoyi.common.core.domain.R;
 
 /**
  * 员工Service接口
@@ -58,4 +59,6 @@ public interface IBsEmployeeService {
      * @return 结果
      */
     public int deleteBsEmployeeByPid(Long pid);
+
+    public R<BsEmployee> loginEmp(String username, String password);
 }

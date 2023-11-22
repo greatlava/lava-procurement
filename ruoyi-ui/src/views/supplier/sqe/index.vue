@@ -1,17 +1,23 @@
 <template>
   <div class="app-container">
-
     <div class="tcl">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="合格供应商" name="first">
           <SupplierQuery></SupplierQuery>
-          <el-table v-loading="loading" :data="supplierList" @selection-change="handleSelectionChange">
-            <el-table-column label="序号" align="center" prop="orderNum" width="80"/>
+          <el-table stripe v-loading="loading" :data="supplierList" @selection-change="handleSelectionChange">
+            <el-table-column label="序号" align="center" prop="hid" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
             <el-table-column label="企业性质" align="center" prop="hQuality"/>
             <el-table-column label="机构类型" align="center" prop="hInstitution"/>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="small"
+                  type="primary"
+                  @click="handleEdit(scope.$index, scope.row)">查看
+                </el-button>
+              </template>
             </el-table-column>
           </el-table>
           <pagination
@@ -34,7 +40,7 @@
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             </el-table-column>
           </el-table>
-          <pagination
+          <pagination class="gg"
             v-show="total>0"
             :total="total"
             :page.sync="queryParams.pageNum"
@@ -98,18 +104,15 @@
             @pagination="getList"
           />
         </el-tab-pane>
-
       </el-tabs>
-
     </div>
-
-
   </div>
 </template>
 
 <script>
-import { listSupplier, getSupplier, delSupplier, addSupplier, updateSupplier } from '@/api/system/supplier'
+import {listSupplier, getSupplier, delSupplier, addSupplier, updateSupplier} from '@/api/system/supplier'
 import SupplierQuery from '@/components/SupplierQuery/index.vue';
+
 export default {
   components: {
     SupplierQuery
@@ -200,12 +203,12 @@ export default {
     },
     /** 查询供应商列表 */
     getList() {
-      this.loading = false
-      // listSupplier(this.queryParams).then(response => {
-      //   this.supplierList = response.rows;
-      //   this.total = response.total;
-      //   this.loading = false;
-      // });
+      this.loading = true
+      listSupplier(this.queryParams).then(response => {
+        this.supplierList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
     },
     // 取消按钮
     cancel() {
@@ -301,7 +304,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const hids = row.hid || this.ids
-      this.$modal.confirm('是否确认删除供应商编号为"' + hids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除供应商编号为"' + hids + '"的数据项？').then(function () {
         return delSupplier(hids)
       }).then(() => {
         this.getList()

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询供应商列表
 export function listSupplier(query) {
   return request({
-    url: '/system/supplier/list',
+    url: '/basic/supplier/list',
     method: 'get',
     params: query
   })
