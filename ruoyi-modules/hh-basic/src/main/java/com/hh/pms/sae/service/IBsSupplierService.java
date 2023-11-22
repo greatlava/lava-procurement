@@ -20,12 +20,28 @@ public interface IBsSupplierService {
     public BsSupplier selectBsSupplierByHid(Long hid);
 
     /**
-     * 查询供应商列表
+     * 查询合格供应商列表
      *
      * @param bsSupplier 供应商
      * @return 供应商集合
      */
     public List<BsSupplier> selectBsSupplierList(BsSupplier bsSupplier);
+
+    /**
+     * 查询不合格供应商列表
+     *
+     * @param bsSupplier 供应商
+     * @return 供应商集合
+     */
+    public List<BsSupplier> selectNoBsSupplierList(BsSupplier bsSupplier);
+
+    /**
+     * 查询供应商不良记录列表
+     *
+     * @param bsSupplier 供应商
+     * @return 供应商集合
+     */
+    public List<BsSupplier> selectBsSupplierBadList(BsSupplier bsSupplier);
 
     /**
      * 新增供应商

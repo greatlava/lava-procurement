@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsSupplierMapper;
 import com.hh.pms.sae.domain.BsSupplier;
 import com.hh.pms.sae.service.IBsSupplierService;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -40,6 +41,16 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
     @Override
     public List<BsSupplier> selectBsSupplierList(BsSupplier bsSupplier) {
         return bsSupplierMapper.selectBsSupplierList(bsSupplier);
+    }
+
+    @Override
+    public List<BsSupplier> selectNoBsSupplierList(BsSupplier bsSupplier) {
+        return bsSupplierMapper.selectNoBsSupplierList(bsSupplier);
+    }
+
+    @Override
+    public List<BsSupplier> selectBsSupplierBadList(BsSupplier bsSupplier) {
+        return bsSupplierMapper.selectBsSupplierBadList(bsSupplier);
     }
 
     /**

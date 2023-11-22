@@ -70,11 +70,94 @@
     <select id="selectBsSupplierList" parameterType="com.hh.pms.sae.domain.BsSupplier" resultMap="BsSupplierResult">
         <include refid="selectBsSupplierVo"/>
         <where>
+            zr_id = 0 and f_state = 1
             <if test="zrId != null ">and zr_id = #{zrId}</if>
             <if test="hName != null  and hName != ''">and h_name like concat('%', #{hName}, '%')</if>
             <if test="hCreditCode != null  and hCreditCode != ''">and h_credit_code = #{hCreditCode}</if>
             <if test="hIncorporation != null  and hIncorporation != ''">and h_incorporation = #{hIncorporation}</if>
-            <if test="hInstitution != null  and hInstitution != ''">and h_institution = #{hInstitution}</if>
+            <if test="hInstitution != null  and hInstitution != ''">
+                and h_institution like concat('%', #{hInstitution},'%')
+            </if>
+            <if test="hQuality != null  and hQuality != ''">and h_quality = #{hQuality}</if>
+            <if test="hStartTime != null ">and h_start_time = #{hStartTime}</if>
+            <if test="hJuridical != null  and hJuridical != ''">and h_juridical = #{hJuridical}</if>
+            <if test="hJuridicalIdentity != null  and hJuridicalIdentity != ''">and h_juridical_identity =
+                #{hJuridicalIdentity}
+            </if>
+            <if test="hAddress != null  and hAddress != ''">and h_address = #{hAddress}</if>
+            <if test="hRange != null  and hRange != ''">and h_range = #{hRange}</if>
+            <if test="hDesc != null  and hDesc != ''">and h_desc = #{hDesc}</if>
+            <if test="hCopies != null  and hCopies != ''">and h_copies = #{hCopies}</if>
+            <if test="hJuridicalCopies != null  and hJuridicalCopies != ''">and h_juridical_copies =
+                #{hJuridicalCopies}
+            </if>
+            <if test="hExpiration != null ">and h_expiration = #{hExpiration}</if>
+            <if test="hBank != null  and hBank != ''">and h_bank = #{hBank}</if>
+            <if test="hAccount != null  and hAccount != ''">and h_account = #{hAccount}</if>
+            <if test="hBankAddress != null  and hBankAddress != ''">and h_bank_address = #{hBankAddress}</if>
+            <if test="hSignPhone != null  and hSignPhone != ''">and h_sign_phone = #{hSignPhone}</if>
+            <if test="hSignAddress != null  and hSignAddress != ''">and h_sign_address = #{hSignAddress}</if>
+            <if test="hCapital != null ">and h_capital = #{hCapital}</if>
+            <if test="hActualCapital != null ">and h_actual_capital = #{hActualCapital}</if>
+            <if test="hProve != null  and hProve != ''">and h_prove = #{hProve}</if>
+            <if test="fStatus != null ">and f_status = #{fStatus}</if>
+            <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
+            <if test="fState != null ">and f_state = #{fState}</if>
+            <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+        </where>
+    </select>
+
+    <select id="selectNoBsSupplierList" parameterType="com.hh.pms.sae.domain.BsSupplier" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        <where>
+            zr_id = 0 and f_state = 2
+            <if test="zrId != null ">and zr_id = #{zrId}</if>
+            <if test="hName != null  and hName != ''">and h_name like concat('%', #{hName}, '%')</if>
+            <if test="hCreditCode != null  and hCreditCode != ''">and h_credit_code = #{hCreditCode}</if>
+            <if test="hIncorporation != null  and hIncorporation != ''">and h_incorporation = #{hIncorporation}</if>
+            <if test="hInstitution != null  and hInstitution != ''">
+                and h_institution like concat('%', #{hInstitution},'%')
+            </if>
+            <if test="hQuality != null  and hQuality != ''">and h_quality = #{hQuality}</if>
+            <if test="hStartTime != null ">and h_start_time = #{hStartTime}</if>
+            <if test="hJuridical != null  and hJuridical != ''">and h_juridical = #{hJuridical}</if>
+            <if test="hJuridicalIdentity != null  and hJuridicalIdentity != ''">and h_juridical_identity =
+                #{hJuridicalIdentity}
+            </if>
+            <if test="hAddress != null  and hAddress != ''">and h_address = #{hAddress}</if>
+            <if test="hRange != null  and hRange != ''">and h_range = #{hRange}</if>
+            <if test="hDesc != null  and hDesc != ''">and h_desc = #{hDesc}</if>
+            <if test="hCopies != null  and hCopies != ''">and h_copies = #{hCopies}</if>
+            <if test="hJuridicalCopies != null  and hJuridicalCopies != ''">and h_juridical_copies =
+                #{hJuridicalCopies}
+            </if>
+            <if test="hExpiration != null ">and h_expiration = #{hExpiration}</if>
+            <if test="hBank != null  and hBank != ''">and h_bank = #{hBank}</if>
+            <if test="hAccount != null  and hAccount != ''">and h_account = #{hAccount}</if>
+            <if test="hBankAddress != null  and hBankAddress != ''">and h_bank_address = #{hBankAddress}</if>
+            <if test="hSignPhone != null  and hSignPhone != ''">and h_sign_phone = #{hSignPhone}</if>
+            <if test="hSignAddress != null  and hSignAddress != ''">and h_sign_address = #{hSignAddress}</if>
+            <if test="hCapital != null ">and h_capital = #{hCapital}</if>
+            <if test="hActualCapital != null ">and h_actual_capital = #{hActualCapital}</if>
+            <if test="hProve != null  and hProve != ''">and h_prove = #{hProve}</if>
+            <if test="fStatus != null ">and f_status = #{fStatus}</if>
+            <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
+            <if test="fState != null ">and f_state = #{fState}</if>
+            <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+        </where>
+    </select>
+
+    <select id="selectBsSupplierBadList" parameterType="com.hh.pms.sae.domain.BsSupplier" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        <where>
+            zr_id = 0 and f_state != 1
+            <if test="zrId != null ">and zr_id = #{zrId}</if>
+            <if test="hName != null  and hName != ''">and h_name like concat('%',#{hName},'%')</if>
+            <if test="hCreditCode != null  and hCreditCode != ''">and h_credit_code = #{hCreditCode}</if>
+            <if test="hIncorporation != null  and hIncorporation != ''">and h_incorporation = #{hIncorporation}</if>
+            <if test="hInstitution != null  and hInstitution != ''">
+                and h_institution like concat('%', #{hInstitution},'%')
+            </if>
             <if test="hQuality != null  and hQuality != ''">and h_quality = #{hQuality}</if>
             <if test="hStartTime != null ">and h_start_time = #{hStartTime}</if>
             <if test="hJuridical != null  and hJuridical != ''">and h_juridical = #{hJuridical}</if>
