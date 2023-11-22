@@ -38,7 +38,7 @@ public class BidGetTenderController extends BaseController
     /**
      * 查询获取标书列表
      */
-    @RequiresPermissions("system:tender:list")
+//    @RequiresPermissions("system:tender:list")
     @GetMapping("/list")
     public TableDataInfo list(BidGetTender bidGetTender)
     {
