@@ -20,18 +20,6 @@ public class PpmLineItems extends BaseEntity
     /** 行项目ID */
     private Long vid;
 
-    /** 采购计划ID */
-    @Excel(name = "采购计划ID")
-    private Long aid;
-
-    /** 框架计划ID */
-    @Excel(name = "框架计划ID")
-    private Long jhId;
-
-    /** 招标项目ID */
-    @Excel(name = "招标项目ID")
-    private Long sid;
-
     /** 行项目编号 */
     @Excel(name = "行项目编号")
     private String vCode;
@@ -65,111 +53,84 @@ public class PpmLineItems extends BaseEntity
     @Excel(name = "需求说明")
     private String vIllustrate;
 
-    public void setVid(Long vid) 
+    public void setVid(Long vid)
     {
         this.vid = vid;
     }
 
-    public Long getVid() 
+    public Long getVid()
     {
         return vid;
     }
-    public void setAid(Long aid) 
-    {
-        this.aid = aid;
-    }
-
-    public Long getAid() 
-    {
-        return aid;
-    }
-    public void setJhId(Long jhId) 
-    {
-        this.jhId = jhId;
-    }
-
-    public Long getJhId() 
-    {
-        return jhId;
-    }
-    public void setSid(Long sid) 
-    {
-        this.sid = sid;
-    }
-
-    public Long getSid() 
-    {
-        return sid;
-    }
-    public void setvCode(String vCode) 
+    public void setvCode(String vCode)
     {
         this.vCode = vCode;
     }
 
-    public String getvCode() 
+    public String getvCode()
     {
         return vCode;
     }
-    public void setvCount(Long vCount) 
+    public void setvCount(Long vCount)
     {
         this.vCount = vCount;
     }
 
-    public Long getvCount() 
+    public Long getvCount()
     {
         return vCount;
     }
-    public void setvPerson(String vPerson) 
+    public void setvPerson(String vPerson)
     {
         this.vPerson = vPerson;
     }
 
-    public String getvPerson() 
+    public String getvPerson()
     {
         return vPerson;
     }
-    public void setvPrice(Long vPrice) 
+    public void setvPrice(Long vPrice)
     {
         this.vPrice = vPrice;
     }
 
-    public Long getvPrice() 
+    public Long getvPrice()
     {
         return vPrice;
     }
-    public void setvTotal(Long vTotal) 
+    public void setvTotal(Long vTotal)
     {
         this.vTotal = vTotal;
     }
 
-    public Long getvTotal() 
+    public Long getvTotal()
     {
         return vTotal;
     }
-    public void setvDeliveryTime(Date vDeliveryTime) 
+    public void setvDeliveryTime(Date vDeliveryTime)
     {
         this.vDeliveryTime = vDeliveryTime;
     }
 
-    public Date getvDeliveryTime() 
+    public Date getvDeliveryTime()
     {
         return vDeliveryTime;
     }
-    public void setvDeliveryArea(String vDeliveryArea) 
+    public void setvDeliveryArea(String vDeliveryArea)
     {
         this.vDeliveryArea = vDeliveryArea;
     }
 
-    public String getvDeliveryArea() 
+    public String getvDeliveryArea()
     {
         return vDeliveryArea;
     }
-    public void setvIllustrate(String vIllustrate) 
+    public void setvIllustrate(String vIllustrate)
     {
         this.vIllustrate = vIllustrate;
     }
 
-    public String getvIllustrate() 
+    public String getvIllustrate()
     {
         return vIllustrate;
     }
@@ -177,18 +138,15 @@ public class PpmLineItems extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("vid", getVid())
-            .append("aid", getAid())
-            .append("jhId", getJhId())
-            .append("sid", getSid())
-            .append("vCode", getvCode())
-            .append("vCount", getvCount())
-            .append("vPerson", getvPerson())
-            .append("vPrice", getvPrice())
-            .append("vTotal", getvTotal())
-            .append("vDeliveryTime", getvDeliveryTime())
-            .append("vDeliveryArea", getvDeliveryArea())
-            .append("vIllustrate", getvIllustrate())
-            .toString();
+                .append("vid", getVid())
+                .append("vCode", getvCode())
+                .append("vCount", getvCount())
+                .append("vPerson", getvPerson())
+                .append("vPrice", getvPrice())
+                .append("vTotal", getvTotal())
+                .append("vDeliveryTime", getvDeliveryTime())
+                .append("vDeliveryArea", getvDeliveryArea())
+                .append("vIllustrate", getvIllustrate())
+                .toString();
     }
 }

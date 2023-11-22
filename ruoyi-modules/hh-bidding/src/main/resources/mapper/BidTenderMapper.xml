@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.BidTenderMapper">
-    
+
     <resultMap type="com.hh.pms.domain.BidTender" id="BidTenderResult">
         <result property="sid"    column="sid"    />
         <result property="xyId"    column="xy_id"    />
@@ -29,15 +29,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="sProjectState"    column="s_project_state"    />
         <result property="sDeadline"    column="s_deadline"    />
         <result property="createTime"    column="create_time"    />
+        <result property="vCode"    column="v_code"    />
     </resultMap>
 
     <sql id="selectBidTenderVo">
-        select sid, xy_id, s_code, s_name, s_way,s_leader, s_must, s_sway, s_type, s_budget, s_unit, s_person, s_phone, email, s_address, create_by, create_time, update_by, update_time, s_start_time, s_end_time, s_project_state, s_deadline from bid_tender
+        select sid, xy_id, s_code, s_name, s_way,s_leader, s_must, s_sway, s_type, s_budget, s_unit, s_person, s_phone, email, s_address, create_by, create_time, update_by, update_time, s_start_time, s_end_time, s_project_state, s_deadline, v_code from bid_tender
     </sql>
 
     <select id="selectBidTenderList" parameterType="com.hh.pms.domain.BidTender" resultMap="BidTenderResult">
         <include refid="selectBidTenderVo"/>
-        <where>  
+        <where>
             <if test="xyId != null "> and xy_id = #{xyId}</if>
             <if test="sCode != null  and sCode != ''"> and s_code = #{sCode}</if>
             <if test="sName != null  and sName != ''"> and s_name like concat('%', #{sName}, '%')</if>
@@ -57,15 +58,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null "> and s_end_time = #{sEndTime}</if>
             <if test="sProjectState != null "> and s_project_state = #{sProjectState}</if>
             <if test="rangeStartTime != null and rangeEndTime != null"> and create_time between #{rangeStartTime} and #{rangeEndTime}</if>
+            <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
         </where>
         order by s_way
     </select>
-    
+
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
         <include refid="selectBidTenderVo"/>
         where sid = #{sid}
     </select>
-        
+
     <insert id="insertBidTender" parameterType="com.hh.pms.domain.BidTender">
         insert into bid_tender
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -92,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">s_end_time,</if>
             <if test="sProjectState != null">s_project_state,</if>
             <if test="sDeadline != null">s_deadline,</if>
+            <if test="vCode != null">v_code,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sid != null">#{sid},</if>
@@ -117,6 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">#{sEndTime},</if>
             <if test="sProjectState != null">#{sProjectState},</if>
             <if test="sDeadline != null">#{sDeadline},</if>
+            <if test="vCode != null">#{vCode},</if>
          </trim>
     </insert>
 
@@ -145,6 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">s_end_time = #{sEndTime},</if>
             <if test="sProjectState != null">s_project_state = #{sProjectState},</if>
             <if test="sDeadline != null">s_deadline = #{sDeadline},</if>
+            <if test="vCode != null">v_code = #{vCode},</if>
         </trim>
         where sid = #{sid}
     </update>
@@ -154,7 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteBidTenderBySids" parameterType="String">
-        delete from bid_tender where sid in 
+        delete from bid_tender where sid in
         <foreach item="sid" collection="array" open="(" separator="," close=")">
             #{sid}
         </foreach>

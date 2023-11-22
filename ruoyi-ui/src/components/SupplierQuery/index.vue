@@ -14,7 +14,7 @@
           <el-button type="primary" @click="query">查询</el-button>
           <el-button @click="resetForm">重置</el-button>
         </el-form-item>
-      </el-row>
+      </el-row>20i
     </el-form>
   </div>
 </template>

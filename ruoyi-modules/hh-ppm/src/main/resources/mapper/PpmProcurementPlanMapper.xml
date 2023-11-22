@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.PpmProcurementPlanMapper">
-    
+
     <resultMap type="PpmProcurementPlan" id="PpmProcurementPlanResult">
         <result property="aid"    column="aid"    />
         <result property="aCode"    column="a_code"    />
@@ -18,31 +18,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="aProjectCount"    column="a_project_count"    />
         <result property="aBtype"    column="a_btype"    />
         <result property="aAstate"    column="a_astate"    />
+        <result property="vCode"    column="v_code"    />
     </resultMap>
 
     <sql id="selectPpmProcurementPlanVo">
-        select aid, a_code, a_name, create_by, a_create_dept, create_time, update_by, update_time, fj_annex, a_opinion, a_project_count, a_btype, a_astate from ppm_procurement_plan
+        select aid, a_code, a_name, create_by, a_create_dept, create_time, update_by, update_time, fj_annex, a_opinion, a_project_count, a_btype, a_astate, v_code from ppm_procurement_plan
     </sql>
 
     <select id="selectPpmProcurementPlanList" parameterType="PpmProcurementPlan" resultMap="PpmProcurementPlanResult">
         <include refid="selectPpmProcurementPlanVo"/>
-        <where>  
-            <if test="aCode != null  and aCode != ''"> and a_code = #{aCode}</if>
-            <if test="aName != null  and aName != ''"> and a_name like concat('%', #{aName}, '%')</if>
+        <where>
+            <if test="aCode != null  and aCode != ''"> and a_code like concat('%', #{aCode}, '%')</if>
+            <if test="aName != null  and aName != ''"> and a_name = #{aName}</if>
             <if test="aCreateDept != null  and aCreateDept != ''"> and a_create_dept = #{aCreateDept}</if>
             <if test="fjAnnex != null  and fjAnnex != ''"> and fj_annex = #{fjAnnex}</if>
             <if test="aOpinion != null  and aOpinion != ''"> and a_opinion = #{aOpinion}</if>
             <if test="aProjectCount != null "> and a_project_count = #{aProjectCount}</if>
             <if test="aBtype != null  and aBtype != ''"> and a_btype = #{aBtype}</if>
             <if test="aAstate != null "> and a_astate = #{aAstate}</if>
+            <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
         </where>
     </select>
-    
+
     <select id="selectPpmProcurementPlanByAid" parameterType="Long" resultMap="PpmProcurementPlanResult">
         <include refid="selectPpmProcurementPlanVo"/>
         where aid = #{aid}
     </select>
-        
+
     <insert id="insertPpmProcurementPlan" parameterType="PpmProcurementPlan">
         insert into ppm_procurement_plan
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -59,7 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="aProjectCount != null">a_project_count,</if>
             <if test="aBtype != null">a_btype,</if>
             <if test="aAstate != null">a_astate,</if>
-         </trim>
+            <if test="vCode != null">v_code,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="aid != null">#{aid},</if>
             <if test="aCode != null">#{aCode},</if>
@@ -74,7 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="aProjectCount != null">#{aProjectCount},</if>
             <if test="aBtype != null">#{aBtype},</if>
             <if test="aAstate != null">#{aAstate},</if>
-         </trim>
+            <if test="vCode != null">#{vCode},</if>
+        </trim>
     </insert>
 
     <update id="updatePpmProcurementPlan" parameterType="PpmProcurementPlan">
@@ -92,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="aProjectCount != null">a_project_count = #{aProjectCount},</if>
             <if test="aBtype != null">a_btype = #{aBtype},</if>
             <if test="aAstate != null">a_astate = #{aAstate},</if>
+            <if test="vCode != null">v_code = #{vCode},</if>
         </trim>
         where aid = #{aid}
     </update>
@@ -101,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePpmProcurementPlanByAids" parameterType="String">
-        delete from ppm_procurement_plan where aid in 
+        delete from ppm_procurement_plan where aid in
         <foreach item="aid" collection="array" open="(" separator="," close=")">
             #{aid}
         </foreach>

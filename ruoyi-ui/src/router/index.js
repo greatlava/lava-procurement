@@ -162,18 +162,6 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  },
-  {
-    path: '/tender/tender1-details',
-    hidden: true,
-    component: Details,
-    children: [
-      {
-        component: () => import('@/views/tender/tender1/details'),
-        name: 'Details',
-        meta: { title: '招标项目-查看', activeMenu: '/tender/tender1' }
-      }
-    ]
   }
 ]
 

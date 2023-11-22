@@ -49,8 +49,8 @@ public class BsContract extends BaseEntity
     private Long eStatus;
 
     /** 交付日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date eDeliveryTime;
 
     /** 合同管理状态 */

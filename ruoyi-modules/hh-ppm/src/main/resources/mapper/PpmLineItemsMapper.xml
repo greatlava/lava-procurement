@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.PpmLineItemsMapper">
-    
+
     <resultMap type="PpmLineItems" id="PpmLineItemsResult">
         <result property="vid"    column="vid"    />
-        <result property="aid"    column="aid"    />
-        <result property="jhId"    column="jh_id"    />
-        <result property="sid"    column="sid"    />
         <result property="vCode"    column="v_code"    />
         <result property="vCount"    column="v_count"    />
         <result property="vPerson"    column="v_person"    />
@@ -20,15 +17,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPpmLineItemsVo">
-        select vid, aid, jh_id, sid, v_code, v_count, v_person, v_price, v_total, v_delivery_time, v_delivery_area, v_illustrate from ppm_line_items
+        select vid, v_code, v_count, v_person, v_price, v_total, v_delivery_time, v_delivery_area, v_illustrate from ppm_line_items
     </sql>
 
     <select id="selectPpmLineItemsList" parameterType="PpmLineItems" resultMap="PpmLineItemsResult">
         <include refid="selectPpmLineItemsVo"/>
-        <where>  
-            <if test="aid != null "> and aid = #{aid}</if>
-            <if test="jhId != null "> and jh_id = #{jhId}</if>
-            <if test="sid != null "> and sid = #{sid}</if>
+        <where>
             <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
             <if test="vCount != null "> and v_count = #{vCount}</if>
             <if test="vPerson != null  and vPerson != ''"> and v_person = #{vPerson}</if>
@@ -39,19 +33,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vIllustrate != null  and vIllustrate != ''"> and v_illustrate = #{vIllustrate}</if>
         </where>
     </select>
-    
+
     <select id="selectPpmLineItemsByVid" parameterType="Long" resultMap="PpmLineItemsResult">
         <include refid="selectPpmLineItemsVo"/>
         where vid = #{vid}
     </select>
-        
+
     <insert id="insertPpmLineItems" parameterType="PpmLineItems">
         insert into ppm_line_items
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="vid != null">vid,</if>
-            <if test="aid != null">aid,</if>
-            <if test="jhId != null">jh_id,</if>
-            <if test="sid != null">sid,</if>
             <if test="vCode != null">v_code,</if>
             <if test="vCount != null">v_count,</if>
             <if test="vPerson != null">v_person,</if>
@@ -60,12 +51,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vDeliveryTime != null">v_delivery_time,</if>
             <if test="vDeliveryArea != null">v_delivery_area,</if>
             <if test="vIllustrate != null">v_illustrate,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="vid != null">#{vid},</if>
-            <if test="aid != null">#{aid},</if>
-            <if test="jhId != null">#{jhId},</if>
-            <if test="sid != null">#{sid},</if>
             <if test="vCode != null">#{vCode},</if>
             <if test="vCount != null">#{vCount},</if>
             <if test="vPerson != null">#{vPerson},</if>
@@ -74,15 +62,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vDeliveryTime != null">#{vDeliveryTime},</if>
             <if test="vDeliveryArea != null">#{vDeliveryArea},</if>
             <if test="vIllustrate != null">#{vIllustrate},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updatePpmLineItems" parameterType="PpmLineItems">
         update ppm_line_items
         <trim prefix="SET" suffixOverrides=",">
-            <if test="aid != null">aid = #{aid},</if>
-            <if test="jhId != null">jh_id = #{jhId},</if>
-            <if test="sid != null">sid = #{sid},</if>
             <if test="vCode != null">v_code = #{vCode},</if>
             <if test="vCount != null">v_count = #{vCount},</if>
             <if test="vPerson != null">v_person = #{vPerson},</if>
@@ -100,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePpmLineItemsByVids" parameterType="String">
-        delete from ppm_line_items where vid in 
+        delete from ppm_line_items where vid in
         <foreach item="vid" collection="array" open="(" separator="," close=")">
             #{vid}
         </foreach>
