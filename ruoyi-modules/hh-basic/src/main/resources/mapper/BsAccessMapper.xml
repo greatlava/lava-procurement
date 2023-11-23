@@ -21,8 +21,8 @@
         <where>
             <if test="zrBnumber != null  and zrBnumber != ''">and zr_bnumber = #{zrBnumber}</if>
             <if test="zrPromoter != null  and zrPromoter != ''">and zr_promoter like concat('%',#{zrPromoter},'%')</if>
-            <if test="zrTime != null ">
-                and zr_time between concat(#{zrTime},' ','00:00:00') and concat(#{zrTime},' ','23:59:59')
+            <if test="zrTime != null">
+                and DATE(zr_time) = #{zrTime}
             </if>
         </where>
     </select>

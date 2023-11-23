@@ -28,7 +28,7 @@ export function listSupplier2(query) {
 // 查询供应商详细
 export function getSupplier(hid) {
   return request({
-    url: '/system/supplier/' + hid,
+    url: '/basic/supplier/' + hid,
     method: 'get'
   })
 }

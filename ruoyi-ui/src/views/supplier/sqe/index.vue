@@ -25,15 +25,23 @@
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
             <el-table-column label="企业性质" align="center" prop="hQuality"/>
-            <el-table-column label="机构类型" align="center" prop="hInstitution"/>
+            <el-table-column label="机构类型" align="center" prop="hInstitution">
+              <template slot-scope="scope">
+                <el-tag
+                  size="small"
+                  disable-transitions>{{ scope.row.hInstitution }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">查看
-                </el-button>
+                <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
+                  <el-button
+                    size="small"
+                    type="primary">查看
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -65,19 +73,27 @@
               </el-form-item>
             </el-row>
           </el-form>
-          <el-table v-loading="loading" :data="noSupplierList">
+          <el-table stripe v-loading="loading" :data="noSupplierList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
             <el-table-column label="企业性质" align="center" prop="hQuality"/>
-            <el-table-column label="机构类型" align="center" prop="hInstitution"/>
+            <el-table-column label="机构类型" align="center" prop="hInstitution">
+              <template slot-scope="scope">
+                <el-tag
+                  size="small"
+                  disable-transitions>{{ scope.row.hInstitution }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">查看
-                </el-button>
+                <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
+                  <el-button
+                    size="small"
+                    type="primary">查看
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -109,24 +125,33 @@
               </el-form-item>
             </el-row>
           </el-form>
-          <el-table v-loading="loading" :data="supplierBadList">
+          <el-table stripe v-loading="loading" :data="supplierBadList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
             <el-table-column label="企业性质" align="center" prop="hQuality"/>
-            <el-table-column label="机构类型" align="center" prop="hInstitution"/>
+            <el-table-column label="机构类型" align="center" prop="hInstitution">
+              <template slot-scope="scope">
+                <el-tag
+                  size="small"
+                  disable-transitions>{{ scope.row.hInstitution }}
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="状态" align="center" prop="fState">
               <template slot-scope="scope">
-                <span v-if="supplierBadList[scope.$index].fState == 2">不合格供应商</span>
-                <span v-else>黑名单</span>
+                <el-tag size="small" v-if="supplierBadList[scope.$index].fState == 2" type="danger">不合格供应商
+                </el-tag>
+                <el-tag size="small" v-else type="info">黑名单</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">查看
-                </el-button>
+                <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
+                  <el-button
+                    size="small"
+                    type="primary">查看
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -157,7 +182,7 @@
               </el-form-item>
             </el-row>
           </el-form>
-          <el-table v-loading="loading" :data="supplierAccessList">
+          <el-table stripe v-loading="loading" :data="supplierAccessList">
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="业务编号" align="center" prop="zrBnumber"/>
             <el-table-column label="发起人" align="center" prop="zrPromoter"/>
@@ -172,11 +197,14 @@
                   size="small"
                   @click="handleEdit(scope.$index, scope.row)">审核
                 </el-button>
-                <el-button
-                  size="small"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">查看
-                </el-button>
+                <router-link :to="'detail?hid='+scope.row.hid">
+                  <el-button
+                    style="margin-left: 10px"
+                    size="small"
+                    type="primary"
+                    @click="handleEdit(scope.$index, scope.row)">查看
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -340,7 +368,11 @@ export default {
     },
     query4() {
       this.loading = true
-      this.queryParams3.zrTime = this.formData.field107
+      if (this.formData.field107 == '' || this.formData.field107 == undefined) {
+        this.queryParams3.zrTime = null
+      } else {
+        this.queryParams3.zrTime = this.formData.field107
+      }
       this.queryParams3.zrPromoter = this.formData.field108
       this.queryParams3.pageNum = 1
       listAccess(this.queryParams3).then(response => {
