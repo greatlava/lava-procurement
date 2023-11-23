@@ -77,6 +77,12 @@
               @click=""
             >查看</el-button>
           </router-link>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click=""
+          >查看</el-button>
         </template>
       </el-table-column>
       <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
