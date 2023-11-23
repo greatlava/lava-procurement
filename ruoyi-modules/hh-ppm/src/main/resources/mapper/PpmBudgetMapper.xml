@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.PpmBudgetMapper">
+<mapper namespace="com.hh.pms.mapper.PpmBudgetMapper">
     
     <resultMap type="PpmBudget" id="PpmBudgetResult">
         <result property="duId"    column="du_id"    />
@@ -12,11 +12,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="duName"    column="du_name"    />
         <result property="duTotal"    column="du_total"    />
         <result property="duUsedMoney"    column="du_used_money"    />
-        <result property="duHaveMoney"    column="du_have_money"    />
     </resultMap>
 
     <sql id="selectPpmBudgetVo">
-        select du_id, aid, du_dept, du_code, du_name, du_total, du_used_money, du_have_money from ppm_budget
+        select du_id, aid, du_dept, du_code, du_name, du_total, du_used_money from ppm_budget
     </sql>
 
     <select id="selectPpmBudgetList" parameterType="PpmBudget" resultMap="PpmBudgetResult">
@@ -28,7 +27,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duName != null  and duName != ''"> and du_name like concat('%', #{duName}, '%')</if>
             <if test="duTotal != null "> and du_total = #{duTotal}</if>
             <if test="duUsedMoney != null "> and du_used_money = #{duUsedMoney}</if>
-            <if test="duHaveMoney != null "> and du_have_money = #{duHaveMoney}</if>
         </where>
     </select>
     
@@ -47,7 +45,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duName != null">du_name,</if>
             <if test="duTotal != null">du_total,</if>
             <if test="duUsedMoney != null">du_used_money,</if>
-            <if test="duHaveMoney != null">du_have_money,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="duId != null">#{duId},</if>
@@ -57,7 +54,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duName != null">#{duName},</if>
             <if test="duTotal != null">#{duTotal},</if>
             <if test="duUsedMoney != null">#{duUsedMoney},</if>
-            <if test="duHaveMoney != null">#{duHaveMoney},</if>
          </trim>
     </insert>
 
@@ -70,7 +66,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duName != null">du_name = #{duName},</if>
             <if test="duTotal != null">du_total = #{duTotal},</if>
             <if test="duUsedMoney != null">du_used_money = #{duUsedMoney},</if>
-            <if test="duHaveMoney != null">du_have_money = #{duHaveMoney},</if>
         </trim>
         where du_id = #{duId}
     </update>
