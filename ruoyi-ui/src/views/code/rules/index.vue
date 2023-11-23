@@ -387,7 +387,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + ids + '"的数据项？').then(function () {
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(function () {
         return delRules(ids);
       }).then(() => {
         this.getList();
@@ -397,7 +397,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/rules/export', {
+      this.download('ppm/rules/export', {
         ...this.queryParams
       }, `rules_${new Date().getTime()}.xlsx`)
     },

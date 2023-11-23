@@ -52,13 +52,13 @@ public class ComCodeRulesController extends BaseController
      * 导出【请填写功能名称】列表
      */
     @RequiresPermissions("system:rules:export")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
+    @Log(title = "编号规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ComCodeRules comCodeRules)
     {
         List<ComCodeRules> list = comCodeRulesService.selectComCodeRulesList(comCodeRules);
         ExcelUtil<ComCodeRules> util = new ExcelUtil<ComCodeRules>(ComCodeRules.class);
-        util.exportExcel(response, list, "【请填写功能名称】数据");
+        util.exportExcel(response, list, "编号规则数据");
     }
 
     /**
