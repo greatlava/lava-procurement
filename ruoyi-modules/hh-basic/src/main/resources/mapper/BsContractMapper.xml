@@ -43,7 +43,7 @@
         <include refid="selectBsContractVo"/>
         <where>
             <if test="hid != null ">and hid = #{hid}</if>
-            <if test="eXcode != null  and eXcode != ''">and e_xcode = #{eXcode}</if>
+            <if test="eXcode != null  and eXcode != ''">and e_xcode like concat('%', #{eXcode}, '%')</if>
             <if test="eXname != null  and eXname != ''">and e_xname like concat('%', #{eXname}, '%')</if>
             <if test="eWinningPerson != null  and eWinningPerson != ''">and e_winning_person = #{eWinningPerson}</if>
             <if test="eHcode != null  and eHcode != ''">and e_hcode = #{eHcode}</if>
