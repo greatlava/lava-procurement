@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsExperienceMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsExperience" id="BsExperienceResult">
+        <result property="qid" column="qid"/>
+        <result property="unit" column="unit"/>
+        <result property="time" column="time"/>
+        <result property="qOffice" column="q_office"/>
+        <result property="specialized" column="specialized"/>
+    </resultMap>
+
+    <sql id="selectBsExperienceVo">
+        select qid, unit, time, q_office, specialized
+        from bs_experience
+    </sql>
+
+    <select id="selectBsExperienceList" parameterType="com.hh.pms.sae.domain.BsExperience" resultMap="BsExperienceResult">
+        <include refid="selectBsExperienceVo"/>
+        <where>
+            <if test="unit != null  and unit != ''">and unit = #{unit}</if>
+            <if test="time != null ">and time = #{time}</if>
+            <if test="qOffice != null  and qOffice != ''">and q_office = #{qOffice}</if>
+            <if test="specialized != null  and specialized != ''">and specialized = #{specialized}</if>
+        </where>
+    </select>
+
+    <select id="selectBsExperienceByQid" parameterType="Long" resultMap="BsExperienceResult">
+        <include refid="selectBsExperienceVo"/>
+        where qid = #{qid}
+    </select>
+
+    <insert id="insertBsExperience" parameterType="com.hh.pms.sae.domain.BsExperience">
+        insert into bs_experience
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="qid != null">qid,</if>
+            <if test="unit != null">unit,</if>
+            <if test="time != null">time,</if>
+            <if test="qOffice != null">q_office,</if>
+            <if test="specialized != null">specialized,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="qid != null">#{qid},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="time != null">#{time},</if>
+            <if test="qOffice != null">#{qOffice},</if>
+            <if test="specialized != null">#{specialized},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsExperience" parameterType="com.hh.pms.sae.domain.BsExperience">
+        update bs_experience
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="qOffice != null">q_office = #{qOffice},</if>
+            <if test="specialized != null">specialized = #{specialized},</if>
+        </trim>
+        where qid = #{qid}
+    </update>
+
+    <delete id="deleteBsExperienceByQid" parameterType="Long">
+        delete
+        from bs_experience
+        where qid = #{qid}
+    </delete>
+
+    <delete id="deleteBsExperienceByQids" parameterType="String">
+        delete from bs_experience where qid in
+        <foreach item="qid" collection="array" open="(" separator="," close=")">
+            #{qid}
+        </foreach>
+    </delete>
+</mapper>

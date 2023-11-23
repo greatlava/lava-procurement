@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsOperatorMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsOperator" id="BsOperatorResult">
+        <result property="ywId" column="yw_id"/>
+        <result property="hid" column="hid"/>
+        <result property="ywName" column="yw_name"/>
+        <result property="ywPhone" column="yw_phone"/>
+        <result property="ywIdcrad" column="yw_idcrad"/>
+        <result property="ywMailbox" column="yw_mailbox"/>
+        <result property="ywScanIdcard" column="yw_scan_idcard"/>
+        <result property="ywScanEmpower" column="yw_scan_empower"/>
+        <result property="ywLandline" column="yw_Landline"/>
+        <result property="ywEmpowerContent" column="yw_empower_content"/>
+    </resultMap>
+
+    <sql id="selectBsOperatorVo">
+        select yw_id,
+               hid,
+               yw_name,
+               yw_phone,
+               yw_idcrad,
+               yw_mailbox,
+               yw_scan_idcard,
+               yw_scan_empower,
+               yw_Landline,
+               yw_empower_content
+        from bs_operator
+    </sql>
+
+    <select id="selectBsOperatorList" parameterType="com.hh.pms.sae.domain.BsOperator" resultMap="BsOperatorResult">
+        <include refid="selectBsOperatorVo"/>
+        <where>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="ywName != null  and ywName != ''">and yw_name like concat('%', #{ywName}, '%')</if>
+            <if test="ywPhone != null  and ywPhone != ''">and yw_phone = #{ywPhone}</if>
+            <if test="ywIdcrad != null  and ywIdcrad != ''">and yw_idcrad = #{ywIdcrad}</if>
+            <if test="ywMailbox != null  and ywMailbox != ''">and yw_mailbox = #{ywMailbox}</if>
+            <if test="ywScanIdcard != null  and ywScanIdcard != ''">and yw_scan_idcard = #{ywScanIdcard}</if>
+            <if test="ywScanEmpower != null  and ywScanEmpower != ''">and yw_scan_empower = #{ywScanEmpower}</if>
+            <if test="ywLandline != null  and ywLandline != ''">and yw_Landline = #{ywLandline}</if>
+            <if test="ywEmpowerContent != null  and ywEmpowerContent != ''">and yw_empower_content =
+                #{ywEmpowerContent}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBsOperatorByYwId" parameterType="Long" resultMap="BsOperatorResult">
+        <include refid="selectBsOperatorVo"/>
+        where yw_id = #{ywId}
+    </select>
+
+    <insert id="insertBsOperator" parameterType="com.hh.pms.sae.domain.BsOperator">
+        insert into bs_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ywId != null">yw_id,</if>
+            <if test="hid != null">hid,</if>
+            <if test="ywName != null">yw_name,</if>
+            <if test="ywPhone != null">yw_phone,</if>
+            <if test="ywIdcrad != null">yw_idcrad,</if>
+            <if test="ywMailbox != null">yw_mailbox,</if>
+            <if test="ywScanIdcard != null">yw_scan_idcard,</if>
+            <if test="ywScanEmpower != null">yw_scan_empower,</if>
+            <if test="ywLandline != null">yw_Landline,</if>
+            <if test="ywEmpowerContent != null">yw_empower_content,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ywId != null">#{ywId},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="ywName != null">#{ywName},</if>
+            <if test="ywPhone != null">#{ywPhone},</if>
+            <if test="ywIdcrad != null">#{ywIdcrad},</if>
+            <if test="ywMailbox != null">#{ywMailbox},</if>
+            <if test="ywScanIdcard != null">#{ywScanIdcard},</if>
+            <if test="ywScanEmpower != null">#{ywScanEmpower},</if>
+            <if test="ywLandline != null">#{ywLandline},</if>
+            <if test="ywEmpowerContent != null">#{ywEmpowerContent},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsOperator" parameterType="com.hh.pms.sae.domain.BsOperator">
+        update bs_operator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="ywName != null">yw_name = #{ywName},</if>
+            <if test="ywPhone != null">yw_phone = #{ywPhone},</if>
+            <if test="ywIdcrad != null">yw_idcrad = #{ywIdcrad},</if>
+            <if test="ywMailbox != null">yw_mailbox = #{ywMailbox},</if>
+            <if test="ywScanIdcard != null">yw_scan_idcard = #{ywScanIdcard},</if>
+            <if test="ywScanEmpower != null">yw_scan_empower = #{ywScanEmpower},</if>
+            <if test="ywLandline != null">yw_Landline = #{ywLandline},</if>
+            <if test="ywEmpowerContent != null">yw_empower_content = #{ywEmpowerContent},</if>
+        </trim>
+        where yw_id = #{ywId}
+    </update>
+
+    <delete id="deleteBsOperatorByYwId" parameterType="Long">
+        delete
+        from bs_operator
+        where yw_id = #{ywId}
+    </delete>
+
+    <delete id="deleteBsOperatorByYwIds" parameterType="String">
+        delete from bs_operator where yw_id in
+        <foreach item="ywId" collection="array" open="(" separator="," close=")">
+            #{ywId}
+        </foreach>
+    </delete>
+</mapper>

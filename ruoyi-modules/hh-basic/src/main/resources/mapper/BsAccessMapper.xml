@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsAccessMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsAccess" id="BsAccessResult">
+        <result property="zrId" column="zr_id"/>
+        <result property="zrBnumber" column="zr_bnumber"/>
+        <result property="zrPromoter" column="zr_promoter"/>
+        <result property="zrTime" column="zr_time"/>
+    </resultMap>
+
+    <sql id="selectBsAccessVo">
+        select zr_id, zr_bnumber, zr_promoter, zr_time
+        from bs_access
+    </sql>
+
+    <select id="selectBsAccessList" parameterType="com.hh.pms.sae.domain.BsAccess" resultMap="BsAccessResult">
+        <include refid="selectBsAccessVo"/>
+        <where>
+            <if test="zrBnumber != null  and zrBnumber != ''">and zr_bnumber = #{zrBnumber}</if>
+            <if test="zrPromoter != null  and zrPromoter != ''">and zr_promoter like concat('%',#{zrPromoter},'%')</if>
+            <if test="zrTime != null ">
+                and zr_time between concat(#{zrTime},' ','00:00:00') and concat(#{zrTime},' ','23:59:59')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBsAccessByZrId" parameterType="Long" resultMap="BsAccessResult">
+        <include refid="selectBsAccessVo"/>
+        where zr_id = #{zrId}
+    </select>
+
+    <insert id="insertBsAccess" parameterType="com.hh.pms.sae.domain.BsAccess">
+        insert into bs_access
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="zrId != null">zr_id,</if>
+            <if test="zrBnumber != null">zr_bnumber,</if>
+            <if test="zrPromoter != null">zr_promoter,</if>
+            <if test="zrTime != null">zr_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="zrId != null">#{zrId},</if>
+            <if test="zrBnumber != null">#{zrBnumber},</if>
+            <if test="zrPromoter != null">#{zrPromoter},</if>
+            <if test="zrTime != null">#{zrTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsAccess" parameterType="com.hh.pms.sae.domain.BsAccess">
+        update bs_access
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="zrBnumber != null">zr_bnumber = #{zrBnumber},</if>
+            <if test="zrPromoter != null">zr_promoter = #{zrPromoter},</if>
+            <if test="zrTime != null">zr_time = #{zrTime},</if>
+        </trim>
+        where zr_id = #{zrId}
+    </update>
+
+    <delete id="deleteBsAccessByZrId" parameterType="Long">
+        delete
+        from bs_access
+        where zr_id = #{zrId}
+    </delete>
+
+    <delete id="deleteBsAccessByZrIds" parameterType="String">
+        delete from bs_access where zr_id in
+        <foreach item="zrId" collection="array" open="(" separator="," close=")">
+            #{zrId}
+        </foreach>
+    </delete>
+</mapper>

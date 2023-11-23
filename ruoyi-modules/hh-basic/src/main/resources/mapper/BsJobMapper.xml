@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsJobMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsJob" id="BsJobResult">
+        <result property="mid" column="mid"/>
+        <result property="jid" column="jid"/>
+        <result property="mName" column="m_name"/>
+        <result property="mCode" column="m_code"/>
+        <result property="mJob" column="m_job"/>
+        <result property="mInstitution" column="m_institution"/>
+        <result property="mGetDate" column="m_get_date"/>
+    </resultMap>
+
+    <sql id="selectBsJobVo">
+        select mid, jid, m_name, m_code, m_job, m_institution, m_get_date
+        from bs_job
+    </sql>
+
+    <select id="selectBsJobList" parameterType="com.hh.pms.sae.domain.BsJob" resultMap="BsJobResult">
+        <include refid="selectBsJobVo"/>
+        <where>
+            <if test="jid != null ">and jid = #{jid}</if>
+            <if test="mName != null  and mName != ''">and m_name like concat('%', #{mName}, '%')</if>
+            <if test="mCode != null  and mCode != ''">and m_code = #{mCode}</if>
+            <if test="mJob != null  and mJob != ''">and m_job = #{mJob}</if>
+            <if test="mInstitution != null  and mInstitution != ''">and m_institution = #{mInstitution}</if>
+            <if test="mGetDate != null ">and m_get_date = #{mGetDate}</if>
+        </where>
+    </select>
+
+    <select id="selectBsJobByMid" parameterType="Long" resultMap="BsJobResult">
+        <include refid="selectBsJobVo"/>
+        where mid = #{mid}
+    </select>
+
+    <insert id="insertBsJob" parameterType="com.hh.pms.sae.domain.BsJob">
+        insert into bs_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="mid != null">mid,</if>
+            <if test="jid != null">jid,</if>
+            <if test="mName != null">m_name,</if>
+            <if test="mCode != null">m_code,</if>
+            <if test="mJob != null">m_job,</if>
+            <if test="mInstitution != null">m_institution,</if>
+            <if test="mGetDate != null">m_get_date,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="mid != null">#{mid},</if>
+            <if test="jid != null">#{jid},</if>
+            <if test="mName != null">#{mName},</if>
+            <if test="mCode != null">#{mCode},</if>
+            <if test="mJob != null">#{mJob},</if>
+            <if test="mInstitution != null">#{mInstitution},</if>
+            <if test="mGetDate != null">#{mGetDate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsJob" parameterType="com.hh.pms.sae.domain.BsJob">
+        update bs_job
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jid != null">jid = #{jid},</if>
+            <if test="mName != null">m_name = #{mName},</if>
+            <if test="mCode != null">m_code = #{mCode},</if>
+            <if test="mJob != null">m_job = #{mJob},</if>
+            <if test="mInstitution != null">m_institution = #{mInstitution},</if>
+            <if test="mGetDate != null">m_get_date = #{mGetDate},</if>
+        </trim>
+        where mid = #{mid}
+    </update>
+
+    <delete id="deleteBsJobByMid" parameterType="Long">
+        delete
+        from bs_job
+        where mid = #{mid}
+    </delete>
+
+    <delete id="deleteBsJobByMids" parameterType="String">
+        delete from bs_job where mid in
+        <foreach item="mid" collection="array" open="(" separator="," close=")">
+            #{mid}
+        </foreach>
+    </delete>
+</mapper>

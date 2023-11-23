@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.cm.mapper.BsEmployeeMapper">
+
+    <resultMap type="com.hh.pms.cm.domain.BsEmployee" id="BsEmployeeResult">
+        <result property="pid" column="pid"/>
+        <result property="pName" column="p_name"/>
+        <result property="pPassword" column="p_password"/>
+        <result property="pSex" column="p_sex"/>
+        <result property="pBorn" column="p_born"/>
+        <result property="pNick" column="p_nick"/>
+    </resultMap>
+
+    <sql id="selectBsEmployeeVo">
+        select pid, p_name, p_password, p_sex, p_born, p_nick
+        from bs_employee
+    </sql>
+
+    <select id="selectBsEmployeeList" parameterType="com.hh.pms.cm.domain.BsEmployee" resultMap="BsEmployeeResult">
+        <include refid="selectBsEmployeeVo"/>
+        <where>
+            <if test="pName != null  and pName != ''">and p_name like concat('%', #{pName}, '%')</if>
+            <if test="pPassword != null  and pPassword != ''">and p_password = #{pPassword}</if>
+            <if test="pSex != null ">and p_sex = #{pSex}</if>
+            <if test="pBorn != null ">and p_born = #{pBorn}</if>
+            <if test="pNick != null  and pNick != ''">and p_nick = #{pNick}</if>
+        </where>
+    </select>
+
+    <select id="selectBsEmployeeByPid" parameterType="Long" resultMap="BsEmployeeResult">
+        <include refid="selectBsEmployeeVo"/>
+        where pid = #{pid}
+    </select>
+
+    <insert id="insertBsEmployee" parameterType="com.hh.pms.cm.domain.BsEmployee">
+        insert into bs_employee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null">pid,</if>
+            <if test="pName != null">p_name,</if>
+            <if test="pPassword != null">p_password,</if>
+            <if test="pSex != null">p_sex,</if>
+            <if test="pBorn != null">p_born,</if>
+            <if test="pNick != null">p_nick,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null">#{pid},</if>
+            <if test="pName != null">#{pName},</if>
+            <if test="pPassword != null">#{pPassword},</if>
+            <if test="pSex != null">#{pSex},</if>
+            <if test="pBorn != null">#{pBorn},</if>
+            <if test="pNick != null">#{pNick},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsEmployee" parameterType="com.hh.pms.cm.domain.BsEmployee">
+        update bs_employee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pName != null">p_name = #{pName},</if>
+            <if test="pPassword != null">p_password = #{pPassword},</if>
+            <if test="pSex != null">p_sex = #{pSex},</if>
+            <if test="pBorn != null">p_born = #{pBorn},</if>
+            <if test="pNick != null">p_nick = #{pNick},</if>
+        </trim>
+        where pid = #{pid}
+    </update>
+
+    <delete id="deleteBsEmployeeByPid" parameterType="Long">
+        delete
+        from bs_employee
+        where pid = #{pid}
+    </delete>
+
+    <delete id="deleteBsEmployeeByPids" parameterType="String">
+        delete from bs_employee where pid in
+        <foreach item="pid" collection="array" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+    </delete>
+
+    <select id="loginEmp" parameterType="com.hh.pms.cm.domain.BsEmployee" resultMap="BsEmployeeResult">
+        select *
+        from bs_employee
+        where p_name = #{username}
+          and p_password = #{password}
+    </select>
+</mapper>

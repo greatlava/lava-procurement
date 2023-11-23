@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsEducateMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsEducate" id="BsEducateResult">
+        <result property="rid" column="rid"/>
+        <result property="jid" column="jid"/>
+        <result property="rSchool" column="r_school"/>
+        <result property="specialized" column="specialized"/>
+        <result property="rDegree" column="r_degree"/>
+        <result property="rEnrollmentTime" column="r_enrollment_time"/>
+        <result property="rGraduationTime" column="r_graduation_time"/>
+    </resultMap>
+
+    <sql id="selectBsEducateVo">
+        select rid, jid, r_school, specialized, r_degree, r_enrollment_time, r_graduation_time
+        from bs_educate
+    </sql>
+
+    <select id="selectBsEducateList" parameterType="com.hh.pms.sae.domain.BsEducate" resultMap="BsEducateResult">
+        <include refid="selectBsEducateVo"/>
+        <where>
+            <if test="jid != null ">and jid = #{jid}</if>
+            <if test="rSchool != null  and rSchool != ''">and r_school = #{rSchool}</if>
+            <if test="specialized != null  and specialized != ''">and specialized = #{specialized}</if>
+            <if test="rDegree != null  and rDegree != ''">and r_degree = #{rDegree}</if>
+            <if test="rEnrollmentTime != null ">and r_enrollment_time = #{rEnrollmentTime}</if>
+            <if test="rGraduationTime != null ">and r_graduation_time = #{rGraduationTime}</if>
+        </where>
+    </select>
+
+    <select id="selectBsEducateByRid" parameterType="Long" resultMap="BsEducateResult">
+        <include refid="selectBsEducateVo"/>
+        where rid = #{rid}
+    </select>
+
+    <insert id="insertBsEducate" parameterType="com.hh.pms.sae.domain.BsEducate">
+        insert into bs_educate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rid != null">rid,</if>
+            <if test="jid != null">jid,</if>
+            <if test="rSchool != null">r_school,</if>
+            <if test="specialized != null">specialized,</if>
+            <if test="rDegree != null">r_degree,</if>
+            <if test="rEnrollmentTime != null">r_enrollment_time,</if>
+            <if test="rGraduationTime != null">r_graduation_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rid != null">#{rid},</if>
+            <if test="jid != null">#{jid},</if>
+            <if test="rSchool != null">#{rSchool},</if>
+            <if test="specialized != null">#{specialized},</if>
+            <if test="rDegree != null">#{rDegree},</if>
+            <if test="rEnrollmentTime != null">#{rEnrollmentTime},</if>
+            <if test="rGraduationTime != null">#{rGraduationTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsEducate" parameterType="com.hh.pms.sae.domain.BsEducate">
+        update bs_educate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jid != null">jid = #{jid},</if>
+            <if test="rSchool != null">r_school = #{rSchool},</if>
+            <if test="specialized != null">specialized = #{specialized},</if>
+            <if test="rDegree != null">r_degree = #{rDegree},</if>
+            <if test="rEnrollmentTime != null">r_enrollment_time = #{rEnrollmentTime},</if>
+            <if test="rGraduationTime != null">r_graduation_time = #{rGraduationTime},</if>
+        </trim>
+        where rid = #{rid}
+    </update>
+
+    <delete id="deleteBsEducateByRid" parameterType="Long">
+        delete
+        from bs_educate
+        where rid = #{rid}
+    </delete>
+
+    <delete id="deleteBsEducateByRids" parameterType="String">
+        delete from bs_educate where rid in
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+</mapper>

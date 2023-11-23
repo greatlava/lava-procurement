@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsFinancialStatusMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsFinancialStatus" id="BsFinancialStatusResult">
+        <result property="hid" column="hid"/>
+        <result property="cId" column="c_id"/>
+        <result property="cAnnual" column="c_annual"/>
+        <result property="cNetProfit" column="c_net_profit"/>
+        <result property="cLev" column="c_lev"/>
+        <result property="cScanFar" column="c_scan_far"/>
+        <result property="cScanAar" column="c_scan_aar"/>
+        <result property="cScanAl" column="c_scan_al"/>
+        <result property="cScanIs" column="c_scan_is"/>
+        <result property="cScanCfs" column="c_scan_cfs"/>
+    </resultMap>
+
+    <sql id="selectBsFinancialStatusVo">
+        select hid,
+               c_id,
+               c_annual,
+               c_net_profit,
+               c_lev,
+               c_scan_far,
+               c_scan_aar,
+               c_scan_al,
+               c_scan_is,
+               c_scan_cfs
+        from bs_financial_status
+    </sql>
+
+    <select id="selectBsFinancialStatusList" parameterType="com.hh.pms.sae.domain.BsFinancialStatus"
+            resultMap="BsFinancialStatusResult">
+        <include refid="selectBsFinancialStatusVo"/>
+        <where>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="cAnnual != null ">and c_annual = #{cAnnual}</if>
+            <if test="cNetProfit != null ">and c_net_profit = #{cNetProfit}</if>
+            <if test="cLev != null  and cLev != ''">and c_lev = #{cLev}</if>
+            <if test="cScanFar != null ">and c_scan_far = #{cScanFar}</if>
+            <if test="cScanAar != null ">and c_scan_aar = #{cScanAar}</if>
+            <if test="cScanAl != null ">and c_scan_al = #{cScanAl}</if>
+            <if test="cScanIs != null ">and c_scan_is = #{cScanIs}</if>
+            <if test="cScanCfs != null ">and c_scan_cfs = #{cScanCfs}</if>
+        </where>
+    </select>
+
+    <select id="selectBsFinancialStatusByCId" parameterType="Long" resultMap="BsFinancialStatusResult">
+        <include refid="selectBsFinancialStatusVo"/>
+        where c_id = #{cId}
+    </select>
+
+    <insert id="insertBsFinancialStatus" parameterType="com.hh.pms.sae.domain.BsFinancialStatus">
+        insert into bs_financial_status
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hid != null">hid,</if>
+            <if test="cId != null">c_id,</if>
+            <if test="cAnnual != null">c_annual,</if>
+            <if test="cNetProfit != null">c_net_profit,</if>
+            <if test="cLev != null">c_lev,</if>
+            <if test="cScanFar != null">c_scan_far,</if>
+            <if test="cScanAar != null">c_scan_aar,</if>
+            <if test="cScanAl != null">c_scan_al,</if>
+            <if test="cScanIs != null">c_scan_is,</if>
+            <if test="cScanCfs != null">c_scan_cfs,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hid != null">#{hid},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="cAnnual != null">#{cAnnual},</if>
+            <if test="cNetProfit != null">#{cNetProfit},</if>
+            <if test="cLev != null">#{cLev},</if>
+            <if test="cScanFar != null">#{cScanFar},</if>
+            <if test="cScanAar != null">#{cScanAar},</if>
+            <if test="cScanAl != null">#{cScanAl},</if>
+            <if test="cScanIs != null">#{cScanIs},</if>
+            <if test="cScanCfs != null">#{cScanCfs},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsFinancialStatus" parameterType="com.hh.pms.sae.domain.BsFinancialStatus">
+        update bs_financial_status
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="cAnnual != null">c_annual = #{cAnnual},</if>
+            <if test="cNetProfit != null">c_net_profit = #{cNetProfit},</if>
+            <if test="cLev != null">c_lev = #{cLev},</if>
+            <if test="cScanFar != null">c_scan_far = #{cScanFar},</if>
+            <if test="cScanAar != null">c_scan_aar = #{cScanAar},</if>
+            <if test="cScanAl != null">c_scan_al = #{cScanAl},</if>
+            <if test="cScanIs != null">c_scan_is = #{cScanIs},</if>
+            <if test="cScanCfs != null">c_scan_cfs = #{cScanCfs},</if>
+        </trim>
+        where c_id = #{cId}
+    </update>
+
+    <delete id="deleteBsFinancialStatusByCId" parameterType="Long">
+        delete
+        from bs_financial_status
+        where c_id = #{cId}
+    </delete>
+
+    <delete id="deleteBsFinancialStatusByCIds" parameterType="String">
+        delete from bs_financial_status where c_id in
+        <foreach item="cId" collection="array" open="(" separator="," close=")">
+            #{cId}
+        </foreach>
+    </delete>
+</mapper>

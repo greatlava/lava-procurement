@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.PpmFrameManagementMapper">
+    
+    <resultMap type="PpmFrameManagement" id="PpmFrameManagementResult">
+        <result property="oid"    column="oid"    />
+        <result property="jhId"    column="jh_id"    />
+        <result property="oCode"    column="o_code"    />
+        <result property="oName"    column="o_name"    />
+        <result property="oWay"    column="o_way"    />
+        <result property="oBid"    column="o_bid"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="oHstatus"    column="o_hstatus"    />
+    </resultMap>
+
+    <sql id="selectPpmFrameManagementVo">
+        select oid, jh_id, o_code, o_name, o_way, o_bid, create_by, create_time, o_hstatus from ppm_frame_management
+    </sql>
+
+    <select id="selectPpmFrameManagementList" parameterType="PpmFrameManagement" resultMap="PpmFrameManagementResult">
+        <include refid="selectPpmFrameManagementVo"/>
+        <where>  
+            <if test="jhId != null "> and jh_id = #{jhId}</if>
+            <if test="oCode != null  and oCode != ''"> and o_code = #{oCode}</if>
+            <if test="oName != null  and oName != ''"> and o_name like concat('%', #{oName}, '%')</if>
+            <if test="oWay != null  and oWay != ''"> and o_way = #{oWay}</if>
+            <if test="oBid != null "> and o_bid = #{oBid}</if>
+            <if test="oHstatus != null "> and o_hstatus = #{oHstatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPpmFrameManagementByOid" parameterType="Long" resultMap="PpmFrameManagementResult">
+        <include refid="selectPpmFrameManagementVo"/>
+        where oid = #{oid}
+    </select>
+        
+    <insert id="insertPpmFrameManagement" parameterType="PpmFrameManagement">
+        insert into ppm_frame_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oid != null">oid,</if>
+            <if test="jhId != null">jh_id,</if>
+            <if test="oCode != null">o_code,</if>
+            <if test="oName != null">o_name,</if>
+            <if test="oWay != null">o_way,</if>
+            <if test="oBid != null">o_bid,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="oHstatus != null">o_hstatus,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oid != null">#{oid},</if>
+            <if test="jhId != null">#{jhId},</if>
+            <if test="oCode != null">#{oCode},</if>
+            <if test="oName != null">#{oName},</if>
+            <if test="oWay != null">#{oWay},</if>
+            <if test="oBid != null">#{oBid},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="oHstatus != null">#{oHstatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePpmFrameManagement" parameterType="PpmFrameManagement">
+        update ppm_frame_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jhId != null">jh_id = #{jhId},</if>
+            <if test="oCode != null">o_code = #{oCode},</if>
+            <if test="oName != null">o_name = #{oName},</if>
+            <if test="oWay != null">o_way = #{oWay},</if>
+            <if test="oBid != null">o_bid = #{oBid},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="oHstatus != null">o_hstatus = #{oHstatus},</if>
+        </trim>
+        where oid = #{oid}
+    </update>
+
+    <delete id="deletePpmFrameManagementByOid" parameterType="Long">
+        delete from ppm_frame_management where oid = #{oid}
+    </delete>
+
+    <delete id="deletePpmFrameManagementByOids" parameterType="String">
+        delete from ppm_frame_management where oid in 
+        <foreach item="oid" collection="array" open="(" separator="," close=")">
+            #{oid}
+        </foreach>
+    </delete>
+</mapper>
