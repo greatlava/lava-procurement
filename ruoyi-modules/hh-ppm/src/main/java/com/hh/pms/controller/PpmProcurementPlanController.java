@@ -1,7 +1,8 @@
 package com.hh.pms.controller;
 
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.domain.PpmProcurementPlan;
@@ -25,14 +26,13 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 
 /**
  * 采购计划Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/frameworkPlan")
-public class PpmProcurementPlanController extends BaseController
-{
+public class PpmProcurementPlanController extends BaseController {
     @Autowired
     private IPpmProcurementPlanService ppmProcurementPlanService;
 
@@ -41,8 +41,7 @@ public class PpmProcurementPlanController extends BaseController
      */
     @RequiresPermissions("system:plan:list")
     @GetMapping("/list")
-    public TableDataInfo list(PpmProcurementPlan ppmProcurementPlan)
-    {
+    public TableDataInfo list(PpmProcurementPlan ppmProcurementPlan) {
         startPage();
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectPpmProcurementPlanList(ppmProcurementPlan);
         return getDataTable(list);
@@ -54,8 +53,7 @@ public class PpmProcurementPlanController extends BaseController
     @RequiresPermissions("system:plan:export")
     @Log(title = "采购计划", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PpmProcurementPlan ppmProcurementPlan)
-    {
+    public void export(HttpServletResponse response, PpmProcurementPlan ppmProcurementPlan) {
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectPpmProcurementPlanList(ppmProcurementPlan);
         ExcelUtil<PpmProcurementPlan> util = new ExcelUtil<PpmProcurementPlan>(PpmProcurementPlan.class);
         util.exportExcel(response, list, "采购计划数据");
@@ -66,8 +64,7 @@ public class PpmProcurementPlanController extends BaseController
      */
     @RequiresPermissions("system:plan:query")
     @GetMapping(value = "/{aid}")
-    public AjaxResult getInfo(@PathVariable("aid") Long aid)
-    {
+    public AjaxResult getInfo(@PathVariable("aid") Long aid) {
         return success(ppmProcurementPlanService.selectPpmProcurementPlanByAid(aid));
     }
 
@@ -77,8 +74,7 @@ public class PpmProcurementPlanController extends BaseController
     @RequiresPermissions("system:plan:add")
     @Log(title = "采购计划", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan)
-    {
+    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         return toAjax(ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan));
     }
 
@@ -88,8 +84,7 @@ public class PpmProcurementPlanController extends BaseController
     @RequiresPermissions("system:plan:edit")
     @Log(title = "采购计划", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PpmProcurementPlan ppmProcurementPlan)
-    {
+    public AjaxResult edit(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         return toAjax(ppmProcurementPlanService.updatePpmProcurementPlan(ppmProcurementPlan));
     }
 
@@ -98,9 +93,37 @@ public class PpmProcurementPlanController extends BaseController
      */
     @RequiresPermissions("system:plan:remove")
     @Log(title = "采购计划", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{aids}")
-    public AjaxResult remove(@PathVariable Long[] aids)
-    {
+    @DeleteMapping("/{aids}")
+    public AjaxResult remove(@PathVariable Long[] aids) {
         return toAjax(ppmProcurementPlanService.deletePpmProcurementPlanByAids(aids));
+    }
+
+    @RequiresPermissions("system:plan:download")
+    @PostMapping("/fileDownload")
+    public AjaxResult fileDownload(HttpServletResponse response, String fileName) {
+        try {
+            System.out.println("fileName" + fileName);
+            String path = "E:\\java\\PracticalTraining\\文件";
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("multipart/form-data");
+            response.setHeader("Content-Disposition",
+                    "attachment;fileName=" + URLEncoder.encode(fileName, "UTF-8"));
+            File file = new File(path, fileName);
+            InputStream input = new FileInputStream(file);
+            OutputStream out = response.getOutputStream();
+            byte[] buff = new byte[1024];
+            int index = 0;
+            //4、执行 写出操作
+            while ((index = input.read(buff)) != -1) {
+                out.write(buff, 0, index);
+                out.flush();
+            }
+            out.close();
+            input.close();
+        } catch (IOException e) {
+            return error("下载失败");
+        }
+        return success("下载成功！！");
     }
 }
