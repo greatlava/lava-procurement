@@ -124,6 +124,11 @@ export default {
   methods: {
     handleClick(row) {
       console.log(row)
+      // listItems(this.queryParams).then(response => {
+      //   this.itemsList = response.rows;
+      //   this.total = response.total;
+      //   this.loading = false;
+      // });
     }
   },
 

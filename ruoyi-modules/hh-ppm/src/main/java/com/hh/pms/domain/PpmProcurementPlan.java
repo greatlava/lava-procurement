@@ -67,12 +67,6 @@ public class PpmProcurementPlan extends BaseEntity {
     @Excel(name = "采购审批状态")
     private Long aAstate;
 
-    /**
-     * 行项目编号
-     */
-    @Excel(name = "行项目编号")
-    private String vCode;
-
     public void setAid(Long aid) {
         this.aid = aid;
     }
@@ -145,14 +139,6 @@ public class PpmProcurementPlan extends BaseEntity {
         return aAstate;
     }
 
-    public void setvCode(String vCode) {
-        this.vCode = vCode;
-    }
-
-    public String getvCode() {
-        return vCode;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -169,7 +155,6 @@ public class PpmProcurementPlan extends BaseEntity {
                 .append("aProjectCount", getaProjectCount())
                 .append("aBtype", getaBtype())
                 .append("aAstate", getaAstate())
-                .append("vCode", getvCode())
                 .toString();
     }
 }

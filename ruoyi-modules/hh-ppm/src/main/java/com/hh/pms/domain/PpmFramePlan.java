@@ -67,12 +67,6 @@ public class PpmFramePlan extends BaseEntity {
     @Excel(name = "采购方式")
     private String jhPmethod;
 
-    /**
-     * 行项目编号
-     */
-    @Excel(name = "行项目编号")
-    private String vCode;
-
     public void setJhId(Long jhId) {
         this.jhId = jhId;
     }
@@ -145,14 +139,6 @@ public class PpmFramePlan extends BaseEntity {
         return jhPmethod;
     }
 
-    public void setvCode(String vCode) {
-        this.vCode = vCode;
-    }
-
-    public String getvCode() {
-        return vCode;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -165,7 +151,6 @@ public class PpmFramePlan extends BaseEntity {
                 .append("jhStatus", getJhStatus())
                 .append("jhPerson", getJhPerson())
                 .append("jhPmethod", getJhPmethod())
-                .append("vCode", getvCode())
                 .toString();
     }
 }

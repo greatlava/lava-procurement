@@ -29,7 +29,7 @@
         select tid, v_code, t_name, t_da, t_zhong, t_xiao, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
     </sql>
 
-    <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain." resultMap="PpmDeviceResult">
+    <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         <where>
             <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
@@ -57,7 +57,7 @@
         where tid = #{tid}
     </select>
 
-    <insert id="insertPpmDevice" parameterType="com.hh.pms.domain.">
+    <insert id="insertPpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
         insert into ppm_device
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tid != null">tid,</if>
@@ -101,7 +101,7 @@
         </trim>
     </insert>
 
-    <update id="updatePpmDevice" parameterType="com.hh.pms.domain.">
+    <update id="updatePpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
         update ppm_device
         <trim prefix="SET" suffixOverrides=",">
             <if test="vCode != null">v_code = #{vCode},</if>

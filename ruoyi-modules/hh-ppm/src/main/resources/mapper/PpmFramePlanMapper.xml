@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.PpmFramePlanMapper">
-
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.PpmFramePlanMapper">
+    
     <resultMap type="PpmFramePlan" id="PpmFramePlanResult">
         <result property="jhId"    column="jh_id"    />
         <result property="oid"    column="oid"    />
@@ -14,11 +14,10 @@
         <result property="jhStatus"    column="jh_status"    />
         <result property="jhPerson"    column="jh_person"    />
         <result property="jhPmethod"    column="jh_pmethod"    />
-        <result property="vCode"    column="v_code"    />
     </resultMap>
 
     <sql id="selectPpmFramePlanVo">
-        select jh_id, oid, jh_code, jh_name, jh_yu, dept, jh_status, jh_person, jh_pmethod, v_code from ppm_frame_plan
+        select jh_id, oid, jh_code, jh_name, jh_yu, dept, jh_status, jh_person, jh_pmethod from ppm_frame_plan
     </sql>
 
     <select id="selectPpmFramePlanList" parameterType="PpmFramePlan" resultMap="PpmFramePlanResult">
@@ -32,7 +31,6 @@
             <if test="jhStatus != null "> and jh_status = #{jhStatus}</if>
             <if test="jhPerson != null  and jhPerson != ''"> and jh_person = #{jhPerson}</if>
             <if test="jhPmethod != null  and jhPmethod != ''"> and jh_pmethod = #{jhPmethod}</if>
-            <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
         </where>
     </select>
 
@@ -53,7 +51,6 @@
             <if test="jhStatus != null">jh_status,</if>
             <if test="jhPerson != null">jh_person,</if>
             <if test="jhPmethod != null">jh_pmethod,</if>
-            <if test="vCode != null">v_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jhId != null">#{jhId},</if>
@@ -65,7 +62,6 @@
             <if test="jhStatus != null">#{jhStatus},</if>
             <if test="jhPerson != null">#{jhPerson},</if>
             <if test="jhPmethod != null">#{jhPmethod},</if>
-            <if test="vCode != null">#{vCode},</if>
         </trim>
     </insert>
 
@@ -80,7 +76,6 @@
             <if test="jhStatus != null">jh_status = #{jhStatus},</if>
             <if test="jhPerson != null">jh_person = #{jhPerson},</if>
             <if test="jhPmethod != null">jh_pmethod = #{jhPmethod},</if>
-            <if test="vCode != null">v_code = #{vCode},</if>
         </trim>
         where jh_id = #{jhId}
     </update>

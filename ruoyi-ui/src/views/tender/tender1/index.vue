@@ -49,12 +49,14 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <router-link :to="'/tender/update?type=update&sid='+scope.row.sid">
           <el-button v-if="scope.row.sProjectState === 2"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改</el-button>
+          </router-link>
           <el-button v-if="scope.row.sProjectState === 2"
             size="mini"
             type="text"
@@ -67,6 +69,14 @@
             icon="el-icon-delete"
             @click=""
           >进入项目</el-button>
+          <router-link :to="'/tender/details?type=details&sid='+scope.row.sid">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-view"
+              @click=""
+            >查看</el-button>
+          </router-link>
           <el-button
             size="mini"
             type="text"
