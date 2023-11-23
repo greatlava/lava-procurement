@@ -155,11 +155,6 @@ public class BidTender extends BaseEntity {
     @Excel(name = "范围截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rangeEndTime;
 
-    /**
-     * 行项目编号
-     */
-    @Excel(name = "行项目编号")
-    private String vCode;
 
     public void setSid(Long sid) {
         this.sid = sid;
@@ -338,14 +333,6 @@ public class BidTender extends BaseEntity {
         return rangeEndTime;
     }
 
-    public void setvCode(String vCode) {
-        this.vCode = vCode;
-    }
-
-    public String getvCode() {
-        return vCode;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -372,7 +359,6 @@ public class BidTender extends BaseEntity {
                 .append("sEndTime", getsEndTime())
                 .append("sProjectState", getsProjectState())
                 .append("sDeadline", getsDeadline())
-                .append("vCode", getvCode())
                 .toString();
     }
 }

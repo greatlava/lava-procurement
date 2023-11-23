@@ -24,6 +24,22 @@ public class PpmLineItems extends BaseEntity
     @Excel(name = "行项目编号")
     private String vCode;
 
+    /** 招标项目ID */
+    @Excel(name = "招标项目ID")
+    private Long sid;
+
+    /** 框架计划ID */
+    @Excel(name = "框架计划ID")
+    private Long jhId;
+
+    /** 采购计划ID */
+    @Excel(name = "采购计划ID")
+    private Long aid;
+
+    /** 非招标项目ID */
+    @Excel(name = "非招标项目ID")
+    private Long gid;
+
     /** 数量 */
     @Excel(name = "数量")
     private Long vCount;
@@ -70,6 +86,42 @@ public class PpmLineItems extends BaseEntity
     public String getvCode()
     {
         return vCode;
+    }
+    public void setSid(Long sid)
+    {
+        this.sid = sid;
+    }
+
+    public Long getSid()
+    {
+        return sid;
+    }
+    public void setJhId(Long jhId)
+    {
+        this.jhId = jhId;
+    }
+
+    public Long getJhId()
+    {
+        return jhId;
+    }
+    public void setAid(Long aid)
+    {
+        this.aid = aid;
+    }
+
+    public Long getAid()
+    {
+        return aid;
+    }
+    public void setGid(Long gid)
+    {
+        this.gid = gid;
+    }
+
+    public Long getGid()
+    {
+        return gid;
     }
     public void setvCount(Long vCount)
     {
@@ -140,6 +192,10 @@ public class PpmLineItems extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("vid", getVid())
                 .append("vCode", getvCode())
+                .append("sid", getSid())
+                .append("jhId", getJhId())
+                .append("aid", getAid())
+                .append("gid", getGid())
                 .append("vCount", getvCount())
                 .append("vPerson", getvPerson())
                 .append("vPrice", getvPrice())

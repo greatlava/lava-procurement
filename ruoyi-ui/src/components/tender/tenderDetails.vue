@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-descriptions  class="margin-top" title="招标项目/查看" :column="2" :size="size" border>
       <el-descriptions-item >
-        <template slot="label">
+        <template slot="label" >
           招标项目编号
         </template>
         自动生成

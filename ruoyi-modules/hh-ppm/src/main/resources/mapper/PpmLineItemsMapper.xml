@@ -7,6 +7,10 @@
     <resultMap type="PpmLineItems" id="PpmLineItemsResult">
         <result property="vid"    column="vid"    />
         <result property="vCode"    column="v_code"    />
+        <result property="sid"    column="sid"    />
+        <result property="jhId"    column="jh_id"    />
+        <result property="aid"    column="aid"    />
+        <result property="gid"    column="gid"    />
         <result property="vCount"    column="v_count"    />
         <result property="vPerson"    column="v_person"    />
         <result property="vPrice"    column="v_price"    />
@@ -17,13 +21,17 @@
     </resultMap>
 
     <sql id="selectPpmLineItemsVo">
-        select vid, v_code, v_count, v_person, v_price, v_total, v_delivery_time, v_delivery_area, v_illustrate from ppm_line_items
+        select vid, v_code, sid, jh_id, aid, gid, v_count, v_person, v_price, v_total, v_delivery_time, v_delivery_area, v_illustrate from ppm_line_items
     </sql>
 
     <select id="selectPpmLineItemsList" parameterType="PpmLineItems" resultMap="PpmLineItemsResult">
         <include refid="selectPpmLineItemsVo"/>
         <where>
             <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
+            <if test="sid != null "> and sid = #{sid}</if>
+            <if test="jhId != null "> and jh_id = #{jhId}</if>
+            <if test="aid != null "> and aid = #{aid}</if>
+            <if test="gid != null "> and gid = #{gid}</if>
             <if test="vCount != null "> and v_count = #{vCount}</if>
             <if test="vPerson != null  and vPerson != ''"> and v_person = #{vPerson}</if>
             <if test="vPrice != null "> and v_price = #{vPrice}</if>
@@ -44,6 +52,10 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="vid != null">vid,</if>
             <if test="vCode != null">v_code,</if>
+            <if test="sid != null">sid,</if>
+            <if test="jhId != null">jh_id,</if>
+            <if test="aid != null">aid,</if>
+            <if test="gid != null">gid,</if>
             <if test="vCount != null">v_count,</if>
             <if test="vPerson != null">v_person,</if>
             <if test="vPrice != null">v_price,</if>
@@ -55,6 +67,10 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="vid != null">#{vid},</if>
             <if test="vCode != null">#{vCode},</if>
+            <if test="sid != null">#{sid},</if>
+            <if test="jhId != null">#{jhId},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="gid != null">#{gid},</if>
             <if test="vCount != null">#{vCount},</if>
             <if test="vPerson != null">#{vPerson},</if>
             <if test="vPrice != null">#{vPrice},</if>
@@ -69,6 +85,10 @@
         update ppm_line_items
         <trim prefix="SET" suffixOverrides=",">
             <if test="vCode != null">v_code = #{vCode},</if>
+            <if test="sid != null">sid = #{sid},</if>
+            <if test="jhId != null">jh_id = #{jhId},</if>
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="gid != null">gid = #{gid},</if>
             <if test="vCount != null">v_count = #{vCount},</if>
             <if test="vPerson != null">v_person = #{vPerson},</if>
             <if test="vPrice != null">v_price = #{vPrice},</if>

@@ -18,11 +18,10 @@
         <result property="aProjectCount"    column="a_project_count"    />
         <result property="aBtype"    column="a_btype"    />
         <result property="aAstate"    column="a_astate"    />
-        <result property="vCode"    column="v_code"    />
     </resultMap>
 
     <sql id="selectPpmProcurementPlanVo">
-        select aid, a_code, a_name, create_by, a_create_dept, create_time, update_by, update_time, fj_annex, a_opinion, a_project_count, a_btype, a_astate, v_code from ppm_procurement_plan
+        select aid, a_code, a_name, create_by, a_create_dept, create_time, update_by, update_time, fj_annex, a_opinion, a_project_count, a_btype, a_astate from ppm_procurement_plan
     </sql>
 
     <select id="selectPpmProcurementPlanList" parameterType="PpmProcurementPlan" resultMap="PpmProcurementPlanResult">
@@ -36,7 +35,6 @@
             <if test="aProjectCount != null "> and a_project_count = #{aProjectCount}</if>
             <if test="aBtype != null  and aBtype != ''"> and a_btype = #{aBtype}</if>
             <if test="aAstate != null "> and a_astate = #{aAstate}</if>
-            <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
         </where>
     </select>
 
@@ -61,7 +59,6 @@
             <if test="aProjectCount != null">a_project_count,</if>
             <if test="aBtype != null">a_btype,</if>
             <if test="aAstate != null">a_astate,</if>
-            <if test="vCode != null">v_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="aid != null">#{aid},</if>
@@ -77,7 +74,6 @@
             <if test="aProjectCount != null">#{aProjectCount},</if>
             <if test="aBtype != null">#{aBtype},</if>
             <if test="aAstate != null">#{aAstate},</if>
-            <if test="vCode != null">#{vCode},</if>
         </trim>
     </insert>
 
@@ -96,7 +92,6 @@
             <if test="aProjectCount != null">a_project_count = #{aProjectCount},</if>
             <if test="aBtype != null">a_btype = #{aBtype},</if>
             <if test="aAstate != null">a_astate = #{aAstate},</if>
-            <if test="vCode != null">v_code = #{vCode},</if>
         </trim>
         where aid = #{aid}
     </update>
