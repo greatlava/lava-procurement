@@ -6,7 +6,9 @@
 
     <resultMap type="com.hh.pms.domain.PpmDevice" id="PpmDeviceResult">
         <result property="tid"    column="tid"    />
-        <result property="vCode"    column="v_code"    />
+        <result property="aid"    column="aid"    />
+        <result property="tSid"    column="t_sid"    />
+        <result property="jhId"    column="jh_id"    />
         <result property="tName"    column="t_name"    />
         <result property="tDa"    column="t_da"    />
         <result property="tZhong"    column="t_zhong"    />
@@ -26,13 +28,15 @@
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
-        select tid, v_code, t_name, t_da, t_zhong, t_xiao, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
+        select tid, aid,t_sid,jh_id, t_name, t_da, t_zhong, t_xiao, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
     </sql>
 
     <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         <where>
-            <if test="vCode != null  and vCode != ''"> and v_code = #{vCode}</if>
+            <if test="aid != null  and aid != ''"> and aid = #{aid}</if>
+            <if test="tSid != null  and tSid != ''"> and t_sid = #{tSid}</if>
+            <if test="jhId != null  and jhId != ''"> and jh_id = #{jhId}</if>
             <if test="tName != null  and tName != ''"> and t_name like concat('%', #{tName}, '%')</if>
             <if test="tDa != null "> and t_da = #{tDa}</if>
             <if test="tZhong != null "> and t_zhong = #{tZhong}</if>
@@ -61,7 +65,9 @@
         insert into ppm_device
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tid != null">tid,</if>
-            <if test="vCode != null">v_code,</if>
+            <if test="aid != null">aid,</if>
+            <if test="tSid != null">t_sid,</if>
+            <if test="jhId != null">jh_id,</if>
             <if test="tName != null">t_name,</if>
             <if test="tDa != null">t_da,</if>
             <if test="tZhong != null">t_zhong,</if>
@@ -81,7 +87,9 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tid != null">#{tid},</if>
-            <if test="vCode != null">#{vCode},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="tSid != null">#{tSid},</if>
+            <if test="jhId != null">#{jhId},</if>
             <if test="tName != null">#{tName},</if>
             <if test="tDa != null">#{tDa},</if>
             <if test="tZhong != null">#{tZhong},</if>
@@ -104,7 +112,9 @@
     <update id="updatePpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
         update ppm_device
         <trim prefix="SET" suffixOverrides=",">
-            <if test="vCode != null">v_code = #{vCode},</if>
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="tSid != null">t_sid = #{tSid},</if>
+            <if test="jhId != null">jh_id = #{jhId},</if>
             <if test="tName != null">t_name = #{tName},</if>
             <if test="tDa != null">t_da = #{tDa},</if>
             <if test="tZhong != null">t_zhong = #{tZhong},</if>

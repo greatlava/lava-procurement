@@ -119,28 +119,44 @@
 
 </template>
 
+
 <script>
 export default {
   methods: {
     handleClick(row) {
       console.log(row)
-      // listItems(this.queryParams).then(response => {
-      //   this.itemsList = response.rows;
-      //   this.total = response.total;
-      //   this.loading = false;
-      // });
+    },
+    getList(){
+      this.queryParams.sid = this.$route.query.sid;
+      listItems(this.queryParams).then(response => {
+        this.tableData = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
     }
   },
-
+  created() {
+    this.getList();
+  },
   data() {
     return {
-      tableData: [{
-        date: '1'
-      }, {
-        date: '1'
-      }, {
-        date: '1'
-      }]
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        sid:null,
+        vCode:null,
+        jhId:null,
+        aid: null,
+        gid:null,
+        vCount:null,
+        vPerson:null,
+        vTotal:null,
+        vDeliveryTime:null,
+        vDeliveryArea:null,
+        vIllustrate:null
+      },
+      tableData: []
     }
   }
 }
