@@ -59,7 +59,7 @@ public class PpmDevice extends BaseEntity
 
     /** 计量单位 */
     @Excel(name = "计量单位")
-    private Long tUnit;
+    private String tUnit;
 
     /** 税率 */
     @Excel(name = "税率")
@@ -190,12 +190,12 @@ public class PpmDevice extends BaseEntity
         return tAmount;
     }
 
-    public void settUnit(Long tUnit)
+    public void settUnit(String tUnit)
     {
         this.tUnit = tUnit;
     }
 
-    public Long gettUnit()
+    public String gettUnit()
     {
         return tUnit;
     }
