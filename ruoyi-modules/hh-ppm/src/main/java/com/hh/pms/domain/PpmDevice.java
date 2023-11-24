@@ -24,18 +24,18 @@ public class PpmDevice extends BaseEntity
      * 采购计划ID
      */
     @Excel(name = "采购计划ID")
-    private Long aid;
+    private Integer aid;
 
     /**
      * 招标项目ID
      */
     @Excel(name = "招标项目ID")
-    private Long tSid;
+    private Integer tSid;
     /**
      * 框架计划ID
      */
     @Excel(name = "框架计划ID")
-    private Long jhId;
+    private Integer jhId;
 
     /** 产品名称 */
     @Excel(name = "产品名称")
@@ -55,14 +55,18 @@ public class PpmDevice extends BaseEntity
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long tUnit;
+    private Integer tAmount;
+
+    /** 计量单位 */
+    @Excel(name = "计量单位")
+    private String tUnit;
 
     /** 税率 */
     @Excel(name = "税率")
     private Long shui;
 
     /** 计量单位 */
-    @Excel(name = "计量单位")
+    @Excel(name = "预算单价")
     private Long tPrice;
 
     /** 预算总价 */
@@ -111,31 +115,31 @@ public class PpmDevice extends BaseEntity
     {
         return tid;
     }
-    public void setAid(Long aid)
+    public void setAid(Integer aid)
     {
         this.aid = aid;
     }
 
-    public long getAid()
+    public Integer getAid()
     {
         return aid;
     }
-    public void settSid(Long tSid)
+    public void settSid(Integer tSid)
     {
         this.tSid = tSid;
     }
 
-    public long gettSid()
+    public Integer gettSid()
     {
         return tSid;
     }
 
-    public void setJhId(Long jhId)
+    public void setJhId(Integer jhId)
     {
         this.jhId = jhId;
     }
 
-    public long getJhId()
+    public Integer getJhId()
     {
         return jhId;
     }
@@ -175,12 +179,23 @@ public class PpmDevice extends BaseEntity
     {
         return tXiao;
     }
-    public void settUnit(Long tUnit)
+
+    public void settAmount(Integer tAmount)
+    {
+        this.tAmount = tAmount;
+    }
+
+    public Integer gettAmount()
+    {
+        return tAmount;
+    }
+
+    public void settUnit(String tUnit)
     {
         this.tUnit = tUnit;
     }
 
-    public Long gettUnit()
+    public String gettUnit()
     {
         return tUnit;
     }
