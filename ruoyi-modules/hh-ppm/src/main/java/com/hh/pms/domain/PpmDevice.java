@@ -20,9 +20,22 @@ public class PpmDevice extends BaseEntity
     /** 产品编码 */
     private Long tid;
 
-    /** 行项目编号 */
-    @Excel(name = "行项目编号")
-    private String vCode;
+    /**
+     * 采购计划ID
+     */
+    @Excel(name = "采购计划ID")
+    private Long aid;
+
+    /**
+     * 招标项目ID
+     */
+    @Excel(name = "招标项目ID")
+    private Long tSid;
+    /**
+     * 框架计划ID
+     */
+    @Excel(name = "框架计划ID")
+    private Long jhId;
 
     /** 产品名称 */
     @Excel(name = "产品名称")
@@ -98,14 +111,33 @@ public class PpmDevice extends BaseEntity
     {
         return tid;
     }
-    public void setvCode(String vCode)
+    public void setAid(Long aid)
     {
-        this.vCode = vCode;
+        this.aid = aid;
     }
 
-    public String getvCode()
+    public long getAid()
     {
-        return vCode;
+        return aid;
+    }
+    public void settSid(Long tSid)
+    {
+        this.tSid = tSid;
+    }
+
+    public long gettSid()
+    {
+        return tSid;
+    }
+
+    public void setJhId(Long jhId)
+    {
+        this.jhId = jhId;
+    }
+
+    public long getJhId()
+    {
+        return jhId;
     }
     public void settName(String tName)
     {
@@ -256,7 +288,9 @@ public class PpmDevice extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("tid", getTid())
-                .append("vCode", getvCode())
+                .append("aid", getAid())
+                .append("tSid", gettSid())
+                .append("jhId", getJhId())
                 .append("tDa", gettDa())
                 .append("tZhong", gettZhong())
                 .append("tXiao", gettXiao())

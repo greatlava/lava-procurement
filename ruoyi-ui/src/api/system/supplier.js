@@ -33,6 +33,13 @@ export function getSupplier(hid) {
   })
 }
 
+export function getSupplierByZrId(zrId) {
+  return request({
+    url: '/basic/supplier/access/' + zrId,
+    method: 'get'
+  })
+}
+
 // 新增供应商
 export function addSupplier(data) {
   return request({

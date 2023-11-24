@@ -173,7 +173,7 @@ export const dynamicRoutes = [
       {
         component: () => import('@/views/tender/tender1/details'),
         name: 'Details',
-        meta: { title: '招标项目-查看', activeMenu: '/tender/tender1' }
+        meta: {title: '招标项目-查看', activeMenu: '/tender/tender1'}
       }
     ]
   },
@@ -185,7 +185,7 @@ export const dynamicRoutes = [
       {
         component: () => import('@/views/tender/tender1/update'),
         name: 'Update',
-        meta: { title: '招标项目-编辑', activeMenu: '/tender/tender1' }
+        meta: {title: '招标项目-编辑', activeMenu: '/tender/tender1'}
       }
     ]
   },
@@ -199,6 +199,19 @@ export const dynamicRoutes = [
         component: () => import('@/views/supplier/sqe/detail'),
         name: 'Detail',
         meta: {title: '查看', activeMenu: '/supplier'}
+      }
+    ]
+  },
+  {
+    path: '/supplier/process',
+    component: Details,
+    hidden: true,
+    children: [
+      {
+        path: 'process?zr_id=:zr_id(\\d+)',
+        component: () => import('@/views/supplier/sqe/process'),
+        name: 'Process',
+        meta: {title: '审核', activeMenu: '/supplier'}
       }
     ]
   }
