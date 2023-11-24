@@ -13,6 +13,7 @@
         <result property="tDa"    column="t_da"    />
         <result property="tZhong"    column="t_zhong"    />
         <result property="tXiao"    column="t_xiao"    />
+        <result property="tAmount"    column="t_amount"    />
         <result property="tUnit"    column="t_unit"    />
         <result property="shui"    column="shui"    />
         <result property="tPrice"    column="t_price"    />
@@ -28,7 +29,7 @@
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
-        select tid, aid,t_sid,jh_id, t_name, t_da, t_zhong, t_xiao, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
+        select tid, aid,t_sid,jh_id, t_name, t_da, t_zhong, t_xiao,t_amount, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
     </sql>
 
     <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
@@ -41,6 +42,7 @@
             <if test="tDa != null "> and t_da = #{tDa}</if>
             <if test="tZhong != null "> and t_zhong = #{tZhong}</if>
             <if test="tXiao != null "> and t_xiao = #{tXiao}</if>
+            <if test="tAmount != null "> and t_amount = #{tAmount}</if>
             <if test="tUnit != null "> and t_unit = #{tUnit}</if>
             <if test="shui != null "> and shui = #{shui}</if>
             <if test="tPrice != null "> and t_price = #{tPrice}</if>
@@ -72,6 +74,7 @@
             <if test="tDa != null">t_da,</if>
             <if test="tZhong != null">t_zhong,</if>
             <if test="tXiao != null">t_xiao,</if>
+            <if test="tAmount != null">t_amount,</if>
             <if test="tUnit != null">t_unit,</if>
             <if test="shui != null">shui,</if>
             <if test="tPrice != null">t_price,</if>
@@ -94,6 +97,7 @@
             <if test="tDa != null">#{tDa},</if>
             <if test="tZhong != null">#{tZhong},</if>
             <if test="tXiao != null">#{tXiao},</if>
+            <if test="tAmount != null">#{tAmount},</if>
             <if test="tUnit != null">#{tUnit},</if>
             <if test="shui != null">#{shui},</if>
             <if test="tPrice != null">#{tPrice},</if>
@@ -119,6 +123,7 @@
             <if test="tDa != null">t_da = #{tDa},</if>
             <if test="tZhong != null">t_zhong = #{tZhong},</if>
             <if test="tXiao != null">t_xiao = #{tXiao},</if>
+            <if test="tAmount != null">t_amount = #{tAmount},</if>
             <if test="tUnit != null">t_unit = #{tUnit},</if>
             <if test="shui != null">shui = #{shui},</if>
             <if test="tPrice != null">t_price = #{tPrice},</if>

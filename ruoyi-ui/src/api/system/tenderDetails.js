@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
-// 查询行项目列表
-export function listItems(query) {
+// 查询设备信息列表
+export function listDevice(query) {
   return request({
-    url: '/system/items/list',
+    url: '/ppm/device/list',
     method: 'get',
     params: query
   })
 }
 
-// 查询行项目详细
-export function getItems(vid) {
+// 查询设备信息详细
+export function getDevice(tid) {
   return request({
-    url: '/system/items/' + vid,
+    url: '/system/device/' + tid,
     method: 'get'
   })
 }
 
-// 新增行项目
-export function addItems(data) {
+// 新增设备信息
+export function addDevice(data) {
   return request({
-    url: '/system/items',
+    url: '/system/device',
     method: 'post',
     data: data
   })
 }
 
-// 修改行项目
-export function updateItems(data) {
+// 修改设备信息
+export function updateDevice(data) {
   return request({
-    url: '/system/items',
+    url: '/system/device',
     method: 'put',
     data: data
   })
 }
 
-// 删除行项目
-export function delItems(vid) {
+// 删除设备信息
+export function delDevice(tid) {
   return request({
-    url: '/system/items/' + vid,
+    url: '/system/device/' + tid,
     method: 'delete'
   })
 }
