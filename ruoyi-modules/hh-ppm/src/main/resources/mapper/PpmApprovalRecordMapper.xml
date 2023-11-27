@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.PpmApprovalRecordMapper">
+
+
+    <resultMap type="PpmApprovalRecord" id="PpmApprovalRecordResult">
+        <result property="rid"    column="rid"    />
+        <result property="aid"    column="aid"    />
+        <result property="node"    column="node"    />
+        <result property="processedBy"    column="processed_by"    />
+        <result property="depnt"    column="depnt"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="opinion"    column="opinion"    />
+        <result property="opinionDetails"    column="opinion_details"    />
+    </resultMap>
+
+    <sql id="selectPpmApprovalRecordVo">
+        select rid, aid, node, processed_by, depnt, update_time, opinion, opinion_details from ppm_approval_record
+    </sql>
+
+    <select id="selectPpmApprovalRecordList" parameterType="PpmApprovalRecord" resultMap="PpmApprovalRecordResult">
+        <include refid="selectPpmApprovalRecordVo"/>
+        <where>
+            <if test="rid != null "> and rid = #{rid}</if>
+            <if test="aid != null "> and aid = #{aid}</if>
+            <if test="node != null  and node != ''"> and node = #{node}</if>
+            <if test="processedBy != null  and processedBy != ''"> and processed_by = #{processedBy}</if>
+            <if test="depnt != null  and depnt != ''"> and depnt = #{depnt}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+            <if test="opinion != null  and opinion != ''"> and opinion = #{opinion}</if>
+            <if test="opinionDetails != null  and opinionDetails != ''"> and opinion_details = #{opinionDetails}</if>
+        </where>
+    </select>
+
+    <select id="selectPpmApprovalRecordByRid" parameterType="Integer" resultMap="PpmApprovalRecordResult">
+        <include refid="selectPpmApprovalRecordVo"/>
+        where rid = #{rid}
+    </select>
+
+    <insert id="insertPpmApprovalRecord" parameterType="PpmApprovalRecord" useGeneratedKeys="true" keyProperty="rid">
+        insert into ppm_approval_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aid != null">aid,</if>
+            <if test="node != null">node,</if>
+            <if test="processedBy != null">processed_by,</if>
+            <if test="depnt != null">depnt,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="opinion != null">opinion,</if>
+            <if test="opinionDetails != null">opinion_details,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aid != null">#{aid},</if>
+            <if test="node != null">#{node},</if>
+            <if test="processedBy != null">#{processedBy},</if>
+            <if test="depnt != null">#{depnt},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="opinion != null">#{opinion},</if>
+            <if test="opinionDetails != null">#{opinionDetails},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePpmApprovalRecord" parameterType="PpmApprovalRecord">
+        update ppm_approval_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="node != null">node = #{node},</if>
+            <if test="processedBy != null">processed_by = #{processedBy},</if>
+            <if test="depnt != null">depnt = #{depnt},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="opinion != null">opinion = #{opinion},</if>
+            <if test="opinionDetails != null">opinion_details = #{opinionDetails},</if>
+        </trim>
+        where rid = #{rid}
+    </update>
+
+    <delete id="deletePpmApprovalRecordByRid" parameterType="Integer">
+        delete from ppm_approval_record where rid = #{rid}
+    </delete>
+
+    <delete id="deletePpmApprovalRecordByRids" parameterType="String">
+        delete from ppm_approval_record where rid in
+        <foreach item="rid" collection="array" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+    </delete>
+</mapper>

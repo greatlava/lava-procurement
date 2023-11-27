@@ -1,5 +1,6 @@
 package com.hh.pms.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -18,44 +19,34 @@ public class PpmDevice extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 产品编码 */
-    private Long tid;
+    @Excel(name = "产品编码")
+    private String tid;
 
-    /**
-     * 采购计划ID
-     */
-    @Excel(name = "采购计划ID")
-    private Integer aid;
+    /** 采购计划ID */
+    private Long aid;
 
-    /**
-     * 招标项目ID
-     */
-    @Excel(name = "招标项目ID")
-    private Integer tSid;
-    /**
-     * 框架计划ID
-     */
-    @Excel(name = "框架计划ID")
-    private Integer jhId;
+    /** 招标项目ID */
+    private Long tSid;
+
+    /** 框架计划ID */
+    private Long jhId;
 
     /** 产品名称 */
     @Excel(name = "产品名称")
     private String tName;
 
     /** 大类 */
-    @Excel(name = "大类")
     private Long tDa;
 
     /** 中类 */
-    @Excel(name = "中类")
     private Long tZhong;
 
     /** 小类 */
-    @Excel(name = "小类")
     private Long tXiao;
 
     /** 数量 */
     @Excel(name = "数量")
-    private Integer tAmount;
+    private String tAmount;
 
     /** 计量单位 */
     @Excel(name = "计量单位")
@@ -65,7 +56,7 @@ public class PpmDevice extends BaseEntity
     @Excel(name = "税率")
     private Long shui;
 
-    /** 计量单位 */
+    /** 预算单价 */
     @Excel(name = "预算单价")
     private Long tPrice;
 
@@ -99,47 +90,48 @@ public class PpmDevice extends BaseEntity
     private String tNotes;
 
     /** 采购方式1：公开招标 2：邀请招标 3：询价 4：委托 5：竞争性谈判 6：单一来源 */
-    @Excel(name = "采购方式1：公开招标 2：邀请招标 3：询价 4：委托 5：竞争性谈判 6：单一来源")
     private Long aWay;
 
     /** 采购计划状态 */
-    @Excel(name = "采购计划状态")
     private Long aState;
 
-    public void setTid(Long tid)
+    /** 规格型号 */
+    @Excel(name = "规格型号")
+    private String tModel;
+
+    public void setTid(String tid)
     {
         this.tid = tid;
     }
 
-    public Long getTid()
+    public String getTid()
     {
         return tid;
     }
-    public void setAid(Integer aid)
+    public void setAid(Long aid)
     {
         this.aid = aid;
     }
 
-    public Integer getAid()
+    public Long getAid()
     {
         return aid;
     }
-    public void settSid(Integer tSid)
+    public void settSid(Long tSid)
     {
         this.tSid = tSid;
     }
 
-    public Integer gettSid()
+    public Long gettSid()
     {
         return tSid;
     }
-
-    public void setJhId(Integer jhId)
+    public void setJhId(Long jhId)
     {
         this.jhId = jhId;
     }
 
-    public Integer getJhId()
+    public Long getJhId()
     {
         return jhId;
     }
@@ -179,17 +171,15 @@ public class PpmDevice extends BaseEntity
     {
         return tXiao;
     }
-
-    public void settAmount(Integer tAmount)
+    public void settAmount(String tAmount)
     {
         this.tAmount = tAmount;
     }
 
-    public Integer gettAmount()
+    public String gettAmount()
     {
         return tAmount;
     }
-
     public void settUnit(String tUnit)
     {
         this.tUnit = tUnit;
@@ -298,6 +288,15 @@ public class PpmDevice extends BaseEntity
     {
         return aState;
     }
+    public void settModel(String tModel)
+    {
+        this.tModel = tModel;
+    }
+
+    public String gettModel()
+    {
+        return tModel;
+    }
 
     @Override
     public String toString() {
@@ -306,9 +305,11 @@ public class PpmDevice extends BaseEntity
                 .append("aid", getAid())
                 .append("tSid", gettSid())
                 .append("jhId", getJhId())
+                .append("tName", gettName())
                 .append("tDa", gettDa())
                 .append("tZhong", gettZhong())
                 .append("tXiao", gettXiao())
+                .append("tAmount", gettAmount())
                 .append("tUnit", gettUnit())
                 .append("shui", getShui())
                 .append("tPrice", gettPrice())
@@ -321,6 +322,7 @@ public class PpmDevice extends BaseEntity
                 .append("tNotes", gettNotes())
                 .append("aWay", getaWay())
                 .append("aState", getaState())
+                .append("tModel", gettModel())
                 .toString();
     }
 }

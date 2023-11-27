@@ -17,7 +17,7 @@ public interface PpmDeviceMapper {
      * @param tid 设备信息主键
      * @return 设备信息
      */
-    public PpmDevice selectPpmDeviceByTid(Long tid);
+    public PpmDevice selectPpmDeviceByTid(String tid);
 
     /**
      * 查询设备信息列表
@@ -49,7 +49,7 @@ public interface PpmDeviceMapper {
      * @param tid 设备信息主键
      * @return 结果
      */
-    public int deletePpmDeviceByTid(Long tid);
+    public int deletePpmDeviceByTid(String tid);
 
     /**
      * 批量删除设备信息
@@ -57,5 +57,5 @@ public interface PpmDeviceMapper {
      * @param tids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePpmDeviceByTids(Long[] tids);
+    public int deletePpmDeviceByTids(String[] tids);
 }

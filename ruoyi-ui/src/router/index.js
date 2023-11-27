@@ -214,6 +214,18 @@ export const dynamicRoutes = [
         meta: {title: '审核', activeMenu: '/supplier'}
       }
     ]
+  },
+  {
+    path: '/purchase/insert',
+    component: Details,
+    children: [
+      {
+        path: 'insert',
+        component: () => import('@/views/purchase/otb/insert'),
+        name: 'InsertOtb',
+        meta: {title: '新增采购计划', activeMenu: '/purchase'}
+      }
+    ]
   }
 ]
 
