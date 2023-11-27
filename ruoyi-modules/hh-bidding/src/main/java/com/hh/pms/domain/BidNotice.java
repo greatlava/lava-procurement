@@ -30,7 +30,7 @@ public class BidNotice extends BaseEntity
 
     /** 关联项目 */
     @Excel(name = "关联项目")
-    private Long uProject;
+    private String uProject;
 
     /** 项目资金 */
     @Excel(name = "项目资金")
@@ -95,12 +95,12 @@ public class BidNotice extends BaseEntity
     {
         return uTitle;
     }
-    public void setuProject(Long uProject) 
+    public void setuProject(String uProject)
     {
         this.uProject = uProject;
     }
 
-    public Long getuProject() 
+    public String getuProject()
     {
         return uProject;
     }

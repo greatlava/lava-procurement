@@ -8,6 +8,7 @@ import Layout from '@/layout'
 import Details from '../views/tender/tender1/details.vue'
 import Update from "@/views/tender/tender1/update.vue";
 import Detail from "@/views/supplier/sqe/detail.vue";
+import Bidding from "@/views/tender/tender1/bidding.vue";
 
 /**
  * Note: 路由配置项
@@ -186,6 +187,18 @@ export const dynamicRoutes = [
         component: () => import('@/views/tender/tender1/update'),
         name: 'Update',
         meta: { title: '招标项目-编辑', activeMenu: '/tender/tender1' }
+      }
+    ]
+  },
+  {
+    path: '/tender/bidding?type=bidding&sid=:sid(\\d+)',
+    component: Bidding,
+    hidden: true,
+    children: [
+      {
+        component: () => import('@/views/tender/tender1/bidding'),
+        name: 'Bidding',
+        meta: {title: '进入项目', activeMenu: '/tender/tender1'}
       }
     ]
   },
