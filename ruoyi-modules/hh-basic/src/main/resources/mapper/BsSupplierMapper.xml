@@ -192,6 +192,11 @@
         where hid = #{hid}
     </select>
 
+    <select id="selectBsSupplierByZrId" parameterType="Long" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        where zr_id = #{zrId}
+    </select>
+
     <insert id="insertBsSupplier" parameterType="com.hh.pms.sae.domain.BsSupplier">
         insert into bs_supplier
         <trim prefix="(" suffix=")" suffixOverrides=",">

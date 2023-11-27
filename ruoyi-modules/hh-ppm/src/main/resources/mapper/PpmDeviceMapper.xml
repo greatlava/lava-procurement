@@ -3,8 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.PpmDeviceMapper">
-
-    <resultMap type="com.hh.pms.domain.PpmDevice" id="PpmDeviceResult">
+    <resultMap type="PpmDevice" id="PpmDeviceResult">
         <result property="tid"    column="tid"    />
         <result property="aid"    column="aid"    />
         <result property="tSid"    column="t_sid"    />
@@ -26,44 +25,27 @@
         <result property="tNotes"    column="t_notes"    />
         <result property="aWay"    column="a_way"    />
         <result property="aState"    column="a_state"    />
+        <result property="tModel"    column="t_model"    />
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
-        select tid, aid,t_sid,jh_id, t_name, t_da, t_zhong, t_xiao,t_amount, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state from ppm_device
+        select tid, aid, t_sid, jh_id, t_name, t_da, t_zhong, t_xiao, t_amount, t_unit, shui, t_price, t_total_price, t_date, t_address, t_illustrate, t_purchaser, du_code, t_notes, a_way, a_state, t_model from ppm_device
     </sql>
 
-    <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
+    <select id="selectPpmDeviceList" parameterType="PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         <where>
-            <if test="aid != null  and aid != ''"> and aid = #{aid}</if>
-            <if test="tSid != null  and tSid != ''"> and t_sid = #{tSid}</if>
-            <if test="jhId != null  and jhId != ''"> and jh_id = #{jhId}</if>
+            <if test="tid != null  and tid != ''"> and tid = #{tid}</if>
             <if test="tName != null  and tName != ''"> and t_name like concat('%', #{tName}, '%')</if>
-            <if test="tDa != null "> and t_da = #{tDa}</if>
-            <if test="tZhong != null "> and t_zhong = #{tZhong}</if>
-            <if test="tXiao != null "> and t_xiao = #{tXiao}</if>
-            <if test="tAmount != null "> and t_amount = #{tAmount}</if>
-            <if test="tUnit != null "> and t_unit = #{tUnit}</if>
-            <if test="shui != null "> and shui = #{shui}</if>
-            <if test="tPrice != null "> and t_price = #{tPrice}</if>
-            <if test="tTotalPrice != null "> and t_total_price = #{tTotalPrice}</if>
-            <if test="tDate != null "> and t_date = #{tDate}</if>
-            <if test="tAddress != null  and tAddress != ''"> and t_address = #{tAddress}</if>
-            <if test="tIllustrate != null  and tIllustrate != ''"> and t_illustrate = #{tIllustrate}</if>
-            <if test="tPurchaser != null  and tPurchaser != ''"> and t_purchaser = #{tPurchaser}</if>
-            <if test="duCode != null  and duCode != ''"> and du_code = #{duCode}</if>
-            <if test="tNotes != null  and tNotes != ''"> and t_notes = #{tNotes}</if>
-            <if test="aWay != null "> and a_way = #{aWay}</if>
-            <if test="aState != null "> and a_state = #{aState}</if>
         </where>
     </select>
 
-    <select id="selectPpmDeviceByTid" parameterType="Long" resultMap="PpmDeviceResult">
+    <select id="selectPpmDeviceByTid" parameterType="String" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         where tid = #{tid}
     </select>
 
-    <insert id="insertPpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
+    <insert id="insertPpmDevice" parameterType="PpmDevice">
         insert into ppm_device
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tid != null">tid,</if>
@@ -87,6 +69,7 @@
             <if test="tNotes != null">t_notes,</if>
             <if test="aWay != null">a_way,</if>
             <if test="aState != null">a_state,</if>
+            <if test="tModel != null">t_model,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tid != null">#{tid},</if>
@@ -110,10 +93,11 @@
             <if test="tNotes != null">#{tNotes},</if>
             <if test="aWay != null">#{aWay},</if>
             <if test="aState != null">#{aState},</if>
+            <if test="tModel != null">#{tModel},</if>
         </trim>
     </insert>
 
-    <update id="updatePpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
+    <update id="updatePpmDevice" parameterType="PpmDevice">
         update ppm_device
         <trim prefix="SET" suffixOverrides=",">
             <if test="aid != null">aid = #{aid},</if>
@@ -136,11 +120,12 @@
             <if test="tNotes != null">t_notes = #{tNotes},</if>
             <if test="aWay != null">a_way = #{aWay},</if>
             <if test="aState != null">a_state = #{aState},</if>
+            <if test="tModel != null">t_model = #{tModel},</if>
         </trim>
         where tid = #{tid}
     </update>
 
-    <delete id="deletePpmDeviceByTid" parameterType="Long">
+    <delete id="deletePpmDeviceByTid" parameterType="String">
         delete from ppm_device where tid = #{tid}
     </delete>
 

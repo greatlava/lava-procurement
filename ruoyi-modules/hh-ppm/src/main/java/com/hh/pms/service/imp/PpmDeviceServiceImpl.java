@@ -26,7 +26,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 设备信息
      */
     @Override
-    public PpmDevice selectPpmDeviceByTid(Long tid) {
+    public PpmDevice selectPpmDeviceByTid(String tid)
+    {
         return ppmDeviceMapper.selectPpmDeviceByTid(tid);
     }
 
@@ -37,7 +38,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 设备信息
      */
     @Override
-    public List<PpmDevice> selectPpmDeviceList(PpmDevice ppmDevice) {
+    public List<PpmDevice> selectPpmDeviceList(PpmDevice ppmDevice)
+    {
         return ppmDeviceMapper.selectPpmDeviceList(ppmDevice);
     }
 
@@ -48,7 +50,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 结果
      */
     @Override
-    public int insertPpmDevice(PpmDevice ppmDevice) {
+    public int insertPpmDevice(PpmDevice ppmDevice)
+    {
         return ppmDeviceMapper.insertPpmDevice(ppmDevice);
     }
 
@@ -59,7 +62,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 结果
      */
     @Override
-    public int updatePpmDevice(PpmDevice ppmDevice) {
+    public int updatePpmDevice(PpmDevice ppmDevice)
+    {
         return ppmDeviceMapper.updatePpmDevice(ppmDevice);
     }
 
@@ -70,7 +74,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 结果
      */
     @Override
-    public int deletePpmDeviceByTids(Long[] tids) {
+    public int deletePpmDeviceByTids(String[] tids)
+    {
         return ppmDeviceMapper.deletePpmDeviceByTids(tids);
     }
 
@@ -81,7 +86,8 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
      * @return 结果
      */
     @Override
-    public int deletePpmDeviceByTid(Long tid) {
+    public int deletePpmDeviceByTid(String tid)
+    {
         return ppmDeviceMapper.deletePpmDeviceByTid(tid);
     }
 }

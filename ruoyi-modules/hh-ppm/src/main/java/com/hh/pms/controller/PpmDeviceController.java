@@ -31,8 +31,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/device")
-public class PpmDeviceController extends BaseController
-{
+public class PpmDeviceController extends BaseController {
     @Autowired
     private IPpmDeviceService ppmDeviceService;
 
@@ -66,7 +65,7 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:query")
     @GetMapping(value = "/{tid}")
-    public AjaxResult getInfo(@PathVariable("tid") Long tid)
+    public AjaxResult getInfo(@PathVariable("tid") String tid)
     {
         return success(ppmDeviceService.selectPpmDeviceByTid(tid));
     }
@@ -98,8 +97,8 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:remove")
     @Log(title = "设备信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{tids}")
-    public AjaxResult remove(@PathVariable Long[] tids)
+    @DeleteMapping("/{tids}")
+    public AjaxResult remove(@PathVariable String[] tids)
     {
         return toAjax(ppmDeviceService.deletePpmDeviceByTids(tids));
     }

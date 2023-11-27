@@ -193,16 +193,16 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                  size="small"
-                  @click="handleEdit(scope.$index, scope.row)">审核
-                </el-button>
-                <router-link :to="'detail?hid='+scope.row.hid">
+                <router-link :to="'process?zr_id='+scope.row.zrId">
+                  <el-button
+                    size="small">审核
+                  </el-button>
+                </router-link>
+                <router-link :to="'detail?zr_id='+scope.row.zrId+'&hid=0'">
                   <el-button
                     style="margin-left: 10px"
                     size="small"
-                    type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">查看
+                    type="primary">查看
                   </el-button>
                 </router-link>
               </template>

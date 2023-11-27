@@ -148,10 +148,12 @@
             </el-descriptions>
             <el-form style="margin-top: 20px" label-width="80px">
               <el-form-item label="审核意见">
-                <el-input type="textarea" v-model="this.opinion" disabled/>
+                <el-input type="textarea" v-model="this.opinion"/>
               </el-form-item>
             </el-form>
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -208,6 +210,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -236,6 +240,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -254,6 +260,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -273,6 +281,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -293,6 +303,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -307,6 +319,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
+              <el-button @click="" type="primary">通过</el-button>
+              <el-button @click="" type="danger">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -329,7 +343,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      hid: this.$route.query.hid,
       zr_id: this.$route.query.zr_id,
       activeName: 'first',
       opinion: '',
@@ -373,55 +386,29 @@ export default {
       this.$router.back()
     },
     query() {
-      if (this.zr_id == 0) {
-        getSupplier(this.hid).then(response => {
-          console.log(response)
-          this.opinion = response.data.fOpinion
-          this.hName = response.data.hName
-          this.hCreditCode = response.data.hCreditCode
-          this.hIncorporation = response.data.hIncorporation
-          this.hInstitution = response.data.hInstitution
-          this.hQuality = response.data.hQuality
-          this.hStartTime = response.data.hStartTime
-          this.hJuridical = response.data.hJuridical
-          this.hJuridicalIdentity = response.data.hJuridicalIdentity
-          this.hAddress = response.data.hAddress
-          this.hRange = response.data.hRange
-          this.hDesc = response.data.hDesc
-          this.hExpiration = response.data.hExpiration
-          this.hBank = response.data.hBank
-          this.hBankAddress = response.data.hBankAddress
-          this.hSignPhone = response.data.hSignPhone
-          this.hSignAddress = response.data.hSignAddress
-          this.hCapital = response.data.hCapital
-          this.hActualCapital = response.data.hActualCapital
-          this.fState = response.data.fState
-        });
-      } else {
-        getSupplierByZrId(this.zr_id).then(response => {
-          console.log(response)
-          this.opinion = response.data.fOpinion
-          this.hName = response.data.hName
-          this.hCreditCode = response.data.hCreditCode
-          this.hIncorporation = response.data.hIncorporation
-          this.hInstitution = response.data.hInstitution
-          this.hQuality = response.data.hQuality
-          this.hStartTime = response.data.hStartTime
-          this.hJuridical = response.data.hJuridical
-          this.hJuridicalIdentity = response.data.hJuridicalIdentity
-          this.hAddress = response.data.hAddress
-          this.hRange = response.data.hRange
-          this.hDesc = response.data.hDesc
-          this.hExpiration = response.data.hExpiration
-          this.hBank = response.data.hBank
-          this.hBankAddress = response.data.hBankAddress
-          this.hSignPhone = response.data.hSignPhone
-          this.hSignAddress = response.data.hSignAddress
-          this.hCapital = response.data.hCapital
-          this.hActualCapital = response.data.hActualCapital
-          this.fState = response.data.fState
-        });
-      }
+      getSupplierByZrId(this.zr_id).then(response => {
+        console.log(response)
+        this.opinion = response.data.fOpinion
+        this.hName = response.data.hName
+        this.hCreditCode = response.data.hCreditCode
+        this.hIncorporation = response.data.hIncorporation
+        this.hInstitution = response.data.hInstitution
+        this.hQuality = response.data.hQuality
+        this.hStartTime = response.data.hStartTime
+        this.hJuridical = response.data.hJuridical
+        this.hJuridicalIdentity = response.data.hJuridicalIdentity
+        this.hAddress = response.data.hAddress
+        this.hRange = response.data.hRange
+        this.hDesc = response.data.hDesc
+        this.hExpiration = response.data.hExpiration
+        this.hBank = response.data.hBank
+        this.hBankAddress = response.data.hBankAddress
+        this.hSignPhone = response.data.hSignPhone
+        this.hSignAddress = response.data.hSignAddress
+        this.hCapital = response.data.hCapital
+        this.hActualCapital = response.data.hActualCapital
+        this.fState = response.data.fState
+      });
       this.loading = false
     }
   }

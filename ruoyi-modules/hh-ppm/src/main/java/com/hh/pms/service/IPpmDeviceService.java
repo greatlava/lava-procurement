@@ -18,7 +18,7 @@ public interface IPpmDeviceService {
      * @param tid 设备信息主键
      * @return 设备信息
      */
-    public PpmDevice selectPpmDeviceByTid(Long tid);
+    public PpmDevice selectPpmDeviceByTid(String tid);
 
     /**
      * 查询设备信息列表
@@ -50,7 +50,7 @@ public interface IPpmDeviceService {
      * @param tids 需要删除的设备信息主键集合
      * @return 结果
      */
-    public int deletePpmDeviceByTids(Long[] tids);
+    public int deletePpmDeviceByTids(String[] tids);
 
     /**
      * 删除设备信息信息
@@ -58,5 +58,5 @@ public interface IPpmDeviceService {
      * @param tid 设备信息主键
      * @return 结果
      */
-    public int deletePpmDeviceByTid(Long tid);
+    public int deletePpmDeviceByTid(String tid);
 }

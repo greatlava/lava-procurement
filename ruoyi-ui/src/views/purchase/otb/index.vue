@@ -19,7 +19,9 @@
           </el-form-item>
           <el-form-item size="medium">
             <el-button type="primary" @click="query">查询</el-button>
-            <el-button type="primary" @click="add">新建</el-button>
+            <router-link to="insert">
+              <el-button style="margin: 0px 20px" type="primary" @click="handleAdd">新建</el-button>
+            </router-link>
             <el-button @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-row>
@@ -29,7 +31,7 @@
     <div class="tcl">
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="待提交" name="first">
-          <el-table v-loading="loading" :data="planList" @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" :data="planList">
             <el-table-column label="序号" align="center" prop="aid" width="80"/>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aBtype">
@@ -71,7 +73,7 @@
         </el-tab-pane>
 
         <el-tab-pane label="待审批" name="second">
-          <el-table v-loading="loading" :data="planList" @before-leave="handleSelectionChange">
+          <el-table v-loading="loading" :data="planList">
             <el-table-column label="序号" align="center" prop="aid" width="80"/>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
@@ -90,7 +92,7 @@
         </el-tab-pane>
 
         <el-tab-pane label="已生效" name="third">
-          <el-table v-loading="loading" :data="planList" @selection-change="handleSelectionChange">
+          <el-table v-loading="loading" :data="planList">
             <el-table-column label="序号" align="center" prop="aid" width="80"/>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aCreateDept"/>
@@ -107,8 +109,8 @@
         </el-tab-pane>
       </el-tabs>
       <!-- 添加或修改采购计划对话框 -->
-      <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-        <el-tabs v-model="toExamine">
+      <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
+        <el-tabs @tab-click="handleClick" v-model="paneName">
           <el-tab-pane label="基础资料" name="basic">
             <el-descriptions direction="vertical" class="margin-top" :column="4" size="medium" border>
               <el-descriptions-item label="采购计划编号">{{ form.aCode }}</el-descriptions-item>
@@ -121,7 +123,7 @@
                 </el-button>
               </el-descriptions-item>
             </el-descriptions>
-            <el-table :data="budgetData" style="margin-top: 20px">
+            <el-table max-height="250" :data="budgetData" style="margin-top: 20px">
               <el-table-column
                 fixed
                 height="250"
@@ -151,46 +153,108 @@
                 label="已使用金额">
               </el-table-column>
             </el-table>
+            <!-- 行项目 -->
+            <el-table max-height="250" v-loading="loading" :data="device" style="margin-top: 20px">
+              <el-table-column label="产品编码" align="center" prop="tid"/>
+              <el-table-column label="行项目编号" align="center" prop="vCode" width="150"/>
+              <el-table-column label="产品名称" align="center" prop="tName"/>
+              <el-table-column label="数量" align="center" prop="tUnit"/>
+              <el-table-column label="税率" align="center" prop="shui"/>
+              <el-table-column label="计量单位" align="center" prop="tPrice"/>
+              <el-table-column label="预算总价" align="center" prop="tTotalPrice"/>
+              <el-table-column label="交付时间" align="center" prop="tDate" width="180">
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.tDate, '{y}-{m}-{d}') }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="交付地点" align="center" prop="tAddress"/>
+              <el-table-column label="需求说明" align="center" prop="tIllustrate"/>
+              <el-table-column label="采购人" align="center" prop="tPurchaser"/>
+              <el-table-column label="预算科目编号" align="center" prop="duCode" width="120"/>
+              <el-table-column label="备注" align="center" prop="tNotes"/>
+              <el-table-column label="采购方式" align="center" prop="aWay"/>
+              <el-table-column label="采购计划状态" align="center" prop="aState" width="120"/>
+            </el-table>
           </el-tab-pane>
-          <el-tab-pane label="审批记录" name="true">
 
+          <el-tab-pane label="审批记录" name="record_approval">
+
+            <el-steps space="200" simple :active="form.aAstate + 1">
+              <el-step title="待提交"></el-step>
+              <el-step title="待审核"></el-step>
+              <el-step title="已生效"></el-step>
+            </el-steps>
+
+            <el-table style="margin-top: 20px" max-height="250" v-loading="loading" :data="record_approval">
+              <el-table-column label="id" align="center" prop="rid"/>
+              <el-table-column label="采购计划id" align="center" prop="aid" width="110"/>
+              <el-table-column label="流程节点" align="center" prop="node" width="110"/>
+              <el-table-column label="处理人" align="center" prop="processedBy"/>
+              <el-table-column label="所属部门" align="center" prop="depnt"/>
+              <el-table-column label="处理时间" align="center" prop="updateTime" width="180">
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="处理意见" align="center" prop="opinion"/>
+              <el-table-column label="意见详情" align="center" prop="opinionDetails" width="200"/>
+              <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['system:record:remove']"
+                  >删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-tab-pane>
         </el-tabs>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
-      <!--   显示修改   -->
-<!--      <el-dialog :title="title" width="800px" :visible.sync="false" append-to-body>-->
-<!--        <el-form :inline="true" size="medium" ref="form" :model="form" :rules="rules" label-width="140px">-->
+      <!--   显示新增修改   -->
+<!--      <el-dialog :title="title" width="800px" :visible.sync="showInsert" append-to-body>-->
+<!--        <el-form style="display: flex;flex-wrap: wrap; justify-content: space-around;" :inline="true" size="medium" ref="form" :model="form" :rules="rules" label-width="140px">-->
 <!--          <el-form-item label="采购计划编号" prop="aCode">-->
-<!--            <el-input v-model="form.aCode" disabled placeholder="请输入采购计划编号"/>-->
+<!--            &lt;!&ndash;            <el-input v-model="form.aCode" disabled placeholder="请输入采购计划编号"/>&ndash;&gt;-->
+<!--            <el-select style="width: 202px" v-model="checkedRuleForm" placeholder="请选择">-->
+<!--              <el-option-->
+<!--                v-for="item in codeRuleForm"-->
+<!--                :key="item.targetForm"-->
+<!--                :label="item.targetForm"-->
+<!--                :value="item.targetForm">-->
+<!--              </el-option>-->
+<!--            </el-select>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="计划名称" prop="aName">-->
 <!--            <el-input v-model="form.aName" placeholder="请输入计划名称"/>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="创建人" prop="createBy">-->
-<!--            <el-input v-model="form.createBy" disabled/>-->
+<!--            <el-input v-model="form.createBy" :disabled="form.aid!=null"/>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="创建部门" prop="aCreateDept">-->
-<!--            <el-input v-model="form.aCreateDept" disabled/>-->
+<!--            <el-input v-model="form.aCreateDept" :disabled="form.aid!=null"/>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="附件" prop="fjAnnex">-->
 <!--            <div style="width: 202px">-->
 <!--              <el-button type="primary">-->
-<!--                下载附件<i class="el-icon-download"></i>-->
+<!--                上传附件<i class="el-icon-upload"></i>-->
 <!--              </el-button>-->
 <!--            </div>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="采购计划审核意见" prop="aOpinion">-->
-<!--            <el-input v-model="form.aOpinion" type="textarea" placeholder="请输入内容"/>-->
+<!--            <el-input style="width: 202px" v-model="form.aOpinion" type="textarea" placeholder="请输入内容"/>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="行项目数量" prop="aProjectCount">-->
 <!--            <el-input v-model="form.aProjectCount" placeholder="请输入行项目数量"/>-->
 <!--          </el-form-item>-->
 <!--          <el-form-item label="采购业务类型名称" prop="aBtype">-->
-<!--            <el-select v-model="form.aBtype" placeholder="请选择采购业务类型名称">-->
+<!--            <el-select style="width: 202px" v-model="form.aBtype" placeholder="请选择采购业务类型名称">-->
 <!--              <el-option-->
 <!--                v-for="dict in dict.type.ppm_procurement_plan"-->
 <!--                :key="dict.value"-->
@@ -200,6 +264,11 @@
 <!--            </el-select>-->
 <!--          </el-form-item>-->
 <!--        </el-form>-->
+<!--        <div slot="footer" class="dialog-footer">-->
+<!--          <el-button type="primary" @click="submitForm">确 定</el-button>-->
+<!--          <el-button @click="cancelInsert">取 消</el-button>-->
+<!--        </div>-->
+
 <!--      </el-dialog>-->
     </div>
     <pagination
@@ -215,7 +284,10 @@
 
 <script>
 import {listPlan, getPlan, delPlan, addPlan, updatePlan, fileDownload} from '@/api/system/plan'
-import {listBudget, getBudget, delBudget, addBudget, updateBudget} from "@/api/system/budget";
+import {listBudget} from "@/api/system/budget";
+import {listDevice} from "@/api/device/device";
+import {listRecord} from "@/api/system/approval";
+import {listRules} from "@/api/code/rules";
 
 export default {
   dicts: ['ppm_procurement_plan'],
@@ -226,8 +298,10 @@ export default {
     return {
       tableData: [/* 表格数据 */],
       tableColumns: [/* 表格列配置 */],
+      device: [],
       activeName: 'first',
-      toExamine: 'basic',
+      //打开编辑或新增
+      showInsert: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -242,10 +316,16 @@ export default {
       total: 0,
       // 采购计划表格数据
       planList: [],
+      //编号规则目标表单
+      codeRuleForm: [],
+      //编号规则选择的值
+      checkedRuleForm: '',
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
+      //pane选中name
+      paneName: 'basic',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -276,46 +356,68 @@ export default {
         'label': '',
         'value': ''
       }],
-      budgetData: []
+      /*计划预算*/
+      budgetData: [],
+      /*审批记录*/
+      record_approval: []
     }
   },
   created() {
     this.getList()
   },
   methods: {
-    add() {
-
-    },
     download(fileName) {
       fileDownload(fileName).then(res => {
         console.log("file", res)
       })
     },
+    // 新增窗口关闭
+    cancelInsert() {
+      this.showInsert = false;
+    },
+    /*查看采购计划*/
     handleClick(activeName, oldActiveName) {
       console.log(activeName, oldActiveName)
-      if (oldActiveName != undefined) {
-        switch (activeName.name) {
-          case 'first':
-            this.queryParams.aAstate = 0;
-            break;
-          case 'second':
-            this.queryParams.aAstate = 1;
-            break;
-          case 'third':
-            this.queryParams.aAstate = 2;
-            break;
-        }
-        this.getList();
-      } else {
-        this.queryParams.aAstate = null;
-        this.reset()
-        getPlan(activeName.aid).then(response => {
-          this.form = response.data
-          this.open = true
-          listBudget({aid: activeName.aid}).then(res => {
-            this.budgetData = res.rows
+      switch (activeName.name) {
+        case 'first':
+          this.queryParams.aAstate = 0;
+          this.getList();
+          break;
+        case 'second':
+          this.queryParams.aAstate = 1;
+          this.getList();
+          break;
+        case 'third':
+          this.queryParams.aAstate = 2;
+          this.getList();
+          break;
+        case "record_approval":
+          this.loading = true;
+          listRecord({aid: this.form.aid}).then((res) => {
+            this.loading = false;
+            this.record_approval = res.rows;
+          }).catch((err) => {
+
           })
-        })
+          break;
+        default:
+          let aid = activeName.aid == undefined ? this.form.aid : activeName.aid;
+          this.queryParams.aAstate = null;
+          this.reset()
+          this.loading = true;
+          getPlan(aid).then(response => {
+            this.form = response.data
+            this.open = true
+            listBudget({aid: aid}).then(res => {
+              this.loading = false;
+              this.budgetData = res.rows
+            })
+            listDevice(null).then(res => {
+              this.loading = false;
+              this.device = res.rows;
+            })
+          })
+          break;
       }
     },
     query() {
@@ -344,6 +446,9 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
+      this.budgetData = [];
+      this.device = [];
+      this.paneName = "basic";
       this.reset()
     },
     // 表单重置
@@ -376,20 +481,18 @@ export default {
       this.reset('queryForm')
       this.handleQuery()
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.aid)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
+
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      const aid = row.aid || this.ids
-      getPlan(aid).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '查看采购计划'
+      this.showInsert = true;
+      this.selectRluesForm()
+      this.title = '新增采购计划'
+    },
+    selectRluesForm() {
+      listRules(null).then(res => {
+        console.log("res", res.rows)
+        this.codeRuleForm = res.rows;
       })
     },
     /** 修改按钮操作 */
@@ -398,7 +501,7 @@ export default {
       const aid = row.aid || this.ids
       getPlan(aid).then(response => {
         this.form = response.data
-        this.open = true
+        this.showInsert = true;
         this.title = '修改采购计划'
       })
     },
