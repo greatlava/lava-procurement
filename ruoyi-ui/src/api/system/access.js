@@ -29,7 +29,7 @@ export function addAccess(data) {
 // 修改供应商准入
 export function updateAccess(data) {
   return request({
-    url: '/system/access',
+    url: '/basic/access',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateAccess(data) {
 // 删除供应商准入
 export function delAccess(zrId) {
   return request({
-    url: '/system/access/' + zrId,
+    url: '/basic/access/' + zrId,
     method: 'delete'
   })
 }

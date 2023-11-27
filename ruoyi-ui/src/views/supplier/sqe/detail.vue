@@ -10,9 +10,15 @@
                   供应商名称
                 </template>
                 {{ this.hName }}
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 1" type="success">合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 2" type="danger">不合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 3" type="info">黑名单</el-tag>
+                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 1 && this.zr_id == 0"
+                        type="success">合格
+                </el-tag>
+                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 2 && this.zr_id == 0" type="danger">
+                  不合格
+                </el-tag>
+                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 3 && this.zr_id == 0" type="info">
+                  黑名单
+                </el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -356,10 +362,7 @@ export default {
       hCapital: null,
       hActualCapital: null,
       hProve: null,
-      fStatus: null,
-      fOpinion: null,
-      fState: null,
-      fClassify: null
+      fState: null
     }
   },
   created() {
@@ -396,6 +399,7 @@ export default {
           this.hCapital = response.data.hCapital
           this.hActualCapital = response.data.hActualCapital
           this.fState = response.data.fState
+          this.hAccount = response.data.hAccount
         });
       } else {
         getSupplierByZrId(this.zr_id).then(response => {
@@ -420,6 +424,7 @@ export default {
           this.hCapital = response.data.hCapital
           this.hActualCapital = response.data.hActualCapital
           this.fState = response.data.fState
+          this.hAccount = response.data.hAccount
         });
       }
       this.loading = false
