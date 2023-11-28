@@ -19,6 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="hour"    column="hour"    />
         <result property="minute"    column="minute"    />
         <result property="second"    column="second"    />
+        <result property="maxMantissa" column="max_mantissa"/>
     </resultMap>
 
     <sql id="selectComCodeRulesVo">

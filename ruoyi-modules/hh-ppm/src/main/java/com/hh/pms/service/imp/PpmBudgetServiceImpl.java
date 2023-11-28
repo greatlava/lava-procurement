@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 预算Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @Service
 public class PpmBudgetServiceImpl implements IPpmBudgetService
@@ -27,7 +27,7 @@ public class PpmBudgetServiceImpl implements IPpmBudgetService
      * @return 预算
      */
     @Override
-    public PpmBudget selectPpmBudgetByDuId(Long duId)
+    public PpmBudget selectPpmBudgetByDuId(String duId)
     {
         return ppmBudgetMapper.selectPpmBudgetByDuId(duId);
     }
@@ -75,7 +75,7 @@ public class PpmBudgetServiceImpl implements IPpmBudgetService
      * @return 结果
      */
     @Override
-    public int deletePpmBudgetByDuIds(Long[] duIds)
+    public int deletePpmBudgetByDuIds(String[] duIds)
     {
         return ppmBudgetMapper.deletePpmBudgetByDuIds(duIds);
     }
@@ -87,7 +87,7 @@ public class PpmBudgetServiceImpl implements IPpmBudgetService
      * @return 结果
      */
     @Override
-    public int deletePpmBudgetByDuId(Long duId)
+    public int deletePpmBudgetByDuId(String duId)
     {
         return ppmBudgetMapper.deletePpmBudgetByDuId(duId);
     }

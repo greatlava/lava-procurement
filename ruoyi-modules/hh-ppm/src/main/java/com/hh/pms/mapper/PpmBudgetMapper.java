@@ -8,7 +8,7 @@ import java.util.List;
  * 预算Mapper接口
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 public interface PpmBudgetMapper 
 {
@@ -18,7 +18,7 @@ public interface PpmBudgetMapper
      * @param duId 预算主键
      * @return 预算
      */
-    public PpmBudget selectPpmBudgetByDuId(Long duId);
+    public PpmBudget selectPpmBudgetByDuId(String duId);
 
     /**
      * 查询预算列表
@@ -50,7 +50,7 @@ public interface PpmBudgetMapper
      * @param duId 预算主键
      * @return 结果
      */
-    public int deletePpmBudgetByDuId(Long duId);
+    public int deletePpmBudgetByDuId(String duId);
 
     /**
      * 批量删除预算
@@ -58,5 +58,5 @@ public interface PpmBudgetMapper
      * @param duIds 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePpmBudgetByDuIds(Long[] duIds);
+    public int deletePpmBudgetByDuIds(String[] duIds);
 }

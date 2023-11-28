@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * 行项目Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @Service
 public class PpmLineItemsServiceImpl implements IPpmLineItemsService
@@ -27,7 +27,7 @@ public class PpmLineItemsServiceImpl implements IPpmLineItemsService
      * @return 行项目
      */
     @Override
-    public PpmLineItems selectPpmLineItemsByVid(Long vid)
+    public PpmLineItems selectPpmLineItemsByVid(Integer vid)
     {
         return ppmLineItemsMapper.selectPpmLineItemsByVid(vid);
     }
@@ -75,7 +75,7 @@ public class PpmLineItemsServiceImpl implements IPpmLineItemsService
      * @return 结果
      */
     @Override
-    public int deletePpmLineItemsByVids(Long[] vids)
+    public int deletePpmLineItemsByVids(Integer[] vids)
     {
         return ppmLineItemsMapper.deletePpmLineItemsByVids(vids);
     }
@@ -87,7 +87,7 @@ public class PpmLineItemsServiceImpl implements IPpmLineItemsService
      * @return 结果
      */
     @Override
-    public int deletePpmLineItemsByVid(Long vid)
+    public int deletePpmLineItemsByVid(Integer vid)
     {
         return ppmLineItemsMapper.deletePpmLineItemsByVid(vid);
     }

@@ -8,7 +8,7 @@ import java.util.List;
  * 采购计划Service接口
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 public interface IPpmProcurementPlanService 
 {
@@ -18,7 +18,7 @@ public interface IPpmProcurementPlanService
      * @param aid 采购计划主键
      * @return 采购计划
      */
-    public PpmProcurementPlan selectPpmProcurementPlanByAid(Long aid);
+    public PpmProcurementPlan selectPpmProcurementPlanByAid(Integer aid);
 
     /**
      * 查询采购计划列表
@@ -50,7 +50,7 @@ public interface IPpmProcurementPlanService
      * @param aids 需要删除的采购计划主键集合
      * @return 结果
      */
-    public int deletePpmProcurementPlanByAids(Long[] aids);
+    public int deletePpmProcurementPlanByAids(Integer[] aids);
 
     /**
      * 删除采购计划信息
@@ -58,5 +58,5 @@ public interface IPpmProcurementPlanService
      * @param aid 采购计划主键
      * @return 结果
      */
-    public int deletePpmProcurementPlanByAid(Long aid);
+    public int deletePpmProcurementPlanByAid(Integer aid);
 }

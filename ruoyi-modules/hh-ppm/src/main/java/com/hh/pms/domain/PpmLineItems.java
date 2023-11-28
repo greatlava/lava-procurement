@@ -1,7 +1,6 @@
 package com.hh.pms.domain;
 
-import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -11,55 +10,45 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 行项目对象 ppm_line_items
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 public class PpmLineItems extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 行项目ID */
-    private Long vid;
+    private Integer vid;
 
     /** 行项目编号 */
     @Excel(name = "行项目编号")
     private String vCode;
 
     /** 招标项目ID */
-    @Excel(name = "招标项目ID")
-    private Long sid;
+    private Integer sid;
 
     /** 框架计划ID */
-    @Excel(name = "框架计划ID")
-    private Long jhId;
+    private Integer jhId;
 
     /** 采购计划ID */
-    @Excel(name = "采购计划ID")
-    private Long aid;
+    private Integer aid;
+
+    /** 设备编号 */
+    private Integer tid;
 
     /** 非招标项目ID */
-    @Excel(name = "非招标项目ID")
-    private Long gid;
+    private Integer gid;
 
     /** 数量 */
     @Excel(name = "数量")
-    private Long vCount;
+    private Integer vCount;
 
     /** 采购人 */
     @Excel(name = "采购人")
     private String vPerson;
 
-    /** 预算单价 */
-    @Excel(name = "预算单价")
-    private Long vPrice;
-
-    /** 预算总价 */
-    @Excel(name = "预算总价")
-    private Long vTotal;
-
     /** 交付时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "交付时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date vDeliveryTime;
+    @Excel(name = "交付时间")
+    private BigDecimal vDeliveryTime;
 
     /** 交付地点 */
     @Excel(name = "交付地点")
@@ -69,140 +58,144 @@ public class PpmLineItems extends BaseEntity
     @Excel(name = "需求说明")
     private String vIllustrate;
 
-    public void setVid(Long vid)
+    /** 采购方式 */
+    @Excel(name = "采购方式")
+    private Integer procurementMethod;
+
+    public void setVid(Integer vid) 
     {
         this.vid = vid;
     }
 
-    public Long getVid()
+    public Integer getVid() 
     {
         return vid;
     }
-    public void setvCode(String vCode)
+    public void setvCode(String vCode) 
     {
         this.vCode = vCode;
     }
 
-    public String getvCode()
+    public String getvCode() 
     {
         return vCode;
     }
-    public void setSid(Long sid)
+    public void setSid(Integer sid) 
     {
         this.sid = sid;
     }
 
-    public Long getSid()
+    public Integer getSid() 
     {
         return sid;
     }
-    public void setJhId(Long jhId)
+    public void setJhId(Integer jhId) 
     {
         this.jhId = jhId;
     }
 
-    public Long getJhId()
+    public Integer getJhId() 
     {
         return jhId;
     }
-    public void setAid(Long aid)
+    public void setAid(Integer aid) 
     {
         this.aid = aid;
     }
 
-    public Long getAid()
+    public Integer getAid() 
     {
         return aid;
     }
-    public void setGid(Long gid)
+    public void setTid(Integer tid) 
+    {
+        this.tid = tid;
+    }
+
+    public Integer getTid() 
+    {
+        return tid;
+    }
+    public void setGid(Integer gid) 
     {
         this.gid = gid;
     }
 
-    public Long getGid()
+    public Integer getGid() 
     {
         return gid;
     }
-    public void setvCount(Long vCount)
+    public void setvCount(Integer vCount) 
     {
         this.vCount = vCount;
     }
 
-    public Long getvCount()
+    public Integer getvCount() 
     {
         return vCount;
     }
-    public void setvPerson(String vPerson)
+    public void setvPerson(String vPerson) 
     {
         this.vPerson = vPerson;
     }
 
-    public String getvPerson()
+    public String getvPerson() 
     {
         return vPerson;
     }
-    public void setvPrice(Long vPrice)
-    {
-        this.vPrice = vPrice;
-    }
-
-    public Long getvPrice()
-    {
-        return vPrice;
-    }
-    public void setvTotal(Long vTotal)
-    {
-        this.vTotal = vTotal;
-    }
-
-    public Long getvTotal()
-    {
-        return vTotal;
-    }
-    public void setvDeliveryTime(Date vDeliveryTime)
+    public void setvDeliveryTime(BigDecimal vDeliveryTime) 
     {
         this.vDeliveryTime = vDeliveryTime;
     }
 
-    public Date getvDeliveryTime()
+    public BigDecimal getvDeliveryTime() 
     {
         return vDeliveryTime;
     }
-    public void setvDeliveryArea(String vDeliveryArea)
+    public void setvDeliveryArea(String vDeliveryArea) 
     {
         this.vDeliveryArea = vDeliveryArea;
     }
 
-    public String getvDeliveryArea()
+    public String getvDeliveryArea() 
     {
         return vDeliveryArea;
     }
-    public void setvIllustrate(String vIllustrate)
+    public void setvIllustrate(String vIllustrate) 
     {
         this.vIllustrate = vIllustrate;
     }
 
-    public String getvIllustrate()
+    public String getvIllustrate() 
     {
         return vIllustrate;
+    }
+    public void setProcurementMethod(Integer procurementMethod) 
+    {
+        this.procurementMethod = procurementMethod;
+    }
+
+    public Integer getProcurementMethod() 
+    {
+        return procurementMethod;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-                .append("vid", getVid())
-                .append("vCode", getvCode())
-                .append("sid", getSid())
-                .append("jhId", getJhId())
-                .append("aid", getAid())
-                .append("gid", getGid())
-                .append("vCount", getvCount())
-                .append("vPerson", getvPerson())
-                .append("vPrice", getvPrice())
-                .append("vTotal", getvTotal())
-                .append("vDeliveryTime", getvDeliveryTime())
-                .append("vDeliveryArea", getvDeliveryArea())
-                .append("vIllustrate", getvIllustrate())
-                .toString();
+            .append("vid", getVid())
+            .append("vCode", getvCode())
+            .append("sid", getSid())
+            .append("jhId", getJhId())
+            .append("aid", getAid())
+            .append("tid", getTid())
+            .append("gid", getGid())
+            .append("vCount", getvCount())
+            .append("vPerson", getvPerson())
+            .append("vDeliveryTime", getvDeliveryTime())
+            .append("vDeliveryArea", getvDeliveryArea())
+            .append("vIllustrate", getvIllustrate())
+            .append("procurementMethod", getProcurementMethod())
+            .toString();
     }
 }

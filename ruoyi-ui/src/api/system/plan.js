@@ -4,7 +4,7 @@ import {download} from '@/utils/request'
 // 查询采购计划列表
 export function listPlan(query) {
   return request({
-    url: '/ppm/frameworkPlan/list',
+    url: '/ppm/plan/list',
     method: 'get',
     params: query
   })
@@ -13,7 +13,7 @@ export function listPlan(query) {
 // 查询采购计划详细
 export function getPlan(aid) {
   return request({
-    url: '/ppm/frameworkPlan/' + aid,
+    url: '/ppm/plan/' + aid,
     method: 'get'
   })
 }
@@ -21,7 +21,7 @@ export function getPlan(aid) {
 // 新增采购计划
 export function addPlan(data) {
   return request({
-    url: '/ppm/frameworkPlan',
+    url: '/ppm/plan',
     method: 'post',
     data: data
   })
@@ -30,7 +30,7 @@ export function addPlan(data) {
 // 修改采购计划
 export function updatePlan(data) {
   return request({
-    url: '/ppm/frameworkPlan',
+    url: '/ppm/plan',
     method: 'put',
     data: data
   })
@@ -39,12 +39,12 @@ export function updatePlan(data) {
 // 删除采购计划
 export function delPlan(aid) {
   return request({
-    url: '/ppm/frameworkPlan/' + aid,
+    url: '/ppm/plan/' + aid,
     method: 'delete'
   })
 }
 
 export function fileDownload(fileName) {
-  const url = "/ppm/frameworkPlan/fileDownload";
+  const url = "/ppm/plan/fileDownload";
   download(url,{fileName:fileName},fileName)
 }
