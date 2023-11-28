@@ -64,8 +64,8 @@ public class BidNotice extends BaseEntity
     @Excel(name = "招标公告审批状态")
     private Long fjStatus;
 
-    /** 备注 */
-    @Excel(name = "备注")
+    /** 内容 */
+    @Excel(name = "内容")
     private String fjRemark;
 
     public void setUid(Long uid) 

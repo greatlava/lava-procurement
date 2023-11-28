@@ -60,7 +60,7 @@
             <span slot="tip" class="el-upload__tip"> 支持文件格式：doc，docx,pdf.xis......</span>
           </el-upload>
         </el-form-item>
-        <el-form-item label="备注" prop="fjRemark">
+        <el-form-item label="内容" prop="fjRemark">
           <el-input v-model="form.fjRemark" type="textarea" placeholder="请输入内容" :disabled="this.routeType==='details'"/>
         </el-form-item>
       </el-form>

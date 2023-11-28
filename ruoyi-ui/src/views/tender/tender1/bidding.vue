@@ -18,7 +18,9 @@
       <el-tab-pane label="招标公告" name="notice">
         <tender-notice></tender-notice>
       </el-tab-pane>
-      <el-tab-pane label="招标文件" name="file">招标文件</el-tab-pane>
+      <el-tab-pane label="招标文件" name="file">
+        <tender-document></tender-document>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </div>
@@ -29,12 +31,14 @@
 import TenderDetails from '@/components/tender/tenderDetails.vue'
 import DeviceDetails from '@/components/device/deviceDetails.vue'
 import TenderNotice from "@/components/tender/tenderNotice.vue"
+import TenderDocument from "@/components/tender/tenderDocument.vue";
 
 export default {
   components: {
     'tender-details': TenderDetails,
     'device-details': DeviceDetails,
     'tender-notice': TenderNotice,
+    'tender-document': TenderDocument,
   },
   data() {
     return {
@@ -63,3 +67,4 @@ export default {
   margin: 20px auto;
 }
 </style>
+
