@@ -336,7 +336,7 @@ export default {
       listContract(this.queryParams2).then(response => {
         console.log(response.row)
         this.contractList2 = response.rows
-        this.total1 = response.total
+        this.total2 = response.total
         this.loading = false
       })
     },
@@ -346,7 +346,7 @@ export default {
       listContract(this.queryParams3).then(response => {
         console.log(response.row)
         this.contractList3 = response.rows
-        this.total1 = response.total
+        this.total3 = response.total
         this.loading = false
       })
     },
