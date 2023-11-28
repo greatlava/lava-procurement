@@ -27,7 +27,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 设备信息Controller
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @RestController
 @RequestMapping("/device")
@@ -66,7 +66,7 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:query")
     @GetMapping(value = "/{tid}")
-    public AjaxResult getInfo(@PathVariable("tid") Long tid)
+    public AjaxResult getInfo(@PathVariable("tid") String tid)
     {
         return success(ppmDeviceService.selectPpmDeviceByTid(tid));
     }
@@ -99,7 +99,7 @@ public class PpmDeviceController extends BaseController
     @RequiresPermissions("system:device:remove")
     @Log(title = "设备信息", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{tids}")
-    public AjaxResult remove(@PathVariable Long[] tids)
+    public AjaxResult remove(@PathVariable String[] tids)
     {
         return toAjax(ppmDeviceService.deletePpmDeviceByTids(tids));
     }

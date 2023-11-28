@@ -89,6 +89,15 @@ public class BsSupplierController extends BaseController {
     }
 
     /**
+     * 获取准入供应商详细信息
+     */
+    @RequiresPermissions("system:supplier:query")
+    @GetMapping("/access/{zrId}")
+    public AjaxResult getInfoByZrId(@PathVariable("zrId") Long zrId) {
+        return success(bsSupplierService.selectBsSupplierByZrId(zrId));
+    }
+
+    /**
      * 新增供应商
      */
     @RequiresPermissions("system:supplier:add")

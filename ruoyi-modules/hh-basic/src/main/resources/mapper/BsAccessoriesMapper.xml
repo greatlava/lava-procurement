@@ -21,6 +21,7 @@
         <where>
             <if test="fjName != null  and fjName != ''">and fj_name like concat('%', #{fjName}, '%')</if>
             <if test="fjAnnex != null  and fjAnnex != ''">and fj_annex = #{fjAnnex}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
         </where>
     </select>
 
@@ -32,11 +33,13 @@
     <insert id="insertBsAccessories" parameterType="com.hh.pms.sae.domain.BsAccessories">
         insert into bs_accessories
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hid != null">hid,</if>
             <if test="fjId != null">fj_id,</if>
             <if test="fjName != null">fj_name,</if>
             <if test="fjAnnex != null">fj_annex,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hid != null">#{hid},</if>
             <if test="fjId != null">#{fjId},</if>
             <if test="fjName != null">#{fjName},</if>
             <if test="fjAnnex != null">#{fjAnnex},</if>
@@ -46,6 +49,7 @@
     <update id="updateBsAccessories" parameterType="com.hh.pms.sae.domain.BsAccessories">
         update bs_accessories
         <trim prefix="SET" suffixOverrides=",">
+            <if test="hid != null">hid = #{hid},</if>
             <if test="fjName != null">fj_name = #{fjName},</if>
             <if test="fjAnnex != null">fj_annex = #{fjAnnex},</if>
         </trim>

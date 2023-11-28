@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * 采购计划Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @Service
 public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
@@ -28,7 +28,7 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
      * @return 采购计划
      */
     @Override
-    public PpmProcurementPlan selectPpmProcurementPlanByAid(Long aid)
+    public PpmProcurementPlan selectPpmProcurementPlanByAid(Integer aid)
     {
         return ppmProcurementPlanMapper.selectPpmProcurementPlanByAid(aid);
     }
@@ -78,7 +78,7 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
      * @return 结果
      */
     @Override
-    public int deletePpmProcurementPlanByAids(Long[] aids)
+    public int deletePpmProcurementPlanByAids(Integer[] aids)
     {
         return ppmProcurementPlanMapper.deletePpmProcurementPlanByAids(aids);
     }
@@ -90,7 +90,7 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
      * @return 结果
      */
     @Override
-    public int deletePpmProcurementPlanByAid(Long aid)
+    public int deletePpmProcurementPlanByAid(Integer aid)
     {
         return ppmProcurementPlanMapper.deletePpmProcurementPlanByAid(aid);
     }

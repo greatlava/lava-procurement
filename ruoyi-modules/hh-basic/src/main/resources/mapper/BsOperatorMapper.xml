@@ -53,6 +53,11 @@
         where yw_id = #{ywId}
     </select>
 
+    <select id="selectBsOperatorByHid" parameterType="Long" resultMap="BsOperatorResult">
+        <include refid="selectBsOperatorVo"/>
+        where hid = #{hid}
+    </select>
+
     <insert id="insertBsOperator" parameterType="com.hh.pms.sae.domain.BsOperator">
         insert into bs_operator
         <trim prefix="(" suffix=")" suffixOverrides=",">

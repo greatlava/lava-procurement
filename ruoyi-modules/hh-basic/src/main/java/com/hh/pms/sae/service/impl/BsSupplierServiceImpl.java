@@ -32,6 +32,11 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
         return bsSupplierMapper.selectBsSupplierByHid(hid);
     }
 
+    @Override
+    public BsSupplier selectBsSupplierByZrId(Long zrId) {
+        return bsSupplierMapper.selectBsSupplierByZrId(zrId);
+    }
+
     /**
      * 查询供应商列表
      *

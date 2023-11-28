@@ -20,6 +20,14 @@ public interface IBsSupplierService {
     public BsSupplier selectBsSupplierByHid(Long hid);
 
     /**
+     * 根据准入id查询供应商
+     *
+     * @param zrId 供应商准入id
+     * @return 供应商
+     */
+    public BsSupplier selectBsSupplierByZrId(Long zrId);
+
+    /**
      * 查询合格供应商列表
      *
      * @param bsSupplier 供应商

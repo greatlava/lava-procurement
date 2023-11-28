@@ -28,7 +28,14 @@ export function listSupplier2(query) {
 // 查询供应商详细
 export function getSupplier(hid) {
   return request({
-    url: '/system/supplier/' + hid,
+    url: '/basic/supplier/' + hid,
+    method: 'get'
+  })
+}
+
+export function getSupplierByZrId(zrId) {
+  return request({
+    url: '/basic/supplier/access/' + zrId,
     method: 'get'
   })
 }
@@ -45,7 +52,7 @@ export function addSupplier(data) {
 // 修改供应商
 export function updateSupplier(data) {
   return request({
-    url: '/system/supplier',
+    url: '/basic/supplier',
     method: 'put',
     data: data
   })

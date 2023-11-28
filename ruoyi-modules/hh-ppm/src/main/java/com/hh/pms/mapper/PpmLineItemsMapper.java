@@ -8,7 +8,7 @@ import java.util.List;
  * 行项目Mapper接口
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 public interface PpmLineItemsMapper 
 {
@@ -18,7 +18,7 @@ public interface PpmLineItemsMapper
      * @param vid 行项目主键
      * @return 行项目
      */
-    public PpmLineItems selectPpmLineItemsByVid(Long vid);
+    public PpmLineItems selectPpmLineItemsByVid(Integer vid);
 
     /**
      * 查询行项目列表
@@ -50,7 +50,7 @@ public interface PpmLineItemsMapper
      * @param vid 行项目主键
      * @return 结果
      */
-    public int deletePpmLineItemsByVid(Long vid);
+    public int deletePpmLineItemsByVid(Integer vid);
 
     /**
      * 批量删除行项目
@@ -58,5 +58,5 @@ public interface PpmLineItemsMapper
      * @param vids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePpmLineItemsByVids(Long[] vids);
+    public int deletePpmLineItemsByVids(Integer[] vids);
 }

@@ -49,30 +49,36 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <router-link :to="'/tender/update?type=update&sid='+scope.row.sid">
           <el-button v-if="scope.row.sProjectState === 2"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
           >修改</el-button>
+          </router-link>
           <el-button v-if="scope.row.sProjectState === 2"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
           >删除</el-button>
+          <router-link :to="'/tender/bidding?type=bidding&sid='+scope.row.sid">
           <el-button v-if="scope.row.sProjectState === 1"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click=""
           >进入项目</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-view"
-            @click=""
-          >查看</el-button>
+          </router-link>
+          <router-link :to="'/tender/details?type=details&sid='+scope.row.sid">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-view"
+              @click=""
+            >查看</el-button>
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column v-for="column in tableColumns" :key="column.prop" :label="column.label" :align="column.align" :prop="column.prop" :width="column.width"/>
@@ -211,12 +217,10 @@ export default {
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const sid = row.sid || this.ids
-
-
-    },
+    // handleUpdate(row) {
+    //   this.reset();
+    //   const sid = row.sid || this.ids
+    // },
     /** 删除按钮操作 */
     handleDelete(row) {
       const sids = row.sid || this.ids;

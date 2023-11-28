@@ -31,6 +31,11 @@ public class BsOperatorServiceImpl implements IBsOperatorService {
         return bsOperatorMapper.selectBsOperatorByYwId(ywId);
     }
 
+    @Override
+    public BsOperator selectBsOperatorByHid(Long hid) {
+        return bsOperatorMapper.selectBsOperatorByHid(hid);
+    }
+
     /**
      * 查询业务经办人信息列表
      *
