@@ -165,43 +165,43 @@
                 <template slot="label">
                   姓名
                 </template>
-                {{ this.hName }}
+                {{ this.operator.ywName }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   身份证号
                 </template>
-                {{ this.hCreditCode }}
+                {{ this.operator.ywIdcrad }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   手机号
                 </template>
-                {{ this.hIncorporation }}
+                {{ this.operator.ywPhone }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   邮箱
                 </template>
-                <el-tag size="small">{{ this.hInstitution }}</el-tag>
+                {{ this.operator.ywMailbox }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   身份证扫描件
                 </template>
-                {{ this.hQuality }}
+                {{ this.operator.ywScanIdcard }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   授权书扫描件
                 </template>
-                {{ this.hStartTime }}
+                {{ this.operator.ywScanEmpower }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   座机
                 </template>
-                {{ this.hJuridical }}
+                {{ this.operator.ywLandline }}
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -217,23 +217,18 @@
           <div style="padding: 20px 100px">
             <el-table stripe v-loading="loading" :data="personnelList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="姓名" align="center" prop="hName"/>
-              <el-table-column label="职位" align="center" prop="hQuality"/>
-              <el-table-column label="学历" align="center" prop="hInstitution"/>
-              <el-table-column label="职称" align="center" prop="fState"/>
-              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-                <template slot-scope="scope">
-                  <el-button
-                    size="small"
-                    type="text">编辑
-                  </el-button>
-                  <el-button
-                    size="small"
-                    type="text">删除
-                  </el-button>
-                </template>
-              </el-table-column>
+              <el-table-column label="姓名" align="center" prop="jsName"/>
+              <el-table-column label="职位" align="center" prop="jsPosition"/>
+              <el-table-column label="学历" align="center" prop="jsEducation"/>
+              <el-table-column label="职称" align="center" prop="jsTitle"/>
             </el-table>
+            <pagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="personnel.pageNum"
+              :limit.sync="personnel.pageSize"
+              @pagination="personnelList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -245,15 +240,22 @@
         </el-tab-pane>
         <el-tab-pane label="企业资质" name="fourth">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="personnelList">
+            <el-table stripe v-loading="loading" :data="enterpriseList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="证书名称" align="center" prop="hName"/>
-              <el-table-column label="证书编号" align="center" prop="hQuality"/>
-              <el-table-column label="发证单位" align="center" prop="hInstitution"/>
-              <el-table-column label="发证日期" align="center" prop="fState"/>
-              <el-table-column label="有效期至" align="center" prop="fState"/>
-              <el-table-column label="扫描件" align="center" prop="fState"/>
+              <el-table-column label="证书名称" align="center" prop="zzCertName"/>
+              <el-table-column label="证书编号" align="center" prop="zzCertNo"/>
+              <el-table-column label="发证单位" align="center" prop="zzUnit"/>
+              <el-table-column label="发证日期" align="center" prop="zzDate"/>
+              <el-table-column label="有效期至" align="center" prop="zzExpirationDate"/>
+              <el-table-column label="扫描件" align="center" prop="zzScan"/>
             </el-table>
+            <pagination
+              v-show="total1>0"
+              :total="total1"
+              :page.sync="enterprise.pageNum"
+              :limit.sync="enterprise.pageSize"
+              @pagination="enterpriseList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -265,16 +267,23 @@
         </el-tab-pane>
         <el-tab-pane label="业绩" name="fifth">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="personnelList">
+            <el-table stripe v-loading="loading" :data="achievementList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="采购单位" align="center" prop="hName"/>
-              <el-table-column label="合作方" align="center" prop="hQuality"/>
-              <el-table-column label="签订日期" align="center" prop="hInstitution"/>
-              <el-table-column label="合同金额（万元）" align="center" prop="fState"/>
-              <el-table-column label="买方业务代表" align="center" prop="fState"/>
-              <el-table-column label="买方业务代表联系电话" align="center" prop="fState"/>
-              <el-table-column label="合同扫描件" align="center" prop="fState"/>
+              <el-table-column label="采购单位" align="center" prop="yjUnit"/>
+              <el-table-column label="合作方" align="center" prop="yjPartner"/>
+              <el-table-column label="签订日期" align="center" prop="yjDate"/>
+              <el-table-column label="合同金额（万元）" align="center" prop="yjRmb"/>
+              <el-table-column label="买方业务代表" align="center" prop="yjBbr"/>
+              <el-table-column label="买方业务代表联系电话" align="center" prop="yjPhone"/>
+              <el-table-column label="合同扫描件" align="center" prop="yjScanContract"/>
             </el-table>
+            <pagination
+              v-show="total2>0"
+              :total="total2"
+              :page.sync="achievement.pageNum"
+              :limit.sync="achievement.pageSize"
+              @pagination="achievementList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -286,17 +295,24 @@
         </el-tab-pane>
         <el-tab-pane label="财务状态" name="sixth">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="personnelList">
+            <el-table stripe v-loading="loading" :data="financialStatusList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="年度" align="center" prop="hName"/>
-              <el-table-column label="净利润（万元）" align="center" prop="hQuality"/>
-              <el-table-column label="资产负债率（%）" align="center" prop="hInstitution"/>
-              <el-table-column label="财务审计报告扫描件" align="center" prop="fState"/>
-              <el-table-column label="附件审计报告" align="center" prop="fState"/>
-              <el-table-column label="资产负债表扫描件" align="center" prop="fState"/>
-              <el-table-column label="利润表扫描件" align="center" prop="fState"/>
-              <el-table-column label="现金流量表扫描件" align="center" prop="fState"/>
+              <el-table-column label="年度" align="center" prop="cAnnual"/>
+              <el-table-column label="净利润（万元）" align="center" prop="cNetProfit"/>
+              <el-table-column label="资产负债率（%）" align="center" prop="cLev"/>
+              <el-table-column label="财务审计报告扫描件" align="center" prop="cScanFar"/>
+              <el-table-column label="附件审计报告" align="center" prop="cScanAar"/>
+              <el-table-column label="资产负债表扫描件" align="center" prop="cScanAl"/>
+              <el-table-column label="利润表扫描件" align="center" prop="cScanIs"/>
+              <el-table-column label="现金流量表扫描件" align="center" prop="cScanCfs"/>
             </el-table>
+            <pagination
+              v-show="total3>0"
+              :total="total3"
+              :page.sync="financialStatus.pageNum"
+              :limit.sync="financialStatus.pageSize"
+              @pagination="financialStatusList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -308,11 +324,18 @@
         </el-tab-pane>
         <el-tab-pane label="相关附件" name="seventh">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="personnelList">
+            <el-table stripe v-loading="loading" :data="accessoriesList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="名称" align="center" prop="hName"/>
-              <el-table-column label="附件" align="center" prop="hQuality"/>
+              <el-table-column label="名称" align="center" prop="fjName"/>
+              <el-table-column label="附件" align="center" prop="fjAnnex"/>
             </el-table>
+            <pagination
+              v-show="total4>0"
+              :total="total4"
+              :page.sync="accessories.pageNum"
+              :limit.sync="accessories.pageSize"
+              @pagination="accessoriesList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -333,6 +356,12 @@ import {
   updateSupplier
 } from '@/api/system/supplier';
 import {delAccess, updateAccess} from "@/api/system/access";
+import {getOperator} from "@/api/system/operator";
+import {listPersonnel} from "@/api/system/personnel";
+import {listEnterprise} from "@/api/system/enterprise";
+import {listAchievement} from "@/api/system/achievement";
+import {listStatus} from "@/api/system/financialStatus";
+import {listAccessories} from "@/api/system/accessories";
 
 export default {
   components: {},
@@ -369,7 +398,62 @@ export default {
       hActualCapital: null,
       hProve: null,
       fStatus: null,
-      fState: null
+      fState: null,
+      //核心技术人员
+      personnelList: [],
+      //企业资质列表
+      enterpriseList: [],
+      //业绩
+      achievementList: [],
+      //财务状态
+      financialStatusList: [],
+      //相关附件
+      accessoriesList: [],
+      //业务经办人
+      operator: {
+        ywName: null,
+        ywPhone: null,
+        ywIdcrad: null,
+        ywMailbox: null,
+        ywScanIdcard: null,
+        ywScanEmpower: null,
+        ywLandline: null
+      },
+      //核心技术人员
+      total: 0,
+      personnel: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: 0,
+      },
+      //企业资质
+      total1: 0,
+      enterprise: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: 0,
+      },
+      //业绩
+      total2: 0,
+      achievement: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: this.$route.query.hid,
+      },
+      //财务状态
+      total3: 0,
+      financialStatus: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: this.$route.query.hid,
+      },
+      //相关附件
+      total4: 0,
+      accessories: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: this.$route.query.hid,
+      }
     }
   },
   created() {
@@ -444,6 +528,51 @@ export default {
         this.hActualCapital = response.data.hActualCapital
         this.fState = response.data.fState
         this.fStatus = response.data.fStatus
+        //业务经办人
+        getOperator(this.hid).then(res => {
+          this.operator.ywName = res.data.ywName
+          this.operator.ywPhone = res.data.ywPhone
+          this.operator.ywIdcrad = res.data.ywIdcrad
+          this.operator.ywMailbox = res.data.ywMailbox
+          this.operator.ywScanIdcard = res.data.ywScanIdcard
+          this.operator.ywScanEmpower = res.data.ywScanEmpower
+          this.operator.ywLandline = res.data.ywLandline
+        })
+        //核心技术人员
+        this.personnel.hid = response.data.hid
+        listPersonnel(this.personnel).then(res => {
+          console.log(res)
+          this.personnelList = res.rows;
+          this.total = res.total;
+        })
+        //企业资质
+        this.enterprise.hid = response.data.hid
+        listEnterprise(this.enterprise).then(res => {
+          console.log(res)
+          this.enterpriseList = res.rows;
+          this.total1 = res.total;
+        })
+        //业绩
+        this.achievement.hid = response.data.hid
+        listAchievement(this.achievement).then(res => {
+          console.log(res)
+          this.achievementList = res.rows;
+          this.total2 = res.total;
+        })
+        //财务状态
+        this.financialStatus.hid = response.data.hid
+        listStatus(this.financialStatus).then(res => {
+          console.log(res)
+          this.financialStatusList = res.rows;
+          this.total3 = res.total;
+        })
+        //相关附件
+        this.accessories.hid = response.data.hid
+        listAccessories(this.accessories).then(res => {
+          console.log(res)
+          this.accessoriesList = res.rows;
+          this.total4 = res.total;
+        })
       });
       this.loading = false
     }

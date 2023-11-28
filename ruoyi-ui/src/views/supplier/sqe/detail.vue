@@ -330,17 +330,24 @@
         </el-tab-pane>
         <el-tab-pane label="财务状态" name="sixth">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="List">
+            <el-table stripe v-loading="loading" :data="financialStatusList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="年度" align="center" prop="hName"/>
-              <el-table-column label="净利润（万元）" align="center" prop="hQuality"/>
-              <el-table-column label="资产负债率（%）" align="center" prop="hInstitution"/>
-              <el-table-column label="财务审计报告扫描件" align="center" prop="fState"/>
-              <el-table-column label="附件审计报告" align="center" prop="fState"/>
-              <el-table-column label="资产负债表扫描件" align="center" prop="fState"/>
-              <el-table-column label="利润表扫描件" align="center" prop="fState"/>
-              <el-table-column label="现金流量表扫描件" align="center" prop="fState"/>
+              <el-table-column label="年度" align="center" prop="cAnnual"/>
+              <el-table-column label="净利润（万元）" align="center" prop="cNetProfit"/>
+              <el-table-column label="资产负债率（%）" align="center" prop="cLev"/>
+              <el-table-column label="财务审计报告扫描件" align="center" prop="cScanFar"/>
+              <el-table-column label="附件审计报告" align="center" prop="cScanAar"/>
+              <el-table-column label="资产负债表扫描件" align="center" prop="cScanAl"/>
+              <el-table-column label="利润表扫描件" align="center" prop="cScanIs"/>
+              <el-table-column label="现金流量表扫描件" align="center" prop="cScanCfs"/>
             </el-table>
+            <pagination
+              v-show="total3>0"
+              :total="total3"
+              :page.sync="financialStatus.pageNum"
+              :limit.sync="financialStatus.pageSize"
+              @pagination="financialStatusList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -350,11 +357,18 @@
         </el-tab-pane>
         <el-tab-pane label="相关附件" name="seventh">
           <div style="padding: 20px 100px">
-            <el-table stripe v-loading="loading" :data="List">
+            <el-table stripe v-loading="loading" :data="accessoriesList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
-              <el-table-column label="名称" align="center" prop="hName"/>
-              <el-table-column label="附件" align="center" prop="hQuality"/>
+              <el-table-column label="名称" align="center" prop="fjName"/>
+              <el-table-column label="附件" align="center" prop="fjAnnex"/>
             </el-table>
+            <pagination
+              v-show="total4>0"
+              :total="total4"
+              :page.sync="accessories.pageNum"
+              :limit.sync="accessories.pageSize"
+              @pagination="accessoriesList"
+            />
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
@@ -376,6 +390,8 @@ import {getOperator} from "@/api/system/operator";
 import {delPersonnel, getPersonnel, listPersonnel, updatePersonnel} from "@/api/system/personnel";
 import {listEnterprise} from "@/api/system/enterprise";
 import {listAchievement} from "@/api/system/achievement";
+import {listStatus} from "@/api/system/financialStatus";
+import {listAccessories} from "@/api/system/accessories";
 
 export default {
   components: {},
@@ -431,6 +447,10 @@ export default {
       enterpriseList: [],
       //业绩
       achievementList: [],
+      //财务状态
+      financialStatusList: [],
+      //相关附件
+      accessoriesList: [],
       //核心技术人员
       total: 0,
       personnel: {
@@ -455,11 +475,38 @@ export default {
         pageNum: 1,
         pageSize: 10,
         hid: this.$route.query.hid,
+      },
+      //财务状态
+      total3: 0,
+      financialStatus: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: this.$route.query.hid,
+      },
+      //相关附件
+      total4: 0,
+      accessories: {
+        pageNum: 1,
+        pageSize: 10,
+        hid: this.$route.query.hid,
       }
     }
   },
   created() {
     this.query()
+  },
+  watch: {
+    '$route.query.hid': function (newHid, oldHid) {
+      if (newHid != oldHid) {
+        this.hid = newHid;
+        this.personnel.hid = newHid
+        this.enterprise.hid = newHid
+        this.achievement.hid = newHid
+        this.financialStatus.hid = newHid
+        this.accessories.hid = newHid
+        this.query()
+      }
+    }
   },
   methods: {
     handleClick(tab, event) {
@@ -513,55 +560,39 @@ export default {
         this.open = true
       })
     },
+    yang(response) {
+      this.opinion = response.data.fOpinion
+      this.hName = response.data.hName
+      this.hCreditCode = response.data.hCreditCode
+      this.hIncorporation = response.data.hIncorporation
+      this.hInstitution = response.data.hInstitution
+      this.hQuality = response.data.hQuality
+      this.hStartTime = response.data.hStartTime
+      this.hJuridical = response.data.hJuridical
+      this.hJuridicalIdentity = response.data.hJuridicalIdentity
+      this.hAddress = response.data.hAddress
+      this.hRange = response.data.hRange
+      this.hDesc = response.data.hDesc
+      this.hExpiration = response.data.hExpiration
+      this.hBank = response.data.hBank
+      this.hBankAddress = response.data.hBankAddress
+      this.hSignPhone = response.data.hSignPhone
+      this.hSignAddress = response.data.hSignAddress
+      this.hCapital = response.data.hCapital
+      this.hActualCapital = response.data.hActualCapital
+      this.fState = response.data.fState
+      this.hAccount = response.data.hAccount
+      this.fStatus = response.data.fStatus
+    },
     query() {
       if (this.zr_id == 0) {
         getSupplier(this.hid).then(response => {
-          this.opinion = response.data.fOpinion
-          this.hName = response.data.hName
-          this.hCreditCode = response.data.hCreditCode
-          this.hIncorporation = response.data.hIncorporation
-          this.hInstitution = response.data.hInstitution
-          this.hQuality = response.data.hQuality
-          this.hStartTime = response.data.hStartTime
-          this.hJuridical = response.data.hJuridical
-          this.hJuridicalIdentity = response.data.hJuridicalIdentity
-          this.hAddress = response.data.hAddress
-          this.hRange = response.data.hRange
-          this.hDesc = response.data.hDesc
-          this.hExpiration = response.data.hExpiration
-          this.hBank = response.data.hBank
-          this.hBankAddress = response.data.hBankAddress
-          this.hSignPhone = response.data.hSignPhone
-          this.hSignAddress = response.data.hSignAddress
-          this.hCapital = response.data.hCapital
-          this.hActualCapital = response.data.hActualCapital
-          this.fState = response.data.fState
-          this.hAccount = response.data.hAccount
+          this.yang(response)
         });
       } else {
         getSupplierByZrId(this.zr_id).then(response => {
-          this.opinion = response.data.fOpinion
-          this.hName = response.data.hName
-          this.hCreditCode = response.data.hCreditCode
-          this.hIncorporation = response.data.hIncorporation
-          this.hInstitution = response.data.hInstitution
-          this.hQuality = response.data.hQuality
-          this.hStartTime = response.data.hStartTime
-          this.hJuridical = response.data.hJuridical
-          this.hJuridicalIdentity = response.data.hJuridicalIdentity
-          this.hAddress = response.data.hAddress
-          this.hRange = response.data.hRange
-          this.hDesc = response.data.hDesc
-          this.hExpiration = response.data.hExpiration
-          this.hBank = response.data.hBank
-          this.hBankAddress = response.data.hBankAddress
-          this.hSignPhone = response.data.hSignPhone
-          this.hSignAddress = response.data.hSignAddress
-          this.hCapital = response.data.hCapital
-          this.hActualCapital = response.data.hActualCapital
-          this.fState = response.data.fState
-          this.hAccount = response.data.hAccount
-          this.fStatus = response.data.fStatus
+          this.$router.replace({query: {...this.$route.query, hid: response.data.hid}});
+          this.yang(response)
         });
       }
       //业务经办人
@@ -591,6 +622,18 @@ export default {
         console.log(response)
         this.achievementList = response.rows;
         this.total2 = response.total;
+      })
+      //财务状态
+      listStatus(this.financialStatus).then(response => {
+        console.log(response)
+        this.financialStatusList = response.rows;
+        this.total3 = response.total;
+      })
+      //相关附件
+      listAccessories(this.accessories).then(response => {
+        console.log(response)
+        this.accessoriesList = response.rows;
+        this.total4 = response.total;
       })
       this.loading = false
     }
