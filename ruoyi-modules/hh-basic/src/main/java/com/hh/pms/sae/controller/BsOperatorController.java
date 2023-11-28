@@ -66,6 +66,12 @@ public class BsOperatorController extends BaseController {
         return success(bsOperatorService.selectBsOperatorByYwId(ywId));
     }
 
+    @RequiresPermissions("system:operator:query")
+    @GetMapping(value = "/getInfoByHid/{hid}")
+    public AjaxResult getInfoByHid(@PathVariable("hid") Long hid) {
+        return success(bsOperatorService.selectBsOperatorByHid(hid));
+    }
+
     /**
      * 新增业务经办人信息
      */

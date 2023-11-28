@@ -15,10 +15,17 @@
         width="100"
       >
       </el-table-column>
+<!--      <el-table-column-->
+<!--        fixed-->
+<!--        prop=""-->
+<!--        label="行项目编号"-->
+<!--        width="140"-->
+<!--      >-->
+<!--      </el-table-column>-->
       <el-table-column
         fixed
-        prop=""
-        label="行项目编号"
+        prop="tid"
+        label="产品编码"
         width="140"
       >
       </el-table-column>
@@ -26,13 +33,6 @@
         fixed
         prop="tName"
         label="产品名称"
-        width="140"
-      >
-      </el-table-column>
-      <el-table-column
-        fixed
-        prop="tid"
-        label="产品编码"
         width="140"
       >
       </el-table-column>
@@ -55,13 +55,13 @@
       >
       </el-table-column>
       <el-table-column
-        prop="tUnit"
+        prop="tAmount"
         label="数量"
         width="120"
       >
       </el-table-column>
       <el-table-column
-        prop=""
+        prop="tUnit"
         label="计量单位"
         width="120"
       >
@@ -145,6 +145,7 @@ export default {
         tDa:null,
         tZhong:null,
         tXiao:null,
+        tAmount:null,
         tUnit:null,
         shui:null,
         tPrice:null,

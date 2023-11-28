@@ -19,6 +19,8 @@ public interface IBsOperatorService {
      */
     public BsOperator selectBsOperatorByYwId(Long ywId);
 
+    public BsOperator selectBsOperatorByHid(Long hid);
+
     /**
      * 查询业务经办人信息列表
      *
