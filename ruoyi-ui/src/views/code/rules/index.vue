@@ -77,14 +77,6 @@
             v-hasPermi="['system:rules:edit']"
           >修改
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:rules:remove']"
-          >删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -233,7 +225,7 @@ export default {
         hour: null,
         minute: null,
         second: null,
-        updateTime:null
+        updateTime: null
       },
       mantissa: null,
       checkTimeVule: [],
@@ -373,11 +365,20 @@ export default {
                   return;
                 })
               } else {
-                addRules(this.form).then(response => {
-                  this.$modal.msgSuccess("新增成功");
-                  this.open = false;
-                  this.getList();
-                });
+                let number = "";
+                for (let i = 1; i <= this.form.serialNumber; i++) {
+                  if (this.form.serialNumber==i){
+                    break;
+                  }
+                  number += "0";
+
+                }
+                this.form.maxMantissa =
+                  addRules(this.form).then(response => {
+                    this.$modal.msgSuccess("新增成功");
+                    this.open = false;
+                    this.getList();
+                  });
               }
             }))
           }

@@ -27,7 +27,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 行项目Controller
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @RestController
 @RequestMapping("/items")
@@ -66,7 +66,7 @@ public class PpmLineItemsController extends BaseController
      */
     @RequiresPermissions("system:items:query")
     @GetMapping(value = "/{vid}")
-    public AjaxResult getInfo(@PathVariable("vid") Long vid)
+    public AjaxResult getInfo(@PathVariable("vid") Integer vid)
     {
         return success(ppmLineItemsService.selectPpmLineItemsByVid(vid));
     }
@@ -99,7 +99,7 @@ public class PpmLineItemsController extends BaseController
     @RequiresPermissions("system:items:remove")
     @Log(title = "行项目", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{vids}")
-    public AjaxResult remove(@PathVariable Long[] vids)
+    public AjaxResult remove(@PathVariable Integer[] vids)
     {
         return toAjax(ppmLineItemsService.deletePpmLineItemsByVids(vids));
     }

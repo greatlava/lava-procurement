@@ -10,18 +10,19 @@ import org.springframework.stereotype.Service;
 
 /**
  * 设备信息Service业务层处理
- *
+ * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @Service
-public class PpmDeviceServiceImpl implements IPpmDeviceService {
+public class PpmDeviceServiceImpl implements IPpmDeviceService
+{
     @Autowired
     private PpmDeviceMapper ppmDeviceMapper;
 
     /**
      * 查询设备信息
-     *
+     * 
      * @param tid 设备信息主键
      * @return 设备信息
      */
@@ -33,7 +34,7 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
 
     /**
      * 查询设备信息列表
-     *
+     * 
      * @param ppmDevice 设备信息
      * @return 设备信息
      */
@@ -45,7 +46,7 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
 
     /**
      * 新增设备信息
-     *
+     * 
      * @param ppmDevice 设备信息
      * @return 结果
      */
@@ -57,7 +58,7 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
 
     /**
      * 修改设备信息
-     *
+     * 
      * @param ppmDevice 设备信息
      * @return 结果
      */
@@ -69,7 +70,7 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
 
     /**
      * 批量删除设备信息
-     *
+     * 
      * @param tids 需要删除的设备信息主键
      * @return 结果
      */
@@ -81,7 +82,7 @@ public class PpmDeviceServiceImpl implements IPpmDeviceService {
 
     /**
      * 删除设备信息信息
-     *
+     * 
      * @param tid 设备信息主键
      * @return 结果
      */

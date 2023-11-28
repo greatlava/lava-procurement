@@ -1,5 +1,6 @@
 package com.hh.pms.domain;
 
+import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -9,18 +10,22 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
  * 预算对象 ppm_budget
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 public class PpmBudget extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 预算ID */
-    private Long duId;
+    private String duId;
+
+    /** 行项目id */
+    @Excel(name = "行项目id")
+    private Integer vid;
 
     /** 采购计划ID */
     @Excel(name = "采购计划ID")
-    private Long aid;
+    private Integer aid;
 
     /** 部门名称 */
     @Excel(name = "部门名称")
@@ -36,31 +41,32 @@ public class PpmBudget extends BaseEntity
 
     /** 总金额 */
     @Excel(name = "总金额")
-    private Long duTotal;
+    private BigDecimal duTotal;
 
-    /** 已使用金额 */
-    @Excel(name = "已使用金额")
-    private Long duUsedMoney;
-
-    /** 剩余金额 */
-    @Excel(name = "剩余金额")
-    private Long duHaveMoney;
-
-    public void setDuId(Long duId) 
+    public void setDuId(String duId) 
     {
         this.duId = duId;
     }
 
-    public Long getDuId() 
+    public String getDuId() 
     {
         return duId;
     }
-    public void setAid(Long aid) 
+    public void setVid(Integer vid) 
+    {
+        this.vid = vid;
+    }
+
+    public Integer getVid() 
+    {
+        return vid;
+    }
+    public void setAid(Integer aid) 
     {
         this.aid = aid;
     }
 
-    public Long getAid() 
+    public Integer getAid() 
     {
         return aid;
     }
@@ -91,45 +97,26 @@ public class PpmBudget extends BaseEntity
     {
         return duName;
     }
-    public void setDuTotal(Long duTotal) 
+    public void setDuTotal(BigDecimal duTotal) 
     {
         this.duTotal = duTotal;
     }
 
-    public Long getDuTotal() 
+    public BigDecimal getDuTotal() 
     {
         return duTotal;
-    }
-    public void setDuUsedMoney(Long duUsedMoney) 
-    {
-        this.duUsedMoney = duUsedMoney;
-    }
-
-    public Long getDuUsedMoney() 
-    {
-        return duUsedMoney;
-    }
-    public void setDuHaveMoney(Long duHaveMoney) 
-    {
-        this.duHaveMoney = duHaveMoney;
-    }
-
-    public Long getDuHaveMoney() 
-    {
-        return duHaveMoney;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("duId", getDuId())
+            .append("vid", getVid())
             .append("aid", getAid())
             .append("duDept", getDuDept())
             .append("duCode", getDuCode())
             .append("duName", getDuName())
             .append("duTotal", getDuTotal())
-            .append("duUsedMoney", getDuUsedMoney())
-            .append("duHaveMoney", getDuHaveMoney())
             .toString();
     }
 }

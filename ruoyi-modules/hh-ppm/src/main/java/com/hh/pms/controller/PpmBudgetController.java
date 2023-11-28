@@ -27,7 +27,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * 预算Controller
  * 
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-11-28
  */
 @RestController
 @RequestMapping("/budget")
@@ -66,7 +66,7 @@ public class PpmBudgetController extends BaseController
      */
     @RequiresPermissions("system:budget:query")
     @GetMapping(value = "/{duId}")
-    public AjaxResult getInfo(@PathVariable("duId") Long duId)
+    public AjaxResult getInfo(@PathVariable("duId") String duId)
     {
         return success(ppmBudgetService.selectPpmBudgetByDuId(duId));
     }
@@ -99,7 +99,7 @@ public class PpmBudgetController extends BaseController
     @RequiresPermissions("system:budget:remove")
     @Log(title = "预算", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{duIds}")
-    public AjaxResult remove(@PathVariable Long[] duIds)
+    public AjaxResult remove(@PathVariable String[] duIds)
     {
         return toAjax(ppmBudgetService.deletePpmBudgetByDuIds(duIds));
     }

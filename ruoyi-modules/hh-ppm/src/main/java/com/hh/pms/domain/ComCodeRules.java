@@ -65,6 +65,19 @@ public class ComCodeRules extends BaseEntity
     /** 秒 */
     @Excel(name = "秒")
     private String second;
+
+    /** 最大尾数 */
+    @Excel(name = "最大尾数")
+    private String maxMantissa;
+
+    public String getMaxMantissa() {
+        return maxMantissa;
+    }
+
+    public void setMaxMantissa(String maxMantissa) {
+        this.maxMantissa = maxMantissa;
+    }
+
     public void setId(Long id)
     {
         this.id = id;
@@ -200,6 +213,7 @@ public class ComCodeRules extends BaseEntity
                 .append("hour", getHour())
                 .append("minute", getMinute())
                 .append("second", getSecond())
+                .append("maxMantissa",getMaxMantissa())
                 .toString();
     }
 }
