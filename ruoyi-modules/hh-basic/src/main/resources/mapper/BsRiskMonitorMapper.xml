@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.BsRiskMonitorMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.BsRiskMonitor" id="BsRiskMonitorResult">
+        <result property="rmId" column="rm_id"/>
+        <result property="eid" column="eid"/>
+        <result property="rmIllustrate" column="rm_illustrate"/>
+        <result property="rmHappenDate" column="rm_happen_date"/>
+        <result property="rmItem" column="rm_item"/>
+        <result property="rmStatus" column="rm_status"/>
+        <result property="rmHandingDate" column="rm_handing_date"/>
+        <result property="rmHandingPerson" column="rm_handing_person"/>
+        <result property="rmHandingResult" column="rm_handing_result"/>
+        <association property="bsContract">
+            <result property="eid" column="eid"/>
+            <result property="hid" column="hid"/>
+            <result property="eXcode" column="e_xcode"/>
+            <result property="eXname" column="e_xname"/>
+            <result property="eWinningPerson" column="e_winning_person"/>
+            <result property="eHcode" column="e_hcode"/>
+            <result property="eHname" column="e_hname"/>
+            <result property="eStatus" column="e_status"/>
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time"/>
+            <result property="eDeliveryTime" column="e_delivery_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="oHstatus" column="o_hstatus"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectBsRiskMonitorVo">
+        select rm_id,
+               eid,
+               rm_illustrate,
+               rm_happen_date,
+               rm_item,
+               rm_status,
+               rm_handing_date,
+               rm_handing_person,
+               rm_handing_result
+        from bs_risk_monitor
+    </sql>
+
+    <select id="selectBsRiskMonitorList" parameterType="com.hh.pms.sae.domain.BsRiskMonitor"
+            resultMap="BsRiskMonitorResult">
+        select * from bs_risk_monitor r
+        inner join bs_contract c on r.eid = c.eid
+        inner join bs_supplier s on s.hid = c.hid
+        <where>
+            <if test="eid != null ">and r.eid = #{eid}</if>
+            <if test="rmIllustrate != null  and rmIllustrate != ''">and r.rm_illustrate = #{rmIllustrate}</if>
+            <if test="rmHappenDate != null ">and r.rm_happen_date = #{rmHappenDate}</if>
+            <if test="rmItem != null ">and r.rm_item = #{rmItem}</if>
+            <if test="rmStatus != null ">and r.rm_status = #{rmStatus}</if>
+            <if test="rmHandingDate != null ">and r.rm_handing_date = #{rmHandingDate}</if>
+            <if test="rmHandingPerson != null  and rmHandingPerson != ''">and r.rm_handing_person = #{rmHandingPerson}
+            </if>
+            <if test="rmHandingResult != null  and rmHandingResult != ''">and r.rm_handing_result = #{rmHandingResult}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBsRiskMonitorByRmId" parameterType="Long" resultMap="BsRiskMonitorResult">
+        <include refid="selectBsRiskMonitorVo"/>
+        where rm_id = #{rmId}
+    </select>
+
+    <insert id="insertBsRiskMonitor" parameterType="com.hh.pms.sae.domain.BsRiskMonitor" useGeneratedKeys="true"
+            keyProperty="rmId">
+        insert into bs_risk_monitor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="rmIllustrate != null">rm_illustrate,</if>
+            <if test="rmHappenDate != null">rm_happen_date,</if>
+            <if test="rmItem != null">rm_item,</if>
+            <if test="rmStatus != null">rm_status,</if>
+            <if test="rmHandingDate != null">rm_handing_date,</if>
+            <if test="rmHandingPerson != null">rm_handing_person,</if>
+            <if test="rmHandingResult != null">rm_handing_result,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="rmIllustrate != null">#{rmIllustrate},</if>
+            <if test="rmHappenDate != null">#{rmHappenDate},</if>
+            <if test="rmItem != null">#{rmItem},</if>
+            <if test="rmStatus != null">#{rmStatus},</if>
+            <if test="rmHandingDate != null">#{rmHandingDate},</if>
+            <if test="rmHandingPerson != null">#{rmHandingPerson},</if>
+            <if test="rmHandingResult != null">#{rmHandingResult},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsRiskMonitor" parameterType="com.hh.pms.sae.domain.BsRiskMonitor">
+        update bs_risk_monitor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="rmIllustrate != null">rm_illustrate = #{rmIllustrate},</if>
+            <if test="rmHappenDate != null">rm_happen_date = #{rmHappenDate},</if>
+            <if test="rmItem != null">rm_item = #{rmItem},</if>
+            <if test="rmStatus != null">rm_status = #{rmStatus},</if>
+            <if test="rmHandingDate != null">rm_handing_date = #{rmHandingDate},</if>
+            <if test="rmHandingPerson != null">rm_handing_person = #{rmHandingPerson},</if>
+            <if test="rmHandingResult != null">rm_handing_result = #{rmHandingResult},</if>
+        </trim>
+        where rm_id = #{rmId}
+    </update>
+
+    <delete id="deleteBsRiskMonitorByRmId" parameterType="Long">
+        delete
+        from bs_risk_monitor
+        where rm_id = #{rmId}
+    </delete>
+
+    <delete id="deleteBsRiskMonitorByRmIds" parameterType="String">
+        delete from bs_risk_monitor where rm_id in
+        <foreach item="rmId" collection="array" open="(" separator="," close=")">
+            #{rmId}
+        </foreach>
+    </delete>
+</mapper>
