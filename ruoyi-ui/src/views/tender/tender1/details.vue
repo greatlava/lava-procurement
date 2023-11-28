@@ -13,9 +13,9 @@ import TenderDetails from '@/components/tender/tenderDetails.vue'
 import DeviceDetails from '@/components/device/deviceDetails.vue'
 
 export default {
-  components: {
-    'tender-details': TenderDetails,
-    'device-details': DeviceDetails
-  }
+    components: {
+      'tender-details': TenderDetails,
+      'device-details': DeviceDetails
+    }
 }
 </script>
