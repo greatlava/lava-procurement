@@ -2,6 +2,7 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
+        <router-link :to="'/tender/updateNotice?type=add&uid='+this.queryParams.sid">
         <el-button
           type="primary"
           plain
@@ -10,6 +11,7 @@
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
         >新增</el-button>
+        </router-link>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -25,7 +27,7 @@
         <el-tag v-show="scope.row.fjStatus === 2">
           <dict-tag :options="dict.type.bid_notice_state" :value="scope.row.fjStatus"/>
         </el-tag>
-        <el-tag type="success"  v-show="scope.row.fjStatus === 3">
+        <el-tag type="success"  v-show="scope.row.fjStatus === 3 || scope.row.fjStatus === 5">
         <dict-tag :options="dict.type.bid_notice_state" :value="scope.row.fjStatus"/>
         </el-tag>
         <el-tag type="warning"  v-show="scope.row.fjStatus === 4">
@@ -50,7 +52,7 @@
             @click="handleDelete(scope.row)"
           >删除</el-button>
           <router-link :to="'/tender/updateNotice?type=details&uid='+scope.row.uid">
-          <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3"
+          <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -59,7 +61,8 @@
           <el-button v-if="scope.row.fjStatus === 3"
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            icon="el-icon-s-promotion"
+            @click="handleUpdateState(scope.row)"
           >发布</el-button>
         </template>
       </el-table-column>
@@ -192,6 +195,16 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
+      }).catch(() => {});
+    },
+    /**发布按钮操作*/
+    handleUpdateState(row){
+      row.fjStatus = 5;//改变状态
+      this.$modal.confirm('是否确认发布招标公告编号为"' + row.uid + '"的数据项？').then(function() {
+        return updateNotice(row);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("发布成功");
       }).catch(() => {});
     }
   }

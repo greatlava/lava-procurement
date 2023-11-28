@@ -1,9 +1,9 @@
 <template>
 <div>
   <div class="div1">
-    <el-steps :active="index" simple>
+    <el-steps :active="index" simple style="background: #e8f4ff;">
       <el-step title="招标" icon="el-icon-edit" @click="selected(1)"></el-step>
-      <el-step title="投标" icon="el-icon-message" @click="selected(2)"></el-step>
+      <el-step title="投标" icon="el-icon-message"  @click="selected(2)"></el-step>
       <el-step title="开标" icon="el-icon-connection" @click="selected(3)"></el-step>
       <el-step title="评标" icon="el-icon-chat-line-square" @click="selected(4)"></el-step>
       <el-step title="定标" icon="el-icon-position" @click="selected(5)"></el-step>
@@ -45,19 +45,20 @@ export default {
   methods: {
     selected(stepIndex) {
       this.index = stepIndex;
+      alert("3243");
     }
   }
 };
 </script>
 <style>
 .div1{
-  width: 80%;
+  width: 95%;
   height: 100%;
   background-color: rgba(221, 221, 221, 0.99);
   margin: 20px auto;
 }
 .div2{
-  width: 80%;
+  width: 95%;
   height: 100%;
   margin: 20px auto;
 }
