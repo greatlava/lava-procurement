@@ -52,7 +52,7 @@ export function addSupplier(data) {
 // 修改供应商
 export function updateSupplier(data) {
   return request({
-    url: '/system/supplier',
+    url: '/basic/supplier',
     method: 'put',
     data: data
   })

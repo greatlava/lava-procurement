@@ -10,9 +10,9 @@
                   供应商名称
                 </template>
                 {{ this.hName }}
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 1" type="success">合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 2" type="danger">不合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 3" type="info">黑名单</el-tag>
+                <el-tag size="small" style="margin-left: 10px" v-if="this.fStatus == 2"
+                        type="danger">已驳回
+                </el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -152,8 +152,8 @@
               </el-form-item>
             </el-form>
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -166,9 +166,6 @@
                   姓名
                 </template>
                 {{ this.hName }}
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 1" type="success">合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 2" type="danger">不合格</el-tag>
-                <el-tag size="small" style="margin-left: 10px" v-if="this.fState == 3" type="info">黑名单</el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -210,8 +207,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -240,8 +237,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -260,8 +257,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -281,8 +278,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -303,8 +300,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -319,8 +316,8 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="" type="primary">通过</el-button>
-              <el-button @click="" type="danger">驳回</el-button>
+              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
+              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
               <el-button @click="cancel">取消</el-button>
             </el-row>
           </div>
@@ -332,9 +329,10 @@
 
 <script>
 import {
-  getSupplier,
-  getSupplierByZrId
+  getSupplierByZrId,
+  updateSupplier
 } from '@/api/system/supplier';
+import {delAccess, updateAccess} from "@/api/system/access";
 
 export default {
   components: {},
@@ -346,7 +344,8 @@ export default {
       zr_id: this.$route.query.zr_id,
       activeName: 'first',
       opinion: '',
-      zrId: null,
+      hid: 0,
+      zrId: 0,
       hName: null,
       hCreditCode: null,
       hIncorporation: null,
@@ -370,9 +369,7 @@ export default {
       hActualCapital: null,
       hProve: null,
       fStatus: null,
-      fOpinion: null,
-      fState: null,
-      fClassify: null
+      fState: null
     }
   },
   created() {
@@ -385,9 +382,47 @@ export default {
     cancel() {
       this.$router.back()
     },
+    pass() {
+      this.fStatus = 1;
+      updateSupplier({
+        "hid": this.hid,
+        "fStatus": this.fStatus,
+        "zrId": this.zrId,
+        "fOpinion": this.opinion
+      }).then(response => {
+        this.loading = true
+        console.log(response);
+        if (response.code == 200) {
+          delAccess(this.zr_id).then(res => {
+            if (res.code == 200) {
+              this.$message({
+                message: '操作成功！',
+                type: 'success'
+              });
+              this.cancel()
+            }
+          })
+        }
+      });
+      this.loading = false
+    },
+    overrule() {
+      this.fStatus = 2;
+      updateSupplier({"hid": this.hid, "fStatus": this.fStatus, "fOpinion": this.opinion}).then(response => {
+        this.loading = true
+        if (response.code == 200) {
+          this.$message({
+            message: '操作成功！',
+            type: 'success'
+          });
+        }
+      });
+      this.loading = false
+    },
     query() {
       getSupplierByZrId(this.zr_id).then(response => {
         console.log(response)
+        this.hid = response.data.hid
         this.opinion = response.data.fOpinion
         this.hName = response.data.hName
         this.hCreditCode = response.data.hCreditCode
@@ -408,6 +443,7 @@ export default {
         this.hCapital = response.data.hCapital
         this.hActualCapital = response.data.hActualCapital
         this.fState = response.data.fState
+        this.fStatus = response.data.fStatus
       });
       this.loading = false
     }
