@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.cm.mapper.BsSignMapper">
+
+    <resultMap type="com.hh.pms.cm.domain.BsSign" id="BsSignResult">
+        <result property="gnId"    column="gn_id"    />
+        <result property="gnSignatorycount"    column="gn_signatoryCount"    />
+        <result property="gnSub"    column="gn_sub"    />
+        <result property="gnPbid"    column="gn_pbId"    />
+        <result property="gnPbname"    column="gn_pbName"    />
+        <result property="gnPbaddress"    column="gn_pbAddress"    />
+        <result property="gnPbcontact"    column="gn_pbContact"    />
+        <result property="gnPbcif"    column="gn_pbCif"    />
+        <result property="gnPbbank"    column="gn_pbBank"    />
+        <result property="gnPbaccount"    column="gn_pbAccount"    />
+        <result property="gnPbamount"    column="gn_pbAmount"    />
+        <result property="gnPbcurrency"    column="gn_pbCurrency"    />
+        <result property="gnPbpayment"    column="gn_pbPayment"    />
+        <result property="gnPbfixedprice"    column="gn_pbFixedprice"    />
+        <result property="gnPbbalance"    column="gn_pbBalance"    />
+        <result property="gnPcid"    column="gn_pcId"    />
+        <result property="gnPcname"    column="gn_pcName"    />
+        <result property="gnPcaddress"    column="gn_pcAddress"    />
+        <result property="gnPccontact"    column="gn_pcContact"    />
+        <result property="gnPccif"    column="gn_pcCif"    />
+        <result property="gnPcbank"    column="gn_pcBank"    />
+        <result property="gnPcaccount"    column="gn_pcAccount"    />
+        <result property="gnPcamount"    column="gn_pcAmount"    />
+        <result property="gnPccurrency"    column="gn_pcCurrency"    />
+        <result property="gnPcpayment"    column="gn_pcPayment"    />
+        <result property="gnPcfixedprice"    column="gn_pcFixedprice"    />
+        <result property="gnPcbalance"    column="gn_pcBalance"    />
+    </resultMap>
+
+    <sql id="selectBsSignVo">
+        select gn_id, gn_signatoryCount, gn_sub, gn_pbId, gn_pbName, gn_pbAddress, gn_pbContact, gn_pbCif, gn_pbBank, gn_pbAccount, gn_pbAmount, gn_pbCurrency, gn_pbPayment, gn_pbFixedprice, gn_pbBalance, gn_pcId, gn_pcName, gn_pcAddress, gn_pcContact, gn_pcCif, gn_pcBank, gn_pcAccount, gn_pcAmount, gn_pcCurrency, gn_pcPayment, gn_pcFixedprice, gn_pcBalance from bs_sign
+    </sql>
+
+    <select id="selectBsSignList" parameterType="com.hh.pms.cm.domain.BsSign" resultMap="BsSignResult">
+        <include refid="selectBsSignVo"/>
+        <where>
+            <if test="gnId != null "> and gn_id = #{gnId}</if>
+            <if test="gnSignatorycount != null "> and gn_signatoryCount = #{gnSignatorycount}</if>
+            <if test="gnSub != null  and gnSub != ''"> and gn_sub = #{gnSub}</if>
+            <if test="gnPbid != null "> and gn_pbId = #{gnPbid}</if>
+            <if test="gnPbname != null  and gnPbname != ''"> and gn_pbName like concat('%', #{gnPbname}, '%')</if>
+            <if test="gnPbaddress != null  and gnPbaddress != ''"> and gn_pbAddress = #{gnPbaddress}</if>
+            <if test="gnPbcontact != null  and gnPbcontact != ''"> and gn_pbContact = #{gnPbcontact}</if>
+            <if test="gnPbcif != null  and gnPbcif != ''"> and gn_pbCif = #{gnPbcif}</if>
+            <if test="gnPbbank != null  and gnPbbank != ''"> and gn_pbBank = #{gnPbbank}</if>
+            <if test="gnPbaccount != null  and gnPbaccount != ''"> and gn_pbAccount = #{gnPbaccount}</if>
+            <if test="gnPbamount != null "> and gn_pbAmount = #{gnPbamount}</if>
+            <if test="gnPbcurrency != null  and gnPbcurrency != ''"> and gn_pbCurrency = #{gnPbcurrency}</if>
+            <if test="gnPbpayment != null "> and gn_pbPayment = #{gnPbpayment}</if>
+            <if test="gnPbfixedprice != null "> and gn_pbFixedprice = #{gnPbfixedprice}</if>
+            <if test="gnPbbalance != null "> and gn_pbBalance = #{gnPbbalance}</if>
+            <if test="gnPcid != null "> and gn_pcId = #{gnPcid}</if>
+            <if test="gnPcname != null  and gnPcname != ''"> and gn_pcName like concat('%', #{gnPcname}, '%')</if>
+            <if test="gnPcaddress != null  and gnPcaddress != ''"> and gn_pcAddress = #{gnPcaddress}</if>
+            <if test="gnPccontact != null  and gnPccontact != ''"> and gn_pcContact = #{gnPccontact}</if>
+            <if test="gnPccif != null  and gnPccif != ''"> and gn_pcCif = #{gnPccif}</if>
+            <if test="gnPcbank != null  and gnPcbank != ''"> and gn_pcBank = #{gnPcbank}</if>
+            <if test="gnPcaccount != null  and gnPcaccount != ''"> and gn_pcAccount = #{gnPcaccount}</if>
+            <if test="gnPcamount != null "> and gn_pcAmount = #{gnPcamount}</if>
+            <if test="gnPccurrency != null  and gnPccurrency != ''"> and gn_pcCurrency = #{gnPccurrency}</if>
+            <if test="gnPcpayment != null "> and gn_pcPayment = #{gnPcpayment}</if>
+            <if test="gnPcfixedprice != null "> and gn_pcFixedprice = #{gnPcfixedprice}</if>
+            <if test="gnPcbalance != null "> and gn_pcBalance = #{gnPcbalance}</if>
+        </where>
+    </select>
+
+    <select id="selectBsSignByGnId" parameterType="Long" resultMap="BsSignResult">
+        <include refid="selectBsSignVo"/>
+        where gn_id = #{gnId}
+    </select>
+
+    <insert id="insertBsSign" parameterType="com.hh.pms.cm.domain.BsSign">
+        insert into bs_sign
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gnId != null">gn_id,</if>
+            <if test="gnSignatorycount != null">gn_signatoryCount,</if>
+            <if test="gnSub != null">gn_sub,</if>
+            <if test="gnPbid != null">gn_pbId,</if>
+            <if test="gnPbname != null">gn_pbName,</if>
+            <if test="gnPbaddress != null">gn_pbAddress,</if>
+            <if test="gnPbcontact != null">gn_pbContact,</if>
+            <if test="gnPbcif != null">gn_pbCif,</if>
+            <if test="gnPbbank != null">gn_pbBank,</if>
+            <if test="gnPbaccount != null">gn_pbAccount,</if>
+            <if test="gnPbamount != null">gn_pbAmount,</if>
+            <if test="gnPbcurrency != null">gn_pbCurrency,</if>
+            <if test="gnPbpayment != null">gn_pbPayment,</if>
+            <if test="gnPbfixedprice != null">gn_pbFixedprice,</if>
+            <if test="gnPbbalance != null">gn_pbBalance,</if>
+            <if test="gnPcid != null">gn_pcId,</if>
+            <if test="gnPcname != null">gn_pcName,</if>
+            <if test="gnPcaddress != null">gn_pcAddress,</if>
+            <if test="gnPccontact != null">gn_pcContact,</if>
+            <if test="gnPccif != null">gn_pcCif,</if>
+            <if test="gnPcbank != null">gn_pcBank,</if>
+            <if test="gnPcaccount != null">gn_pcAccount,</if>
+            <if test="gnPcamount != null">gn_pcAmount,</if>
+            <if test="gnPccurrency != null">gn_pcCurrency,</if>
+            <if test="gnPcpayment != null">gn_pcPayment,</if>
+            <if test="gnPcfixedprice != null">gn_pcFixedprice,</if>
+            <if test="gnPcbalance != null">gn_pcBalance,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gnId != null">#{gnId},</if>
+            <if test="gnSignatorycount != null">#{gnSignatorycount},</if>
+            <if test="gnSub != null">#{gnSub},</if>
+            <if test="gnPbid != null">#{gnPbid},</if>
+            <if test="gnPbname != null">#{gnPbname},</if>
+            <if test="gnPbaddress != null">#{gnPbaddress},</if>
+            <if test="gnPbcontact != null">#{gnPbcontact},</if>
+            <if test="gnPbcif != null">#{gnPbcif},</if>
+            <if test="gnPbbank != null">#{gnPbbank},</if>
+            <if test="gnPbaccount != null">#{gnPbaccount},</if>
+            <if test="gnPbamount != null">#{gnPbamount},</if>
+            <if test="gnPbcurrency != null">#{gnPbcurrency},</if>
+            <if test="gnPbpayment != null">#{gnPbpayment},</if>
+            <if test="gnPbfixedprice != null">#{gnPbfixedprice},</if>
+            <if test="gnPbbalance != null">#{gnPbbalance},</if>
+            <if test="gnPcid != null">#{gnPcid},</if>
+            <if test="gnPcname != null">#{gnPcname},</if>
+            <if test="gnPcaddress != null">#{gnPcaddress},</if>
+            <if test="gnPccontact != null">#{gnPccontact},</if>
+            <if test="gnPccif != null">#{gnPccif},</if>
+            <if test="gnPcbank != null">#{gnPcbank},</if>
+            <if test="gnPcaccount != null">#{gnPcaccount},</if>
+            <if test="gnPcamount != null">#{gnPcamount},</if>
+            <if test="gnPccurrency != null">#{gnPccurrency},</if>
+            <if test="gnPcpayment != null">#{gnPcpayment},</if>
+            <if test="gnPcfixedprice != null">#{gnPcfixedprice},</if>
+            <if test="gnPcbalance != null">#{gnPcbalance},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsSign" parameterType="com.hh.pms.cm.domain.BsSign">
+        update bs_sign
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gnSignatorycount != null">gn_signatoryCount = #{gnSignatorycount},</if>
+            <if test="gnSub != null">gn_sub = #{gnSub},</if>
+            <if test="gnPbid != null">gn_pbId = #{gnPbid},</if>
+            <if test="gnPbname != null">gn_pbName = #{gnPbname},</if>
+            <if test="gnPbaddress != null">gn_pbAddress = #{gnPbaddress},</if>
+            <if test="gnPbcontact != null">gn_pbContact = #{gnPbcontact},</if>
+            <if test="gnPbcif != null">gn_pbCif = #{gnPbcif},</if>
+            <if test="gnPbbank != null">gn_pbBank = #{gnPbbank},</if>
+            <if test="gnPbaccount != null">gn_pbAccount = #{gnPbaccount},</if>
+            <if test="gnPbamount != null">gn_pbAmount = #{gnPbamount},</if>
+            <if test="gnPbcurrency != null">gn_pbCurrency = #{gnPbcurrency},</if>
+            <if test="gnPbpayment != null">gn_pbPayment = #{gnPbpayment},</if>
+            <if test="gnPbfixedprice != null">gn_pbFixedprice = #{gnPbfixedprice},</if>
+            <if test="gnPbbalance != null">gn_pbBalance = #{gnPbbalance},</if>
+            <if test="gnPcid != null">gn_pcId = #{gnPcid},</if>
+            <if test="gnPcname != null">gn_pcName = #{gnPcname},</if>
+            <if test="gnPcaddress != null">gn_pcAddress = #{gnPcaddress},</if>
+            <if test="gnPccontact != null">gn_pcContact = #{gnPccontact},</if>
+            <if test="gnPccif != null">gn_pcCif = #{gnPccif},</if>
+            <if test="gnPcbank != null">gn_pcBank = #{gnPcbank},</if>
+            <if test="gnPcaccount != null">gn_pcAccount = #{gnPcaccount},</if>
+            <if test="gnPcamount != null">gn_pcAmount = #{gnPcamount},</if>
+            <if test="gnPccurrency != null">gn_pcCurrency = #{gnPccurrency},</if>
+            <if test="gnPcpayment != null">gn_pcPayment = #{gnPcpayment},</if>
+            <if test="gnPcfixedprice != null">gn_pcFixedprice = #{gnPcfixedprice},</if>
+            <if test="gnPcbalance != null">gn_pcBalance = #{gnPcbalance},</if>
+        </trim>
+        where gn_id = #{gnId}
+    </update>
+
+    <delete id="deleteBsSignByGnId" parameterType="Long">
+        delete from bs_sign where gn_id = #{gnId}
+    </delete>
+
+    <delete id="deleteBsSignByGnIds" parameterType="String">
+        delete from bs_sign where gn_id in
+        <foreach item="gnId" collection="array" open="(" separator="," close=")">
+            #{gnId}
+        </foreach>
+    </delete>
+</mapper>

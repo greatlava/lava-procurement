@@ -5,53 +5,54 @@
 <mapper namespace="com.hh.pms.cm.mapper.BsContractMapper">
 
     <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult">
-        <result property="hid" column="hid"/>
-        <result property="eid" column="eid"/>
-        <result property="eXcode" column="e_xcode"/>
-        <result property="eXname" column="e_xname"/>
-        <result property="eWinningPerson" column="e_winning_person"/>
-        <result property="eHcode" column="e_hcode"/>
-        <result property="eHname" column="e_hname"/>
-        <result property="eStatus" column="e_status"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
-        <result property="eDeliveryTime" column="e_delivery_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="oHstatus" column="o_hstatus"/>
+        <result property="eid"    column="eid"    />
+        <result property="hid"    column="hid"    />
+        <result property="eXcode"    column="e_xcode"    />
+        <result property="gnId"    column="gn_id"    />
+        <result property="eHcode"    column="e_hcode"    />
+        <result property="eHname"    column="e_hname"    />
+        <result property="eStatus"    column="e_status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="eDeliveryTime"    column="e_delivery_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="oHstatus"    column="o_hstatus"    />
+        <result property="eType"    column="e_type"    />
+        <result property="eCon"    column="e_con"    />
+        <result property="eStartdate"    column="e_startDate"    />
+        <result property="eEnddate"    column="e_endDate"    />
+        <result property="eAmount"    column="e_amount"    />
+        <result property="eDescription"    column="e_description"    />
+        <result property="eOpinion"    column="e_opinion"    />
+        <result property="eImage"    column="e_image"    />
+        <result property="eDocuments"    column="e_documents"    />
     </resultMap>
 
     <sql id="selectBsContractVo">
-        select hid,
-               eid,
-               e_xcode,
-               e_xname,
-               e_winning_person,
-               e_hcode,
-               e_hname,
-               e_status,
-               create_by,
-               create_time,
-               e_delivery_time,
-               update_by,
-               update_time,
-               o_hstatus
-        from bs_contract
+        select eid, hid, e_xcode, gn_id, e_hcode, e_hname, e_status, create_by, create_time, e_delivery_time, update_by, update_time, o_hstatus, e_type, e_con, e_startDate, e_endDate, e_amount, e_description, e_opinion, e_image, e_documents from bs_contract
     </sql>
 
     <select id="selectBsContractList" parameterType="com.hh.pms.cm.domain.BsContract" resultMap="BsContractResult">
         <include refid="selectBsContractVo"/>
         <where>
-            <if test="hid != null ">and hid = #{hid}</if>
-            <if test="eXcode != null  and eXcode != ''">and e_xcode = #{eXcode}</if>
-            <if test="eXcode != null  and eXcode != ''">and e_xcode like concat('%', #{eXcode}, '%')</if>
-            <if test="eXname != null  and eXname != ''">and e_xname like concat('%', #{eXname}, '%')</if>
-            <if test="eWinningPerson != null  and eWinningPerson != ''">and e_winning_person = #{eWinningPerson}</if>
-            <if test="eHcode != null  and eHcode != ''">and e_hcode = #{eHcode}</if>
-            <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
-            <if test="eStatus != null ">and e_status = #{eStatus}</if>
-            <if test="eDeliveryTime != null ">and e_delivery_time = #{eDeliveryTime}</if>
-            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="hid != null "> and hid = #{hid}</if>
+            <if test="eXcode != null  and eXcode != ''"> and e_xcode = #{eXcode}</if>
+            <if test="gnId != null "> and gn_id = #{gnId}</if>
+            <if test="eHcode != null  and eHcode != ''"> and e_hcode = #{eHcode}</if>
+            <if test="eHname != null  and eHname != ''"> and e_hname like concat('%', #{eHname}, '%')</if>
+            <if test="eStatus != null "> and e_status = #{eStatus}</if>
+            <if test="eDeliveryTime != null "> and e_delivery_time = #{eDeliveryTime}</if>
+            <if test="oHstatus != null "> and o_hstatus = #{oHstatus}</if>
+            <if test="eType != null "> and e_type = #{eType}</if>
+            <if test="eCon != null "> and e_con = #{eCon}</if>
+            <if test="eStartdate != null "> and e_startDate = #{eStartdate}</if>
+            <if test="eEnddate != null "> and e_endDate = #{eEnddate}</if>
+            <if test="eAmount != null "> and e_amount = #{eAmount}</if>
+            <if test="eDescription != null  and eDescription != ''"> and e_description = #{eDescription}</if>
+            <if test="eOpinion != null  and eOpinion != ''"> and e_opinion = #{eOpinion}</if>
+            <if test="eImage != null  and eImage != ''"> and e_image = #{eImage}</if>
+            <if test="eDocuments != null  and eDocuments != ''"> and e_documents = #{eDocuments}</if>
         </where>
     </select>
 
@@ -63,11 +64,10 @@
     <insert id="insertBsContract" parameterType="com.hh.pms.cm.domain.BsContract">
         insert into bs_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="hid != null">hid,</if>
             <if test="eid != null">eid,</if>
+            <if test="hid != null">hid,</if>
             <if test="eXcode != null">e_xcode,</if>
-            <if test="eXname != null">e_xname,</if>
-            <if test="eWinningPerson != null">e_winning_person,</if>
+            <if test="gnId != null">gn_id,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
             <if test="eStatus != null">e_status,</if>
@@ -77,13 +77,21 @@
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="oHstatus != null">o_hstatus,</if>
-        </trim>
+            <if test="eType != null">e_type,</if>
+            <if test="eCon != null">e_con,</if>
+            <if test="eStartdate != null">e_startDate,</if>
+            <if test="eEnddate != null">e_endDate,</if>
+            <if test="eAmount != null">e_amount,</if>
+            <if test="eDescription != null">e_description,</if>
+            <if test="eOpinion != null">e_opinion,</if>
+            <if test="eImage != null">e_image,</if>
+            <if test="eDocuments != null">e_documents,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="hid != null">#{hid},</if>
             <if test="eid != null">#{eid},</if>
+            <if test="hid != null">#{hid},</if>
             <if test="eXcode != null">#{eXcode},</if>
-            <if test="eXname != null">#{eXname},</if>
-            <if test="eWinningPerson != null">#{eWinningPerson},</if>
+            <if test="gnId != null">#{gnId},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
             <if test="eStatus != null">#{eStatus},</if>
@@ -93,7 +101,16 @@
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="oHstatus != null">#{oHstatus},</if>
-        </trim>
+            <if test="eType != null">#{eType},</if>
+            <if test="eCon != null">#{eCon},</if>
+            <if test="eStartdate != null">#{eStartdate},</if>
+            <if test="eEnddate != null">#{eEnddate},</if>
+            <if test="eAmount != null">#{eAmount},</if>
+            <if test="eDescription != null">#{eDescription},</if>
+            <if test="eOpinion != null">#{eOpinion},</if>
+            <if test="eImage != null">#{eImage},</if>
+            <if test="eDocuments != null">#{eDocuments},</if>
+         </trim>
     </insert>
 
     <update id="updateBsContract" parameterType="com.hh.pms.cm.domain.BsContract">
@@ -101,8 +118,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="hid != null">hid = #{hid},</if>
             <if test="eXcode != null">e_xcode = #{eXcode},</if>
-            <if test="eXname != null">e_xname = #{eXname},</if>
-            <if test="eWinningPerson != null">e_winning_person = #{eWinningPerson},</if>
+            <if test="gnId != null">gn_id = #{gnId},</if>
             <if test="eHcode != null">e_hcode = #{eHcode},</if>
             <if test="eHname != null">e_hname = #{eHname},</if>
             <if test="eStatus != null">e_status = #{eStatus},</if>
@@ -112,14 +128,21 @@
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="oHstatus != null">o_hstatus = #{oHstatus},</if>
+            <if test="eType != null">e_type = #{eType},</if>
+            <if test="eCon != null">e_con = #{eCon},</if>
+            <if test="eStartdate != null">e_startDate = #{eStartdate},</if>
+            <if test="eEnddate != null">e_endDate = #{eEnddate},</if>
+            <if test="eAmount != null">e_amount = #{eAmount},</if>
+            <if test="eDescription != null">e_description = #{eDescription},</if>
+            <if test="eOpinion != null">e_opinion = #{eOpinion},</if>
+            <if test="eImage != null">e_image = #{eImage},</if>
+            <if test="eDocuments != null">e_documents = #{eDocuments},</if>
         </trim>
         where eid = #{eid}
     </update>
 
     <delete id="deleteBsContractByEid" parameterType="Long">
-        delete
-        from bs_contract
-        where eid = #{eid}
+        delete from bs_contract where eid = #{eid}
     </delete>
 
     <delete id="deleteBsContractByEids" parameterType="String">
@@ -128,4 +151,5 @@
             #{eid}
         </foreach>
     </delete>
+
 </mapper>

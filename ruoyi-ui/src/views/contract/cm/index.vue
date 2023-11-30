@@ -44,14 +44,15 @@
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建合同-->
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-folder-add"
-                  @click=""
-                  v-hasPermi="['system:contract:add']"
-                >创建合同
-                </el-button>
+                <router-link :to="'add?sid='+scope.row.sid+'&gid=0'">
+                  <el-button
+                    size="mini"
+                    type="text"
+                    icon="el-icon-folder-add"
+                    v-hasPermi="['system:contract:add']"
+                  >创建合同
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -186,7 +187,6 @@
 
       </el-tabs>
     </div>
-
   </div>
 </template>
 
