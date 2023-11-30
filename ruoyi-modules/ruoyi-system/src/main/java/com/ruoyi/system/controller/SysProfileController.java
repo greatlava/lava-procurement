@@ -40,7 +40,6 @@ public class SysProfileController extends BaseController
     
     @Autowired
     private TokenService tokenService;
-    
     @Autowired
     private RemoteFileService remoteFileService;
 

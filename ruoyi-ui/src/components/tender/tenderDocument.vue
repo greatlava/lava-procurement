@@ -49,7 +49,7 @@
     <el-table v-loading="loading" :data="documentsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="wid" />
-      <el-table-column label="文件标题" align="center" prop="wTitle" />
+      <el-table-column label="文件标题" align="center" prop="wTitle"/>
       <el-table-column label="文件大小" align="center" prop="wSize" />
       <el-table-column label="上传时间" align="center" prop="wUploadTime" width="180">
         <template slot-scope="scope">
@@ -61,16 +61,19 @@
           <el-button
             size="mini"
             type="text"
+            icon="el-icon-view"
+          >预览</el-button>
+          <el-button
+            size="mini"
+            type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:documents:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:documents:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -88,7 +91,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="招标项目ID" prop="sid">
-          <el-input v-model="form.sid" placeholder="请输入招标项目ID" />
+          <el-input v-model="form.sid" placeholder="请输入招标项目ID" :disabled="true"/>
         </el-form-item>
         <el-form-item label="文件标题" prop="wTitle">
           <el-input v-model="form.wTitle" placeholder="请输入文件标题" />
@@ -115,6 +118,7 @@
 
 <script>
 import { listDocuments, getDocuments, delDocuments, addDocuments, updateDocuments } from "@/api/system/document";
+import { getTender,updateTender } from '@/api/system/tender';
 
 export default {
   name: "Documents",
@@ -138,6 +142,7 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      sCode:null,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -176,22 +181,11 @@ export default {
     reset() {
       this.form = {
         wid: null,
-        sid: null,
         wTitle: null,
+        sid:this.$route.query.sid,
         wSize: null,
         wUploadTime: null
       };
-      this.resetForm("form");
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
     },
     // 多选框选中数据
     handleSelectionChange(selection) {

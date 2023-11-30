@@ -383,6 +383,8 @@ public class BsSupplier extends BaseEntity
         return fClassify;
     }
 
+
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

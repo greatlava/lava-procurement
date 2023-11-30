@@ -2,6 +2,7 @@ package com.hh.pms.cm.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hh.pms.sae.domain.BsSupplier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -9,22 +10,28 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 合同对象 bs_contract
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
-public class BsContract extends BaseEntity
-{
+public class BsContract extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 合同ID */
-    private Long eid;
-
     /** 供应商ID */
+    /**
+     * 供应商ID
+     */
     @Excel(name = "供应商ID")
     private Long hid;
 
-    /** 项目编号 */
+    /**
+     * 合同ID
+     */
+    private Long eid;
+
+    /**
+     * 项目编号
+     */
     @Excel(name = "项目编号")
     private String eXcode;
 
@@ -32,24 +39,34 @@ public class BsContract extends BaseEntity
     @Excel(name = "签署执行状态ID")
     private Long gnId;
 
-    /** 合同编号 */
+    /**
+     * 合同编号
+     */
     @Excel(name = "合同编号")
     private String eHcode;
 
-    /** 合同名称 */
+    /**
+     * 合同名称
+     */
     @Excel(name = "合同名称")
     private String eHname;
 
-    /** 合同状态 */
+    /**
+     * 合同状态
+     */
     @Excel(name = "合同状态")
     private Long eStatus;
 
-    /** 交付日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd")
+    /**
+     * 交付日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date eDeliveryTime;
 
-    /** 合同管理状态 */
+    /**
+     * 合同管理状态
+     */
     @Excel(name = "合同管理状态")
     private Long oHstatus;
 
@@ -96,7 +113,7 @@ public class BsContract extends BaseEntity
         this.eid = eid;
     }
 
-    public Long getEid()
+    public Long getEid() 
     {
         return eid;
     }
