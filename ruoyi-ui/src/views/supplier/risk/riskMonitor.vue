@@ -250,6 +250,12 @@ export default {
     };
   },
   created() {
+    if (sessionStorage.getItem('a1') != null && sessionStorage.getItem('a2')) {
+      this.queryParams.pageNum = JSON.parse(sessionStorage.getItem('a1'))
+      this.queryParams.pageSize = JSON.parse(sessionStorage.getItem('a2'))
+      sessionStorage.removeItem('a1')
+      sessionStorage.removeItem('a2')
+    }
     this.getList();
     //查询风险项字典
     this.getDicts("bs_risk_monitoring_item").then(res => {
@@ -259,6 +265,11 @@ export default {
     this.getDicts("bs_risk_monitoring_status").then(res => {
       this.rm_Status = res.data;
     });
+  },
+  beforeRouteLeave(to, from, next) {
+    sessionStorage.setItem('a1', this.queryParams.pageNum)
+    sessionStorage.setItem('a2', this.queryParams.pageSize)
+    next(true)
   },
   methods: {
     /** 查询供应商风险监控列表 */

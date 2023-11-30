@@ -17,8 +17,7 @@
             <id property="eid" column="eid"/>
             <result property="hid" column="hid"/>
             <result property="eXcode" column="e_xcode"/>
-            <result property="eXname" column="e_xname"/>
-            <result property="eWinningPerson" column="e_winning_person"/>
+            <result property="gnId" column="gn_id"/>
             <result property="eHcode" column="e_hcode"/>
             <result property="eHname" column="e_hname"/>
             <result property="eStatus" column="e_status"/>
@@ -28,6 +27,15 @@
             <result property="updateBy" column="update_by"/>
             <result property="updateTime" column="update_time"/>
             <result property="oHstatus" column="o_hstatus"/>
+            <result property="eType" column="e_type"/>
+            <result property="eCon" column="e_con"/>
+            <result property="eStartdate" column="e_startDate"/>
+            <result property="eEnddate" column="e_endDate"/>
+            <result property="eAmount" column="e_amount"/>
+            <result property="eDescription" column="e_description"/>
+            <result property="eOpinion" column="e_opinion"/>
+            <result property="eImage" column="e_image"/>
+            <result property="eDocuments" column="e_documents"/>
         </association>
         <association property="bsSupplier">
             <id property="hid" column="hid"/>
