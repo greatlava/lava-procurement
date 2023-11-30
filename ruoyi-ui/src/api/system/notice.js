@@ -42,3 +42,12 @@ export function delNotice(noticeId) {
     method: 'delete'
   })
 }
+
+// 用户头像上传
+export function uploads(data) {
+  return request({
+    url: '/bidding//notice/upload',
+    method: 'post',
+    data: data
+  })
+}

@@ -46,22 +46,21 @@
         <el-form-item label="附件" prop="fjAnnex">
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            multiple
+            action="http://localhost:9300"
+            :on-success="handleSuccess"
+            :on-error="handleError"
+            :before-upload="beforeUpload"
+            :multiple="true"
             :limit="3"
             :on-exceed="handleExceed"
             :file-list="fileList"
-            :disabled="this.routeType==='details'"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <span slot="tip" class="el-upload__tip"> 支持文件格式：doc，docx,pdf.xis......</span>
+          > <el-button size="small" type="primary">点击上传</el-button>
+            <span slot="tip" class="el-upload__tip"> 支持文件格式：pdf.xis......</span>
           </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="fjRemark">
-          <el-input v-model="form.fjRemark" type="textarea" placeholder="请输入内容" :disabled="this.routeType==='details'"/>
+          <div v-html="form.fjRemark"   class="ql-editor" ref="editor" style="height: 200px">
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -73,9 +72,30 @@
 
 <script>
 import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice";
-
+import Quill from 'quill';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
 export default {
   name: "Notice",
+  mounted() {
+    this.$nextTick(() => {
+      const editor = new Quill(this.$refs.editor, {
+        theme: 'snow', // 使用雪狐主题
+        modules: {
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['link', 'blockquote', 'code-block', 'image'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+          ] // 配置工具栏按钮
+        }
+      });
+      // 将编辑器的内容绑定到组件的数据属性上
+      editor.on('text-change', () => {
+        this.form.fjRemark = editor.getEditor().root;
+      });
+    });
+  },
   data() {
     return {
       // 遮罩层
@@ -130,6 +150,7 @@ export default {
     }
   },
   methods: {
+    requestUpload(){},
     // 取消按钮
     cancel() {
       this.open = false;
@@ -194,19 +215,31 @@ export default {
        })
      }
     },
-  //上传附件
-  handleRemove(file, fileList) {
-    console.log(file, fileList)
-  },
-  handlePreview(file) {
-    console.log(file)
-  },
-  handleExceed(files, fileList) {
-    this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-  },
-  beforeRemove(file, fileList) {
-    return this.$confirm(`确定移除 ${file.name}？`)
-  }
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    beforeUpload(file) { // 上传文件之前的操作
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG 格式!');
+        return false;
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!');
+        return false;
+      }
+      return true;
+    },
+    handleSuccess(response, file, fileList) { // 上传成功后的操作
+      this.$message.success('上传成功');
+    },
+    handleError(error, file, fileList) { // 上传失败后的操作
+      this.$message.error('上传失败');
+    },
   }
 };
 </script>

@@ -1,14 +1,9 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="15">
-      <el-col :span="24">
-        <el-card shadow="never" class="title">
-          <h2>采购合同</h2>
-        </el-card>
-      </el-col>
-    </el-row>
     <div class="con">
-      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="100px" label-position="left">
+      <h2>采购合同</h2>
+      <el-divider direction="horizontal"/>
+      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="180px" label-position="left">
         <h3>合同基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同名称" prop="field101" style="width: 45%">
@@ -54,9 +49,9 @@
           </el-form-item>
           <!--招投标信息-->
           <el-form-item label="招投标信息" style="width: 45%">
-            <el-input v-model="ztbInputValue" @click="ztbShowDialog" class="cInput">
-              <template slot="append">
-                <el-button icon="el-icon-search" @click="ztbShowDialog"></el-button>
+            <el-input v-model="ztbInputValue" class="cInput">
+              <template v-slot:suffix>
+                <i class="ei-icon-search" @click="ztbShowDialog"/>
               </template>
             </el-input>
             <el-dialog :visible.sync="ztbDialogVisible" @close="ztbHandleClose">
@@ -84,20 +79,20 @@
               <el-button @click="kjCloseDialog">取消</el-button>
             </el-dialog>
           </el-form-item>
-          <!--采购清单-->
-          <el-form-item label="采购清单" style="width: 45%">
-            <el-input v-model="qdInputValue" @click="qdShowDialog" class="cInput">
+          <!--相关项目-->
+          <el-form-item label="相关项目" style="width: 45%">
+            <el-input v-model="xgInputValue" @click="xgShowDialog" class="cInput">
               <template slot="append">
-                <el-button icon="el-icon-search" @click="qdShowDialog"></el-button>
+                <el-button icon="el-icon-search" @click="xgShowDialog"/>
               </template>
             </el-input>
-            <el-dialog :visible.sync="qdDialogVisible" @close="qdHandleClose">
-              <el-table :data="qdOptions" @row-click="qdHandleRowClick">
+            <el-dialog :visible.sync="xgDialogVisible" @close="xgHandleClose">
+              <el-table :data="xgOptions" @row-click="xgHandleRowClick">
                 <el-table-column prop="value" label="数值"/>
                 <el-table-column prop="label" label="标签"/>
               </el-table>
-              <el-button @click="qdClearInput">清除</el-button>
-              <el-button @click="qdCloseDialog">取消</el-button>
+              <el-button @click="xgClearInput">清除</el-button>
+              <el-button @click="xgCloseDialog">取消</el-button>
             </el-dialog>
           </el-form-item>
         </el-row>
@@ -187,45 +182,134 @@
             </el-table-column>
           </el-table>
         </div>
+      </el-form>
 
-        <h3>合同签署状态</h3>
+      <h3>合同签署状态</h3>
+      <el-form ref="qsForm" :model="qsFormData" :rules="rules" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同名称" prop="field101" style="width: 45%">
-            <el-input v-model="form.field101" clearable class="cInput"/>
+            <el-select v-model="qsValue" class="cInput" @change="qsHandleChange">
+              <el-option
+                v-for="item in qsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="合同编号" prop="field102" style="width: 45%">
-            <el-input v-model="form.field102" clearable class="cInput"/>
+          <el-form-item label="我方主体" prop="field102" style="width: 45%">
+            <el-input v-model="sub" @blur="subHandleBlur" class="cInput">
+              <template v-slot:suffix>
+                <i class="el-icon-search" @click="openSub"/>
+              </template>
+            </el-input>
+            <el-dialog title="我方主体" :visible.sync="subDialog">
+              <p>这是对话框的内容</p>
+            </el-dialog>
           </el-form-item>
-          <el-form-item label="类型" prop="field103" style="width: 45%">
-            <el-input v-model="form.field103" clearable class="cInput"/>
+          <el-form-item label="乙方供应商" prop="field102" style="width: 45%">
+            <el-input v-model="sub" @blur="subHandleBlur" class="cInput">
+              <template v-slot:suffix>
+                <i class="el-icon-search" @click="openSub"/>
+              </template>
+            </el-input>
+            <el-dialog title="我方主体" :visible.sync="subDialog">
+              <p>这是对话框的内容</p>
+            </el-dialog>
           </el-form-item>
-          <el-form-item label="密级" prop="field104" style="width: 45%">
+          <el-form-item label="乙方供应商地址" prop="field104" style="width: 45%">
             <el-input v-model="form.field104" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="开始时间" prop="field101" style="width: 45%">
+          <el-form-item label="乙方联系人" prop="field101" style="width: 45%">
             <el-input v-model="form.field101" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="结束时间" prop="field102" style="width: 45%">
+          <el-form-item label="乙方联系方式" prop="field102" style="width: 45%">
             <el-input v-model="form.field102" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="合同金额" prop="field103" style="width: 45%">
+          <el-form-item label="乙方开户行" prop="field103" style="width: 45%">
             <el-input v-model="form.field103" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="合同情况说明" prop="field104" style="width: 100%">
-            <el-col>
-              <el-input v-model="form.field104" type="textarea" :rows="4" clearable class="cInput"/>
-            </el-col>
+          <el-form-item label="乙方开户行账户" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="合同方金额" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="币别" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="已支付金额" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="锁定金额" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="剩余金额" prop="field104" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
           </el-form-item>
         </el-row>
-
-        <!--        <el-form-item size="large">
-                  <el-button type="primary" @click="submitForm">提交</el-button>
-                  <el-button @click="resetForm">重置</el-button>
-                </el-form-item>-->
+        <div v-if="qsValue === 1">
+          <el-divider direction="horizontal"/>
+          <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
+            <el-form-item label="丙方供应商地址" prop="field104" style="width: 45%">
+              <el-input v-model="form.field104" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="丙方联系人" prop="field101" style="width: 45%">
+              <el-input v-model="form.field101" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="丙方联系方式" prop="field102" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="丙方开户行" prop="field103" style="width: 45%">
+              <el-input v-model="form.field103" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="丙方开户行账户" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="合同方金额" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="币别" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="已支付金额" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="锁定金额" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+            <el-form-item label="剩余金额" prop="field104" style="width: 45%">
+              <el-input v-model="form.field102" clearable class="cInput"/>
+            </el-form-item>
+          </el-row>
+        </div>
       </el-form>
+
+      <!--合同签署文件-->
+      <h3>合同签署文件</h3>
+      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="180px" label-position="left">
+        <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
+          <el-form-item label="合同影像上传" prop="field101" style="width: 45%">
+            <el-input v-model="form.field101" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="附件上传" prop="field102" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="合同文件" prop="field102" style="width: 45%">
+            <el-input v-model="form.field102" clearable class="cInput"/>
+          </el-form-item>
+        </el-row>
+      </el-form>
+
+      <!--        <el-form-item size="large">
+                <el-button type="primary" @click="submitForm">提交</el-button>
+                <el-button @click="resetForm">重置</el-button>
+              </el-form-item>-->
     </div>
-
-
+    <el-button @click="back">
+      返回
+    </el-button>
   </div>
 </template>
 
@@ -234,16 +318,26 @@
 export default {
   data() {
     return {
+      /* 签署执行状态 */
+      //我方主体选择
+      sub: '',
+      subDialog: false,
+      //签署方数下拉框
+      qsValue: 0,  // 默认值
+      qsOptions: [
+        { value: 0, label: '选项1' },
+        { value: 1, label: '选项2' }
+      ],
       payTimeValue: '',
-      //合同标的清单
+      /* //合同标的清单 */
       lTotalSubtotal: 0, // 初始化总价格为0
       lTableColumns: [
         { label: '序号', prop: 'id' },
         { label: '产品名称', prop: 'name' },
-        { label: '产品编号', prop: 'age' },
+        { label: '行项目编号', prop: 'deviceId' },
         { label: '规格型号', prop: 'age' },
-        { label: '含税单价', prop: 'age' },
-        { label: '数量', prop: 'age' },
+        { label: '含税单价', prop: 'age1' },
+        { label: '数量', prop: 'age2' },
         { label: '小计', prop: 'total' }
       ],
       payTableColumns: {
@@ -274,9 +368,9 @@ export default {
       ],
       kjSelectedItem: '',
       //采购清单
-      qdInputValue: '',
-      qdDialogVisible: false,
-      qdOptions: [
+      xgInputValue: '',
+      xgDialogVisible: false,
+      xgOptions: [
         { value: 'option1', label: '选项1' },
         { value: 'option2', label: '选项2' },
         { value: 'option3', label: '选项3' }
@@ -307,6 +401,7 @@ export default {
         field103: undefined,
         field104: undefined
       },
+      qsFormData: {},
       // 表单校验
       rules: {
         field103: undefined,
@@ -318,7 +413,27 @@ export default {
     this.lCalculateTotalSubtotal()
   },
   methods: {
-    //招投标
+    /* 签署执行状态 */
+    qsHandleChange(value) {
+      this.qsValue = value  // 更新选择项的值
+    },
+    back() {
+      this.$router.back()
+    },
+    subHandleBlur() {
+      if (this.sub !== '') {
+        // 如果输入框的值不为空，则手动输入的值保留，清空对话框选中的值
+        this.sub = ''
+      } else {
+        // 如果输入框的值为空，则清空手动输入的值，保留对话框选中的值
+        this.sub = ''
+      }
+    },
+    //显示我方主体对话框
+    openSub() {
+      this.subDialog = true
+    },
+    /* //招投标 */
     ztbShowDialog() {
       this.ztbDialogVisible = true
     },
@@ -353,21 +468,21 @@ export default {
       this.kjDialogVisible = false
     },
     //采购清单
-    qdShowDialog() {
-      this.qdDialogVisible = true
+    xgShowDialog() {
+      this.xgDialogVisible = true
     },
-    qdHandleClose() {
-      this.qdDialogVisible = false
+    xgHandleClose() {
+      this.xgDialogVisible = false
     },
-    qdHandleRowClick(row) {
-      this.qdInputValue = row.label
-      this.qdDialogVisible = false
+    xgHandleRowClick(row) {
+      this.xgInputValue = row.label
+      this.xgDialogVisible = false
     },
-    qdClearInput() {
-      this.qdInputValue = ''
+    xgClearInput() {
+      this.xgInputValue = ''
     },
-    qdCloseDialog() {
-      this.qdDialogVisible = false
+    xgCloseDialog() {
+      this.xgDialogVisible = false
     },
     /* 合同标的清单 */
     lAddRow() {
@@ -478,13 +593,33 @@ export default {
     payHandleSelectionChange(selection) {
       this.paySelectedRows = selection
     },
+    // payHandleBlur(row) {
+    //   row.total = parseFloat(row.total).toFixed(2)
+    // },
+    // payHandleInput(row) {
+    //   // 只保留数字和一个小数点
+    //   row.total = row.total.replace(/[^\d.]/g, '')
+    //   // 只能输入到小数点后两位
+    //   let parts = row.total.split('.')
+    //   if (parts[1] && parts[1].length > 2) {
+    //     row.total = parts[0] + '.' + parts[1].slice(0, 2)
+    //   }
+    // },
     payHandleBlur(row) {
-      // 将输入的值保留两位小数
-      row.total = parseFloat(row.total).toFixed(2)
+      if (row.total) {
+        row.total = parseFloat(row.total).toFixed(2)
+      }
     },
     payHandleInput(row) {
       // 只保留数字和一个小数点
       row.total = row.total.replace(/[^\d.]/g, '')
+
+      // 只能输入一个小数点
+      let dotIndex = row.total.indexOf('.')
+      if (dotIndex !== -1) {
+        row.total = row.total.slice(0, dotIndex + 1) + row.total.slice(dotIndex + 1).replace(/\./g, '')
+      }
+
       // 只能输入到小数点后两位
       let parts = row.total.split('.')
       if (parts[1] && parts[1].length > 2) {
@@ -514,7 +649,6 @@ export default {
 
 .cInput {
   width: 100%;
-  padding-left: 100px;
 }
 
 /*穿透隐藏el-input边框
@@ -532,11 +666,15 @@ export default {
   background-color: white;
   padding: 15px 80px 20px 80px;
   border: 1px solid #ececec;
-  margin-top: -15px;
 }
 
 h3 {
   font-weight: bold;
+}
+
+h2 {
+  text-align: center;
+  margin: 30px 0px;
 }
 
 </style>

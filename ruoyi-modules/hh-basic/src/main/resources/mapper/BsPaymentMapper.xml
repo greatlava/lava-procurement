@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.cm.mapper.BsPaymentMapper">
+
+    <resultMap type="com.hh.pms.cm.domain.BsPayment" id="BsPaymentResult">
+        <result property="payId"    column="pay_id"    />
+        <result property="eid"    column="eid"    />
+        <result property="payContent"    column="payContent"    />
+        <result property="payDate"    column="payDate"    />
+        <result property="payer"    column="payer"    />
+        <result property="hid"    column="hid"    />
+        <result property="hName"    column="h_name"    />
+        <result property="payTerms"    column="payTerms"    />
+        <result property="payAmount"    column="payAmount"    />
+        <result property="debty"    column="debty"    />
+    </resultMap>
+
+    <sql id="selectBsPaymentVo">
+        select pay_id, eid, payContent, payDate, payer, hid, h_name, payTerms, payAmount, debty from bs_payment
+    </sql>
+
+    <select id="selectBsPaymentList" parameterType="com.hh.pms.cm.domain.BsPayment" resultMap="BsPaymentResult">
+        <include refid="selectBsPaymentVo"/>
+        <where>
+            <if test="eid != null "> and eid = #{eid}</if>
+            <if test="payContent != null  and payContent != ''"> and payContent = #{payContent}</if>
+            <if test="payDate != null "> and payDate = #{payDate}</if>
+            <if test="payer != null  and payer != ''"> and payer = #{payer}</if>
+            <if test="hid != null "> and hid = #{hid}</if>
+            <if test="hName != null  and hName != ''"> and h_name like concat('%', #{hName}, '%')</if>
+            <if test="payTerms != null  and payTerms != ''"> and payTerms = #{payTerms}</if>
+            <if test="payAmount != null "> and payAmount = #{payAmount}</if>
+            <if test="debty != null  and debty != ''"> and debty = #{debty}</if>
+        </where>
+    </select>
+
+    <select id="selectBsPaymentByPayId" parameterType="Long" resultMap="BsPaymentResult">
+        <include refid="selectBsPaymentVo"/>
+        where pay_id = #{payId}
+    </select>
+
+    <insert id="insertBsPayment" parameterType="com.hh.pms.cm.domain.BsPayment" useGeneratedKeys="true" keyProperty="payId">
+        insert into bs_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null">eid,</if>
+            <if test="payContent != null">payContent,</if>
+            <if test="payDate != null">payDate,</if>
+            <if test="payer != null">payer,</if>
+            <if test="hid != null">hid,</if>
+            <if test="hName != null">h_name,</if>
+            <if test="payTerms != null">payTerms,</if>
+            <if test="payAmount != null">payAmount,</if>
+            <if test="debty != null">debty,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="eid != null">#{eid},</if>
+            <if test="payContent != null">#{payContent},</if>
+            <if test="payDate != null">#{payDate},</if>
+            <if test="payer != null">#{payer},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="hName != null">#{hName},</if>
+            <if test="payTerms != null">#{payTerms},</if>
+            <if test="payAmount != null">#{payAmount},</if>
+            <if test="debty != null">#{debty},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBsPayment" parameterType="com.hh.pms.cm.domain.BsPayment">
+        update bs_payment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="payContent != null">payContent = #{payContent},</if>
+            <if test="payDate != null">payDate = #{payDate},</if>
+            <if test="payer != null">payer = #{payer},</if>
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="hName != null">h_name = #{hName},</if>
+            <if test="payTerms != null">payTerms = #{payTerms},</if>
+            <if test="payAmount != null">payAmount = #{payAmount},</if>
+            <if test="debty != null">debty = #{debty},</if>
+        </trim>
+        where pay_id = #{payId}
+    </update>
+
+    <delete id="deleteBsPaymentByPayId" parameterType="Long">
+        delete from bs_payment where pay_id = #{payId}
+    </delete>
+
+    <delete id="deleteBsPaymentByPayIds" parameterType="String">
+        delete from bs_payment where pay_id in
+        <foreach item="payId" collection="array" open="(" separator="," close=")">
+            #{payId}
+        </foreach>
+    </delete>
+</mapper>
