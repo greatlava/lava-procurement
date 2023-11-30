@@ -122,15 +122,15 @@
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            相关附件
+            相关文件
           </template>
           <el-upload
             class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            action="http://127.0.0.1:9300/statics/"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
             :before-remove="beforeRemove"
-            multiple
+            :multiple="true"
             :limit="3"
             :on-exceed="handleExceed"
             :file-list="fileList"
@@ -213,7 +213,7 @@ export default {
     }  ,
     //上传附件
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      console.log(file, fileList);
     },
     handlePreview(file) {
       console.log(file)
