@@ -78,6 +78,16 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同管理状态")
     private Long oHstatus;
 
+    private BsSupplier bsSupplier;
+
+    public BsSupplier getBsSupplier() {
+        return bsSupplier;
+    }
+
+    public void setBsSupplier(BsSupplier bsSupplier) {
+        this.bsSupplier = bsSupplier;
+    }
+
     public void setHid(Long hid) {
         this.hid = hid;
     }

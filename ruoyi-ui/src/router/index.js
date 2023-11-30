@@ -229,6 +229,18 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/supplier/riskHandling',
+    component: Details,
+    children: [
+      {
+        path: 'riskHandling?rm_id=:rm_id(\\d+)',
+        component: () => import('@/views/supplier/risk/riskHandling'),
+        name: 'RiskHandling',
+        meta: {title: '供应商风险处理', activeMenu: '/supplier'}
+      }
+    ]
+  },
+  {
     path: '/purchase/insert',
     component: Details,
     children: [
