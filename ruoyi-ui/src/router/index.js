@@ -265,6 +265,18 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/expert/auditOrView',
+    component: Details,
+    children: [
+      {
+        path: 'auditOrView?jid=:jid(\\d+)&param=:param(\\d+)',
+        component: () => import('@/views/expert/ewh/auditOrView'),
+        name: 'AuditOrView',
+        meta: {title: '查看或审核', activeMenu: '/expert'}
+      }
+    ]
+  },
+  {
     path: '/purchase/insert',
     component: Details,
     children: [
