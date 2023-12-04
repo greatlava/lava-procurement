@@ -15,7 +15,6 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.domain.SysFile;
 import com.ruoyi.system.api.model.LoginUser;
-import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
@@ -46,9 +45,6 @@ public class BidNoticeController extends BaseController
 
     @Autowired
     private TokenService tokenService;
-
-    @Resource
-    private ISysUserService userService;
 
     /**
      * 查询招标公告列表
@@ -118,36 +114,4 @@ public class BidNoticeController extends BaseController
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 
-
-    @RequiresPermissions("system:notice:remove")
-    @Log(title = "上传", businessType = BusinessType.DELETE)
-    @PostMapping("/upload")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file)
-    {
-        if (!file.isEmpty())
-        {
-            LoginUser loginUser = SecurityUtils.getLoginUser();
-            String extension = FileTypeUtils.getExtension(file);
-            if (!StringUtils.equalsAnyIgnoreCase(extension, MimeTypeUtils.IMAGE_EXTENSION))
-            {
-                return error("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
-            }
-            R<SysFile> fileResult = remoteFileService.upload(file);
-            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData()))
-            {
-                return error("文件服务异常，请联系管理员");
-            }
-            String url = fileResult.getData().getUrl();
-            if (userService.updateUserAvatar(loginUser.getUsername(), url))
-            {
-                AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", url);
-                // 更新缓存用户头像
-                loginUser.getSysUser().setAvatar(url);
-                tokenService.setLoginUser(loginUser);
-                return ajax;
-            }
-        }
-        return error("上传图片异常，请联系管理员");
-    }
 }

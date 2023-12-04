@@ -1,6 +1,7 @@
 package com.hh.pms.cm.domain;
 
 import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hh.pms.sae.domain.BsSupplier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,7 +18,6 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 public class BsContract extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 供应商ID */
     /**
      * 供应商ID
      */
@@ -64,6 +64,16 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同管理状态")
     private Long oHstatus;
 
+    private BsSupplier bsSupplier;
+
+    public BsSupplier getBsSupplier() {
+        return bsSupplier;
+    }
+
+    public void setBsSupplier(BsSupplier bsSupplier) {
+        this.bsSupplier = bsSupplier;
+    }
+
     /** 合同类型 */
     @Excel(name = "合同类型")
     private Long eType;
@@ -107,7 +117,7 @@ public class BsContract extends BaseEntity {
         this.eid = eid;
     }
 
-    public Long getEid() 
+    public Long getEid()
     {
         return eid;
     }

@@ -39,7 +39,6 @@
     <insert id="insertBsEducate" parameterType="com.hh.pms.sae.domain.BsEducate">
         insert into bs_educate
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="rid != null">rid,</if>
             <if test="jid != null">jid,</if>
             <if test="rSchool != null">r_school,</if>
             <if test="specialized != null">specialized,</if>
@@ -48,7 +47,6 @@
             <if test="rGraduationTime != null">r_graduation_time,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="rid != null">#{rid},</if>
             <if test="jid != null">#{jid},</if>
             <if test="rSchool != null">#{rSchool},</if>
             <if test="specialized != null">#{specialized},</if>

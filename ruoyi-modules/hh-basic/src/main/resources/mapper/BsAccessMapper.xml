@@ -9,6 +9,36 @@
         <result property="zrBnumber" column="zr_bnumber"/>
         <result property="zrPromoter" column="zr_promoter"/>
         <result property="zrTime" column="zr_time"/>
+        <association property="bsSupplier">
+            <id property="hid" column="hid"/>
+            <result property="zrId" column="zr_id"/>
+            <result property="hName" column="h_name"/>
+            <result property="hCreditCode" column="h_credit_code"/>
+            <result property="hIncorporation" column="h_incorporation"/>
+            <result property="hInstitution" column="h_institution"/>
+            <result property="hQuality" column="h_quality"/>
+            <result property="hStartTime" column="h_start_time"/>
+            <result property="hJuridical" column="h_juridical"/>
+            <result property="hJuridicalIdentity" column="h_juridical_identity"/>
+            <result property="hAddress" column="h_address"/>
+            <result property="hRange" column="h_range"/>
+            <result property="hDesc" column="h_desc"/>
+            <result property="hCopies" column="h_copies"/>
+            <result property="hJuridicalCopies" column="h_juridical_copies"/>
+            <result property="hExpiration" column="h_expiration"/>
+            <result property="hBank" column="h_bank"/>
+            <result property="hAccount" column="h_account"/>
+            <result property="hBankAddress" column="h_bank_address"/>
+            <result property="hSignPhone" column="h_sign_phone"/>
+            <result property="hSignAddress" column="h_sign_address"/>
+            <result property="hCapital" column="h_capital"/>
+            <result property="hActualCapital" column="h_actual_capital"/>
+            <result property="hProve" column="h_prove"/>
+            <result property="fStatus" column="f_status"/>
+            <result property="fOpinion" column="f_opinion"/>
+            <result property="fState" column="f_state"/>
+            <result property="fClassify" column="f_classify"/>
+        </association>
     </resultMap>
 
     <sql id="selectBsAccessVo">
@@ -17,7 +47,8 @@
     </sql>
 
     <select id="selectBsAccessList" parameterType="com.hh.pms.sae.domain.BsAccess" resultMap="BsAccessResult">
-        <include refid="selectBsAccessVo"/>
+        select * from bs_access a
+        inner join bs_supplier s on a.zr_id = s.zr_id
         <where>
             <if test="zrBnumber != null  and zrBnumber != ''">and zr_bnumber = #{zrBnumber}</if>
             <if test="zrPromoter != null  and zrPromoter != ''">and zr_promoter like concat('%',#{zrPromoter},'%')</if>

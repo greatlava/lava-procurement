@@ -5,52 +5,107 @@
 <mapper namespace="com.hh.pms.cm.mapper.BsContractMapper">
 
     <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult">
-        <result property="eid"    column="eid"    />
-        <result property="hid"    column="hid"    />
-        <result property="gnId"    column="gn_id"    />
-        <result property="eHcode"    column="e_hcode"    />
-        <result property="eHname"    column="e_hname"    />
-        <result property="eStatus"    column="e_status"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="eDeliveryTime"    column="e_delivery_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="oHstatus"    column="o_hstatus"    />
-        <result property="eType"    column="e_type"    />
-        <result property="eCon"    column="e_con"    />
-        <result property="eStartdate"    column="e_startDate"    />
-        <result property="eEnddate"    column="e_endDate"    />
-        <result property="eAmount"    column="e_amount"    />
-        <result property="eDescription"    column="e_description"    />
-        <result property="eOpinion"    column="e_opinion"    />
-        <result property="eImage"    column="e_image"    />
-        <result property="eDocuments"    column="e_documents"    />
+        <result property="eid" column="eid"/>
+        <result property="hid" column="hid"/>
+        <result property="eXcode" column="e_xcode"/>
+        <result property="gnId" column="gn_id"/>
+        <result property="eHcode" column="e_hcode"/>
+        <result property="eHname" column="e_hname"/>
+        <result property="eStatus" column="e_status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="eDeliveryTime" column="e_delivery_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="oHstatus" column="o_hstatus"/>
+        <result property="eType" column="e_type"/>
+        <result property="eCon" column="e_con"/>
+        <result property="eStartdate" column="e_startDate"/>
+        <result property="eEnddate" column="e_endDate"/>
+        <result property="eAmount" column="e_amount"/>
+        <result property="eDescription" column="e_description"/>
+        <result property="eOpinion" column="e_opinion"/>
+        <result property="eImage" column="e_image"/>
+        <result property="eDocuments" column="e_documents"/>
+        <association property="bsSupplier">
+            <id property="hid" column="hid"/>
+            <result property="zrId" column="zr_id"/>
+            <result property="hName" column="h_name"/>
+            <result property="hCreditCode" column="h_credit_code"/>
+            <result property="hIncorporation" column="h_incorporation"/>
+            <result property="hInstitution" column="h_institution"/>
+            <result property="hQuality" column="h_quality"/>
+            <result property="hStartTime" column="h_start_time"/>
+            <result property="hJuridical" column="h_juridical"/>
+            <result property="hJuridicalIdentity" column="h_juridical_identity"/>
+            <result property="hAddress" column="h_address"/>
+            <result property="hRange" column="h_range"/>
+            <result property="hDesc" column="h_desc"/>
+            <result property="hCopies" column="h_copies"/>
+            <result property="hJuridicalCopies" column="h_juridical_copies"/>
+            <result property="hExpiration" column="h_expiration"/>
+            <result property="hBank" column="h_bank"/>
+            <result property="hAccount" column="h_account"/>
+            <result property="hBankAddress" column="h_bank_address"/>
+            <result property="hSignPhone" column="h_sign_phone"/>
+            <result property="hSignAddress" column="h_sign_address"/>
+            <result property="hCapital" column="h_capital"/>
+            <result property="hActualCapital" column="h_actual_capital"/>
+            <result property="hProve" column="h_prove"/>
+            <result property="fStatus" column="f_status"/>
+            <result property="fOpinion" column="f_opinion"/>
+            <result property="fState" column="f_state"/>
+            <result property="fClassify" column="f_classify"/>
+        </association>
     </resultMap>
 
     <sql id="selectBsContractVo">
-        select eid, hid, gn_id, e_hcode, e_hname, e_status, create_by, create_time, e_delivery_time, update_by, update_time, o_hstatus, e_type, e_con, e_startDate, e_endDate, e_amount, e_description, e_opinion, e_image, e_documents from bs_contract
+        select eid,
+               hid,
+               e_xcode,
+               gn_id,
+               e_hcode,
+               e_hname,
+               e_status,
+               create_by,
+               create_time,
+               e_delivery_time,
+               update_by,
+               update_time,
+               o_hstatus,
+               e_type,
+               e_con,
+               e_startDate,
+               e_endDate,
+               e_amount,
+               e_description,
+               e_opinion,
+               e_image,
+               e_documents
+        from bs_contract
     </sql>
 
     <select id="selectBsContractList" parameterType="com.hh.pms.cm.domain.BsContract" resultMap="BsContractResult">
-        <include refid="selectBsContractVo"/>
+        select * from bs_contract c
+        inner join bs_supplier s on c.hid = s.hid
         <where>
-            <if test="hid != null "> and hid = #{hid}</if>
-            <if test="gnId != null "> and gn_id = #{gnId}</if>
-            <if test="eHcode != null  and eHcode != ''"> and e_hcode = #{eHcode}</if>
-            <if test="eHname != null  and eHname != ''"> and e_hname like concat('%', #{eHname}, '%')</if>
-            <if test="eStatus != null "> and e_status = #{eStatus}</if>
-            <if test="eDeliveryTime != null "> and e_delivery_time = #{eDeliveryTime}</if>
-            <if test="oHstatus != null "> and o_hstatus = #{oHstatus}</if>
-            <if test="eType != null "> and e_type = #{eType}</if>
-            <if test="eCon != null "> and e_con = #{eCon}</if>
-            <if test="eStartdate != null "> and e_startDate = #{eStartdate}</if>
-            <if test="eEnddate != null "> and e_endDate = #{eEnddate}</if>
-            <if test="eAmount != null "> and e_amount = #{eAmount}</if>
-            <if test="eDescription != null  and eDescription != ''"> and e_description = #{eDescription}</if>
-            <if test="eOpinion != null  and eOpinion != ''"> and e_opinion = #{eOpinion}</if>
-            <if test="eImage != null  and eImage != ''"> and e_image = #{eImage}</if>
-            <if test="eDocuments != null  and eDocuments != ''"> and e_documents = #{eDocuments}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="eXcode != null  and eXcode != ''">and e_xcode = #{eXcode}</if>
+            <if test="gnId != null ">and gn_id = #{gnId}</if>
+            <if test="eHcode != null  and eHcode != ''">and e_hcode = #{eHcode}</if>
+            <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
+            <if test="eStatus != null ">and e_status = #{eStatus}</if>
+            <if test="eDeliveryTime != null ">and e_delivery_time = #{eDeliveryTime}</if>
+            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="eType != null ">and e_type = #{eType}</if>
+            <if test="eCon != null ">and e_con = #{eCon}</if>
+            <if test="eStartdate != null ">and e_startDate = #{eStartdate}</if>
+            <if test="eEnddate != null ">and e_endDate = #{eEnddate}</if>
+            <if test="eAmount != null ">and e_amount = #{eAmount}</if>
+            <if test="eDescription != null  and eDescription != ''">and e_description = #{eDescription}</if>
+            <if test="eOpinion != null  and eOpinion != ''">and e_opinion = #{eOpinion}</if>
+            <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
+            <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
         </where>
     </select>
 
@@ -64,6 +119,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="eid != null">eid,</if>
             <if test="hid != null">hid,</if>
+            <if test="eXcode != null">e_xcode,</if>
             <if test="gnId != null">gn_id,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
@@ -83,10 +139,11 @@
             <if test="eOpinion != null">e_opinion,</if>
             <if test="eImage != null">e_image,</if>
             <if test="eDocuments != null">e_documents,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="eid != null">#{eid},</if>
             <if test="hid != null">#{hid},</if>
+            <if test="eXcode != null">#{eXcode},</if>
             <if test="gnId != null">#{gnId},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
@@ -106,13 +163,15 @@
             <if test="eOpinion != null">#{eOpinion},</if>
             <if test="eImage != null">#{eImage},</if>
             <if test="eDocuments != null">#{eDocuments},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateBsContract" parameterType="com.hh.pms.cm.domain.BsContract">
         update bs_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="hid != null">hid = #{hid},</if>
+            <if test="eXcode != null">e_xcode = #{eXcode},</if>
+            <if test="gnId != null">gn_id = #{gnId},</if>
             <if test="eHcode != null">e_hcode = #{eHcode},</if>
             <if test="eHname != null">e_hname = #{eHname},</if>
             <if test="eStatus != null">e_status = #{eStatus},</if>
@@ -136,7 +195,9 @@
     </update>
 
     <delete id="deleteBsContractByEid" parameterType="Long">
-        delete from bs_contract where eid = #{eid}
+        delete
+        from bs_contract
+        where eid = #{eid}
     </delete>
 
     <delete id="deleteBsContractByEids" parameterType="String">
