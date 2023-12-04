@@ -6,94 +6,57 @@
       <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="180px" label-position="left">
         <h3>合同基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
-          <el-form-item label="合同名称" prop="field101" style="width: 45%">
-            <el-input v-model="form.field101" clearable class="cInput"/>
+          <el-form-item label="合同名称" prop="eHname" style="width: 45%">
+            <el-input v-model="form.eHname" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="合同编号" prop="field102" style="width: 45%">
-            <el-input v-model="form.field102" clearable class="cInput"/>
+          <el-form-item label="合同编号" prop="eHcode" style="width: 45%">
+            <el-input v-model="form.eHcode" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="类型" prop="field103" style="width: 45%">
-            <el-input v-model="form.field103" clearable class="cInput"/>
+          <el-form-item label="类型" prop="eType" style="width: 45%">
+            <el-input v-model="form.eType" clearable class="cInput" readonly/>
           </el-form-item>
-          <el-form-item label="密级" prop="field104" style="width: 45%">
-            <el-input v-model="form.field104" clearable class="cInput"/>
-          </el-form-item>
-          <el-form-item label="开始时间" prop="field101" style="width: 45%">
-            <el-input v-model="form.field101" clearable class="cInput"/>
-          </el-form-item>
-          <el-form-item label="结束时间" prop="field102" style="width: 45%">
-            <el-input v-model="form.field102" clearable class="cInput"/>
-          </el-form-item>
-          <el-form-item label="合同金额" prop="field103" style="width: 45%">
-            <el-input v-model="form.field103" clearable class="cInput"/>
-          </el-form-item>
-          <el-form-item label="合同情况说明" prop="field104" style="width: 100%">
-            <el-col>
-              <el-input v-model="form.field104" type="textarea" :rows="4" clearable class="cInput"/>
-            </el-col>
-          </el-form-item>
-        </el-row>
-        <h3>合同采购方式</h3>
-        <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
-          <!--采购方式-->
-          <el-form-item label="采购方式" prop="field101" style="width: 45%">
-            <el-select v-model="cgValue" placeholder="请选择" class="cInput">
+          <el-form-item label="密级" prop="eCon" style="width: 45%">
+            <el-select v-model="mjValue" placeholder="请选择" class="cInput">
               <el-option
-                v-for="item in cgOptions"
+                v-for="item in mjOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
-          <!--招投标信息-->
-          <el-form-item label="招投标信息" style="width: 45%">
-            <el-input v-model="ztbInputValue" class="cInput">
-              <template v-slot:suffix>
-                <i class="ei-icon-search" @click="ztbShowDialog"/>
-              </template>
-            </el-input>
-            <el-dialog :visible.sync="ztbDialogVisible" @close="ztbHandleClose">
-              <el-table :data="ztbOptions" @row-click="ztbHandleRowClick">
-                <el-table-column prop="value" label="数值"/>
-                <el-table-column prop="label" label="标签"/>
-              </el-table>
-              <el-button @click="ztbClearInput">清除</el-button>
-              <el-button @click="ztbCloseDialog">取消</el-button>
-            </el-dialog>
+          <el-form-item label="开始时间" prop="eStartDate" style="width: 45%">
+            <el-date-picker v-model="form.eStartDate" type="date" class="cInput"/>
+          </el-form-item>
+          <el-form-item label="结束时间" prop="eEndDate" style="width: 45%">
+            <el-date-picker v-model="form.eEndDate" type="date" class="cInput"/>
+          </el-form-item>
+          <el-form-item label="合同金额" prop="eAmount" style="width: 45%">
+            <el-input v-model="form.eAmount" clearable class="cInput"/>
+          </el-form-item>
+          <el-form-item label="合同情况说明" prop="eDescription" style="width: 100%">
+            <el-col>
+              <el-input v-model="form.eDescription" type="textarea" :rows="4" clearable class="cInput"/>
+            </el-col>
+          </el-form-item>
+        </el-row>
+        <h3>相关项目信息</h3>
+        <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
+          <!--相关项目-->
+          <el-form-item label="相关项目名称" style="width: 45%">
+            <el-input v-model="xgInputValue" class="cInput" readonly/>
+          </el-form-item>
+          <!--项目编号-->
+          <el-form-item label="项目编号" style="width: 45%">
+            <el-input v-model="xgInputValue" class="cInput" readonly/>
+          </el-form-item>
+          <!--采购方式-->
+          <el-form-item label="采购方式" style="width: 45%">
+            <el-input v-model="xgInputValue" class="cInput" readonly/>
           </el-form-item>
           <!--相关框架协议-->
           <el-form-item label="相关框架协议" style="width: 45%">
-            <el-input v-model="kjInputValue" @click="kjShowDialog" class="cInput">
-              <template slot="append">
-                <el-button icon="el-icon-search" @click="kjShowDialog"></el-button>
-              </template>
-            </el-input>
-            <el-dialog :visible.sync="kjDialogVisible" @close="kjHandleClose">
-              <el-table :data="kjOptions" @row-click="kjHandleRowClick">
-                <el-table-column prop="value" label="数值"/>
-                <el-table-column prop="label" label="标签"/>
-              </el-table>
-              <el-button @click="kjClearInput">清除</el-button>
-              <el-button @click="kjCloseDialog">取消</el-button>
-            </el-dialog>
-          </el-form-item>
-          <!--相关项目-->
-          <el-form-item label="相关项目" style="width: 45%">
-            <el-input v-model="xgInputValue" @click="xgShowDialog" class="cInput">
-              <template slot="append">
-                <el-button icon="el-icon-search" @click="xgShowDialog"/>
-              </template>
-            </el-input>
-            <el-dialog :visible.sync="xgDialogVisible" @close="xgHandleClose">
-              <el-table :data="xgOptions" @row-click="xgHandleRowClick">
-                <el-table-column prop="value" label="数值"/>
-                <el-table-column prop="label" label="标签"/>
-              </el-table>
-              <el-button @click="xgClearInput">清除</el-button>
-              <el-button @click="xgCloseDialog">取消</el-button>
-            </el-dialog>
+            <el-input v-model="kjInputValue" class="cInput" readonly/>
           </el-form-item>
         </el-row>
         <!--合同标的清单-->
@@ -318,6 +281,7 @@
 export default {
   data() {
     return {
+      sid: this.$route.query.sid,
       /* 签署执行状态 */
       //我方主体选择
       sub: '',
@@ -376,15 +340,24 @@ export default {
         { value: 'option3', label: '选项3' }
       ],
       qdSelectedItem: '',
+      //保密级别
+      mjOptions: [{
+        value: 1,
+        label: '非密'
+      }, {
+        value: 2,
+        label: '商密'
+      }],
       //采购方式
       cgOptions: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: 1,
+        label: '邀请招标'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: 2,
+        label: '公开招标'
       }],
       cgValue: '',
+      mjValue: '',
       // 遮罩层
       loading: true,
       // 弹出层标题
@@ -398,8 +371,14 @@ export default {
       },
       // 表单参数
       form: {
-        field103: undefined,
-        field104: undefined
+        eHname: null,
+        eHcode: null,
+        eType: null,
+        eCon: null,
+        eStartDate: null,
+        eEndDate: null,
+        eAmount: null,
+        eDescription: null
       },
       qsFormData: {},
       // 表单校验
@@ -411,6 +390,9 @@ export default {
   },
   mounted() {
     this.lCalculateTotalSubtotal()
+  },
+  created() {
+    alert(this.sid)
   },
   methods: {
     /* 签署执行状态 */

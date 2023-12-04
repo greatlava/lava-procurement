@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="email != null  and email != ''"> and email = #{email}</if>
             <if test="yDownloadTime != null "> and y_download_time = #{yDownloadTime}</if>
             <if test="tdStatus != null "> and td_status = #{tdStatus}</if>
+            <if test="eid != null "> and eid = #{eid}</if>
         </where>
     </select>
     
@@ -36,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectBidGetTenderVo"/>
         where yid = #{yid}
     </select>
-        
+
     <insert id="insertBidGetTender" parameterType="com.hh.pms.domain.BidGetTender">
         insert into bid_get_tender
         <trim prefix="(" suffix=")" suffixOverrides=",">

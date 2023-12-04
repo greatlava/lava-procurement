@@ -28,7 +28,6 @@
               </el-col>
             </el-row>
           </el-col>
-
         </el-form>
       </el-row>
     </div>
@@ -38,13 +37,14 @@
         <el-tab-pane label="待创建" name="first">
           <el-table stripe v-loading="loading" :data="contractList1">
             <el-table-column type="index" label="序号" align="center"/>
-            <el-table-column label="项目编号" align="center" prop="eXcode"/>
-            <el-table-column label="项目名称" align="center" prop="eXname"/>
-            <el-table-column label="中标人" align="center" prop="eWinningPerson"/>
+            <el-table-column label="项目编号" align="center" prop="sCode"/>
+            <el-table-column label="项目名称" align="center" prop="sName"/>
+            <!--            <el-table-column label="中标人" align="center" prop="eWinningPerson"/>-->
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建合同-->
-                <router-link :to="'add?sid='+scope.row.sid+'&gid=0'">
+                <!--                <router-link :to="'add?sid='+scope.row.sid">-->
+                <router-link :to="'add?sid='+1">
                   <el-button
                     size="mini"
                     type="text"
@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import { listContract, getContract, delContract, addContract, updateContract } from '@/api/system/cm'
+import { listContract, getContract, delContract, addContract, updateContract, listTender } from '@/api/system/cm'
 
 export default {
   name: 'Contract',
@@ -224,17 +224,10 @@ export default {
       queryParams1: {
         pageNum: 1,
         pageSize: 10,
-        hid: null,
-        eXcode: null,
-        eXname: null,
-        eWinningPerson: null,
-        eHcode: null,
-        eHname: null,
-        eStatus: null,
-        eDeliveryTime: null,
-        oHstatus: 1,
-        createBy: null,
-        createTime: null
+        sid: null,
+        sCode: null,
+        sName: null
+        // eWinningPerson: null
       },
       queryParams2: {
         pageNum: 1,
@@ -324,7 +317,8 @@ export default {
     /** 查询待创建合同列表 */
     getList1() {
       this.loading = true
-      listContract(this.queryParams1).then(response => {
+      listTender(this.queryParams1).then(response => {
+        console.log(response)
         this.contractList1 = response.rows
         this.total1 = response.total
         this.loading = false
@@ -362,6 +356,9 @@ export default {
         eid: null,
         eXcode: null,
         eXname: null,
+        sid: null,
+        scode: null,
+        sName: null,
         eWinningPerson: null,
         eHcode: null,
         eHname: null,

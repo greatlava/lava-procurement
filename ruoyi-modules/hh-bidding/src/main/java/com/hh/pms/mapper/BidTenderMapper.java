@@ -58,4 +58,7 @@ public interface BidTenderMapper
      * @return 结果
      */
     public int deleteBidTenderBySids(Long[] sids);
+
+    //获取未签订合同的招标项目
+    public List<BidTender> selectNoEidTenderList(BidTender bidTender);
 }

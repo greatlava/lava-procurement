@@ -7,7 +7,6 @@
     <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult">
         <result property="eid"    column="eid"    />
         <result property="hid"    column="hid"    />
-        <result property="eXcode"    column="e_xcode"    />
         <result property="gnId"    column="gn_id"    />
         <result property="eHcode"    column="e_hcode"    />
         <result property="eHname"    column="e_hname"    />
@@ -30,14 +29,13 @@
     </resultMap>
 
     <sql id="selectBsContractVo">
-        select eid, hid, e_xcode, gn_id, e_hcode, e_hname, e_status, create_by, create_time, e_delivery_time, update_by, update_time, o_hstatus, e_type, e_con, e_startDate, e_endDate, e_amount, e_description, e_opinion, e_image, e_documents from bs_contract
+        select eid, hid, gn_id, e_hcode, e_hname, e_status, create_by, create_time, e_delivery_time, update_by, update_time, o_hstatus, e_type, e_con, e_startDate, e_endDate, e_amount, e_description, e_opinion, e_image, e_documents from bs_contract
     </sql>
 
     <select id="selectBsContractList" parameterType="com.hh.pms.cm.domain.BsContract" resultMap="BsContractResult">
         <include refid="selectBsContractVo"/>
         <where>
             <if test="hid != null "> and hid = #{hid}</if>
-            <if test="eXcode != null  and eXcode != ''"> and e_xcode = #{eXcode}</if>
             <if test="gnId != null "> and gn_id = #{gnId}</if>
             <if test="eHcode != null  and eHcode != ''"> and e_hcode = #{eHcode}</if>
             <if test="eHname != null  and eHname != ''"> and e_hname like concat('%', #{eHname}, '%')</if>
@@ -66,7 +64,6 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="eid != null">eid,</if>
             <if test="hid != null">hid,</if>
-            <if test="eXcode != null">e_xcode,</if>
             <if test="gnId != null">gn_id,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
@@ -90,7 +87,6 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="eid != null">#{eid},</if>
             <if test="hid != null">#{hid},</if>
-            <if test="eXcode != null">#{eXcode},</if>
             <if test="gnId != null">#{gnId},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
@@ -117,8 +113,6 @@
         update bs_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="hid != null">hid = #{hid},</if>
-            <if test="eXcode != null">e_xcode = #{eXcode},</if>
-            <if test="gnId != null">gn_id = #{gnId},</if>
             <if test="eHcode != null">e_hcode = #{eHcode},</if>
             <if test="eHname != null">e_hname = #{eHname},</if>
             <if test="eStatus != null">e_status = #{eStatus},</if>
