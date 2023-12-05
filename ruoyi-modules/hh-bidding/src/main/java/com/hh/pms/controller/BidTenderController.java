@@ -75,7 +75,7 @@ public class BidTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:add")
     @Log(title = "招标项目", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("addTender")
     public AjaxResult add(@RequestBody BidTender bidTender)
     {
         return toAjax(bidTenderService.insertBidTender(bidTender));

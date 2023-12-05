@@ -2,7 +2,6 @@
   <div class="app-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <router-link :to="'/tender/updateNotice?type=add&uid='+this.queryParams.sid">
         <el-button
           type="primary"
           plain
@@ -11,7 +10,6 @@
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
         >新增</el-button>
-        </router-link>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -37,27 +35,25 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <router-link :to="'/tender/updateNotice?type=update&uid='+scope.row.uid">
+
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleUpdate(scope.row,1)"
           >编辑</el-button>
-          </router-link>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
           >删除</el-button>
-          <router-link :to="'/tender/updateNotice?type=details&uid='+scope.row.uid">
           <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
             type="text"
             icon="el-icon-edit"
+            @click="handleUpdate(scope.row,2)"
           >查看</el-button>
-          </router-link>
           <el-button v-if="scope.row.fjStatus === 3"
             size="mini"
             type="text"
@@ -67,7 +63,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -75,12 +70,67 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+
+    <!-- 添加或修改招标公告对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="1080px" append-to-body>
+      <el-form ref="form"  :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="公告标题" prop="uTitle">
+          <el-input v-model="form.uTitle" placeholder="请输入公告标题" />
+        </el-form-item>
+        <el-form-item label="关联项目" prop="uProject" class="form-input">
+          <el-input v-model="form.uProject" placeholder="请输入关联项目"/>
+        </el-form-item>
+        <el-form-item label="项目资金" prop="uMoney" class="form-input">
+          <el-input v-model="form.uMoney" placeholder="请输入项目资金"/>
+        </el-form-item>
+        <el-form-item label="标注获取时间" prop="uGetTime" class="form-input">
+          <el-date-picker clearable
+                          v-model="form.uGetTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择标注获取时间">
+          </el-date-picker>
+        </el-form-item >
+        <el-form-item label="接受答疑时间" prop="uAcceptTime" class="form-input">
+          <el-date-picker clearable
+                          v-model="form.uAcceptTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择接受答疑时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="投标截止时间" prop="uEndTime" class="form-input">
+          <el-date-picker clearable
+                          v-model="form.uEndTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择投标截止时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="开标时间" prop="uKaiTime" class="form-input">
+          <el-date-picker clearable
+                          v-model="form.uKaiTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择开标时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="附件" prop="fjAnnex">
+        </el-form-item>
+        <el-form-item label="内容" prop="fjRemark">
+          <editor v-model="form.fjRemark" :min-height="192"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/notice";
-import {listTender} from "@/api/system/tender";
+import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/tenderNotice";
 
 export default {
   dicts:["bid_notice_state"],
@@ -135,6 +185,11 @@ export default {
     this.getList();
   },
   methods: {
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
     /** 查询招标公告列表 */
     getList() {
       this.loading = true;
@@ -178,13 +233,17 @@ export default {
       this.title = "添加招标公告";
     },
     /** 修改按钮操作 */
-    handleUpdate(row) {
+    handleUpdate(row,num) {
       this.reset();
       const uid = row.uid || this.ids
       getNotice(uid).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改招标公告";
+        if (num === 1){
+          this.title = "修改招标公告";
+        }else{
+          this.title = "招标公告详情";
+        }
       });
     },
     /** 删除按钮操作 */
@@ -206,7 +265,34 @@ export default {
         this.getList();
         this.$modal.msgSuccess("发布成功");
       }).catch(() => {});
-    }
+    },
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.uid != null) {
+            updateNotice(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            this.form.sid = this.$route.query.sid;//确定对应招标项目
+            addNotice(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
   }
 };
 </script>
+<style>
+.form-input{
+  width: 500px;
+  display: inline-block;
+}
+</style>

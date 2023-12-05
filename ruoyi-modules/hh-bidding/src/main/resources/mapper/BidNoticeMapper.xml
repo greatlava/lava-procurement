@@ -1,50 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.BidNoticeMapper">
-    
+
     <resultMap type="com.hh.pms.domain.BidNotice" id="BidNoticeResult">
-        <result property="uid"    column="uid"    />
-        <result property="sid"    column="sid"    />
-        <result property="uTitle"    column="u_title"    />
-        <result property="uProject"    column="u_project"    />
-        <result property="uMoney"    column="u_money"    />
-        <result property="uGetTime"    column="u_get_time"    />
-        <result property="uAcceptTime"    column="u_accept_time"    />
-        <result property="uEndTime"    column="u_end_time"    />
-        <result property="uKaiTime"    column="u_kai_time"    />
-        <result property="fjAnnex"    column="fj_annex"    />
-        <result property="fjStatus"    column="fj_status"    />
-        <result property="fjRemark"    column="fj_remark"    />
+        <result property="uid" column="uid"/>
+        <result property="sid" column="sid"/>
+        <result property="uTitle" column="u_title"/>
+        <result property="uProject" column="u_project"/>
+        <result property="uMoney" column="u_money"/>
+        <result property="uGetTime" column="u_get_time"/>
+        <result property="uAcceptTime" column="u_accept_time"/>
+        <result property="uEndTime" column="u_end_time"/>
+        <result property="uKaiTime" column="u_kai_time"/>
+        <result property="fjAnnex" column="fj_annex"/>
+        <result property="fjStatus" column="fj_status"/>
+        <result property="fjRemark" column="fj_remark"/>
     </resultMap>
 
     <sql id="selectBidNoticeVo">
-        select uid, sid, u_title, u_project, u_money, u_get_time, u_accept_time, u_end_time, u_kai_time, fj_annex, fj_status, fj_remark from bid_notice
+        select uid,
+               sid,
+               u_title,
+               u_project,
+               u_money,
+               u_get_time,
+               u_accept_time,
+               u_end_time,
+               u_kai_time,
+               fj_annex,
+               fj_status,
+               fj_remark
+        from bid_notice
     </sql>
 
     <select id="selectBidNoticeList" parameterType="com.hh.pms.domain.BidNotice" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
-        <where>  
-            <if test="sid != null "> and sid = #{sid}</if>
-            <if test="uTitle != null  and uTitle != ''"> and u_title = #{uTitle}</if>
-            <if test="uProject != null "> and u_project = #{uProject}</if>
-            <if test="uMoney != null "> and u_money = #{uMoney}</if>
-            <if test="uGetTime != null "> and u_get_time = #{uGetTime}</if>
-            <if test="uAcceptTime != null "> and u_accept_time = #{uAcceptTime}</if>
-            <if test="uEndTime != null "> and u_end_time = #{uEndTime}</if>
-            <if test="uKaiTime != null "> and u_kai_time = #{uKaiTime}</if>
-            <if test="fjAnnex != null "> and fj_annex = #{fjAnnex}</if>
-            <if test="fjStatus != null "> and fj_status = #{fjStatus}</if>
-            <if test="fjRemark != null  and fjRemark != ''"> and fj_remark = #{fjRemark}</if>
+        <where>
+            <if test="sid != null ">and sid = #{sid}</if>
+            <if test="uTitle != null  and uTitle != ''">and u_title = #{uTitle}</if>
+            <if test="uProject != null ">and u_project = #{uProject}</if>
+            <if test="uMoney != null ">and u_money = #{uMoney}</if>
+            <if test="uGetTime != null ">and u_get_time = #{uGetTime}</if>
+            <if test="uAcceptTime != null ">and u_accept_time = #{uAcceptTime}</if>
+            <if test="uEndTime != null ">and u_end_time = #{uEndTime}</if>
+            <if test="uKaiTime != null ">and u_kai_time = #{uKaiTime}</if>
+            <if test="fjAnnex != null ">and fj_annex = #{fjAnnex}</if>
+            <if test="fjStatus != null ">and fj_status = #{fjStatus}</if>
+            <if test="fjRemark != null  and fjRemark != ''">and fj_remark = #{fjRemark}</if>
         </where>
     </select>
-    
+
     <select id="selectBidNoticeByUid" parameterType="Long" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
         where uid = #{uid}
     </select>
-        
+    <select id="findAllByEndTime" resultType="com.hh.pms.domain.BidNotice">
+        select *
+        from bid_notice
+        WHERE now() >= u_end_time
+    </select>
+
     <insert id="insertBidNotice" parameterType="com.hh.pms.domain.BidNotice">
         insert into bid_notice
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -60,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fjAnnex != null">fj_annex,</if>
             <if test="fjStatus != null">fj_status,</if>
             <if test="fjRemark != null">fj_remark,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="uid != null">#{uid},</if>
             <if test="sid != null">#{sid},</if>
@@ -74,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fjAnnex != null">#{fjAnnex},</if>
             <if test="fjStatus != null">#{fjStatus},</if>
             <if test="fjRemark != null">#{fjRemark},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateBidNotice" parameterType="com.hh.pms.domain.BidNotice">
@@ -96,13 +113,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteBidNoticeByUid" parameterType="Long">
-        delete from bid_notice where uid = #{uid}
+        delete
+        from bid_notice
+        where uid = #{uid}
     </delete>
 
     <delete id="deleteBidNoticeByUids" parameterType="String">
-        delete from bid_notice where uid in 
+        delete from bid_notice where uid in
         <foreach item="uid" collection="array" open="(" separator="," close=")">
             #{uid}
         </foreach>
     </delete>
+
 </mapper>

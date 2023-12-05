@@ -58,4 +58,6 @@ public interface IBidNoticeService
      * @return 结果
      */
     public int deleteBidNoticeByUid(Long uid);
+
+    public List<BidNotice> findAllByEndTime();
 }

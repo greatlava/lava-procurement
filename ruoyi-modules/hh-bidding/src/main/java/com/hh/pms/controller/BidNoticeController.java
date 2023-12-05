@@ -31,32 +31,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 招标公告Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/notice")
-public class BidNoticeController extends BaseController
-{
+public class BidNoticeController extends BaseController {
     @Autowired
     private IBidNoticeService bidNoticeService;
-    @Resource
-    private RemoteFileService remoteFileService;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Resource
-    private ISysUserService userService;
 
     /**
      * 查询招标公告列表
      */
-    @RequiresPermissions("system:notice:list")
     @GetMapping("/list")
-    public TableDataInfo list(BidNotice bidNotice)
-    {
+    public TableDataInfo list(BidNotice bidNotice) {
         startPage();
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
         return getDataTable(list);
@@ -68,8 +57,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:export")
     @Log(title = "招标公告", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BidNotice bidNotice)
-    {
+    public void export(HttpServletResponse response, BidNotice bidNotice) {
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
         ExcelUtil<BidNotice> util = new ExcelUtil<BidNotice>(BidNotice.class);
         util.exportExcel(response, list, "招标公告数据");
@@ -80,8 +68,7 @@ public class BidNoticeController extends BaseController
      */
     @RequiresPermissions("system:notice:query")
     @GetMapping(value = "/{uid}")
-    public AjaxResult getInfo(@PathVariable("uid") Long uid)
-    {
+    public AjaxResult getInfo(@PathVariable("uid") Long uid) {
         return success(bidNoticeService.selectBidNoticeByUid(uid));
     }
 
@@ -91,8 +78,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:add")
     @Log(title = "招标公告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BidNotice bidNotice)
-    {
+    public AjaxResult add(@RequestBody BidNotice bidNotice) {
         return toAjax(bidNoticeService.insertBidNotice(bidNotice));
     }
 
@@ -102,8 +88,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:edit")
     @Log(title = "招标公告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BidNotice bidNotice)
-    {
+    public AjaxResult edit(@RequestBody BidNotice bidNotice) {
         return toAjax(bidNoticeService.updateBidNotice(bidNotice));
     }
 
@@ -112,42 +97,13 @@ public class BidNoticeController extends BaseController
      */
     @RequiresPermissions("system:notice:remove")
     @Log(title = "招标公告", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{uids}")
-    public AjaxResult remove(@PathVariable Long[] uids)
-    {
+    @DeleteMapping("/{uids}")
+    public AjaxResult remove(@PathVariable Long[] uids) {
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 
-
-    @RequiresPermissions("system:notice:remove")
-    @Log(title = "上传", businessType = BusinessType.DELETE)
-    @PostMapping("/upload")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file)
-    {
-        if (!file.isEmpty())
-        {
-            LoginUser loginUser = SecurityUtils.getLoginUser();
-            String extension = FileTypeUtils.getExtension(file);
-            if (!StringUtils.equalsAnyIgnoreCase(extension, MimeTypeUtils.IMAGE_EXTENSION))
-            {
-                return error("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
-            }
-            R<SysFile> fileResult = remoteFileService.upload(file);
-            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData()))
-            {
-                return error("文件服务异常，请联系管理员");
-            }
-            String url = fileResult.getData().getUrl();
-            if (userService.updateUserAvatar(loginUser.getUsername(), url))
-            {
-                AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", url);
-                // 更新缓存用户头像
-                loginUser.getSysUser().setAvatar(url);
-                tokenService.setLoginUser(loginUser);
-                return ajax;
-            }
-        }
-        return error("上传图片异常，请联系管理员");
+    @PostMapping("/find")
+    public AjaxResult findAllByEndTime() {
+        return AjaxResult.success(bidNoticeService.findAllByEndTime());
     }
 }

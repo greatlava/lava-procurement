@@ -130,6 +130,35 @@ public class BsSupplier extends BaseEntity
     @Excel(name = "供应商分类")
     private Long fClassify;
 
+    @Excel(name = "供应商账号")
+    private String fLoginAccount;
+
+    @Excel(name = "供应商密码")
+    private String fPassword;
+
+    public void setfLoginAccount(String fLoginAccount)
+    {
+        this.fLoginAccount = fLoginAccount;
+    }
+
+    public String getfLoginAccount()
+    {
+        return fLoginAccount;
+    }
+
+    public void setfPassword(String fPassword)
+    {
+        this.fPassword = fPassword;
+    }
+
+    public String getfPassword()
+    {
+        return fPassword;
+    }
+
+
+
+
     public void setHid(Long hid) 
     {
         this.hid = hid;
