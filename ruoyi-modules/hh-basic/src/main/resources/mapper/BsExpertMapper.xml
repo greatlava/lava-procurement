@@ -6,8 +6,6 @@
 
     <resultMap type="com.hh.pms.sae.domain.BsExpert" id="BsExpertResult">
         <result property="jid" column="jid"/>
-        <result property="qid" column="qid"/>
-        <result property="pbId" column="pb_id"/>
         <result property="jName" column="j_name"/>
         <result property="jSex" column="j_sex"/>
         <result property="jIdentity" column="j_identity"/>
@@ -23,12 +21,18 @@
         <result property="jBank" column="j_bank"/>
         <result property="jShState" column="j_sh_state"/>
         <result property="jOpinion" column="j_opinion"/>
+        <association property="experience">
+            <result property="qid" column="qid"/>
+            <result property="unit" column="unit"/>
+            <result property="time" column="time"/>
+            <result property="qOffice" column="q_office"/>
+            <result property="specialized" column="specialized"/>
+            <result property="jid" column="jid"/>
+        </association>
     </resultMap>
 
     <sql id="selectBsExpertVo">
         select jid,
-               qid,
-               pb_id,
                j_name,
                j_sex,
                j_identity,
@@ -48,26 +52,11 @@
     </sql>
 
     <select id="selectBsExpertList" parameterType="com.hh.pms.sae.domain.BsExpert" resultMap="BsExpertResult">
-        <include refid="selectBsExpertVo"/>
+        select * from bs_expert a
+        left join bs_experience b on a.jid = b.jid
         <where>
-            <if test="qid != null ">and qid = #{qid}</if>
-            <if test="pbId != null ">and pb_id = #{pbId}</if>
-            <if test="jName != null  and jName != ''">and j_name like concat('%', #{jName}, '%')</if>
-            <if test="jSex != null ">and j_sex = #{jSex}</if>
-            <if test="jIdentity != null  and jIdentity != ''">and j_identity = #{jIdentity}</if>
-            <if test="jPhone != null  and jPhone != ''">and j_phone = #{jPhone}</if>
-            <if test="email != null  and email != ''">and email = #{email}</if>
-            <if test="jState != null  and jState != ''">and j_state = #{jState}</if>
-            <if test="jUnit != null  and jUnit != ''">and j_unit = #{jUnit}</if>
-            <if test="jRetire != null ">and j_retire = #{jRetire}</if>
-            <if test="jAddress != null  and jAddress != ''">and j_address = #{jAddress}</if>
-            <if test="jCard != null  and jCard != ''">and j_card = #{jCard}</if>
-            <if test="jIdentityPhoto != null  and jIdentityPhoto != ''">and j_identity_photo = #{jIdentityPhoto}</if>
-            <if test="jDocumentsPhoto != null  and jDocumentsPhoto != ''">and j_documents_photo = #{jDocumentsPhoto}
-            </if>
-            <if test="jBank != null  and jBank != ''">and j_bank = #{jBank}</if>
-            <if test="jShState != null ">and j_sh_state = #{jShState}</if>
-            <if test="jOpinion != null  and jOpinion != ''">and j_opinion = #{jOpinion}</if>
+            <if test="jName != null  and jName != ''">and a.j_name like concat('%', #{jName}, '%')</if>
+            <if test="jShState != null ">and a.j_sh_state = #{jShState}</if>
         </where>
     </select>
 
@@ -79,9 +68,6 @@
     <insert id="insertBsExpert" parameterType="com.hh.pms.sae.domain.BsExpert">
         insert into bs_expert
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="jid != null">jid,</if>
-            <if test="qid != null">qid,</if>
-            <if test="pbId != null">pb_id,</if>
             <if test="jName != null">j_name,</if>
             <if test="jSex != null">j_sex,</if>
             <if test="jIdentity != null">j_identity,</if>
@@ -99,9 +85,6 @@
             <if test="jOpinion != null">j_opinion,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="jid != null">#{jid},</if>
-            <if test="qid != null">#{qid},</if>
-            <if test="pbId != null">#{pbId},</if>
             <if test="jName != null">#{jName},</if>
             <if test="jSex != null">#{jSex},</if>
             <if test="jIdentity != null">#{jIdentity},</if>
@@ -123,8 +106,6 @@
     <update id="updateBsExpert" parameterType="com.hh.pms.sae.domain.BsExpert">
         update bs_expert
         <trim prefix="SET" suffixOverrides=",">
-            <if test="qid != null">qid = #{qid},</if>
-            <if test="pbId != null">pb_id = #{pbId},</if>
             <if test="jName != null">j_name = #{jName},</if>
             <if test="jSex != null">j_sex = #{jSex},</if>
             <if test="jIdentity != null">j_identity = #{jIdentity},</if>

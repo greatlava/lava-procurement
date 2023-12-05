@@ -35,17 +35,9 @@ public class BsContract extends BaseEntity {
     @Excel(name = "项目编号")
     private String eXcode;
 
-    /**
-     * 项目名称
-     */
-    @Excel(name = "项目名称")
-    private String eXname;
-
-    /**
-     * 中标人
-     */
-    @Excel(name = "中标人")
-    private String eWinningPerson;
+    /** 签署执行状态ID */
+    @Excel(name = "签署执行状态ID")
+    private Long gnId;
 
     /**
      * 合同编号
@@ -78,94 +70,224 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同管理状态")
     private Long oHstatus;
 
-    public void setHid(Long hid) {
-        this.hid = hid;
+    private BsSupplier bsSupplier;
+
+    public BsSupplier getBsSupplier() {
+        return bsSupplier;
     }
 
-    public Long getHid() {
-        return hid;
+    public void setBsSupplier(BsSupplier bsSupplier) {
+        this.bsSupplier = bsSupplier;
     }
 
-    public void setEid(Long eid) {
+    /** 合同类型 */
+    @Excel(name = "合同类型")
+    private Long eType;
+
+    /** 密级 */
+    @Excel(name = "密级")
+    private Long eCon;
+
+    /** 开始时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date eStartdate;
+
+    /** 结束时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date eEnddate;
+
+    /** 合同金额 */
+    @Excel(name = "合同金额")
+    private Long eAmount;
+
+    /** 合同情况说明 */
+    @Excel(name = "合同情况说明")
+    private String eDescription;
+
+    /** 意见 */
+    @Excel(name = "意见")
+    private String eOpinion;
+
+    /** 合同影像 */
+    @Excel(name = "合同影像")
+    private String eImage;
+
+    /** 合同文件 */
+    @Excel(name = "合同文件")
+    private String eDocuments;
+
+    public void setEid(Long eid)
+    {
         this.eid = eid;
     }
 
-    public Long getEid() {
+    public Long getEid()
+    {
         return eid;
     }
+    public void setHid(Long hid)
+    {
+        this.hid = hid;
+    }
 
-    public void seteXcode(String eXcode) {
+    public Long getHid()
+    {
+        return hid;
+    }
+    public void seteXcode(String eXcode)
+    {
         this.eXcode = eXcode;
     }
 
-    public String geteXcode() {
+    public String geteXcode()
+    {
         return eXcode;
     }
-
-    public void seteXname(String eXname) {
-        this.eXname = eXname;
+    public void setGnId(Long gnId)
+    {
+        this.gnId = gnId;
     }
 
-    public String geteXname() {
-        return eXname;
+    public Long getGnId()
+    {
+        return gnId;
     }
-
-    public void seteWinningPerson(String eWinningPerson) {
-        this.eWinningPerson = eWinningPerson;
-    }
-
-    public String geteWinningPerson() {
-        return eWinningPerson;
-    }
-
-    public void seteHcode(String eHcode) {
+    public void seteHcode(String eHcode)
+    {
         this.eHcode = eHcode;
     }
 
-    public String geteHcode() {
+    public String geteHcode()
+    {
         return eHcode;
     }
-
-    public void seteHname(String eHname) {
+    public void seteHname(String eHname)
+    {
         this.eHname = eHname;
     }
 
-    public String geteHname() {
+    public String geteHname()
+    {
         return eHname;
     }
-
-    public void seteStatus(Long eStatus) {
+    public void seteStatus(Long eStatus)
+    {
         this.eStatus = eStatus;
     }
 
-    public Long geteStatus() {
+    public Long geteStatus()
+    {
         return eStatus;
     }
-
-    public void seteDeliveryTime(Date eDeliveryTime) {
+    public void seteDeliveryTime(Date eDeliveryTime)
+    {
         this.eDeliveryTime = eDeliveryTime;
     }
 
-    public Date geteDeliveryTime() {
+    public Date geteDeliveryTime()
+    {
         return eDeliveryTime;
     }
-
-    public void setoHstatus(Long oHstatus) {
+    public void setoHstatus(Long oHstatus)
+    {
         this.oHstatus = oHstatus;
     }
 
-    public Long getoHstatus() {
+    public Long getoHstatus()
+    {
         return oHstatus;
+    }
+    public void seteType(Long eType)
+    {
+        this.eType = eType;
+    }
+
+    public Long geteType()
+    {
+        return eType;
+    }
+    public void seteCon(Long eCon)
+    {
+        this.eCon = eCon;
+    }
+
+    public Long geteCon()
+    {
+        return eCon;
+    }
+    public void seteStartdate(Date eStartdate)
+    {
+        this.eStartdate = eStartdate;
+    }
+
+    public Date geteStartdate()
+    {
+        return eStartdate;
+    }
+    public void seteEnddate(Date eEnddate)
+    {
+        this.eEnddate = eEnddate;
+    }
+
+    public Date geteEnddate()
+    {
+        return eEnddate;
+    }
+    public void seteAmount(Long eAmount)
+    {
+        this.eAmount = eAmount;
+    }
+
+    public Long geteAmount()
+    {
+        return eAmount;
+    }
+    public void seteDescription(String eDescription)
+    {
+        this.eDescription = eDescription;
+    }
+
+    public String geteDescription()
+    {
+        return eDescription;
+    }
+    public void seteOpinion(String eOpinion)
+    {
+        this.eOpinion = eOpinion;
+    }
+
+    public String geteOpinion()
+    {
+        return eOpinion;
+    }
+    public void seteImage(String eImage)
+    {
+        this.eImage = eImage;
+    }
+
+    public String geteImage()
+    {
+        return eImage;
+    }
+    public void seteDocuments(String eDocuments)
+    {
+        this.eDocuments = eDocuments;
+    }
+
+    public String geteDocuments()
+    {
+        return eDocuments;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("hid", getHid())
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("eid", getEid())
+                .append("hid", getHid())
                 .append("eXcode", geteXcode())
-                .append("eXname", geteXname())
-                .append("eWinningPerson", geteWinningPerson())
+                .append("gnId", getGnId())
                 .append("eHcode", geteHcode())
                 .append("eHname", geteHname())
                 .append("eStatus", geteStatus())
@@ -175,6 +297,15 @@ public class BsContract extends BaseEntity {
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("oHstatus", getoHstatus())
+                .append("eType", geteType())
+                .append("eCon", geteCon())
+                .append("eStartdate", geteStartdate())
+                .append("eEnddate", geteEnddate())
+                .append("eAmount", geteAmount())
+                .append("eDescription", geteDescription())
+                .append("eOpinion", geteOpinion())
+                .append("eImage", geteImage())
+                .append("eDocuments", geteDocuments())
                 .toString();
     }
 }

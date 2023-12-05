@@ -15,7 +15,6 @@ import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.domain.SysFile;
 import com.ruoyi.system.api.model.LoginUser;
-import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
@@ -31,21 +30,30 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 招标公告Controller
- *
+ * 
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/notice")
-public class BidNoticeController extends BaseController {
+public class BidNoticeController extends BaseController
+{
     @Autowired
     private IBidNoticeService bidNoticeService;
+    @Resource
+    private RemoteFileService remoteFileService;
+
+    @Autowired
+    private TokenService tokenService;
+
 
     /**
      * 查询招标公告列表
      */
+    @RequiresPermissions("system:notice:list")
     @GetMapping("/list")
-    public TableDataInfo list(BidNotice bidNotice) {
+    public TableDataInfo list(BidNotice bidNotice)
+    {
         startPage();
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
         return getDataTable(list);
@@ -57,7 +65,8 @@ public class BidNoticeController extends BaseController {
     @RequiresPermissions("system:notice:export")
     @Log(title = "招标公告", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BidNotice bidNotice) {
+    public void export(HttpServletResponse response, BidNotice bidNotice)
+    {
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
         ExcelUtil<BidNotice> util = new ExcelUtil<BidNotice>(BidNotice.class);
         util.exportExcel(response, list, "招标公告数据");
@@ -68,7 +77,8 @@ public class BidNoticeController extends BaseController {
      */
     @RequiresPermissions("system:notice:query")
     @GetMapping(value = "/{uid}")
-    public AjaxResult getInfo(@PathVariable("uid") Long uid) {
+    public AjaxResult getInfo(@PathVariable("uid") Long uid)
+    {
         return success(bidNoticeService.selectBidNoticeByUid(uid));
     }
 
@@ -78,7 +88,8 @@ public class BidNoticeController extends BaseController {
     @RequiresPermissions("system:notice:add")
     @Log(title = "招标公告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BidNotice bidNotice) {
+    public AjaxResult add(@RequestBody BidNotice bidNotice)
+    {
         return toAjax(bidNoticeService.insertBidNotice(bidNotice));
     }
 
@@ -88,7 +99,8 @@ public class BidNoticeController extends BaseController {
     @RequiresPermissions("system:notice:edit")
     @Log(title = "招标公告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BidNotice bidNotice) {
+    public AjaxResult edit(@RequestBody BidNotice bidNotice)
+    {
         return toAjax(bidNoticeService.updateBidNotice(bidNotice));
     }
 
@@ -97,8 +109,9 @@ public class BidNoticeController extends BaseController {
      */
     @RequiresPermissions("system:notice:remove")
     @Log(title = "招标公告", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{uids}")
-    public AjaxResult remove(@PathVariable Long[] uids) {
+	@DeleteMapping("/{uids}")
+    public AjaxResult remove(@PathVariable Long[] uids)
+    {
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 

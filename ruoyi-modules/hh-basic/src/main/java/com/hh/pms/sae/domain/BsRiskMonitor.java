@@ -76,6 +76,35 @@ public class BsRiskMonitor extends BaseEntity {
     //合同
     private BsContract bsContract;
 
+    private BsSupplier bsSupplier;
+
+    private String eHname;
+    private String hName;
+
+    public String geteHname() {
+        return eHname;
+    }
+
+    public void seteHname(String eHname) {
+        this.eHname = eHname;
+    }
+
+    public String gethName() {
+        return hName;
+    }
+
+    public void sethName(String hName) {
+        this.hName = hName;
+    }
+
+    public BsSupplier getBsSupplier() {
+        return bsSupplier;
+    }
+
+    public void setBsSupplier(BsSupplier bsSupplier) {
+        this.bsSupplier = bsSupplier;
+    }
+
     public BsContract getBsContract() {
         return bsContract;
     }

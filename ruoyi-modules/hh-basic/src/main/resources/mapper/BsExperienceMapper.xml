@@ -10,16 +10,19 @@
         <result property="time" column="time"/>
         <result property="qOffice" column="q_office"/>
         <result property="specialized" column="specialized"/>
+        <result property="jid" column="jid"/>
     </resultMap>
 
     <sql id="selectBsExperienceVo">
-        select qid, unit, time, q_office, specialized
+        select qid, unit, time, q_office, specialized, jid
         from bs_experience
     </sql>
 
-    <select id="selectBsExperienceList" parameterType="com.hh.pms.sae.domain.BsExperience" resultMap="BsExperienceResult">
+    <select id="selectBsExperienceList" parameterType="com.hh.pms.sae.domain.BsExperience"
+            resultMap="BsExperienceResult">
         <include refid="selectBsExperienceVo"/>
         <where>
+            <if test="jid != null ">and jid = #{jid}</if>
             <if test="unit != null  and unit != ''">and unit = #{unit}</if>
             <if test="time != null ">and time = #{time}</if>
             <if test="qOffice != null  and qOffice != ''">and q_office = #{qOffice}</if>
@@ -35,18 +38,18 @@
     <insert id="insertBsExperience" parameterType="com.hh.pms.sae.domain.BsExperience">
         insert into bs_experience
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="qid != null">qid,</if>
             <if test="unit != null">unit,</if>
             <if test="time != null">time,</if>
             <if test="qOffice != null">q_office,</if>
             <if test="specialized != null">specialized,</if>
+            <if test="jid != null">jid,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="qid != null">#{qid},</if>
             <if test="unit != null">#{unit},</if>
             <if test="time != null">#{time},</if>
             <if test="qOffice != null">#{qOffice},</if>
             <if test="specialized != null">#{specialized},</if>
+            <if test="jid != null">#{jid},</if>
         </trim>
     </insert>
 

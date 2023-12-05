@@ -158,11 +158,11 @@
             </el-descriptions>
             <el-form style="margin-top: 20px" label-width="80px">
               <el-form-item label="审核意见">
-                <el-input type="textarea" v-model="this.opinion" disabled/>
+                <el-input type="textarea" v-model="this.opinion" :readonly="true"/>
               </el-form-item>
             </el-form>
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -215,7 +215,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -273,7 +273,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -298,7 +298,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -324,7 +324,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -351,7 +351,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>
@@ -372,7 +372,7 @@
           </div>
           <div style="text-align: center;padding: 0 100px">
             <el-row>
-              <el-button @click="cancel">取消</el-button>
+              <el-button @click="cancel">返回</el-button>
             </el-row>
           </div>
         </el-tab-pane>

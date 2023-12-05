@@ -6,9 +6,9 @@ Vue.use(Router)
 /* Layout */
 import Layout from '@/layout'
 import Details from '../views/tender/tender1/details.vue'
-import Update from "@/views/tender/tender1/update.vue";
-import Detail from "@/views/supplier/sqe/detail.vue";
-import Bidding from "@/views/tender/tender1/bidding.vue";
+import Update from '@/views/tender/tender1/update.vue'
+import Detail from '@/views/supplier/sqe/detail.vue'
+import Bidding from '@/views/tender/tender1/bidding.vue'
 
 /**
  * Note: 路由配置项
@@ -216,6 +216,18 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/contract/add',
+    component: Details,
+    children: [
+      {
+        path: 'add?sid=:sid(\\d+)&gid=:gid(\\d+)',
+        component: () => import('@/views/contract/cm/add'),
+        name: 'Add',
+        meta: {title: '创建合同', activeMenu: '/contract'}
+      }
+    ]
+  },
+  {
     path: '/supplier/process',
     component: Details,
     hidden: true,
@@ -225,6 +237,42 @@ export const dynamicRoutes = [
         component: () => import('@/views/supplier/sqe/process'),
         name: 'Process',
         meta: {title: '审核', activeMenu: '/supplier'}
+      }
+    ]
+  },
+  {
+    path: '/supplier/riskHandling',
+    component: Details,
+    children: [
+      {
+        path: 'riskHandling?rm_id=:rm_id(\\d+)',
+        component: () => import('@/views/supplier/risk/riskHandling'),
+        name: 'RiskHandling',
+        meta: {title: '供应商风险处理', activeMenu: '/supplier'}
+      }
+    ]
+  },
+  {
+    path: '/expert/expertWare',
+    component: Details,
+    children: [
+      {
+        path: 'expertWare',
+        component: () => import('@/views/expert/ewh/expertWare'),
+        name: 'ExpertWare',
+        meta: {title: '专家', activeMenu: '/expert'}
+      }
+    ]
+  },
+  {
+    path: '/expert/auditOrView',
+    component: Details,
+    children: [
+      {
+        path: 'auditOrView?jid=:jid(\\d+)&param=:param(\\d+)',
+        component: () => import('@/views/expert/ewh/auditOrView'),
+        name: 'AuditOrView',
+        meta: {title: '查看或审核', activeMenu: '/expert'}
       }
     ]
   },
@@ -243,8 +291,8 @@ export const dynamicRoutes = [
 ]
 
 // 防止连续点击多次路由报错
-let routerPush = Router.prototype.push;
-let routerReplace = Router.prototype.replace;
+let routerPush = Router.prototype.push
+let routerReplace = Router.prototype.replace
 // push
 Router.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(err => err)

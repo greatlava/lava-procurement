@@ -184,7 +184,15 @@
           </el-form>
           <el-table stripe v-loading="loading" :data="supplierAccessList">
             <el-table-column type="index" label="序号" align="center"/>
-            <el-table-column label="业务编号" align="center" prop="zrBnumber"/>
+            <el-table-column label="业务编号" align="center" prop="zrBnumber">
+              <template slot-scope="scope">
+                {{ scope.row.bsSupplier.hName }}
+                <el-tag size="small" style="margin-left: 20px" v-if="scope.row.bsSupplier.fStatus == 2"
+                        type="danger">
+                  已驳回
+                </el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="发起人" align="center" prop="zrPromoter"/>
             <el-table-column label="提交时间" align="center" prop="zrTime" width="180">
               <template slot-scope="scope">
@@ -195,7 +203,8 @@
               <template slot-scope="scope">
                 <router-link :to="'process?zr_id='+scope.row.zrId">
                   <el-button
-                    size="small">审核
+                    size="small"
+                    v-if="scope.row.bsSupplier.fStatus == 0">审核
                   </el-button>
                 </router-link>
                 <router-link :to="'detail?zr_id='+scope.row.zrId+'&hid=0'">
@@ -272,26 +281,26 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        hName: null,
-        hInstitution: null,
+        hName: '',
+        hInstitution: '',
       },
       queryParams1: {
         pageNum: 1,
         pageSize: 10,
-        hName: null,
-        hInstitution: null,
+        hName: '',
+        hInstitution: '',
       },
       queryParams2: {
         pageNum: 1,
         pageSize: 10,
-        hName: null,
-        hInstitution: null,
+        hName: '',
+        hInstitution: '',
       },
       queryParams3: {
         pageNum: 1,
         pageSize: 10,
-        zrPromoter: null,
-        zrTime: null
+        zrPromoter: '',
+        zrTime: ''
       },
       // 表单参数
       form: {},
@@ -319,10 +328,66 @@ export default {
     }
   },
   created() {
+    if (sessionStorage.getItem('tag_item') != null) {
+      //标签页
+      this.activeName = sessionStorage.getItem('tag_item')
+      sessionStorage.removeItem('tag_item')
+
+      if (sessionStorage.getItem('num') != null && sessionStorage.getItem('size') != null) {
+        this.queryParams.pageNum = JSON.parse(sessionStorage.getItem('num'))
+        this.queryParams.pageSize = JSON.parse(sessionStorage.getItem('size'))
+
+        sessionStorage.removeItem('num')
+        sessionStorage.removeItem('size')
+      }
+      if (sessionStorage.getItem('num1') != null && sessionStorage.getItem('size1') != null) {
+        this.queryParams1.pageNum = JSON.parse(sessionStorage.getItem('num1'))
+        this.queryParams1.pageSize = JSON.parse(sessionStorage.getItem('size1'))
+
+        sessionStorage.removeItem('num1')
+        sessionStorage.removeItem('size1')
+      }
+      if (sessionStorage.getItem('num2') != null && sessionStorage.getItem('size2') != null) {
+        this.queryParams2.pageNum = JSON.parse(sessionStorage.getItem('num2'))
+        this.queryParams2.pageSize = JSON.parse(sessionStorage.getItem('size2'))
+
+        sessionStorage.removeItem('num2')
+        sessionStorage.removeItem('size2')
+      }
+      if (sessionStorage.getItem('num3') != null && sessionStorage.getItem('size3') != null) {
+        this.queryParams3.pageNum = JSON.parse(sessionStorage.getItem('num3'))
+        this.queryParams3.pageSize = JSON.parse(sessionStorage.getItem('size3'))
+
+        sessionStorage.removeItem('num3')
+        sessionStorage.removeItem('size3')
+      }
+    }
     this.getList()
     this.getList1()
     this.getList2()
     this.getList3()
+  },
+  beforeRouteLeave(to, from, next) {
+    sessionStorage.setItem('tag_item', this.activeName)
+
+    if (this.activeName == 'first') {
+      //存第一个标签页参数数据
+      sessionStorage.setItem('num', this.queryParams.pageNum)
+      sessionStorage.setItem('size', this.queryParams.pageSize)
+    } else if (this.activeName == 'second') {
+      //存第二个标签页参数数据
+      sessionStorage.setItem('num1', this.queryParams1.pageNum)
+      sessionStorage.setItem('size1', this.queryParams1.pageSize)
+    } else if (this.activeName == 'third') {
+      //存第一个标签页参数数据
+      sessionStorage.setItem('num2', this.queryParams2.pageNum)
+      sessionStorage.setItem('size2', this.queryParams2.pageSize)
+    } else if (this.activeName == 'fourth') {
+      //存第一个标签页参数数据
+      sessionStorage.setItem('num3', this.queryParams3.pageNum)
+      sessionStorage.setItem('size3', this.queryParams3.pageSize)
+    }
+    next(true)
   },
   methods: {
     parseTime,
@@ -376,6 +441,7 @@ export default {
       this.queryParams3.zrPromoter = this.formData.field108
       this.queryParams3.pageNum = 1
       listAccess(this.queryParams3).then(response => {
+        console.log(response)
         this.supplierAccessList = response.rows;
         this.total3 = response.total;
         this.loading = false;

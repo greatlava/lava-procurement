@@ -148,7 +148,11 @@
             </el-descriptions>
             <el-form style="margin-top: 20px" label-width="80px">
               <el-form-item label="审核意见">
-                <el-input type="textarea" v-model="this.opinion"/>
+                <el-input
+                  type="textarea"
+                  placeholder="请输入审核意见"
+                  v-model="opinion">
+                </el-input>
               </el-form-item>
             </el-form>
             <el-row>
@@ -205,13 +209,6 @@
               </el-descriptions-item>
             </el-descriptions>
           </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="核心技术人员" name="third">
           <div style="padding: 20px 100px">
@@ -229,13 +226,6 @@
               :limit.sync="personnel.pageSize"
               @pagination="personnelList"
             />
-          </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
           </div>
         </el-tab-pane>
         <el-tab-pane label="企业资质" name="fourth">
@@ -257,13 +247,6 @@
               @pagination="enterpriseList"
             />
           </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="业绩" name="fifth">
           <div style="padding: 20px 100px">
@@ -284,13 +267,6 @@
               :limit.sync="achievement.pageSize"
               @pagination="achievementList"
             />
-          </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
           </div>
         </el-tab-pane>
         <el-tab-pane label="财务状态" name="sixth">
@@ -314,13 +290,6 @@
               @pagination="financialStatusList"
             />
           </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
-          </div>
         </el-tab-pane>
         <el-tab-pane label="相关附件" name="seventh">
           <div style="padding: 20px 100px">
@@ -336,13 +305,6 @@
               :limit.sync="accessories.pageSize"
               @pagination="accessoriesList"
             />
-          </div>
-          <div style="text-align: center;padding: 0 100px">
-            <el-row>
-              <el-button @click="pass" type="primary" v-if="this.fStatus == 0">通过</el-button>
-              <el-button @click="overrule" type="danger" v-if="this.fStatus == 0">驳回</el-button>
-              <el-button @click="cancel">取消</el-button>
-            </el-row>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -372,7 +334,7 @@ export default {
       loading: true,
       zr_id: this.$route.query.zr_id,
       activeName: 'first',
-      opinion: '',
+      opinion: null,
       hid: 0,
       zrId: 0,
       hName: null,
@@ -507,7 +469,6 @@ export default {
       getSupplierByZrId(this.zr_id).then(response => {
         console.log(response)
         this.hid = response.data.hid
-        this.opinion = response.data.fOpinion
         this.hName = response.data.hName
         this.hCreditCode = response.data.hCreditCode
         this.hIncorporation = response.data.hIncorporation
