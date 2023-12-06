@@ -46,5 +46,27 @@ export function delPlan(aid) {
 
 export function fileDownload(fileName) {
   const url = "/ppm/plan/fileDownload";
-  download(url,{fileName:fileName},fileName)
+  download(url, {fileName: fileName}, fileName)
+}
+
+export function selectProcurementPlanByIdForThreeTables(aid) {
+  return request({
+    url: '/ppm/plan/many?aid=' + aid,
+    method: 'GET'
+  })
+}
+
+export function generatePlanID() {
+  return request({
+    url: '/ppm/plan/generatePlanID',
+    method: 'GET'
+  })
+}
+
+export function ModifyPlanAndOtherInformation(data) {
+  return request({
+    url: "/ppm/plan/otherInformation",
+    method: "post",
+    data: data
+  })
 }

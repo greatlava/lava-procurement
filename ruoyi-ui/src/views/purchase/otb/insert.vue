@@ -43,7 +43,7 @@ import {addBudget} from "@/api/system/budget";
 
           <el-col :span="6">
             <el-form-item label="行项目数量" prop="aProjectCount">
-              <el-input v-model.number="form.aProjectCount" placeholder="请输入行项目数量"/>
+              <el-input disabled v-model.number="form.aProjectCount" placeholder="系统自动生成"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -70,9 +70,9 @@ import {addBudget} from "@/api/system/budget";
           <el-button type="primary" @click="showAddBudget" size="small">添加预算</el-button>
         </div>
         <el-table max-height="250" v-loading="loading" :data="budgetList">
-          <el-table-column label="预算ID" align="center" prop="aid">
+          <el-table-column label="预算ID" align="center" prop="duId">
             <template slot-scope="scope">
-              <span>{{ scope.$index + 1 }}</span>
+              <span>{{ scope.row.duId }}</span>
             </template>
           </el-table-column>
           <el-table-column label="部门名称" align="center" prop="duDept"/>
@@ -80,15 +80,25 @@ import {addBudget} from "@/api/system/budget";
           <el-table-column label="总金额" align="center" prop="duTotal"/>
           <el-table-column label="已使用金额" align="center" prop="duUsedMoney"/>
           <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
+            <!--            @click="handleDeleteBudget(scope.row,scope.$index)"-->
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDeleteBudget(scope.row,scope.$index)"
-                v-hasPermi="['system:budget:remove']"
-              >删除
-              </el-button>
+              <el-popconfirm
+                confirm-button-text='删除'
+                cancel-button-text='取消'
+                icon="el-icon-info"
+                icon-color="red"
+                :title="'你确定要删除编号为'+scope.row.aid+'吗？'"
+                @confirm="handleDeleteBudget(scope.row,scope.$index)"
+              >
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  slot="reference"
+
+                >删除
+                </el-button>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -106,38 +116,53 @@ import {addBudget} from "@/api/system/budget";
         </div>
         <el-table ref="elTable" max-height="250" v-loading="loading" :data="device" border style="margin-top: 20px">
           <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column label="产品编码" align="center">
+          <el-table-column label="序号" align="center">
             <template slot-scope="scope">
               <span>{{ scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="产品编号" align="center" prop="tid" width="150">
+          <el-table-column label="行项目编号" align="center" prop="vCode" width="150">
             <template slot-scope="scope">
-              <span style="margin-right: 10px">{{ scope.row.tid }}</span>
+              <span v-if="form.aid==null">自动生成</span>
+              <el-input v-model="scope.row.vCode" class="borderNone" disabled></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="物料编号" align="center" prop="tid" width="150">
+            <template slot-scope="scope">
+              <span>{{ scope.row.tid }}</span>
               <i class="el-icon-search" @click="search(scope.$index)"></i>
             </template>
           </el-table-column>
-          <el-table-column label="产品名称" align="center" prop="tName"/>
-          <el-table-column label="数量" align="center" prop="tAmount" width="220">
+          <el-table-column label="数量" align="center" prop="vCount" width="230">
             <template slot-scope="scope">
-              <el-input-number :step="1" step-strictly v-model="scope.row.tAmount"></el-input-number>
+              <el-input-number :step="1" step-strictly v-model="scope.row.vCount"></el-input-number>
             </template>
           </el-table-column>
-          <el-table-column label="税率" align="center" prop="shui"/>
-          <el-table-column label="计量单位" align="center" prop="tUnit"/>
-          <el-table-column label="交付时间" align="center" prop="tDate" width="180">
+          <el-table-column label="采购人" align="center" prop="vPerson" width="120">
             <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.tDate, '{y}-{m}-{d}') }}</span>
+              <el-input class="borderNone" v-model="scope.row.vPerson"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="交付地点" align="center" prop="tAddress"/>
-          <el-table-column label="需求说明" align="center" prop="tIllustrate"/>
-          <el-table-column label="采购人" align="center" prop="tPurchaser"/>
-          <el-table-column label="备注" align="center" prop="tNotes"/>
-          <el-table-column label="采购计划状态" align="center" prop="aState" width="120"/>
+          <el-table-column label="交付时间" align="center" prop="vDeliveryTime" width="200">
+            <template slot-scope="scope">
+              <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="180">
+            <template slot-scope="scope">
+              <el-input class="borderNone" v-model="scope.row.vDeliveryArea">
+                {{ parseTime(scope.row.tDate, '{y}-{m}-{d}') }}
+              </el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="需求说明" align="center" prop="vIllustrate" width="160">
+            <template slot-scope="scope">
+              <el-input class="borderNone" v-model="scope.row.vIllustrate"></el-input>
+            </template>
+          </el-table-column>
           <el-table-column label="预算" align="center" fixed="right">
             <template slot-scope="scope">
-              <span style="margin-right: 10px">{{ scope.row.duName }}</span>
+              <span style="margin-right: 10px">{{ scope.row.did }}</span>
               <i class="el-icon-search" @click="searchBudget(scope.$index)"></i>
             </template>
           </el-table-column>
@@ -158,8 +183,11 @@ import {addBudget} from "@/api/system/budget";
     </div>
     <!--    底部按钮  -->
     <div slot="footer" class="button">
-      <el-button type="primary" @click="sumbitPlan">确 定</el-button>
-      <el-button @click="goBack">取 消</el-button>
+      <el-button type="primary" @click="sumbitPlan" v-if="this.form.aid==null">提 交
+      </el-button>
+      <el-button type="warning" v-loading.fullscreen.lock="fullscreenLoading" @click="updatePlanByAid" v-else>修 改
+      </el-button>
+      <el-button @click="goBack">返 回</el-button>
     </div>
     <!--  -------------------------------------- 弹窗开始 --------------------------------  -->
     <!--    搜索设备/物料    -->
@@ -186,21 +214,26 @@ import {addBudget} from "@/api/system/budget";
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-table @cell-dblclick="selectedMateria" max-height="300" border :data="newDevice" v-loading="loading">
+      <el-table @cell-dblclick="selectedMateria" max-height="300" border :data="newDevice"
+                v-loading="show.deviceLoding">
         <el-table-column label="产品编码" align="center" prop="tid"/>
         <el-table-column label="产品名称" align="center" prop="tName"/>
       </el-table>
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getMaterialList"
-      />
+      <div :class="{'hidden':hidden}" class="pagination-container">
+        <pagination
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
+          @pagination="getMaterialList"
+        />
+      </div>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">关 闭</el-button>
       </div>
     </el-dialog>
+    <!--    添加预算     -->
     <el-dialog title="添加预算" :visible.sync="show.openBudget" width="500px" append-to-body>
       <el-form style="display: flex; flex-wrap: wrap; justify-content: space-between;" :inline="true"
                label-position="top" ref="budgetValidateForm" :model="budgetForm" :rules="budRules" label-width="100px">
@@ -210,9 +243,6 @@ import {addBudget} from "@/api/system/budget";
         <el-form-item label="部门名称" prop="duDept">
           <el-input v-model="budgetForm.duDept" placeholder="请输入部门名称"/>
         </el-form-item>
-        <!--        <el-form-item label="预算科目编号" prop="duCode">-->
-        <!--          <el-input v-model="budgetForm.duCode" placeholder="请输入预算科目编号"/>-->
-        <!--        </el-form-item>-->
         <el-form-item label="预算科目名称" prop="duName">
           <el-input v-model="budgetForm.duName" placeholder="请输入预算科目名称"/>
         </el-form-item>
@@ -224,8 +254,9 @@ import {addBudget} from "@/api/system/budget";
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitBudgetForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitBudgetForm" v-loading.fullscreen.lock="fullscreenLoading">提 交
+        </el-button>
+        <el-button @click="cancel">返 回</el-button>
       </div>
     </el-dialog>
     <el-dialog :visible.sync="show.changeBudget">
@@ -241,21 +272,34 @@ import {addBudget} from "@/api/system/budget";
         <el-table-column label="已使用金额" align="center" prop="duUsedMoney"/>
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="cancel">返 回</el-button>
       </div>
     </el-dialog>
     <!--  -------------------------------------- 弹窗结束 --------------------------------  -->
   </div>
 </template>
 <script>
-import {listRules} from "@/api/code/rules";
 import {listDevice} from "@/api/device/device";
+import {addBudget, delBudget, selectPpmBudgetByAid} from '@/api/system/budget'
+import {
+  generatePlanID,
+  addPlan,
+  selectProcurementPlanByIdForThreeTables,
+  updatePlan,
+  ModifyPlanAndOtherInformation
+} from '@/api/system/plan'
+import {Message} from "element-ui";
 
 export default {
   dicts: ['ppm_procurement_plan'],
   data() {
     return {
-      total: 1,
+      hidden: {
+        type: Boolean,
+        default: false
+      },
+      fullscreenLoading: false,
+      total: 0,
       //所有设备列表
       newDevice: [],
       //编号规则目标表单
@@ -290,10 +334,6 @@ export default {
         aName: [{required: true, message: '计划名称不能为空', trigger: 'blur'}],
         createBy: [{required: true, message: '创建人不能为空', trigger: 'blur'}],
         aCreateDept: [{required: true, message: '创建部门不能为空', trigger: 'blur'}],
-        aProjectCount: [
-          {required: true, message: '设备数量不能为空', trigger: 'blur'},
-          {type: 'number', message: '设备数量数量不能为空', trigger: 'blur'}
-        ],
         aBtype: [{required: true, message: '业务类型不能为空', trigger: 'blur'}]
       },
       //采购预算列表
@@ -307,14 +347,41 @@ export default {
         openBudget: false,
         codeDisabled: false,
         //选择添加的预算
-        changeBudget: false
+        changeBudget: false,
+        deviceLoding: false,
       },
       queryParams: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        tName: null,
+        tid: null
       },
       selectedIndex: 0
     }
+  },
+  created() {
+    let obj = this.$route.query;
+    if (obj.aid) {
+      this.form = obj;
+      this.getItemsByPlanId();
+      return;
+    }
+    let planId = localStorage.getItem("procurementPlanID");
+    if (planId == null && planId == undefined) {
+      generatePlanID().then((res) => {
+        localStorage.setItem("procurementPlanID", res);
+        console.log('res', res)
+      }).catch((err) => {
+        Message.error("服务器异常请稍后重试！！");
+        setTimeout(() => {
+          this.$router.back();
+        }, 2000)
+      })
+    }
+  },
+  beforeDestroy() {
+    localStorage.removeItem("procurementPlanID");
+    console.log("页面销毁---------------")
   },
   methods: {
     handleDelete(row, index) {
@@ -338,19 +405,25 @@ export default {
     },
     //搜索按钮
     handleQuery() {
-
+      this.getMaterialList();
     },
     //重置按钮
     resetQuery() {
-
+      this.queryParams = {
+        pageNum: 1,
+        pageSize: 10,
+        tName: null,
+        tid: null
+      }
+      this.getMaterialList();
     },
     //获取物料列表
     getMaterialList() {
-      this.loading = true;
-      listDevice(null).then((res => {
+      this.show.deviceLoding = true;
+      listDevice(this.queryParams).then((res => {
         this.newDevice = res.rows;
         this.total = res.total;
-        this.loading = false;
+        this.show.deviceLoding = false;
       }))
     },
     //关闭按钮
@@ -362,7 +435,7 @@ export default {
     //双击选中物料
     selectedMateria(row) {
       let obj = this.device[this.selectedIndex];
-      obj = {...obj, ...row}
+      obj = {...obj, tid: row.tid}
       this.device.splice(this.selectedIndex, 1, obj);
       this.show.open = false;
     },
@@ -377,10 +450,21 @@ export default {
       this.$refs['budgetValidateForm'].validate((valid) => {
         if (valid) {
           let budget = this.budgetForm;
-          budget['aid'] = this.form.previewCode;
-          this.budgetList.push(budget);
-          this.budgetForm = {};
-          this.show.openBudget = false;
+          if (this.form.aid) {
+            budget['aid'] = this.form.aid;
+          } else {
+            budget['aid'] = localStorage.getItem("procurementPlanID");
+          }
+          this.fullscreenLoading = true;
+          addBudget(budget).then(res => {
+            budget['duId'] = res.msg;
+            this.budgetList.push(budget);
+            this.budgetForm = {};
+            this.fullscreenLoading = false;
+            this.show.openBudget = false;
+          }).catch(err => {
+
+          })
         } else {
           console.log('error submit!!');
           return false;
@@ -389,7 +473,9 @@ export default {
     },
     //预算列表删除按钮
     handleDeleteBudget(row, index) {
-      this.budgetList.splice(index, 1)
+      delBudget(row.duId).then(res => {
+        this.budgetList.splice(index, 1)
+      })
     },
     //添加预算弹窗编号选择事件
     changeCode(value) {
@@ -426,7 +512,7 @@ export default {
     //双击选中预算
     doubleClickBudget(row) {
       let obj = this.device[this.selectedIndex];
-      obj = {...obj, duName: row.duName}
+      obj = {...obj, did: row.duId}
       this.device.splice(this.selectedIndex, 1, obj);
       this.show.changeBudget = false;
       console.log("row", obj)
@@ -437,25 +523,63 @@ export default {
     sumbitPlan() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          alert("成功")
-        } else {
-          alert("失败")
+          if (this.device.length == 0) {
+            this.$modal.msgError("请至少添加一条物料信息");
+            return false;
+          }
+          if (this.device.some(e => !e.tid)) {
+            this.$modal.msgError("所有行项目设备不能为空");
+            return; // 跳出整个函数
+          }
+          this.form['items'] = this.device;
+          this.form["aCode"] = localStorage.getItem("procurementPlanID");
+          addPlan(this.form).then(res => {
+            Message.success("操作成功");
+            setTimeout(() => {
+              this.$router.back();
+            }, 1000)
+          })
+        }
+      })
+    },
+    getItemsByPlanId() {
+      selectProcurementPlanByIdForThreeTables(this.form.aid).then(res => {
+        console.log("data", res)
+        this.device = res.data.items;
+      })
+      selectPpmBudgetByAid(this.form.aCode).then(res => {
+        this.budgetList = res.data;
+      })
+    },
+    updatePlanByAid() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.device.length == 0) {
+            this.$modal.msgError("请至少添加一条物料信息");
+            return false;
+          }
+          if (this.device.some(e => !e.tid)) {
+            this.$modal.msgError("所有行项目设备不能为空");
+            return; // 跳出整个函数
+          }
+          this.form['items'] = this.device;
+          this.fullscreenLoading = true;
+          ModifyPlanAndOtherInformation(this.form).then(res => {
+            this.fullscreenLoading = false;
+            this.$modal.msgSuccess("操作成功！！")
+            setTimeout(() => {
+              this.$router.back();
+            },1000)
+          })
         }
       })
     }
   }
 }
 </script>
-<style scoped lang="scss">
+<style scoped>
 .top {
-  //background: #fafafa;
-  padding: 20px 40px;
-  box-shadow: -2px 2px 2px 2px #dadada;
-  width: 1300px;
-  margin: 50px auto;
-  border: 1px solid #ececec;
-  //background: #f5f5f5;
-  //height: 500px;
+//background: #fafafa; padding: 20px 40px; box-shadow: -2px 2px 2px 2px #dadada; width: 1300px; margin: 50px auto; border: 1px solid #ececec; //background: #f5f5f5; //height: 500px;
 }
 
 .title {
@@ -490,5 +614,11 @@ export default {
 .button {
   text-align: right;
   padding: 0px 200px 50px 0px;
+}
+
+.borderNone >>> .el-input__inner {
+  border: none;
+  text-align: center;
+//box-shadow: none;
 }
 </style>

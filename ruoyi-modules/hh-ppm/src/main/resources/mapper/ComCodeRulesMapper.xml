@@ -49,6 +49,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
+    <select id="selectComCodeRulesByTargetForm" resultType="com.hh.pms.domain.ComCodeRules">
+        SELECT * from com_code_rules WHERE target_form = #{targetForm}
+    </select>
+
     <insert id="insertComCodeRules" parameterType="ComCodeRules" useGeneratedKeys="true" keyProperty="id">
         insert into com_code_rules
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -99,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hour != null">hour = #{hour},</if>
             <if test="minute != null">minute = #{minute},</if>
             <if test="second != null">second = #{second},</if>
+            <if test="maxMantissa != null">max_mantissa = #{maxMantissa},</if>
         </trim>
         where id = #{id}
     </update>

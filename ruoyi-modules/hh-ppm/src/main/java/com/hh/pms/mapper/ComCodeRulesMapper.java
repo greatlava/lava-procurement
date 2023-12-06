@@ -59,4 +59,11 @@ public interface ComCodeRulesMapper
      * @return 结果
      */
     public int deleteComCodeRulesByIds(Long[] ids);
+
+    /**
+     * 根据表名查询编号规则
+     * @param str
+     * @return
+     */
+    public ComCodeRules selectComCodeRulesByTargetForm(String str);
 }

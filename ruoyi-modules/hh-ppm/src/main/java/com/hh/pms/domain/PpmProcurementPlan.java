@@ -1,9 +1,13 @@
 package com.hh.pms.domain;
 
+import net.bytebuddy.build.ToStringPlugin;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 采购计划对象 ppm_procurement_plan
@@ -37,6 +41,7 @@ public class PpmProcurementPlan extends BaseEntity
     private String aOpinion;
 
     /** 行项目数量 */
+    @Excel(name = "行项目数量")
     private Integer aProjectCount;
 
     /** 采购业务类型名称 */
@@ -46,6 +51,17 @@ public class PpmProcurementPlan extends BaseEntity
     /** 采购审批状态 */
     @Excel(name = "采购审批状态")
     private Integer aAstate;
+
+    /** 行项目集合 */
+    private List<PpmLineItems> items;
+
+    public List<PpmLineItems> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PpmLineItems> items) {
+        this.items = items;
+    }
 
     public void setAid(Integer aid) 
     {
@@ -145,6 +161,8 @@ public class PpmProcurementPlan extends BaseEntity
             .append("aProjectCount", getaProjectCount())
             .append("aBtype", getaBtype())
             .append("aAstate", getaAstate())
+                .append("items",getItems())
+                .append("")
             .toString();
     }
 }

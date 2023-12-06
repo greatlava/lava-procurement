@@ -59,4 +59,6 @@ public interface IPpmBudgetService
      * @return 结果
      */
     public int deletePpmBudgetByDuId(String duId);
+
+    public List<PpmBudget> selectPpmBudgetByAid(String aid);
 }

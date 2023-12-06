@@ -59,4 +59,6 @@ public interface PpmLineItemsMapper
      * @return 结果
      */
     public int deletePpmLineItemsByVids(Integer[] vids);
+
+    public int deletePpmLineItemsByAid(Integer aid);
 }
