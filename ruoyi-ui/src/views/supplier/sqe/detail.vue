@@ -88,7 +88,14 @@
                 <template slot="label">
                   营业执照扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    fit="cover"
+                    :src="hCopies"
+                    :preview-src-list="hCopiesList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -100,7 +107,14 @@
                 <template slot="label">
                   法人/负责人身份证扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    :src="idCardCopy"
+                    fit="cover"
+                    :preview-src-list="idCardCopyList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -419,6 +433,7 @@ export default {
       hRange: null,
       hDesc: null,
       hCopies: null,
+      hCopiesList: [],
       hJuridicalCopies: null,
       hExpiration: null,
       hBank: null,
@@ -431,6 +446,9 @@ export default {
       hProve: null,
       fState: null,
       fStatus: null,
+      //法人身份证
+      idCardCopy: null,
+      idCardCopyList: [],
       //业务经办人
       operator: {
         ywName: null,
@@ -583,10 +601,18 @@ export default {
       this.fState = response.data.fState
       this.hAccount = response.data.hAccount
       this.fStatus = response.data.fStatus
+      this.hCopies = `http://192.168.162.1:9210/` + response.data.hCopies
+      this.hCopiesList.push(`http://192.168.162.1:9210/` + response.data.hCopies)
+      this.idCardCopy = `http://192.168.162.1:9210/` + response.data.idCardCopies[0]
+      for (let i = 0; i < response.data.idCardCopies.length; i++) {
+        this.idCardCopyList.push(`http://192.168.162.1:9210/` + response.data.idCardCopies[i])
+      }
     },
     query() {
       if (this.zr_id == 0) {
         getSupplier(this.hid).then(response => {
+          console.log("!!1!!:")
+          console.log(response)
           this.yang(response)
         });
       } else {

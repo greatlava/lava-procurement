@@ -2,8 +2,9 @@
 server:
   port: 9610
 
+
 # Spring
-spring: 
+spring:
   application:
     # 应用名称
     name: hh-basic
@@ -23,3 +24,6 @@ spring:
         # 共享配置
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  web:
+    resources:
+      static-locations: classpath:/static/photoFile/, classpath:/static/otherFile/

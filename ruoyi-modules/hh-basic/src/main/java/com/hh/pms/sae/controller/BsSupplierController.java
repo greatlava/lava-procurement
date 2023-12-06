@@ -85,7 +85,13 @@ public class BsSupplierController extends BaseController {
     @RequiresPermissions("system:supplier:query")
     @GetMapping(value = "/{hid}")
     public AjaxResult getInfo(@PathVariable("hid") Long hid) {
-        return success(bsSupplierService.selectBsSupplierByHid(hid));
+        BsSupplier bsSupplier = bsSupplierService.selectBsSupplierByHid(hid);
+        String copy = bsSupplier.gethJuridicalCopies();
+        if (copy != null) {
+            String[] arr = copy.split(",");
+            bsSupplier.setIdCardCopies(arr);
+        }
+        return success(bsSupplier);
     }
 
     /**
@@ -94,7 +100,13 @@ public class BsSupplierController extends BaseController {
     @RequiresPermissions("system:supplier:query")
     @GetMapping("/access/{zrId}")
     public AjaxResult getInfoByZrId(@PathVariable("zrId") Long zrId) {
-        return success(bsSupplierService.selectBsSupplierByZrId(zrId));
+        BsSupplier bsSupplier = bsSupplierService.selectBsSupplierByZrId(zrId);
+        String copy = bsSupplier.gethJuridicalCopies();
+        if (copy != null) {
+            String[] arr = copy.split(",");
+            bsSupplier.setIdCardCopies(arr);
+        }
+        return success(bsSupplier);
     }
 
     /**
