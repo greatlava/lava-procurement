@@ -20,7 +20,7 @@ export function getTender(sid) {
 // 新增招标项目
 export function addTender(data) {
   return request({
-    url: '/bidding/tender',
+    url: '/bidding/tender/addTender',
     method: 'post',
     data: data
   })

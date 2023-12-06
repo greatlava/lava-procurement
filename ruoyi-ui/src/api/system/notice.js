@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询公告列表
 export function listNotice(query) {
   return request({
-    url: '/bidding/notice/list',
+    url: '/system/notice/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listNotice(query) {
 // 查询公告详细
 export function getNotice(noticeId) {
   return request({
-    url: '/bidding/notice/' + noticeId,
+    url: '/system/notice/' + noticeId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getNotice(noticeId) {
 // 新增公告
 export function addNotice(data) {
   return request({
-    url: '/bidding/notice',
+    url: '/system/notice',
     method: 'post',
     data: data
   })
@@ -29,25 +29,10 @@ export function addNotice(data) {
 // 修改公告
 export function updateNotice(data) {
   return request({
-    url: '/bidding/notice',
+    url: '/system/notice',
     method: 'put',
     data: data
   })
 }
 
-// 删除公告
-export function delNotice(noticeId) {
-  return request({
-    url: '/bidding/notice/' + noticeId,
-    method: 'delete'
-  })
-}
 
-// 用户头像上传
-export function uploads(data) {
-  return request({
-    url: '/bidding//notice/upload',
-    method: 'post',
-    data: data
-  })
-}

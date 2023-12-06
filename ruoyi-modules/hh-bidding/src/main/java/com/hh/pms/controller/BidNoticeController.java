@@ -46,6 +46,7 @@ public class BidNoticeController extends BaseController
     @Autowired
     private TokenService tokenService;
 
+
     /**
      * 查询招标公告列表
      */
@@ -114,4 +115,8 @@ public class BidNoticeController extends BaseController
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 
+    @PostMapping("/find")
+    public AjaxResult findAllByEndTime() {
+        return AjaxResult.success(bidNoticeService.findAllByEndTime());
+    }
 }

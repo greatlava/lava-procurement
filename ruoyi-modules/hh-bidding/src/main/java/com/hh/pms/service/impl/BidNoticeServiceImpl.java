@@ -92,4 +92,9 @@ public class BidNoticeServiceImpl implements IBidNoticeService
     {
         return bidNoticeMapper.deleteBidNoticeByUid(uid);
     }
+
+    @Override
+    public List<BidNotice> findAllByEndTime() {
+        return bidNoticeMapper.findAllByEndTime();
+    }
 }

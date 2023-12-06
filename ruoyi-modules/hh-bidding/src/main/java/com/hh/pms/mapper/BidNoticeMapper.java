@@ -58,4 +58,6 @@ public interface BidNoticeMapper
      * @return 结果
      */
     public int deleteBidNoticeByUids(Long[] uids);
+
+    public List<BidNotice> findAllByEndTime();
 }
