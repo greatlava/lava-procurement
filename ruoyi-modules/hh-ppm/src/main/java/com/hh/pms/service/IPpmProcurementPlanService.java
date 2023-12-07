@@ -59,4 +59,11 @@ public interface IPpmProcurementPlanService
      * @return 结果
      */
     public int deletePpmProcurementPlanByAid(Integer aid);
+
+    /**
+     * 根据id多表查询
+     * @param aid
+     * @return
+     */
+    public PpmProcurementPlan selectProcurementPlanByIdForThreeTables(Integer aid);
 }

@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 框架计划对象 ppm_frame_plan
  *
@@ -66,6 +68,16 @@ public class PpmFramePlan extends BaseEntity {
      */
     @Excel(name = "采购方式")
     private String jhPmethod;
+
+    /** 行项目集合 */
+    private List<PpmLineItems> items;
+    public List<PpmLineItems> getItems() {
+        return items;
+    }
+
+    public void setItems(List<PpmLineItems> items) {
+        this.items = items;
+    }
 
     public void setJhId(Long jhId) {
         this.jhId = jhId;

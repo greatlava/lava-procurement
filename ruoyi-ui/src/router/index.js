@@ -287,6 +287,18 @@ export const dynamicRoutes = [
         meta: {title: '新增采购计划', activeMenu: '/purchase'}
       }
     ]
+  },
+  {
+    path: '/frameworkPlan/FrameworkPlanInsert',
+    component: Details,
+    children: [
+      {
+        path: 'FrameworkPlanInsert',
+        component: () => import('@/views/frameworkPlan/FrameworkPlanInsert'),
+        name: 'FrameworkPlanInsert',
+        meta: {title: '新增框架计划', activeMenu: '/frameworkPlan'}
+      }
+    ]
   }
 ]
 

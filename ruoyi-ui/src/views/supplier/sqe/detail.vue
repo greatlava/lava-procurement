@@ -88,7 +88,14 @@
                 <template slot="label">
                   营业执照扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    fit="contain"
+                    :src="hCopies"
+                    :preview-src-list="hCopiesList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -100,7 +107,14 @@
                 <template slot="label">
                   法人/负责人身份证扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    :src="idCardCopy"
+                    fit="contain"
+                    :preview-src-list="idCardCopyList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -164,6 +178,17 @@
             <el-row>
               <el-button @click="cancel">返回</el-button>
             </el-row>
+            <el-upload ref="upload" class="upload-demo" :limit="2" accept=".doc, .docx,.rar,.txt" multiple
+                       :action="upload.url"
+                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"
+                       :on-progress="handleFileUploadProgress"
+                       :on-success="handleFileSuccess" :auto-upload="false">
+              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
+                         @click="submitUpload">上传到服务器
+              </el-button>
+              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx,.rar,.txt文件，且不超过5MB</div>
+            </el-upload>
           </div>
         </el-tab-pane>
         <el-tab-pane label="业务经办人信息" name="second">
@@ -392,6 +417,9 @@ import {listEnterprise} from "@/api/system/enterprise";
 import {listAchievement} from "@/api/system/achievement";
 import {listStatus} from "@/api/system/financialStatus";
 import {listAccessories} from "@/api/system/accessories";
+import {
+  getToken
+} from "@/utils/auth";
 
 export default {
   components: {},
@@ -419,6 +447,7 @@ export default {
       hRange: null,
       hDesc: null,
       hCopies: null,
+      hCopiesList: [],
       hJuridicalCopies: null,
       hExpiration: null,
       hBank: null,
@@ -431,6 +460,9 @@ export default {
       hProve: null,
       fState: null,
       fStatus: null,
+      //法人身份证
+      idCardCopy: null,
+      idCardCopyList: [],
       //业务经办人
       operator: {
         ywName: null,
@@ -489,6 +521,21 @@ export default {
         pageNum: 1,
         pageSize: 10,
         hid: this.$route.query.hid,
+      },
+
+      // 上传参数
+      upload: {
+        // 上传的文件列表
+        fileList: [],
+
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: {
+          Authorization: "Bearer " + getToken()
+        },
+        // 上传的地址
+        url: "http://localhost:9210/basic/supplier/upload1",
       }
     }
   },
@@ -583,6 +630,12 @@ export default {
       this.fState = response.data.fState
       this.hAccount = response.data.hAccount
       this.fStatus = response.data.fStatus
+      this.hCopies = `http://192.168.162.1:9210/` + response.data.hCopies
+      this.hCopiesList.push(`http://192.168.162.1:9210/` + response.data.hCopies)
+      this.idCardCopy = `http://192.168.162.1:9210/` + response.data.idCardCopies[0]
+      for (let i = 0; i < response.data.idCardCopies.length; i++) {
+        this.idCardCopyList.push(`http://192.168.162.1:9210/` + response.data.idCardCopies[i])
+      }
     },
     query() {
       if (this.zr_id == 0) {
@@ -607,35 +660,49 @@ export default {
       })
       //核心技术人员
       listPersonnel(this.personnel).then(response => {
-        console.log(response)
         this.personnelList = response.rows;
         this.total = response.total;
       })
       //企业资质
       listEnterprise(this.enterprise).then(response => {
-        console.log(response)
         this.enterpriseList = response.rows;
         this.total1 = response.total;
       })
       //业绩
       listAchievement(this.achievement).then(response => {
-        console.log(response)
         this.achievementList = response.rows;
         this.total2 = response.total;
       })
       //财务状态
       listStatus(this.financialStatus).then(response => {
-        console.log(response)
         this.financialStatusList = response.rows;
         this.total3 = response.total;
       })
       //相关附件
       listAccessories(this.accessories).then(response => {
-        console.log(response)
         this.accessoriesList = response.rows;
         this.total4 = response.total;
       })
       this.loading = false
+    },
+
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      alert(response.url)
+      this.upload.isUploading = false;
+      //this.form.filePath = response.url;
+      //this.msgSuccess(response.msg);
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
     }
   }
 }

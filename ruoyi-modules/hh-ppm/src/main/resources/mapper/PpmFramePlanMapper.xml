@@ -90,4 +90,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{jhId}
         </foreach>
     </delete>
+
+
+    <sql id="fourTableLinkedQuery">
+        SELECT p.aid p_aid,
+               p.a_code,
+               p.a_name,
+               p.create_by,
+               p.a_create_dept,
+               p.fj_annex,
+               p.a_astate,
+               i.*,
+               d.tid     d_tid,
+               d.t_name,
+               d.category,
+               d.t_unit,
+               d.shui,
+               d.t_illustrate,
+               d.t_notes,
+               d.t_model,
+               b.du_dept,
+               b.du_name,
+               b.du_total
+        FROM ppm_procurement_plan p
+                 inner join ppm_line_items i on p.aid = i.aid
+                 left join ppm_device d on i.tid = d.tid
+                 left join ppm_budget b on b.du_id = i.did
+                left join ppm_frame_plan f on f.jh_id = i.jh_id
+    </sql>
 </mapper>
