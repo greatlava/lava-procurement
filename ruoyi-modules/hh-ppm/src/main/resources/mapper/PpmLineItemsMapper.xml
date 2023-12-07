@@ -50,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vDeliveryArea != null">v_delivery_area,</if>
             <if test="vIllustrate != null">v_illustrate,</if>
             <if test="procurementMethod != null">procurement_method,</if>
+            <if test="did != null">did,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="vCode != null">#{vCode},</if>
@@ -64,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="vDeliveryArea != null">#{vDeliveryArea},</if>
             <if test="vIllustrate != null">#{vIllustrate},</if>
             <if test="procurementMethod != null">#{procurementMethod},</if>
+            <if test="did != null">#{did},</if>
          </trim>
     </insert>
 
@@ -95,5 +97,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <foreach item="vid" collection="array" open="(" separator="," close=")">
             #{vid}
         </foreach>
+    </delete>
+    <delete id="deletePpmLineItemsByAid">
+        DELETE FROM ppm_line_items WHERE aid = #{aid}
     </delete>
 </mapper>

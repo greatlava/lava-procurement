@@ -33,6 +33,8 @@
         <result property="fOpinion" column="f_opinion"/>
         <result property="fState" column="f_state"/>
         <result property="fClassify" column="f_classify"/>
+        <result property="hLoginAccount" column="h_loginaccount"/>
+        <result property="hPassword" column="h_password"/>
     </resultMap>
 
     <sql id="selectBsSupplierVo">
@@ -63,7 +65,9 @@
                f_status,
                f_opinion,
                f_state,
-               f_classify
+               f_classify,
+               h_loginaccount,
+               h_password
         from bs_supplier
     </sql>
 
@@ -104,6 +108,8 @@
             <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
             <if test="fState != null ">and f_state = #{fState}</if>
             <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+            <if test="hLoginAccount != null and hLoginAccount != ''">and h_loginaccount = #{hLoginAccount}</if>
+            <if test="hPassword != null and hPassword != ''">and h_password = #{hPassword}</if>
         </where>
     </select>
 
@@ -144,6 +150,8 @@
             <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
             <if test="fState != null ">and f_state = #{fState}</if>
             <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+            <if test="hLoginAccount != null and hLoginAccount != ''">and h_loginaccount = #{hLoginAccount}</if>
+            <if test="hPassword != null and hPassword != ''">and h_password = #{hPassword}</if>
         </where>
     </select>
 
@@ -184,6 +192,8 @@
             <if test="fOpinion != null  and fOpinion != ''">and f_opinion = #{fOpinion}</if>
             <if test="fState != null ">and f_state = #{fState}</if>
             <if test="fClassify != null ">and f_classify = #{fClassify}</if>
+            <if test="hLoginAccount != null and hLoginAccount != ''">and h_loginaccount = #{hLoginAccount}</if>
+            <if test="hPassword != null and hPassword != ''">and h_password = #{hPassword}</if>
         </where>
     </select>
 
@@ -228,6 +238,8 @@
             <if test="fOpinion != null">f_opinion,</if>
             <if test="fState != null">f_state,</if>
             <if test="fClassify != null">f_classify,</if>
+            <if test="hLoginAccount != null ">h_loginaccount,</if>
+            <if test="hPassword != null ">h_password,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="hid != null">#{hid},</if>
@@ -258,6 +270,8 @@
             <if test="fOpinion != null">#{fOpinion},</if>
             <if test="fState != null">#{fState},</if>
             <if test="fClassify != null">#{fClassify},</if>
+            <if test="hLoginAccount != null ">#{hLoginAccount},</if>
+            <if test="hPassword != null ">#{hPassword},</if>
         </trim>
     </insert>
 
@@ -291,6 +305,8 @@
             <if test="fOpinion != null">f_opinion = #{fOpinion},</if>
             <if test="fState != null">f_state = #{fState},</if>
             <if test="fClassify != null">f_classify = #{fClassify},</if>
+            <if test="hLoginAccount != null ">and h_loginaccount = #{hLoginAccount}</if>
+            <if test="hPassword != null ">and h_password = #{hPassword}</if>
         </trim>
         where hid = #{hid}
     </update>

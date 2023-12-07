@@ -25,14 +25,13 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 
 /**
  * 设备信息Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-28
  */
 @RestController
 @RequestMapping("/device")
-public class PpmDeviceController extends BaseController
-{
+public class PpmDeviceController extends BaseController {
     @Autowired
     private IPpmDeviceService ppmDeviceService;
 
@@ -41,9 +40,9 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:list")
     @GetMapping("/list")
-    public TableDataInfo list(PpmDevice ppmDevice)
-    {
+    public TableDataInfo list(PpmDevice ppmDevice) {
         startPage();
+        System.out.println("ppmDevice:" + ppmDevice);
         List<PpmDevice> list = ppmDeviceService.selectPpmDeviceList(ppmDevice);
         return getDataTable(list);
     }
@@ -54,8 +53,7 @@ public class PpmDeviceController extends BaseController
     @RequiresPermissions("system:device:export")
     @Log(title = "设备信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, PpmDevice ppmDevice)
-    {
+    public void export(HttpServletResponse response, PpmDevice ppmDevice) {
         List<PpmDevice> list = ppmDeviceService.selectPpmDeviceList(ppmDevice);
         ExcelUtil<PpmDevice> util = new ExcelUtil<PpmDevice>(PpmDevice.class);
         util.exportExcel(response, list, "设备信息数据");
@@ -66,8 +64,7 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:query")
     @GetMapping(value = "/{tid}")
-    public AjaxResult getInfo(@PathVariable("tid") String tid)
-    {
+    public AjaxResult getInfo(@PathVariable("tid") String tid) {
         return success(ppmDeviceService.selectPpmDeviceByTid(tid));
     }
 
@@ -77,8 +74,7 @@ public class PpmDeviceController extends BaseController
     @RequiresPermissions("system:device:add")
     @Log(title = "设备信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PpmDevice ppmDevice)
-    {
+    public AjaxResult add(@RequestBody PpmDevice ppmDevice) {
         return toAjax(ppmDeviceService.insertPpmDevice(ppmDevice));
     }
 
@@ -88,8 +84,7 @@ public class PpmDeviceController extends BaseController
     @RequiresPermissions("system:device:edit")
     @Log(title = "设备信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody PpmDevice ppmDevice)
-    {
+    public AjaxResult edit(@RequestBody PpmDevice ppmDevice) {
         return toAjax(ppmDeviceService.updatePpmDevice(ppmDevice));
     }
 
@@ -98,9 +93,8 @@ public class PpmDeviceController extends BaseController
      */
     @RequiresPermissions("system:device:remove")
     @Log(title = "设备信息", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{tids}")
-    public AjaxResult remove(@PathVariable String[] tids)
-    {
+    @DeleteMapping("/{tids}")
+    public AjaxResult remove(@PathVariable String[] tids) {
         return toAjax(ppmDeviceService.deletePpmDeviceByTids(tids));
     }
 }

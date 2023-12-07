@@ -124,20 +124,6 @@
           <template slot="label">
             相关文件
           </template>
-          <el-upload
-            class="upload-demo"
-            action="http://127.0.0.1:9300/statics/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :multiple="true"
-            :limit="3"
-            :on-exceed="handleExceed"
-            :file-list="fileList"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-            <span slot="tip" class="el-upload__tip"> 支持文件格式：pdf.xis......</span>
-          </el-upload>
         </el-descriptions-item>
         <el-descriptions-item/>
         <el-descriptions-item label="标的清单"/>

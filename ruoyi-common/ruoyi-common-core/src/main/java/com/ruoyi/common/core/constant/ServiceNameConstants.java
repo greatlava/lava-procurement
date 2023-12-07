@@ -21,4 +21,9 @@ public class ServiceNameConstants
      * 文件服务的serviceid
      */
     public static final String FILE_SERVICE = "ruoyi-file";
+
+    /**
+     * 采购计划服务  生产者nacos内注册应用名
+     */
+    public static final String PPM_SERVICE ="hh-ppm";
 }

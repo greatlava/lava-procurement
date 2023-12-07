@@ -161,7 +161,7 @@
           :total="total1"
           :page.sync="contract.pageNum"
           :limit.sync="contract.pageSize"
-          @pagination="contractData"
+          @pagination="innerShow"
         />
       </el-dialog>
 
@@ -209,7 +209,7 @@ export default {
     return {
       contract: {
         pageNum: 1,
-        pageSize: 5
+        pageSize: 10
       },
       //合同总数
       total1: 0,

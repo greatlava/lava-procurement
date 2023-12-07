@@ -59,4 +59,8 @@ public interface PpmProcurementPlanMapper
      * @return 结果
      */
     public int deletePpmProcurementPlanByAids(Integer[] aids);
+
+    public PpmProcurementPlan selectProcurementPlanByIdForThreeTables(Integer aid);
+
+
 }

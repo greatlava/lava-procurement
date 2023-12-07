@@ -18,15 +18,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
-        select tid, t_name, category, t_unit, shui, t_illustrate, du_code, t_notes, t_model,t_price  from ppm_device
+        select tid,
+               t_name,
+               category,
+               t_unit,
+               shui,
+               t_illustrate,
+               du_code,
+               t_notes,
+               t_model
+        from ppm_device
     </sql>
 
     <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
-        <where>  
+        <where>
+            <if test="tid != null">tid = #{tid}</if>
         </where>
     </select>
-    
+
     <select id="selectPpmDeviceByTid" parameterType="String" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         where tid = #{tid}
@@ -77,11 +87,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deletePpmDeviceByTid" parameterType="String">
-        delete from ppm_device where tid = #{tid}
+        delete
+        from ppm_device
+        where tid = #{tid}
     </delete>
 
     <delete id="deletePpmDeviceByTids" parameterType="String">
-        delete from ppm_device where tid in 
+        delete from ppm_device where tid in
         <foreach item="tid" collection="array" open="(" separator="," close=")">
             #{tid}
         </foreach>
