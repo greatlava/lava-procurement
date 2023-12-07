@@ -11,13 +11,12 @@ import org.springframework.stereotype.Service;
 
 /**
  * 【请填写功能名称】Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2023-11-22
  */
 @Service
-public class ComCodeRulesServiceImpl implements IComCodeRulesService
-{
+public class ComCodeRulesServiceImpl implements IComCodeRulesService {
     @Autowired
     private ComCodeRulesMapper comCodeRulesMapper;
 
@@ -28,8 +27,7 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 【请填写功能名称】
      */
     @Override
-    public ComCodeRules selectComCodeRulesById(Long id)
-    {
+    public ComCodeRules selectComCodeRulesById(Long id) {
         return comCodeRulesMapper.selectComCodeRulesById(id);
     }
 
@@ -40,8 +38,7 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 【请填写功能名称】
      */
     @Override
-    public List<ComCodeRules> selectComCodeRulesList(ComCodeRules comCodeRules)
-    {
+    public List<ComCodeRules> selectComCodeRulesList(ComCodeRules comCodeRules) {
         return comCodeRulesMapper.selectComCodeRulesList(comCodeRules);
     }
 
@@ -52,8 +49,7 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 结果
      */
     @Override
-    public int insertComCodeRules(ComCodeRules comCodeRules)
-    {
+    public int insertComCodeRules(ComCodeRules comCodeRules) {
         return comCodeRulesMapper.insertComCodeRules(comCodeRules);
     }
 
@@ -64,8 +60,7 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 结果
      */
     @Override
-    public int updateComCodeRules(ComCodeRules comCodeRules)
-    {
+    public int updateComCodeRules(ComCodeRules comCodeRules) {
         comCodeRules.setUpdateTime(DateUtils.getNowDate());
         return comCodeRulesMapper.updateComCodeRules(comCodeRules);
     }
@@ -77,8 +72,7 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 结果
      */
     @Override
-    public int deleteComCodeRulesByIds(Long[] ids)
-    {
+    public int deleteComCodeRulesByIds(Long[] ids) {
         return comCodeRulesMapper.deleteComCodeRulesByIds(ids);
     }
 
@@ -89,8 +83,12 @@ public class ComCodeRulesServiceImpl implements IComCodeRulesService
      * @return 结果
      */
     @Override
-    public int deleteComCodeRulesById(Long id)
-    {
+    public int deleteComCodeRulesById(Long id) {
         return comCodeRulesMapper.deleteComCodeRulesById(id);
+    }
+
+    @Override
+    public ComCodeRules selectComCodeRulesByTargetForm(String str) {
+        return comCodeRulesMapper.selectComCodeRulesByTargetForm(str);
     }
 }

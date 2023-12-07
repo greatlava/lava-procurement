@@ -1,42 +1,75 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.PpmProcurementPlanMapper">
-    
+
     <resultMap type="PpmProcurementPlan" id="PpmProcurementPlanResult">
-        <result property="aid"    column="aid"    />
-        <result property="aCode"    column="a_code"    />
-        <result property="aName"    column="a_name"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="aCreateDept"    column="a_create_dept"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="fjAnnex"    column="fj_annex"    />
-        <result property="aOpinion"    column="a_opinion"    />
-        <result property="aProjectCount"    column="a_project_count"    />
-        <result property="aBtype"    column="a_btype"    />
-        <result property="aAstate"    column="a_astate"    />
+        <result property="aid" column="aid"/>
+        <result property="aCode" column="a_code"/>
+        <result property="aName" column="a_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="aCreateDept" column="a_create_dept"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="fjAnnex" column="fj_annex"/>
+        <result property="aOpinion" column="a_opinion"/>
+        <result property="aProjectCount" column="a_project_count"/>
+        <result property="aBtype" column="a_btype"/>
+        <result property="aAstate" column="a_astate"/>
+    </resultMap>
+
+    <resultMap id="fourTableResult" type="com.hh.pms.domain.PpmProcurementPlan">
+        <id column="p_aid" property="aid"/>
+        <collection property="items" ofType="com.hh.pms.domain.PpmLineItems">
+            <id property="vid" column="vid"/>
+            <association property="ppmDevice" >
+                <id column="d_tid" property="tid"/>
+            </association>
+            <association property="ppmBudget">
+                <id property="duId" column="du_id"/>
+                <result property="duCode" column="b_code"/>
+            </association>
+        </collection>
     </resultMap>
 
     <sql id="selectPpmProcurementPlanVo">
-        select aid, a_code, a_name, create_by, a_create_dept, create_time, update_by, update_time, fj_annex, a_opinion, a_project_count, a_btype, a_astate from ppm_procurement_plan
+        select aid,
+               a_code,
+               a_name,
+               create_by,
+               a_create_dept,
+               create_time,
+               update_by,
+               update_time,
+               fj_annex,
+               a_opinion,
+               a_project_count,
+               a_btype,
+               a_astate
+        from ppm_procurement_plan
     </sql>
 
     <select id="selectPpmProcurementPlanList" parameterType="PpmProcurementPlan" resultMap="PpmProcurementPlanResult">
         <include refid="selectPpmProcurementPlanVo"/>
-        <where>  
-            <if test="aCode != null  and aCode != ''"> and a_code = #{aCode}</if>
-            <if test="aBtype != null  and aBtype != ''"> and a_btype = #{aBtype}</if>
+        <where>
+            <if test="aCode != null  and aCode != ''">and a_code = #{aCode}</if>
+            <if test="aBtype != null  and aBtype != ''">and a_btype = #{aBtype}</if>
+            <if test="aAstate != null ">and a_astate = #{aAstate}</if>
         </where>
     </select>
-    
+
     <select id="selectPpmProcurementPlanByAid" parameterType="Integer" resultMap="PpmProcurementPlanResult">
         <include refid="selectPpmProcurementPlanVo"/>
         where aid = #{aid}
     </select>
-        
+
+    <select id="selectProcurementPlanByIdForThreeTables" parameterType="Integer" resultMap="fourTableResult">
+        <include refid="fourTableLinkedQuery"/>
+        where p.aid = #{aid}
+    </select>
+
     <insert id="insertPpmProcurementPlan" parameterType="PpmProcurementPlan" useGeneratedKeys="true" keyProperty="aid">
         insert into ppm_procurement_plan
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -52,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="aProjectCount != null">a_project_count,</if>
             <if test="aBtype != null">a_btype,</if>
             <if test="aAstate != null">a_astate,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="aCode != null">#{aCode},</if>
             <if test="aName != null">#{aName},</if>
@@ -66,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="aProjectCount != null">#{aProjectCount},</if>
             <if test="aBtype != null">#{aBtype},</if>
             <if test="aAstate != null">#{aAstate},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updatePpmProcurementPlan" parameterType="PpmProcurementPlan">
@@ -89,13 +122,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deletePpmProcurementPlanByAid" parameterType="Integer">
-        delete from ppm_procurement_plan where aid = #{aid}
+        delete
+        from ppm_procurement_plan
+        where aid = #{aid}
     </delete>
 
     <delete id="deletePpmProcurementPlanByAids" parameterType="String">
-        delete from ppm_procurement_plan where aid in 
+        delete from ppm_procurement_plan where aid in
         <foreach item="aid" collection="array" open="(" separator="," close=")">
             #{aid}
         </foreach>
     </delete>
+
+
+    <sql id="fourTableLinkedQuery">
+        SELECT p.aid p_aid,
+               p.a_code,
+               p.a_name,
+               p.create_by,
+               p.a_create_dept,
+               p.fj_annex,
+               p.a_astate,
+               i.*,
+               d.tid     d_tid,
+               d.t_name,
+               d.category,
+               d.t_unit,
+               d.shui,
+               d.t_illustrate,
+               d.t_notes,
+               d.t_model,
+               b.du_dept,
+               b.du_name,
+               b.du_total
+        FROM ppm_procurement_plan p
+                 inner join ppm_line_items i on p.aid = i.aid
+                 left join ppm_device d on i.tid = d.tid
+                 left join ppm_budget b on b.du_id = i.did
+    </sql>
 </mapper>

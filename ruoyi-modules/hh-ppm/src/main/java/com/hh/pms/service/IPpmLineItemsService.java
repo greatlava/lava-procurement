@@ -59,4 +59,6 @@ public interface IPpmLineItemsService
      * @return 结果
      */
     public int deletePpmLineItemsByVid(Integer vid);
+
+    public int deletePpmLineItemsByAid(Integer aid);
 }

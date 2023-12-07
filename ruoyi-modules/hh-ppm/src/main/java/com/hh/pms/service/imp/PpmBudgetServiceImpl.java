@@ -91,4 +91,9 @@ public class PpmBudgetServiceImpl implements IPpmBudgetService
     {
         return ppmBudgetMapper.deletePpmBudgetByDuId(duId);
     }
+
+    @Override
+    public List<PpmBudget> selectPpmBudgetByAid(String aid){
+        return ppmBudgetMapper.selectPpmBudgetByAid(aid);
+    }
 }

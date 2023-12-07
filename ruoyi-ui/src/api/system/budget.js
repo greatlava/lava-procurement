@@ -42,3 +42,10 @@ export function delBudget(duId) {
     method: 'delete'
   })
 }
+
+export function selectPpmBudgetByAid(aid) {
+  return request({
+    url: '/ppm/budget/BudgetBy?aid=' + aid,
+    method: 'post'
+  })
+}

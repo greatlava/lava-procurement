@@ -59,4 +59,6 @@ public interface PpmBudgetMapper
      * @return 结果
      */
     public int deletePpmBudgetByDuIds(String[] duIds);
+
+    public List<PpmBudget> selectPpmBudgetByAid(String aid);
 }

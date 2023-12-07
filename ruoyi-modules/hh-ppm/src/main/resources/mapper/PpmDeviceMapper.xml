@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.PpmDeviceMapper">
-    
+
     <resultMap type="PpmDevice" id="PpmDeviceResult">
-        <result property="tid"    column="tid"    />
-        <result property="tName"    column="t_name"    />
-        <result property="category"    column="category"    />
-        <result property="tUnit"    column="t_unit"    />
-        <result property="shui"    column="shui"    />
-        <result property="tIllustrate"    column="t_illustrate"    />
-        <result property="duCode"    column="du_code"    />
-        <result property="tNotes"    column="t_notes"    />
-        <result property="tModel"    column="t_model"    />
+        <result property="tid" column="tid"/>
+        <result property="tName" column="t_name"/>
+        <result property="category" column="category"/>
+        <result property="tUnit" column="t_unit"/>
+        <result property="shui" column="shui"/>
+        <result property="tIllustrate" column="t_illustrate"/>
+        <result property="duCode" column="du_code"/>
+        <result property="tNotes" column="t_notes"/>
+        <result property="tModel" column="t_model"/>
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
-        select tid, t_name, category, t_unit, shui, t_illustrate, du_code, t_notes, t_model from ppm_device
+        select tid,
+               t_name,
+               category,
+               t_unit,
+               shui,
+               t_illustrate,
+               du_code,
+               t_notes,
+               t_model
+        from ppm_device
     </sql>
 
     <select id="selectPpmDeviceList" parameterType="PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
-        <where>  
+        <where>
+            <if test="tid != null">tid = #{tid}</if>
         </where>
     </select>
-    
+
     <select id="selectPpmDeviceByTid" parameterType="String" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         where tid = #{tid}
     </select>
-        
+
     <insert id="insertPpmDevice" parameterType="PpmDevice">
         insert into ppm_device
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -43,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duCode != null">du_code,</if>
             <if test="tNotes != null">t_notes,</if>
             <if test="tModel != null">t_model,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tid != null">#{tid},</if>
             <if test="tName != null">#{tName},</if>
@@ -54,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="duCode != null">#{duCode},</if>
             <if test="tNotes != null">#{tNotes},</if>
             <if test="tModel != null">#{tModel},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updatePpmDevice" parameterType="PpmDevice">
@@ -73,11 +83,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deletePpmDeviceByTid" parameterType="String">
-        delete from ppm_device where tid = #{tid}
+        delete
+        from ppm_device
+        where tid = #{tid}
     </delete>
 
     <delete id="deletePpmDeviceByTids" parameterType="String">
-        delete from ppm_device where tid in 
+        delete from ppm_device where tid in
         <foreach item="tid" collection="array" open="(" separator="," close=")">
             #{tid}
         </foreach>

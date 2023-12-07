@@ -30,7 +30,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  * @date 2023-11-19
  */
 @RestController
-@RequestMapping("/procurePlan")
+@RequestMapping("/framework")
 public class PpmFramePlanController extends BaseController
 {
     @Autowired
