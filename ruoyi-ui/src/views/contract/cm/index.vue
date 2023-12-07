@@ -43,8 +43,7 @@
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建合同-->
-                <!--                <router-link :to="'add?sid='+scope.row.sid">-->
-                <router-link :to="'add?sid='+1">
+                <router-link :to="'add?sid='+scope.row.sid">
                   <el-button
                     size="mini"
                     type="text"
@@ -318,7 +317,6 @@ export default {
     getList1() {
       this.loading = true
       listTender(this.queryParams1).then(response => {
-        console.log(response)
         this.contractList1 = response.rows
         this.total1 = response.total
         this.loading = false

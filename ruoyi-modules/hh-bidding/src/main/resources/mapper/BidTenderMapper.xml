@@ -103,6 +103,12 @@
         where eid is null
     </select>
 
+    <select id="selectTenderBySid" resultType="com.hh.pms.domain.BidTender">
+        select s_code, s_name, s_way, s_type
+        from bid_tender
+        WHERE sid = #{sid}
+    </select>
+
     <insert id="insertBidTender" parameterType="com.hh.pms.domain.BidTender">
         insert into bid_tender
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -27,7 +27,7 @@ public class BsPayment extends BaseEntity {
      * 款项内容
      */
     @Excel(name = "款项内容")
-    private String payContent;
+    private Long payContent;
 
     /**
      * 付款日期
@@ -88,11 +88,11 @@ public class BsPayment extends BaseEntity {
         return eid;
     }
 
-    public void setPayContent(String payContent) {
+    public void setPayContent(Long payContent) {
         this.payContent = payContent;
     }
 
-    public String getPayContent() {
+    public Long getPayContent() {
         return payContent;
     }
 
