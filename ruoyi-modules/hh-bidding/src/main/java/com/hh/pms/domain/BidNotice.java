@@ -68,6 +68,18 @@ public class BidNotice extends BaseEntity
     @Excel(name = "内容")
     private String fjRemark;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "公示时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date uUpdateTime;
+    public void setuUpdateTime(Date uUpdateTime)
+    {
+        this.uUpdateTime = uUpdateTime;
+    }
+
+    public Date getuUpdateTime()
+    {
+        return uUpdateTime;
+    }
     public void setUid(Long uid) 
     {
         this.uid = uid;

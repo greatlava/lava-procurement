@@ -171,7 +171,7 @@ export default {
     },
     /** 查询招标项目列表 */
     getList() {
-      this.loading = false;
+      this.loading = true;
       this.tenderList=[];
       listTender(this.queryParams).then(response => {
         response.rows.forEach((e,i)=>{

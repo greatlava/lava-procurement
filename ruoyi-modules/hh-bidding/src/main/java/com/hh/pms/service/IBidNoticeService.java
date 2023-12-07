@@ -60,4 +60,9 @@ public interface IBidNoticeService
     public int deleteBidNoticeByUid(Long uid);
 
     public List<BidNotice> findAllByEndTime();
+
+
+    public List<BidNotice> findStatus(Long sid);
+
+    public int deleteYfb(Long sid);
 }

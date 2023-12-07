@@ -42,6 +42,7 @@ service.interceptors.request.use(config => {
       data: typeof config.data === 'object' ? JSON.stringify(config.data) : config.data,
       time: new Date().getTime()
     }
+
     const requestSize = Object.keys(JSON.stringify(requestObj)).length; // 请求数据大小
     const limitSize = 5 * 1024 * 1024; // 限制存放数据5M
     if (requestSize >= limitSize) {
@@ -65,6 +66,7 @@ service.interceptors.request.use(config => {
       }
     }
   }
+
   return config
 }, error => {
     console.log(error)

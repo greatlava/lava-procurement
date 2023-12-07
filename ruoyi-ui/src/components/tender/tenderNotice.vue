@@ -16,7 +16,7 @@
     <el-table v-loading="loading" :data="noticeList">
       <el-table-column label="序号" align="center" prop="orderNum" />
       <el-table-column label="公告标题" align="center" prop="uTitle" />
-      <el-table-column label="关联项目" align="center" prop="uProject" />
+      <el-table-column label="关联项目" align="center" prop="uProject"/>
       <el-table-column label="审批状态" align="center" prop="fjStatus">
       <template slot-scope="scope">
         <el-tag type="info"  v-show="scope.row.fjStatus === 1">
@@ -35,7 +35,12 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-
+          <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
+                     size="mini"
+                     type="text"
+                     icon="el-icon-s-check"
+                     @click="handleUpdateState2(scope.row,1)"
+          >审核</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
@@ -73,12 +78,12 @@
 
     <!-- 添加或修改招标公告对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="1080px" append-to-body>
-      <el-form ref="form"  :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form"  :model="form" :rules="rules" label-width="120px"  v-loading="loading">
         <el-form-item label="公告标题" prop="uTitle">
           <el-input v-model="form.uTitle" placeholder="请输入公告标题" />
         </el-form-item>
         <el-form-item label="关联项目" prop="uProject" class="form-input">
-          <el-input v-model="form.uProject" placeholder="请输入关联项目"/>
+          <el-input v-model="form.uProject" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="项目资金" prop="uMoney" class="form-input">
           <el-input v-model="form.uMoney" placeholder="请输入项目资金"/>
@@ -122,7 +127,9 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="success" v-show="showPass" @click="handleUpdateState2(form,2)">通 过</el-button>
+        <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)">驳 回</el-button>
+        <el-button type="primary" v-show="showBtn" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -130,7 +137,8 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice } from "@/api/system/tenderNotice";
+import { listNotice, getNotice, delNotice, addNotice, updateNotice,findStatus,delYfb} from "@/api/system/tenderNotice";
+import { getTender } from '@/api/system/tender'
 
 export default {
   dicts:["bid_notice_state"],
@@ -138,7 +146,7 @@ export default {
   data() {
     return {
       // 遮罩层
-      loading: true,
+      loading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -155,6 +163,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      showBtn:true,
+      showPass:false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -174,9 +184,31 @@ export default {
         fjRemark: null
       },
       // 表单参数
-      form: {},
+      form: {
+      },
       // 表单校验
       rules: {
+        uTitle: [
+          { required: true, message: "公告标题不能为空", trigger: "blur" }
+        ],
+        uMoney: [
+          { required: true, message: "项目资金不能为空", trigger: "blur" }
+        ],
+        uGetTime: [
+          { required: true, message: "标注获取时间不能为空", trigger: "blur" }
+        ],
+        uAcceptTime: [
+          { required: true, message: "接受答疑时间不能为空", trigger: "blur" }
+        ],
+        uEndTime: [
+          { required: true, message: "投标截止时间不能为空", trigger: "blur" }
+        ],
+        uKaiTime: [
+          { required: true, message: "开标时间不能为空", trigger: "blur" }
+        ],
+        fjRemark: [
+          { required: true, message: "内容不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -229,12 +261,23 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
+      getTender(this.queryParams.sid).then(res=>{
+          this.form.uProject =res.data.sName;
+      });
       this.open = true;
+      this.loading = true;
       this.title = "添加招标公告";
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
     },
     /** 修改按钮操作 */
     handleUpdate(row,num) {
       this.reset();
+      if (row.fjStatus === 2){
+        this.showBtn=false;
+        this.showPass=true;
+      }
       const uid = row.uid || this.ids
       getNotice(uid).then(response => {
         this.form = response.data;
@@ -258,31 +301,91 @@ export default {
     },
     /**发布按钮操作*/
     handleUpdateState(row){
-      row.fjStatus = 5;//改变状态
-      this.$modal.confirm('是否确认发布招标公告编号为"' + row.uid + '"的数据项？').then(function() {
-        return updateNotice(row);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("发布成功");
-      }).catch(() => {});
+       //判定是否已存在已发布公告
+      findStatus(this.$route.query.sid).then(res=>{
+        if(res.data.length === 0){
+          //进行发布  无发布的公告
+          this.$modal.confirm('是否确认发布编号为"' + row.uid + '"的招标公告？').then(function() {
+            row.fjStatus = 5;//改变状态
+            return updateNotice(row);
+          }).then(() => {
+            this.getList();
+            this.$modal.msgSuccess("公告发布成功");
+          }).catch(() => {});
+        }else{
+          //存在发布公告
+          this.$modal.confirm('察觉到当前项目已存在发布的公告，是否替换为当前公告？')
+            .then(() => {
+              return delYfb(this.$route.query.sid);//删除已发布公告
+            })
+            .then(() => {
+              row.fjStatus = 5; // 改变状态
+              return updateNotice(row);
+            })
+            .then(() => {
+              this.getList();
+              this.$modal.msgSuccess("公告发布成功");
+            })
+            .catch(() => {
+              // 在这里处理错误
+              console.error("An error occurred");
+            });
+        }
+      });
+    },
+    /**审核按钮操作*/
+    handleUpdateState2(row,num){
+      console.log(row,"row.....");
+      if(num === 1){
+        this.$modal.confirm('是否确认审核编号为"' + row.uid + '"的招标公告？').then(function() {
+          row.fjStatus = 2;//改变状态
+          return updateNotice(row);
+        }).then(() => {
+          // this.getList();
+          this.$modal.msgSuccess("公告处于审核中状态");
+        }).catch(() => {});
+      }else if(num === 2){
+        this.$modal.confirm('是否确认通过编号为"' + row.uid + '"的招标公告？').then(function() {
+          row.fjStatus = 3;//改变状态 通过
+          return updateNotice(row);
+        }).then(() => {
+          this.open=false;
+          this.getList();
+          this.$modal.msgSuccess("审核通过");
+        }).catch(() => {});
+      }else if(num === 3){
+        this.$modal.confirm('是否确认驳回编号为"' + row.uid + '"的招标公告？').then(function() {
+          row.fjStatus = 4;//改变状态 驳回
+          return updateNotice(row);
+        }).then(() => {
+          this.open=false;
+          this.getList();
+          this.$modal.msgError("驳回公告");
+        }).catch(() => {});
+      }
+
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.uid != null) {
-            updateNotice(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            this.form.sid = this.$route.query.sid;//确定对应招标项目
-            addNotice(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+        if(this.form.fjStatus === 5){
+          this.open = false;
+        }else{
+          if (valid) {
+            if (this.form.uid != null) {
+              updateNotice(this.form).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              this.form.sid = this.$route.query.sid;//确定对应招标项目
+              addNotice(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
           }
         }
       });

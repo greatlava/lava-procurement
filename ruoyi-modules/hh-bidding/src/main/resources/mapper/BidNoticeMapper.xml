@@ -17,6 +17,7 @@
         <result property="fjAnnex" column="fj_annex"/>
         <result property="fjStatus" column="fj_status"/>
         <result property="fjRemark" column="fj_remark"/>
+        <result property="uUpdateTime" column="u_updateTime"/>
     </resultMap>
 
     <sql id="selectBidNoticeVo">
@@ -31,9 +32,11 @@
                u_kai_time,
                fj_annex,
                fj_status,
-               fj_remark
+               fj_remark,
+               u_updateTime
         from bid_notice
     </sql>
+
 
     <select id="selectBidNoticeList" parameterType="com.hh.pms.domain.BidNotice" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
@@ -44,12 +47,14 @@
             <if test="uMoney != null ">and u_money = #{uMoney}</if>
             <if test="uGetTime != null ">and u_get_time = #{uGetTime}</if>
             <if test="uAcceptTime != null ">and u_accept_time = #{uAcceptTime}</if>
-            <if test="uEndTime != null ">and u_end_time = #{uEndTime}</if>
+            <if test="uEndTime != null ">and u_end_time >= now() and u_end_time >= u_updateTime</if>
             <if test="uKaiTime != null ">and u_kai_time = #{uKaiTime}</if>
             <if test="fjAnnex != null ">and fj_annex = #{fjAnnex}</if>
             <if test="fjStatus != null ">and fj_status = #{fjStatus}</if>
             <if test="fjRemark != null  and fjRemark != ''">and fj_remark = #{fjRemark}</if>
+            <if test="uUpdateTime != null">and u_updateTime >= now()</if>
         </where>
+        order by u_updateTime desc
     </select>
 
     <select id="selectBidNoticeByUid" parameterType="Long" resultMap="BidNoticeResult">
@@ -59,7 +64,11 @@
     <select id="findAllByEndTime" resultType="com.hh.pms.domain.BidNotice">
         select *
         from bid_notice
-        WHERE now() >= u_end_time
+        WHERE  fj_status = 5 and now() >= u_end_time
+    </select>
+
+    <select id="findStatus" resultType="com.hh.pms.domain.BidNotice">
+        select * from bid_notice where fj_status=5 and sid=#{sid}
     </select>
 
     <insert id="insertBidNotice" parameterType="com.hh.pms.domain.BidNotice">
@@ -108,6 +117,7 @@
             <if test="fjAnnex != null">fj_annex = #{fjAnnex},</if>
             <if test="fjStatus != null">fj_status = #{fjStatus},</if>
             <if test="fjRemark != null">fj_remark = #{fjRemark},</if>
+            <if test="fjStatus == 5">u_updateTime = NOW()</if>
         </trim>
         where uid = #{uid}
     </update>
@@ -117,6 +127,11 @@
         from bid_notice
         where uid = #{uid}
     </delete>
+    <delete id="deleteYfb" parameterType="Long">
+        delete
+        from bid_notice
+        where fj_status=5 and sid=#{sid}
+    </delete>
 
     <delete id="deleteBidNoticeByUids" parameterType="String">
         delete from bid_notice where uid in
@@ -124,5 +139,9 @@
             #{uid}
         </foreach>
     </delete>
+
+    <select id="findTwoInfo">
+        select * from bid_notice n inner join bid_tender t on n.sid = t.sid where n.uid=#{uid}
+    </select>
 
 </mapper>
