@@ -26,4 +26,4 @@ spring:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
   web:
     resources:
-      static-locations: classpath:/static/photoFile/, classpath:/static/otherFile/
+      static-locations: classpath:/static/

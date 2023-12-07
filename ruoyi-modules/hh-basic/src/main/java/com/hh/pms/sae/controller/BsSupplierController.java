@@ -1,17 +1,19 @@
 package com.hh.pms.sae.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.system.api.RemoteFileService;
+import com.ruoyi.system.api.domain.SysFile;
+import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -21,6 +23,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 供应商Controller
@@ -33,6 +36,23 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 public class BsSupplierController extends BaseController {
     @Autowired
     private IBsSupplierService bsSupplierService;
+
+    @Autowired
+    private RemoteFileService remoteFileService;
+    @PostMapping("/upload1")
+    public AjaxResult upload1(MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            LoginUser loginUser = SecurityUtils.getLoginUser();
+            R<SysFile> fileResult = remoteFileService.upload(file);
+            System.out.println("fileResult:" + fileResult);
+            System.out.println("文件上传成功！。。。。");
+            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
+                return AjaxResult.error("文件服务异常，请联系管理员");
+            }
+            return AjaxResult.success(fileResult);
+        }
+        return AjaxResult.error("上传文件异常，请联系管理员");
+    }
 
     /**
      * 查询合格供应商列表

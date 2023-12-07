@@ -10,7 +10,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 供应商对象 bs_supplier
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
@@ -477,6 +477,8 @@ public class BsSupplier extends BaseEntity {
                 .append("fOpinion", getfOpinion())
                 .append("fState", getfState())
                 .append("fClassify", getfClassify())
+                .append("hLoginAccount", gethLoginAccount())
+                .append("hPassword", gethPassword())
                 .toString();
     }
 }
