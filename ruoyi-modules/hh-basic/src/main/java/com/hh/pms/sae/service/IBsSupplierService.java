@@ -82,4 +82,13 @@ public interface IBsSupplierService {
      * @return 结果
      */
     public int deleteBsSupplierByHid(Long hid);
+
+    /**
+     * 登录
+     *
+     * @param hLoginAccount
+     * @param hPassword
+     * @return
+     */
+    public BsSupplier loginSupplier(String hLoginAccount, String hPassword);
 }

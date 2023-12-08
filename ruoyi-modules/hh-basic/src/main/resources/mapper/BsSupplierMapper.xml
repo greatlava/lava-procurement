@@ -323,4 +323,10 @@
             #{hid}
         </foreach>
     </delete>
+
+    <select id="loginSupplier" resultMap="BsSupplierResult">
+        <include refid="selectBsSupplierVo"/>
+        where h_loginaccount = #{hLoginAccount}
+        and h_password = #{hPassword}
+    </select>
 </mapper>

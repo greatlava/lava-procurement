@@ -71,6 +71,19 @@ public class BidNotice extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "公示时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date uUpdateTime;
+
+    private BidTender bidTender;//招标项目
+
+    public void setBidTender(BidTender bidTender)
+    {
+        this.bidTender = bidTender;
+    }
+
+    public BidTender getBidTender()
+    {
+        return bidTender;
+    }
+
     public void setuUpdateTime(Date uUpdateTime)
     {
         this.uUpdateTime = uUpdateTime;

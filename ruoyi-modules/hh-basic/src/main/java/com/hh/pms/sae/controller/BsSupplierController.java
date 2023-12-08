@@ -1,11 +1,19 @@
 package com.hh.pms.sae.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hh.pms.sae.utils.CodeUtils;
+import com.hh.pms.sae.utils.TokenUtil;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
@@ -13,6 +21,8 @@ import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.domain.SysFile;
 import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -53,6 +63,48 @@ public class BsSupplierController extends BaseController {
             return AjaxResult.success(fileResult);
         }
         return AjaxResult.error("上传文件异常，请联系管理员");
+    }
+
+    /**
+     * 生成验证码图片
+     *
+     * @param request
+     * @param res
+     * @throws IOException
+     */
+    @GetMapping("/code")
+    public AjaxResult code(HttpServletRequest request,
+                           HttpServletResponse res) throws IOException {
+        CodeUtils code = new CodeUtils();
+        BufferedImage image = code.getImage();
+        String text = code.getText();
+        HttpSession session = request.getSession(true);
+        session.setAttribute("code", text);
+        CodeUtils.output(image, res.getOutputStream());
+        return AjaxResult.success(res);
+    }
+
+    @PostMapping("/loginSupplier")
+    public AjaxResult login(String userName, String pass, String code, HttpServletRequest request,
+                            HttpServletResponse response) {
+        System.out.println("userName" + userName + "\t" + pass);
+        BsSupplier bsSupplier = bsSupplierService.loginSupplier(userName, pass);
+        JSONObject jsonObject = new JSONObject();
+
+        //判断code是否正确
+        if (request.getSession(true).getAttribute("code") == null || !code.toUpperCase().equals(request.getSession(true).getAttribute("code").toString().toUpperCase())) {
+            return AjaxResult.error("code error");
+        }
+
+        if (bsSupplier != null) {
+            String token = TokenUtil.sign(bsSupplier);
+            jsonObject.put("token", token);
+            jsonObject.put("bsSupplier", bsSupplier);
+            jsonObject.put("msg", "登录成功");
+            jsonObject.put("code", 200);
+            return AjaxResult.success(jsonObject);
+        }
+        return AjaxResult.error("用户名或者密码错误");
     }
 
     /**

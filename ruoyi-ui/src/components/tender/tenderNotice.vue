@@ -278,9 +278,12 @@ export default {
         this.showBtn=false;
         this.showPass=true;
       }
-      const uid = row.uid || this.ids
+      const uid = row.uid || this.ids;
       getNotice(uid).then(response => {
         this.form = response.data;
+        getTender(this.queryParams.sid).then(res=>{
+          this.form.uProject =res.data.sName;
+        });
         this.open = true;
         if (num === 1){
           this.title = "修改招标公告";

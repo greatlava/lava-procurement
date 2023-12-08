@@ -106,7 +106,7 @@ public class BidNoticeController extends BaseController
 
     //判定是否已存在已发布状态
     @PostMapping("/findStatus")
-    public AjaxResult findStatus(@Validated @RequestBody  Long sid) {
+    public AjaxResult findStatus(@Validated @RequestBody Long sid) {
         return AjaxResult.success(bidNoticeService.findStatus(sid));
     }
 
@@ -118,5 +118,11 @@ public class BidNoticeController extends BaseController
     public AjaxResult remove123(@PathVariable Long sid)
     {
         return toAjax(bidNoticeService.deleteYfb(sid));
+    }
+
+    //两表联查 招标项目的招标公告信息
+    @GetMapping(value = "/findTwoInfo/{uid}")
+    public AjaxResult findTwoInfo(@PathVariable Long uid) {
+        return AjaxResult.success(bidNoticeService.findTwoInfo(uid));
     }
 }
