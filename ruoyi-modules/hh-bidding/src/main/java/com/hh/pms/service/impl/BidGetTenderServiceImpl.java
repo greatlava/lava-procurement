@@ -92,4 +92,5 @@ public class BidGetTenderServiceImpl implements IBidGetTenderService
     {
         return bidGetTenderMapper.deleteBidGetTenderByYid(yid);
     }
+
 }

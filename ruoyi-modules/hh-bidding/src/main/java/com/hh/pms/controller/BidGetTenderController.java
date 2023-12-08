@@ -102,4 +102,6 @@ public class BidGetTenderController extends BaseController
     {
         return toAjax(bidGetTenderService.deleteBidGetTenderByYids(yids));
     }
+
+
 }

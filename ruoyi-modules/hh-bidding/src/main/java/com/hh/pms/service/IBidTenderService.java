@@ -1,6 +1,8 @@
 package com.hh.pms.service;
 
 import java.util.List;
+
+import com.hh.pms.domain.BidGetTender;
 import com.hh.pms.domain.BidTender;
 
 /**
@@ -58,4 +60,7 @@ public interface IBidTenderService
      * @return 结果
      */
     public int deleteBidTenderBySid(Long sid);
+
+    //获取未签订合同的招标项目
+    public List<BidTender> selectNoEidTenderList(BidTender bidTender);
 }

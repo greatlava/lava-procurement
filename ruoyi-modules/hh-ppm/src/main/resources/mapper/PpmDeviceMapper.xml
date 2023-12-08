@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.PpmDeviceMapper">
-
-    <resultMap type="PpmDevice" id="PpmDeviceResult">
-        <result property="tid" column="tid"/>
-        <result property="tName" column="t_name"/>
-        <result property="category" column="category"/>
-        <result property="tUnit" column="t_unit"/>
-        <result property="shui" column="shui"/>
-        <result property="tIllustrate" column="t_illustrate"/>
-        <result property="duCode" column="du_code"/>
-        <result property="tNotes" column="t_notes"/>
-        <result property="tModel" column="t_model"/>
+    
+    <resultMap type="com.hh.pms.domain.PpmDevice" id="PpmDeviceResult">
+        <result property="tid"    column="tid"    />
+        <result property="tName"    column="t_name"    />
+        <result property="category"    column="category"    />
+        <result property="tUnit"    column="t_unit"    />
+        <result property="shui"    column="shui"    />
+        <result property="tIllustrate"    column="t_illustrate"    />
+        <result property="duCode"    column="du_code"    />
+        <result property="tNotes"    column="t_notes"    />
+        <result property="tModel"    column="t_model"    />
+        <result property="tPrice"    column="t_price"    />
     </resultMap>
 
     <sql id="selectPpmDeviceVo">
@@ -29,7 +30,7 @@
         from ppm_device
     </sql>
 
-    <select id="selectPpmDeviceList" parameterType="PpmDevice" resultMap="PpmDeviceResult">
+    <select id="selectPpmDeviceList" parameterType="com.hh.pms.domain.PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         <where>
             <if test="tid != null">tid = #{tid}</if>
@@ -40,8 +41,8 @@
         <include refid="selectPpmDeviceVo"/>
         where tid = #{tid}
     </select>
-
-    <insert id="insertPpmDevice" parameterType="PpmDevice">
+        
+    <insert id="insertPpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
         insert into ppm_device
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tid != null">tid,</if>
@@ -53,7 +54,8 @@
             <if test="duCode != null">du_code,</if>
             <if test="tNotes != null">t_notes,</if>
             <if test="tModel != null">t_model,</if>
-        </trim>
+            <if test="tPrice != null">t_price,</if>
+         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tid != null">#{tid},</if>
             <if test="tName != null">#{tName},</if>
@@ -64,10 +66,11 @@
             <if test="duCode != null">#{duCode},</if>
             <if test="tNotes != null">#{tNotes},</if>
             <if test="tModel != null">#{tModel},</if>
-        </trim>
+            <if test="tPrice != null">#{tPrice},</if>
+         </trim>
     </insert>
 
-    <update id="updatePpmDevice" parameterType="PpmDevice">
+    <update id="updatePpmDevice" parameterType="com.hh.pms.domain.PpmDevice">
         update ppm_device
         <trim prefix="SET" suffixOverrides=",">
             <if test="tName != null">t_name = #{tName},</if>
@@ -78,6 +81,7 @@
             <if test="duCode != null">du_code = #{duCode},</if>
             <if test="tNotes != null">t_notes = #{tNotes},</if>
             <if test="tModel != null">t_model = #{tModel},</if>
+            <if test="tPrice != null">t_price = #{tPrice},</if>
         </trim>
         where tid = #{tid}
     </update>
