@@ -178,17 +178,18 @@
             <el-row>
               <el-button @click="cancel">返回</el-button>
             </el-row>
-            <el-upload ref="upload" class="upload-demo" :limit="2" accept=".doc, .docx,.rar,.txt" multiple
-                       :action="upload.url"
-                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"
-                       :on-progress="handleFileUploadProgress"
-                       :on-success="handleFileSuccess" :auto-upload="false">
-              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
-                         @click="submitUpload">上传到服务器
-              </el-button>
-              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx,.rar,.txt文件，且不超过5MB</div>
-            </el-upload>
+<!--            <el-upload ref="upload" class="upload-demo" :limit="2" accept=".doc, .docx, .rar, .txt, .png, .jpg"-->
+            <!--                       multiple-->
+            <!--                       :action="upload.url"-->
+            <!--                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"-->
+            <!--                       :on-progress="handleFileUploadProgress"-->
+            <!--                       :on-success="handleFileSuccess" :auto-upload="false">-->
+            <!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+            <!--              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
+            <!--                         @click="submitUpload">上传到服务器-->
+            <!--              </el-button>-->
+            <!--              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>-->
+            <!--            </el-upload>-->
           </div>
         </el-tab-pane>
         <el-tab-pane label="业务经办人信息" name="second">
@@ -535,7 +536,7 @@ export default {
           Authorization: "Bearer " + getToken()
         },
         // 上传的地址
-        url: "http://localhost:9210/basic/supplier/upload1",
+        url: process.env.VUE_APP_BASE_API + "/basic/supplier/upload1",
       }
     }
   },
@@ -630,11 +631,11 @@ export default {
       this.fState = response.data.fState
       this.hAccount = response.data.hAccount
       this.fStatus = response.data.fStatus
-      this.hCopies = `http://192.168.162.1:9210/` + response.data.hCopies
-      this.hCopiesList.push(`http://192.168.162.1:9210/` + response.data.hCopies)
-      this.idCardCopy = `http://192.168.162.1:9210/` + response.data.idCardCopies[0]
+      this.hCopies = `http://192.168.162.1:9610/` + response.data.hCopies
+      this.hCopiesList.push(`http://192.168.162.1:9610/` + response.data.hCopies)
+      this.idCardCopy = `http://192.168.162.1:9610/` + response.data.idCardCopies[0]
       for (let i = 0; i < response.data.idCardCopies.length; i++) {
-        this.idCardCopyList.push(`http://192.168.162.1:9210/` + response.data.idCardCopies[i])
+        this.idCardCopyList.push(`http://192.168.162.1:9610/` + response.data.idCardCopies[i])
       }
     },
     query() {
@@ -686,6 +687,7 @@ export default {
       this.loading = false
     },
 
+
     // 文件提交处理
     submitUpload() {
       this.$refs.upload.submit();
@@ -696,13 +698,22 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      alert(response.url)
+      console.log(response)
       this.upload.isUploading = false;
       //this.form.filePath = response.url;
-      //this.msgSuccess(response.msg);
+      this.$message.success(response.msg);
+
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    beforeUpload(file) {
+      const isLt5M = file.size / 1024 / 1024 < 5;
+
+      if (!isLt5M) {
+        this.$message.error('文件大小不能超过5MB');
+      }
+      return isLt5M;
     }
   }
 }
