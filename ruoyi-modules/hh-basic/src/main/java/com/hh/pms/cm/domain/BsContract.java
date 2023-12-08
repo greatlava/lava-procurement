@@ -29,12 +29,6 @@ public class BsContract extends BaseEntity {
      */
     private Long eid;
 
-    /**
-     * 项目编号
-     */
-    @Excel(name = "项目编号")
-    private String eXcode;
-
     /** 签署执行状态ID */
     @Excel(name = "签署执行状态ID")
     private Long gnId;
@@ -136,15 +130,7 @@ public class BsContract extends BaseEntity {
     {
         return hid;
     }
-    public void seteXcode(String eXcode)
-    {
-        this.eXcode = eXcode;
-    }
 
-    public String geteXcode()
-    {
-        return eXcode;
-    }
     public void setGnId(Long gnId)
     {
         this.gnId = gnId;
@@ -286,7 +272,6 @@ public class BsContract extends BaseEntity {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("eid", getEid())
                 .append("hid", getHid())
-                .append("eXcode", geteXcode())
                 .append("gnId", getGnId())
                 .append("eHcode", geteHcode())
                 .append("eHname", geteHname())

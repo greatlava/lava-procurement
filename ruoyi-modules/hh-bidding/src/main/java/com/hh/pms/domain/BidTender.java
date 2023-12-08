@@ -155,6 +155,11 @@ public class BidTender extends BaseEntity {
     @Excel(name = "范围截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rangeEndTime;
 
+    /**
+     * 合同ID
+     */
+    @Excel(name = "合同ID")
+    private Long eid;
 
     public void setSid(Long sid) {
         this.sid = sid;
@@ -308,7 +313,6 @@ public class BidTender extends BaseEntity {
         return sDeadline;
     }
 
-
     public void setCreatetime(Date CreateTime) {
         this.createTime = createTime;
     }
@@ -331,6 +335,14 @@ public class BidTender extends BaseEntity {
 
     public Date getRangeEndTime() {
         return rangeEndTime;
+    }
+
+    public void setEid(Long eid) {
+        this.eid = eid;
+    }
+
+    public Long getEid() {
+        return eid;
     }
 
     @Override
@@ -359,6 +371,7 @@ public class BidTender extends BaseEntity {
                 .append("sEndTime", getsEndTime())
                 .append("sProjectState", getsProjectState())
                 .append("sDeadline", getsDeadline())
+                .append("eid", getEid())
                 .toString();
     }
 }

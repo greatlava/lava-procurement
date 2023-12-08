@@ -3,6 +3,8 @@ package com.hh.pms.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.hh.pms.domain.BidGetTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +26,13 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 
 /**
  * 招标项目Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/tender")
-public class BidTenderController extends BaseController
-{
+public class BidTenderController extends BaseController {
     @Autowired
     private IBidTenderService bidTenderService;
 
@@ -40,8 +41,7 @@ public class BidTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:list")
     @GetMapping("/list")
-    public TableDataInfo list(BidTender bidTender)
-    {
+    public TableDataInfo list(BidTender bidTender) {
         startPage();
         List<BidTender> list = bidTenderService.selectBidTenderList(bidTender);
         return getDataTable(list);
@@ -53,8 +53,7 @@ public class BidTenderController extends BaseController
     @RequiresPermissions("system:tender:export")
     @Log(title = "招标项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BidTender bidTender)
-    {
+    public void export(HttpServletResponse response, BidTender bidTender) {
         List<BidTender> list = bidTenderService.selectBidTenderList(bidTender);
         ExcelUtil<BidTender> util = new ExcelUtil<BidTender>(BidTender.class);
         util.exportExcel(response, list, "招标项目数据");
@@ -65,8 +64,7 @@ public class BidTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:query")
     @GetMapping(value = "/{sid}")
-    public AjaxResult getInfo(@PathVariable("sid") Long sid)
-    {
+    public AjaxResult getInfo(@PathVariable("sid") Long sid) {
         return success(bidTenderService.selectBidTenderBySid(sid));
     }
 
@@ -76,8 +74,7 @@ public class BidTenderController extends BaseController
     @RequiresPermissions("system:tender:add")
     @Log(title = "招标项目", businessType = BusinessType.INSERT)
     @PostMapping("addTender")
-    public AjaxResult add(@RequestBody BidTender bidTender)
-    {
+    public AjaxResult add(@RequestBody BidTender bidTender) {
         return toAjax(bidTenderService.insertBidTender(bidTender));
     }
 
@@ -87,8 +84,7 @@ public class BidTenderController extends BaseController
     @RequiresPermissions("system:tender:edit")
     @Log(title = "招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BidTender bidTender)
-    {
+    public AjaxResult edit(@RequestBody BidTender bidTender) {
         return toAjax(bidTenderService.updateBidTender(bidTender));
     }
 
@@ -97,9 +93,19 @@ public class BidTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:remove")
     @Log(title = "招标项目", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{sids}")
-    public AjaxResult remove(@PathVariable Long[] sids)
-    {
+    @DeleteMapping("/{sids}")
+    public AjaxResult remove(@PathVariable Long[] sids) {
         return toAjax(bidTenderService.deleteBidTenderBySids(sids));
+    }
+
+    /**
+     * 获取没有合同的项目
+     */
+    @GetMapping("/NoEidTenderList")
+   @RequiresPermissions("system:tender:list")
+    public TableDataInfo noContract(BidTender bidTender) {
+        startPage();
+        List<BidTender> list = bidTenderService.selectNoEidTenderList(bidTender);
+        return getDataTable(list);
     }
 }

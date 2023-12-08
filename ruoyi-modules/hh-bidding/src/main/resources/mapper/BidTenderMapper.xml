@@ -1,63 +1,89 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.BidTenderMapper">
 
     <resultMap type="com.hh.pms.domain.BidTender" id="BidTenderResult">
-        <result property="sid"    column="sid"    />
-        <result property="xyId"    column="xy_id"    />
-        <result property="sCode"    column="s_code"    />
-        <result property="sName"    column="s_name"    />
-        <result property="sWay"    column="s_way"    />
-        <result property="sLeader"    column="s_leader"    />
-        <result property="sMust"    column="s_must"    />
-        <result property="sSway"    column="s_sway"    />
-        <result property="sType"    column="s_type"    />
-        <result property="sBudget"    column="s_budget"    />
-        <result property="sUnit"    column="s_unit"    />
-        <result property="sPerson"    column="s_person"    />
-        <result property="sPhone"    column="s_phone"    />
-        <result property="email"    column="email"    />
-        <result property="sAddress"    column="s_address"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="sStartTime"    column="s_start_time"    />
-        <result property="sEndTime"    column="s_end_time"    />
-        <result property="sProjectState"    column="s_project_state"    />
-        <result property="sDeadline"    column="s_deadline"    />
-        <result property="createTime"    column="create_time"    />
-
+        <result property="sid" column="sid"/>
+        <result property="xyId" column="xy_id"/>
+        <result property="sCode" column="s_code"/>
+        <result property="sName" column="s_name"/>
+        <result property="sWay" column="s_way"/>
+        <result property="sLeader" column="s_leader"/>
+        <result property="sMust" column="s_must"/>
+        <result property="sSway" column="s_sway"/>
+        <result property="sType" column="s_type"/>
+        <result property="sBudget" column="s_budget"/>
+        <result property="sUnit" column="s_unit"/>
+        <result property="sPerson" column="s_person"/>
+        <result property="sPhone" column="s_phone"/>
+        <result property="email" column="email"/>
+        <result property="sAddress" column="s_address"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sStartTime" column="s_start_time"/>
+        <result property="sEndTime" column="s_end_time"/>
+        <result property="sProjectState" column="s_project_state"/>
+        <result property="sDeadline" column="s_deadline"/>
+        <result property="createTime" column="create_time"/>
+        <result property="eid" column="eid"/>
     </resultMap>
 
     <sql id="selectBidTenderVo">
-        select sid, xy_id, s_code, s_name, s_way,s_leader, s_must, s_sway, s_type, s_budget, s_unit, s_person, s_phone, email, s_address, create_by, create_time, update_by, update_time, s_start_time, s_end_time, s_project_state, s_deadline from bid_tender
+        select sid,
+               xy_id,
+               s_code,
+               s_name,
+               s_way,
+               s_leader,
+               s_must,
+               s_sway,
+               s_type,
+               s_budget,
+               s_unit,
+               s_person,
+               s_phone,
+               email,
+               s_address,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               s_start_time,
+               s_end_time,
+               s_project_state,
+               s_deadline,
+               eid
+        from bid_tender
     </sql>
 
     <select id="selectBidTenderList" parameterType="com.hh.pms.domain.BidTender" resultMap="BidTenderResult">
         <include refid="selectBidTenderVo"/>
         <where>
-            <if test="xyId != null "> and xy_id = #{xyId}</if>
-            <if test="sCode != null  and sCode != ''"> and s_code = #{sCode}</if>
-            <if test="sName != null  and sName != ''"> and s_name like concat('%', #{sName}, '%')</if>
-            <if test="sWay != null "> and s_way = #{sWay}</if>
-            <if test="sLeader != null "> and s_leader = #{sLeader}</if>
-            <if test="sMust != null "> and s_must = #{sMust}</if>
-            <if test="sSway != null "> and s_sway = #{sSway}</if>
-            <if test="sType != null "> and s_type = #{sType}</if>
-            <if test="sBudget != null "> and s_budget = #{sBudget}</if>
-            <if test="sUnit != null  and sUnit != ''"> and s_unit = #{sUnit}</if>
-            <if test="sPerson != null  and sPerson != ''"> and s_person = #{sPerson}</if>
-            <if test="sPhone != null  and sPhone != ''"> and s_phone = #{sPhone}</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
-            <if test="sAddress != null  and sAddress != ''"> and s_address = #{s
-             Address}</if>
-            <if test="sStartTime != null "> and s_start_time = #{sStartTime}</if>
-            <if test="sEndTime != null "> and s_end_time = #{sEndTime}</if>
-            <if test="sProjectState != null "> and s_project_state = #{sProjectState}</if>
-            <if test="rangeStartTime != null and rangeEndTime != null"> and create_time between #{rangeStartTime} and #{rangeEndTime}</if>
+            <if test="xyId != null ">and xy_id = #{xyId}</if>
+            <if test="sCode != null  and sCode != ''">and s_code = #{sCode}</if>
+            <if test="sName != null  and sName != ''">and s_name like concat('%', #{sName}, '%')</if>
+            <if test="sWay != null ">and s_way = #{sWay}</if>
+            <if test="sLeader != null ">and s_leader = #{sLeader}</if>
+            <if test="sMust != null ">and s_must = #{sMust}</if>
+            <if test="sSway != null ">and s_sway = #{sSway}</if>
+            <if test="sType != null ">and s_type = #{sType}</if>
+            <if test="sBudget != null ">and s_budget = #{sBudget}</if>
+            <if test="sUnit != null  and sUnit != ''">and s_unit = #{sUnit}</if>
+            <if test="sPerson != null  and sPerson != ''">and s_person = #{sPerson}</if>
+            <if test="sPhone != null  and sPhone != ''">and s_phone = #{sPhone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="sAddress != null  and sAddress != ''">and s_address = #{sAddress}</if>
+            <if test="sStartTime != null ">and s_start_time = #{sStartTime}</if>
+            <if test="sEndTime != null ">and s_end_time = #{sEndTime}</if>
+            <if test="sProjectState != null ">and s_project_state = #{sProjectState}</if>
+            <if test="rangeStartTime != null and rangeEndTime != null">and create_time between #{rangeStartTime} and
+                #{rangeEndTime}
+            </if>
+            <if test="eid != null ">and eid = #{eid}</if>
         </where>
         order by s_way
     </select>
@@ -65,6 +91,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
         <include refid="selectBidTenderVo"/>
         where sid = #{sid}
+    </select>
+
+    <!--查询未创建合同的招标项目-->
+    <select id="selectNoEidTenderList" resultMap="BidTenderResult">
+        select * from bid_tender
+        <where>
+            <if test="sCode != null  and sCode != ''">and s_code like concat('%', #{sCode}, '%')</if>
+            <if test="sName != null  and sName != ''">and s_name like concat('%', #{sName}, '%')</if>
+        </where>
+        where eid is null
+    </select>
+
+    <select id="selectTenderBySid" resultType="com.hh.pms.domain.BidTender">
+        select s_code, s_name, s_way, s_type
+        from bid_tender
+        WHERE sid = #{sid}
     </select>
 
     <insert id="insertBidTender" parameterType="com.hh.pms.domain.BidTender">
@@ -75,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null">s_code,</if>
             <if test="sName != null">s_name,</if>
             <if test="sWay != null">s_way,</if>
-            <if test="sLeader != null "> s_leader,</if>
+            <if test="sLeader != null ">s_leader,</if>
             <if test="sMust != null">s_must,</if>
             <if test="sSway != null">s_sway,</if>
             <if test="sType != null">s_type,</if>
@@ -93,7 +135,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">s_end_time,</if>
             <if test="sProjectState != null">s_project_state,</if>
             <if test="sDeadline != null">s_deadline,</if>
-         </trim>
+            <if test="eid != null">eid,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sid != null">#{sid},</if>
             <if test="xyId != null">#{xyId},</if>
@@ -118,7 +161,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">#{sEndTime},</if>
             <if test="sProjectState != null">#{sProjectState},</if>
             <if test="sDeadline != null">#{sDeadline},</if>
-         </trim>
+            <if test="eid != null">#{eid},</if>
+        </trim>
     </insert>
 
     <update id="updateBidTender" parameterType="com.hh.pms.domain.BidTender">
@@ -128,7 +172,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sCode != null">s_code = #{sCode},</if>
             <if test="sName != null">s_name = #{sName},</if>
             <if test="sWay != null">s_way = #{sWay},</if>
-            <if test="sLeader != null "> and s_leader = #{sLeader}</if>
+            <if test="sLeader != null ">and s_leader = #{sLeader}</if>
             <if test="sMust != null">s_must = #{sMust},</if>
             <if test="sSway != null">s_sway = #{sSway},</if>
             <if test="sType != null">s_type = #{sType},</if>
@@ -146,12 +190,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sEndTime != null">s_end_time = #{sEndTime},</if>
             <if test="sProjectState != null">s_project_state = #{sProjectState},</if>
             <if test="sDeadline != null">s_deadline = #{sDeadline},</if>
+            <if test="eid != null">eid = #{eid},</if>
         </trim>
         where sid = #{sid}
     </update>
 
     <delete id="deleteBidTenderBySid" parameterType="Long">
-        delete from bid_tender where sid = #{sid}
+        delete
+        from bid_tender
+        where sid = #{sid}
     </delete>
 
     <delete id="deleteBidTenderBySids" parameterType="String">

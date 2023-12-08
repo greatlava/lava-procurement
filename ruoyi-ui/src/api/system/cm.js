@@ -9,6 +9,15 @@ export function listContract(query) {
   })
 }
 
+// 查询没有合同的招标项目列表
+export function listTender(query) {
+  return request({
+    url: '/bidding/tender/NoEidTenderList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询合同详细
 export function getContract(eid) {
   return request({

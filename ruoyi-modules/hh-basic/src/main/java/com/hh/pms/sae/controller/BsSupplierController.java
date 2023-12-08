@@ -39,12 +39,13 @@ public class BsSupplierController extends BaseController {
 
     @Autowired
     private RemoteFileService remoteFileService;
+
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
             LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
-            System.out.println("fileResult:" + fileResult);
+            System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
             System.out.println("文件上传成功！。。。。");
             if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
                 return AjaxResult.error("文件服务异常，请联系管理员");
