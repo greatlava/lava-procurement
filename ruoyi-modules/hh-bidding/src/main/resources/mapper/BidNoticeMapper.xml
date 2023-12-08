@@ -140,8 +140,16 @@
         </foreach>
     </delete>
 
-    <select id="findTwoInfo">
-        select * from bid_notice n inner join bid_tender t on n.sid = t.sid where n.uid=#{uid}
+    <select id="findTwoInfo" resultMap="TwoTableResult" parameterType="Long">
+        select n.uid uid,u_title,u_project,u_money,u_get_time,u_accept_time,u_end_time,u_kai_time,fj_remark,fj_annex,fj_status,u_updateTime,t.*
+        from bid_notice n inner join bid_tender t on n.sid = t.sid where uid=#{uid}
     </select>
+
+    <resultMap id="TwoTableResult" type="com.hh.pms.domain.BidNotice">
+        <id column="uid" property="uid"/>
+            <association property="bidTender" >
+                <id column="sid" property="sid"/>
+            </association>
+    </resultMap>
 
 </mapper>

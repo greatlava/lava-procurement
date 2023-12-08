@@ -109,4 +109,9 @@ public class BidNoticeServiceImpl implements IBidNoticeService
     public int deleteYfb(Long sid) {
         return bidNoticeMapper.deleteYfb(sid);
     }
+
+    @Override
+    public BidNotice findTwoInfo(Long uid) {
+        return bidNoticeMapper.findTwoInfo(uid);
+    }
 }

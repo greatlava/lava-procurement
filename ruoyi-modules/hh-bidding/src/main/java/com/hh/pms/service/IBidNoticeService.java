@@ -65,4 +65,5 @@ public interface IBidNoticeService
     public List<BidNotice> findStatus(Long sid);
 
     public int deleteYfb(Long sid);
+    public BidNotice findTwoInfo(Long uid);
 }
