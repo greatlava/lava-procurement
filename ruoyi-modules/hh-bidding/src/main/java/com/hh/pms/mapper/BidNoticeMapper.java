@@ -51,6 +51,8 @@ public interface BidNoticeMapper
      */
     public int deleteBidNoticeByUid(Long uid);
 
+    public int deleteYfb(Long sid);
+
     /**
      * 批量删除招标公告
      * 
@@ -60,4 +62,8 @@ public interface BidNoticeMapper
     public int deleteBidNoticeByUids(Long[] uids);
 
     public List<BidNotice> findAllByEndTime();
+
+    public List<BidNotice> findStatus(Long sid);
+
+    public BidNotice findTwoInfo(Long uid);
 }

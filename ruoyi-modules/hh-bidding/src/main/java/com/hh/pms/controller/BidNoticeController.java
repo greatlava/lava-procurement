@@ -1,21 +1,10 @@
 package com.hh.pms.controller;
 
-import java.util.Arrays;
 import java.util.List;
-import java.io.IOException;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.utils.file.FileTypeUtils;
-import com.ruoyi.common.core.utils.file.MimeTypeUtils;
-import com.ruoyi.common.security.service.TokenService;
-import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.system.api.RemoteFileService;
-import com.ruoyi.system.api.domain.SysFile;
-import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
@@ -40,17 +29,11 @@ public class BidNoticeController extends BaseController
 {
     @Autowired
     private IBidNoticeService bidNoticeService;
-    @Resource
-    private RemoteFileService remoteFileService;
-
-    @Autowired
-    private TokenService tokenService;
 
 
     /**
      * 查询招标公告列表
      */
-    @RequiresPermissions("system:notice:list")
     @GetMapping("/list")
     public TableDataInfo list(BidNotice bidNotice)
     {
@@ -88,7 +71,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:add")
     @Log(title = "招标公告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BidNotice bidNotice)
+    public AjaxResult add(@Validated @RequestBody BidNotice bidNotice)
     {
         return toAjax(bidNoticeService.insertBidNotice(bidNotice));
     }
@@ -99,7 +82,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:edit")
     @Log(title = "招标公告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BidNotice bidNotice)
+    public AjaxResult edit(@Validated  @RequestBody BidNotice bidNotice)
     {
         return toAjax(bidNoticeService.updateBidNotice(bidNotice));
     }
@@ -115,8 +98,31 @@ public class BidNoticeController extends BaseController
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 
+    //终止
     @PostMapping("/find")
     public AjaxResult findAllByEndTime() {
         return AjaxResult.success(bidNoticeService.findAllByEndTime());
+    }
+
+    //判定是否已存在已发布状态
+    @PostMapping("/findStatus")
+    public AjaxResult findStatus(@Validated @RequestBody Long sid) {
+        return AjaxResult.success(bidNoticeService.findStatus(sid));
+    }
+
+    /**
+     * 删除已发布招标公告
+     */
+    @Log(title = "招标公告", businessType = BusinessType.DELETE)
+    @DeleteMapping("/sc/{sid}")
+    public AjaxResult remove123(@PathVariable Long sid)
+    {
+        return toAjax(bidNoticeService.deleteYfb(sid));
+    }
+
+    //两表联查 招标项目的招标公告信息
+    @GetMapping(value = "/findTwoInfo/{uid}")
+    public AjaxResult findTwoInfo(@PathVariable Long uid) {
+        return AjaxResult.success(bidNoticeService.findTwoInfo(uid));
     }
 }

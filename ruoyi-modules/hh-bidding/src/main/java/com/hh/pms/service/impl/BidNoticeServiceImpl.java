@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @date 2023-11-19
  */
 @Service
-public class BidNoticeServiceImpl implements IBidNoticeService 
+public class BidNoticeServiceImpl implements IBidNoticeService
 {
     @Resource
     private BidNoticeMapper bidNoticeMapper;
@@ -81,6 +81,8 @@ public class BidNoticeServiceImpl implements IBidNoticeService
         return bidNoticeMapper.deleteBidNoticeByUids(uids);
     }
 
+
+
     /**
      * 删除招标公告信息
      * 
@@ -96,5 +98,20 @@ public class BidNoticeServiceImpl implements IBidNoticeService
     @Override
     public List<BidNotice> findAllByEndTime() {
         return bidNoticeMapper.findAllByEndTime();
+    }
+
+    @Override
+    public List<BidNotice> findStatus(Long sid) {
+        return bidNoticeMapper.findStatus(sid);
+    }
+
+    @Override
+    public int deleteYfb(Long sid) {
+        return bidNoticeMapper.deleteYfb(sid);
+    }
+
+    @Override
+    public BidNotice findTwoInfo(Long uid) {
+        return bidNoticeMapper.findTwoInfo(uid);
     }
 }

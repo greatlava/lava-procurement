@@ -23,6 +23,7 @@
               <el-col :span="24">
                 <el-form-item size="medium">
                   <el-button type="primary" @click="query">查询</el-button>
+                  <el-button type="primary" @click="addTenders">新增</el-button>
                   <el-button @click="resetForm">重置</el-button>
                 </el-form-item>
               </el-col>
@@ -153,6 +154,12 @@ export default {
     this.getList();
   },
   methods: {
+    addTenders(){
+      this.queryParams.sCode = "sdgsfdfh";
+      addTender(this.queryParams).then(res=>{
+        alert(res.msg);
+      });
+    },
     query() {
       this.queryParams.sName = this.formData.field108;//项目名称
       let range = this.formData.field101;//查询时间范围
@@ -171,7 +178,7 @@ export default {
     },
     /** 查询招标项目列表 */
     getList() {
-      this.loading = false;
+      this.loading = true;
       this.tenderList=[];
       listTender(this.queryParams).then(response => {
         response.rows.forEach((e,i)=>{

@@ -156,6 +156,15 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        wTitle:[
+          { required: true, message: "文件标题不能为空", trigger: "blur" }
+        ],
+        wSize:[
+          { required: true, message: "文件大小不能为空", trigger: "blur" }
+        ],
+        wUploadTime:[
+          { required: true, message: "上传时间不能为空", trigger: "blur" }
+        ]
       }
     };
   },

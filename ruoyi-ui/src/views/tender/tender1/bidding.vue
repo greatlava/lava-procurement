@@ -49,7 +49,6 @@ export default {
   methods: {
     selected(stepIndex) {
       this.index = stepIndex;
-      alert("3243");
     }
   }
 };

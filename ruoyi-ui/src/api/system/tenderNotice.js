@@ -42,3 +42,20 @@ export function delNotice(uid) {
     method: 'delete'
   })
 }
+
+// 已发布公告
+export function findStatus(sid) {
+    return request({
+      url: '/bidding/notice/findStatus',
+      method: 'post',
+      data: sid
+    })
+}
+
+// 删除招标公告
+export function delYfb(sid) {
+  return request({
+    url: '/bidding/notice/sc/' + sid,
+    method: 'delete'
+  })
+}
