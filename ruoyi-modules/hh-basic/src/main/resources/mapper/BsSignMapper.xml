@@ -20,7 +20,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gnPbpayment"    column="gn_pbPayment"    />
         <result property="gnPbfixedprice"    column="gn_pbFixedprice"    />
         <result property="gnPbbalance"    column="gn_pbBalance"    />
-        <result property="gnPcid"    column="gn_pcId"    />
         <result property="gnPcname"    column="gn_pcName"    />
         <result property="gnPcaddress"    column="gn_pcAddress"    />
         <result property="gnPccontact"    column="gn_pcContact"    />
@@ -35,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBsSignVo">
-        select gn_id, gn_signatoryCount, gn_sub, gn_pbId, gn_pbName, gn_pbAddress, gn_pbContact, gn_pbCif, gn_pbBank, gn_pbAccount, gn_pbAmount, gn_pbCurrency, gn_pbPayment, gn_pbFixedprice, gn_pbBalance, gn_pcId, gn_pcName, gn_pcAddress, gn_pcContact, gn_pcCif, gn_pcBank, gn_pcAccount, gn_pcAmount, gn_pcCurrency, gn_pcPayment, gn_pcFixedprice, gn_pcBalance from bs_sign
+        select gn_id, gn_signatoryCount, gn_sub, gn_pbId, gn_pbName, gn_pbAddress, gn_pbContact, gn_pbCif, gn_pbBank, gn_pbAccount, gn_pbAmount, gn_pbCurrency, gn_pbPayment, gn_pbFixedprice, gn_pbBalance, gn_pcName, gn_pcAddress, gn_pcContact, gn_pcCif, gn_pcBank, gn_pcAccount, gn_pcAmount, gn_pcCurrency, gn_pcPayment, gn_pcFixedprice, gn_pcBalance from bs_sign
     </sql>
 
     <select id="selectBsSignList" parameterType="com.hh.pms.cm.domain.BsSign" resultMap="BsSignResult">
@@ -56,7 +55,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gnPbpayment != null "> and gn_pbPayment = #{gnPbpayment}</if>
             <if test="gnPbfixedprice != null "> and gn_pbFixedprice = #{gnPbfixedprice}</if>
             <if test="gnPbbalance != null "> and gn_pbBalance = #{gnPbbalance}</if>
-            <if test="gnPcid != null "> and gn_pcId = #{gnPcid}</if>
             <if test="gnPcname != null  and gnPcname != ''"> and gn_pcName like concat('%', #{gnPcname}, '%')</if>
             <if test="gnPcaddress != null  and gnPcaddress != ''"> and gn_pcAddress = #{gnPcaddress}</if>
             <if test="gnPccontact != null  and gnPccontact != ''"> and gn_pcContact = #{gnPccontact}</if>
@@ -94,7 +92,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gnPbpayment != null">gn_pbPayment,</if>
             <if test="gnPbfixedprice != null">gn_pbFixedprice,</if>
             <if test="gnPbbalance != null">gn_pbBalance,</if>
-            <if test="gnPcid != null">gn_pcId,</if>
             <if test="gnPcname != null">gn_pcName,</if>
             <if test="gnPcaddress != null">gn_pcAddress,</if>
             <if test="gnPccontact != null">gn_pcContact,</if>
@@ -123,7 +120,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gnPbpayment != null">#{gnPbpayment},</if>
             <if test="gnPbfixedprice != null">#{gnPbfixedprice},</if>
             <if test="gnPbbalance != null">#{gnPbbalance},</if>
-            <if test="gnPcid != null">#{gnPcid},</if>
             <if test="gnPcname != null">#{gnPcname},</if>
             <if test="gnPcaddress != null">#{gnPcaddress},</if>
             <if test="gnPccontact != null">#{gnPccontact},</if>
@@ -155,7 +151,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="gnPbpayment != null">gn_pbPayment = #{gnPbpayment},</if>
             <if test="gnPbfixedprice != null">gn_pbFixedprice = #{gnPbfixedprice},</if>
             <if test="gnPbbalance != null">gn_pbBalance = #{gnPbbalance},</if>
-            <if test="gnPcid != null">gn_pcId = #{gnPcid},</if>
             <if test="gnPcname != null">gn_pcName = #{gnPcname},</if>
             <if test="gnPcaddress != null">gn_pcAddress = #{gnPcaddress},</if>
             <if test="gnPccontact != null">gn_pcContact = #{gnPccontact},</if>
