@@ -96,7 +96,6 @@
 
 <script>
 import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender'
-import item from '@/layout/components/Sidebar/Item.vue'
 
 export default {
   dicts:["bid_tender_biddingmethod","bid_tender_state"],
