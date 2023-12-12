@@ -101,4 +101,9 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
     public int deleteBsSupplierByHid(Long hid) {
         return bsSupplierMapper.deleteBsSupplierByHid(hid);
     }
+
+    @Override
+    public BsSupplier loginSupplier(String hLoginAccount, String hPassword) {
+        return bsSupplierMapper.loginSupplier(hLoginAccount, hPassword);
+    }
 }
