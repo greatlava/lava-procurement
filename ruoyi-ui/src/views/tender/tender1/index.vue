@@ -23,6 +23,7 @@
               <el-col :span="24">
                 <el-form-item size="medium">
                   <el-button type="primary" @click="query">查询</el-button>
+                  <el-button type="primary" @click="addTenders">新增</el-button>
                   <el-button @click="resetForm">重置</el-button>
                 </el-form-item>
               </el-col>
@@ -95,7 +96,6 @@
 
 <script>
 import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender'
-import item from '@/layout/components/Sidebar/Item.vue'
 
 export default {
   dicts:["bid_tender_biddingmethod","bid_tender_state"],
@@ -153,6 +153,12 @@ export default {
     this.getList();
   },
   methods: {
+    addTenders(){
+      this.queryParams.sCode = "sdgsfdfh";
+      addTender(this.queryParams).then(res=>{
+        alert(res.msg);
+      });
+    },
     query() {
       this.queryParams.sName = this.formData.field108;//项目名称
       let range = this.formData.field101;//查询时间范围
