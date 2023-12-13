@@ -3,6 +3,9 @@ package com.hh.pms.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.hh.pms.domain.BidNotice;
+import com.hh.pms.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,6 +104,15 @@ public class BidGetTenderController extends BaseController
     public AjaxResult remove(@PathVariable Long[] yids)
     {
         return toAjax(bidGetTenderService.deleteBidGetTenderByYids(yids));
+    }
+
+
+    //下载招标书
+    @GetMapping("/downloadZip")
+    public AjaxResult downloadZip(BidNotice bidNotice)
+    {
+//        FileUtil.downloadFiles();
+        return AjaxResult.success();
     }
 
 

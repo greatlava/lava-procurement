@@ -49,7 +49,7 @@ public class FileUtil {
             String[] fileNames = file.split(",");
             // 将多个文件打包到zip文件中
             for (String fileName : fileNames) {
-                Path filePath = Paths.get(FileUtil.FILENAME + fileName);
+                Path filePath = Paths.get(fileName);
                 ZipEntry zipEntry = new ZipEntry(fileName);
                 zipOut.putNextEntry(zipEntry);
 

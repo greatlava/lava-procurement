@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.domain.BidNotice;
+import com.hh.pms.utils.FileUtil;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
@@ -123,7 +124,7 @@ public class BidDocumentsController extends BaseController
             System.out.println("文件上传成功！。。。。");
             //结果非空
             if (!StringUtils.isNull(fileResult) || !StringUtils.isNull(fileResult.getData())) {
-                return AjaxResult.success("上传文件成功！");
+                return AjaxResult.success("上传文件成功！",fileResult.getData());
             }
         }
         return AjaxResult.error("上传文件异常，请联系管理员");
@@ -143,6 +144,4 @@ public class BidDocumentsController extends BaseController
         }
         return AjaxResult.error("上传文件异常，请联系管理员");
     }
-
-
 }

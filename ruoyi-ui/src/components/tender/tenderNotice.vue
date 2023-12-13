@@ -439,7 +439,6 @@ export default {
                   this.getList();
                 });
 
-
               } else if(this.queryParams.type === 'add'){
                 this.form.sid = this.$route.query.sid;//确定对应招标项目
                 //新增公告
@@ -450,7 +449,6 @@ export default {
                 });
 
               }
-
             }else{
               //2:如果有文件
               //2.1文件上传执行submit  即触发 handleFileSuccess函数
@@ -489,6 +487,10 @@ export default {
         let updatedArray = fileList.map(obj => {
           let newObj = obj;
           delete newObj.response;
+          delete newObj.raw;
+          delete newObj.percentage;
+          delete newObj.status;
+          obj.url = response.data.url;
           return newObj;
         });
         this.form.fjAnnex = JSON.stringify(updatedArray);

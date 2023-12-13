@@ -131,4 +131,5 @@ public class BidNoticeController extends BaseController
     {
         return AjaxResult.success(bidNoticeService.selMax());
     }
+
 }
