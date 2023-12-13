@@ -61,4 +61,8 @@ public interface PpmLineItemsMapper
     public int deletePpmLineItemsByVids(Integer[] vids);
 
     public int deletePpmLineItemsByAid(Integer aid);
+
+    public int deletePpmLineItemByJhId(Integer jhId);
+
+
 }

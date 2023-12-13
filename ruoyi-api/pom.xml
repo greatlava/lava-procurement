@@ -10,7 +10,7 @@
 
     <modules>
         <module>ruoyi-api-system</module>
-        <module>hh-general</module>
+
     </modules>
 
     <artifactId>ruoyi-api</artifactId>
@@ -19,5 +19,9 @@
     <description>
         ruoyi-api系统接口
     </description>
+
+    <dependencies>
+
+    </dependencies>
 
 </project>

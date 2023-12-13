@@ -2,10 +2,14 @@ package com.hh.pms.controller;
 
 import java.util.List;
 import java.io.IOException;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.domain.PpmDevice;
 import com.hh.pms.service.IPpmDeviceService;
+import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.system.api.RemoteBidWinningResultsService;
+import com.ruoyi.system.api.domain.BidWinningResults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -97,4 +101,5 @@ public class PpmDeviceController extends BaseController {
     public AjaxResult remove(@PathVariable String[] tids) {
         return toAjax(ppmDeviceService.deletePpmDeviceByTids(tids));
     }
+
 }

@@ -75,7 +75,6 @@ public class BidTenderController extends BaseController {
     @Log(title = "招标项目", businessType = BusinessType.INSERT)
     @PostMapping("addTender")
     public AjaxResult add(@RequestBody BidTender bidTender) {
-        System.out.println(bidTender);
         return toAjax(bidTenderService.insertBidTender(bidTender));
     }
 
@@ -103,7 +102,7 @@ public class BidTenderController extends BaseController {
      * 获取没有合同的项目
      */
     @GetMapping("/NoEidTenderList")
-   @RequiresPermissions("system:tender:list")
+    @RequiresPermissions("system:tender:list")
     public TableDataInfo noContract(BidTender bidTender) {
         startPage();
         List<BidTender> list = bidTenderService.selectNoEidTenderList(bidTender);

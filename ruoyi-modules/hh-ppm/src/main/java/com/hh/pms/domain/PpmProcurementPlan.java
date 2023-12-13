@@ -46,7 +46,7 @@ public class PpmProcurementPlan extends BaseEntity
 
     /** 采购业务类型名称 */
     @Excel(name = "采购业务类型名称")
-    private String aBtype;
+    private Integer aBtype;
 
     /** 采购审批状态 */
     @Excel(name = "采购审批状态")
@@ -68,7 +68,15 @@ public class PpmProcurementPlan extends BaseEntity
         this.aid = aid;
     }
 
-    public Integer getAid() 
+    public Integer getaBtype() {
+        return aBtype;
+    }
+
+    public void setaBtype(Integer aBtype) {
+        this.aBtype = aBtype;
+    }
+
+    public Integer getAid()
     {
         return aid;
     }
@@ -126,15 +134,7 @@ public class PpmProcurementPlan extends BaseEntity
     {
         return aProjectCount;
     }
-    public void setaBtype(String aBtype) 
-    {
-        this.aBtype = aBtype;
-    }
 
-    public String getaBtype() 
-    {
-        return aBtype;
-    }
     public void setaAstate(Integer aAstate) 
     {
         this.aAstate = aAstate;

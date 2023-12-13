@@ -8,11 +8,11 @@
       <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="150px">
         <el-row type="flex" justify="start" align="middle" :gutter="15">
           <el-form-item label="采购计划名称" prop="field107">
-            <el-input v-model="form.aName" placeholder="请输入采购计划名称" clearable :style="{width: '100%'}">
+            <el-input v-model="queryParams.aName" placeholder="请输入采购计划名称" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
           <el-form-item label="创建部门">
-            <el-input v-model="form.aCreateDept" placeholder="请输入创建部门" clearable :style="{width: '100%'}">
+            <el-input v-model="queryParams.aCreateDept" placeholder="请输入创建部门" clearable :style="{width: '100%'}">
             </el-input>
           </el-form-item>
           <el-form-item size="medium">
@@ -35,7 +35,7 @@
       </el-col>
     </el-row>
     <el-table @selection-change="handleSelectionChange" v-loading="loading" :data="planList">
-      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column :selectable="selectable" type="selection" width="55" align="center"/>
       <el-table-column label="序号" align="center" prop="aid" width="80"/>
       <el-table-column label="采购计划编号" align="center" prop="aCode"/>
       <el-table-column label="采购业务类型" align="center" prop="aBtype">
@@ -44,8 +44,9 @@
         </template>
       </el-table-column>
       <el-table-column label="采购计划名称" align="center" prop="aName"/>
-      <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>
+      <!--      <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
       <el-table-column label="创建人" align="center" prop="createBy"/>
+      <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
       <el-table-column label="创建日期" align="center" prop="createTime"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -139,6 +140,20 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog @close="cancelType" :visible.sync="openByType" title="选择采购方式" width="35%">
+      <div class="radio" style="text-align: center">
+        <el-radio v-model="radio" :label="1">公开</el-radio>
+        <el-radio v-model="radio" :label="2">邀请</el-radio>
+        <el-radio v-model="radio" :label="3">询价</el-radio>
+        <el-radio v-model="radio" :label="4">委托</el-radio>
+        <el-radio v-model="radio" :label="5">竞争性谈判</el-radio>
+        <el-radio v-model="radio" :label="6">单一来源</el-radio>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" @click="sumbitType">确 定</el-button>
+        <el-button @click="cancelType">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -147,7 +162,12 @@
 </style>
 
 <script>
-import {listPlan, selectProcurementPlanByIdForThreeTables} from '@/api/system/plan'
+import {
+  FindProcurementPlanBy,
+  listPlan,
+  selectProcurementPlanByIdForThreeTables,
+  updateStateAndAddBidWinning
+} from '@/api/system/plan'
 
 export default {
   dicts: ['ppm_procurement_plan'],
@@ -158,6 +178,9 @@ export default {
     return {
       planList: [],
       itemList: [],
+      openByType: false,
+      fullscreenLoading: false,
+      radio: 1,
       form: {},
       queryParams: {
         pageNum: 1,
@@ -177,10 +200,17 @@ export default {
     this.getList()
   },
   methods: {
+    selectable(row, index) {
+      if (row.aAstate == 2) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     getList() {
       this.loading = true;
       this.planList = [];
-      listPlan(this.queryParams).then(response => {
+      FindProcurementPlanBy(this.queryParams).then(response => {
         this.total = response.total;
         this.loading = false;
         this.planList = response.rows;
@@ -194,8 +224,25 @@ export default {
         this.getList();
       })
     },
-    resetQuery() {
-      this.form = {
+    //关闭采购寻源方式选择
+    cancelType() {
+      this.radio = 1;
+      this.openByType = false;
+    },
+    //采购寻源方式选择确定按钮
+    sumbitType() {
+      console.log(this.radio, "radio")
+      this.fullscreenLoading = true;
+      updateStateAndAddBidWinning(this.yilist, this.radio).then(res => {
+        console.log("res-----", res);
+        this.fullscreenLoading = false
+        this.openByType = false;
+        this.$modal.msgSuccess("操作成功！！");
+        this.getList();
+      })
+    },
+    reset() {
+      this.queryParams = {
         aid: null,
         aCode: null,
         aName: null,
@@ -210,9 +257,18 @@ export default {
         aBtype: null,
         aAstate: 0
       }
+      this.queryParams.aBtype = null;
+      this.resetForm('form')
+
+    },
+    resetForm() {
       this.$nextTick(() => {
         this.$refs['elForm'].resetFields()
       })
+    },
+    resetQuery() {
+      this.reset();
+      this.getList();
     },
     handleClick(row) {
       selectProcurementPlanByIdForThreeTables(row.aid).then(res => {
@@ -222,11 +278,17 @@ export default {
         this.form = res.data;
       })
     },
+    //采购寻源按钮
     handleSubmit() {
-      console.log("list", this.yilist)
+      if (this.yilist.length > 0) {
+        this.openByType = true;
+      } else {
+        this.$modal.msgError("请选择采购寻源")
+      }
     },
     cancel() {
       this.open = false;
+      this.reset();
     },
     click(row) {
       if (row.ppmBudget.duName != null && row.ppmBudget.duName != undefined) {
@@ -240,8 +302,15 @@ export default {
     handleSelectionChange(e) {
       this.yilist = e;
     },
-    download() {
-
+    download(name) {
+      console.log("file", name)
+      name = encodeURIComponent(name)
+      var url = `http://localhost:8080/ppm/file/RemoteFileDownloader?file=${name}`;
+      const a = document.createElement('a')
+      a.setAttribute('file', name)
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
     }
 
   }

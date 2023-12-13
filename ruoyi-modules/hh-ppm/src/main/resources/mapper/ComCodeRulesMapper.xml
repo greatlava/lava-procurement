@@ -69,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hour != null">hour,</if>
             <if test="minute != null">minute,</if>
             <if test="second != null">second,</if>
+            <if test="maxMantissa != null">max_mantissa,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="targetForm != null">#{targetForm},</if>
@@ -84,6 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hour != null">#{hour},</if>
             <if test="minute != null">#{minute},</if>
             <if test="second != null">#{second},</if>
+            <if test="maxMantissa != null">#{maxMantissa},</if>
         </trim>
     </insert>
 

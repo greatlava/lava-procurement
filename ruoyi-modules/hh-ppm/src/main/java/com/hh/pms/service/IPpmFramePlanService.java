@@ -58,5 +58,9 @@ public interface IPpmFramePlanService
      * @param jhId 框架计划主键
      * @return 结果
      */
-    public int deletePpmFramePlanByJhId(Long jhId);
+    public int deletePpmFramePlanByJhId(Integer jhId);
+
+    public PpmFramePlan queryFrameworkPlanAndRelatedInformation(Integer jhId);
+
+    public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan);
 }

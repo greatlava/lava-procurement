@@ -368,12 +368,12 @@ export default {
                 let number = "";
                 for (let i = 1; i <= this.form.serialNumber; i++) {
                   if (this.form.serialNumber==i){
+                    number += "1";
                     break;
                   }
                   number += "0";
-
                 }
-                this.form.maxMantissa =
+                this.form.maxMantissa = number;
                   addRules(this.form).then(response => {
                     this.$modal.msgSuccess("新增成功");
                     this.open = false;

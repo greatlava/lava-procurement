@@ -70,3 +70,19 @@ export function ModifyPlanAndOtherInformation(data) {
     data: data
   })
 }
+
+export function updateStateAndAddBidWinning(data, type) {
+  return request({
+    url: "/ppm/plan/updateStateAndAddBidWinning?type=" + type,
+    method: "post",
+    data: data
+  })
+}
+
+export function FindProcurementPlanBy(data) {
+  return request({
+    url: "/ppm/plan/FindProcurementPlanBy",
+    params: data,
+    method: "post"
+  })
+}

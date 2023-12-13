@@ -40,7 +40,7 @@ public class BidWinningResultsController extends BaseController
      */
     @RequiresPermissions("system:results:list")
     @GetMapping("/list")
-    public TableDataInfo list(BidWinningResults bidWinningResults)
+    public TableDataInfo list( BidWinningResults bidWinningResults)
     {
         startPage();
         List<BidWinningResults> list = bidWinningResultsService.selectBidWinningResultsList(bidWinningResults);
