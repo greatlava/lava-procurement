@@ -26,4 +26,6 @@ public class ServiceNameConstants
      * 采购计划服务  生产者nacos内注册应用名
      */
     public static final String PPM_SERVICE ="hh-ppm";
+
+    public static final String BIDDING_SERVICE = "hh-bidding";
 }

@@ -12,6 +12,7 @@ import com.hh.pms.mapper.PpmProcurementPlanMapper;
 import com.hh.pms.service.IPpmLineItemsService;
 import com.hh.pms.service.IPpmProcurementPlanService;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,5 +123,15 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
     @Override
     public PpmProcurementPlan selectProcurementPlanByIdForThreeTables(Integer aid) {
         return ppmProcurementPlanMapper.selectProcurementPlanByIdForThreeTables(aid);
+    }
+
+    @Override
+    public int insertTenders(BidTender bidTender) {
+        return ppmProcurementPlanMapper.insertTenders(bidTender);
+    }
+
+    @Override
+    public List<PpmProcurementPlan> FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
+        return ppmProcurementPlanMapper.FindProcurementPlanBy(ppmProcurementPlan);
     }
 }

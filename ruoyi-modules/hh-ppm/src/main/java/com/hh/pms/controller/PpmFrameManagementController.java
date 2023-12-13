@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.domain.PpmFrameManagement;
+import com.hh.pms.domain.PpmFramePlan;
 import com.hh.pms.service.IPpmFrameManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,4 +104,6 @@ public class PpmFrameManagementController extends BaseController
     {
         return toAjax(ppmFrameManagementService.deletePpmFrameManagementByOids(oids));
     }
+
+
 }

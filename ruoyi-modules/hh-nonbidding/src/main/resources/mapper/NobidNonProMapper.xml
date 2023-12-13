@@ -42,8 +42,9 @@
             <if test="gCode != null  and gCode != ''">and g_code = #{gCode}</if>
             <if test="gName != null  and gName != ''">and g_name like concat('%', #{gName}, '%')</if>
             <if test="gIsPublic != null ">and g_is_public = #{gIsPublic}</if>
-            <if test="gSpawnTime != null ">and g_spawn_time = #{gSpawnTime}</if>
-            <if test="gDeadline != null ">and g_deadline = #{gDeadline}</if>
+            <if test="gSpawnTime != null and  gDeadline != null">
+                and Date(g_spawn_time) &gt;= #{gSpawnTime} and Date(g_deadline) &lt;= #{gDeadline}
+            </if>
             <if test="gStatus != null ">and g_status = #{gStatus}</if>
             <if test="gCount != null ">and g_count = #{gCount}</if>
             <if test="gUnit != null  and gUnit != ''">and g_unit = #{gUnit}</if>

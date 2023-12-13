@@ -89,4 +89,9 @@ public class PpmLineItemsServiceImpl implements IPpmLineItemsService {
         return ppmLineItemsMapper.deletePpmLineItemsByAid(aid);
     }
 
+    @Override
+    public int deletePpmLineItemByJhId(Integer jhId) {
+        return ppmLineItemsMapper.deletePpmLineItemByJhId(jhId);
+    }
+
 }

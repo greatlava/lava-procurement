@@ -33,10 +33,26 @@ import {addBudget} from "@/api/system/budget";
           </el-col>
           <el-col :span="6">
             <el-form-item label="附件" prop="fjAnnex">
-              <div style="width: 202px">
-                <el-button type="primary">
-                  上传附件<i class="el-icon-upload"></i>
-                </el-button>
+              <div>
+                <el-upload
+                  ref="upload"
+                  :action="upload.url"
+                  :headers="upload.headers"
+                  :file-list="upload.fileList"
+                  :multiple="true"
+                  :on-progress="handleFileUploadProgress"
+                  :on-success="handleFileSuccess"
+                  :limit="5"
+                  :on-exceed="exceedingMaximumLimit"
+                  :on-error="uploadError"
+                  :before-upload="beforeUpload"
+                  :auto-upload="false">
+                  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                  <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
+                             @click="submitUpload">上传到服务器
+                  </el-button>
+                  <!--                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+                </el-upload>
               </div>
             </el-form-item>
           </el-col>
@@ -124,7 +140,7 @@ import {addBudget} from "@/api/system/budget";
           <el-table-column label="行项目编号" align="center" prop="vCode" width="150">
             <template slot-scope="scope">
               <span v-if="form.aid==null">自动生成</span>
-              <el-input v-model="scope.row.vCode" class="borderNone" disabled></el-input>
+              <el-input v-else v-model="scope.row.vCode" class="borderNone" disabled></el-input>
             </template>
           </el-table-column>
           <el-table-column label="物料编号" align="center" prop="tid" width="150">
@@ -143,9 +159,16 @@ import {addBudget} from "@/api/system/budget";
               <el-input class="borderNone" v-model="scope.row.vPerson"></el-input>
             </template>
           </el-table-column>
-          <el-table-column label="交付时间" align="center" prop="vDeliveryTime" width="200">
+          <el-table-column label="交付时间" align="center" prop="vDeliveryTime" width="250">
             <template slot-scope="scope">
-              <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>
+              <div class="block">
+                <el-date-picker
+                  v-model="scope.row.vDeliveryTime"
+                  type="date"
+                  placeholder="选择日期">
+                </el-date-picker>
+              </div>
+              <!--              <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>-->
             </template>
           </el-table-column>
           <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="180">
@@ -279,6 +302,7 @@ import {addBudget} from "@/api/system/budget";
   </div>
 </template>
 <script>
+import {getToken} from "@/utils/auth";
 import {listDevice} from "@/api/device/device";
 import {addBudget, delBudget, selectPpmBudgetByAid} from '@/api/system/budget'
 import {
@@ -324,8 +348,23 @@ export default {
       },
       //标题
       title: "新增采购计划",
+      //上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: {Authorization: "Bearer " + getToken()},
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/ppm/file/upload",
+        // 上传的文件列表
+        fileList: [],
+        //上传成功列表
+        fileSecuss: [],
+      },
       //form表单
-      form: {},
+      form: {
+        fjAnnex: "",
+      },
       loading: false,
       //预览编号
       previewCode: null,
@@ -384,6 +423,44 @@ export default {
     console.log("页面销毁---------------")
   },
   methods: {
+    //上传文件之前
+    beforeUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$modal.msgError("文件大小不可超过2MB")
+      }
+      return isLt2M;
+    },
+    //文件上传失败
+    uploadError(err, file, fileList) {
+
+      this.upload.isUploading = false;
+      this.$modal.msgError(err);
+    },
+    exceedingMaximumLimit(file, fileList) {
+      this.$modal.msgError("最多上传文件5个！！")
+    },
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.fileSecuss.push(file);
+      this.upload.isUploading = false;
+      this.form.filePath = response.url;
+      this.$modal.msgSuccess(response.msg);
+    },
+    handleAdd() {
+      this.upload.fileList = [];
+    },
+    handleUpdate(row) {
+      this.upload.fileList = [{name: this.form.fileName, url: this.form.filePath}];
+    },
     handleDelete(row, index) {
       this.device.splice(index, 1)
     },
@@ -531,6 +608,24 @@ export default {
             this.$modal.msgError("所有行项目设备不能为空");
             return; // 跳出整个函数
           }
+          if (this.upload.fileSecuss.length == 0) {
+            this.$modal.msgError("请上传附件！！");
+            return;
+          }
+          console.log('res', this.upload.fileSecuss)
+          let url = "";
+          let fileName = "";
+          this.upload.fileSecuss.forEach((e, i) => {
+            if (e.response.code == 200) {
+              url += e.response.data.data.url + ",";
+              fileName += e.response.data.data.name + ",";
+            }
+          })
+          let files = {
+            anUrl: url,
+            anName: fileName
+          }
+          this.form["file"] = files;
           this.form['items'] = this.device;
           this.form["aCode"] = localStorage.getItem("procurementPlanID");
           addPlan(this.form).then(res => {
@@ -569,7 +664,7 @@ export default {
             this.$modal.msgSuccess("操作成功！！")
             setTimeout(() => {
               this.$router.back();
-            },1000)
+            }, 1000)
           })
         }
       })

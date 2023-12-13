@@ -18,6 +18,15 @@ export function listTender(query) {
   })
 }
 
+// 查询完成的框架计划
+export function listComPlan(query) {
+  return request({
+    url: '/bidding/tender/NoEidTenderList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询合同详细
 export function getContract(eid) {
   return request({

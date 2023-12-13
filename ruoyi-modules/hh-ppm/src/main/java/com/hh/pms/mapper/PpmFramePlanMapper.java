@@ -50,7 +50,7 @@ public interface PpmFramePlanMapper
      * @param jhId 框架计划主键
      * @return 结果
      */
-    public int deletePpmFramePlanByJhId(Long jhId);
+    public int deletePpmFramePlanByJhId(Integer jhId);
 
     /**
      * 批量删除框架计划
@@ -59,4 +59,10 @@ public interface PpmFramePlanMapper
      * @return 结果
      */
     public int deletePpmFramePlanByJhIds(Long[] jhIds);
+
+
+   public PpmFramePlan queryFrameworkPlanAndRelatedInformation(Integer jhId);
+
+
+   public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan);
 }
