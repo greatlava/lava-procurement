@@ -327,7 +327,7 @@ export default {
       this.queryParams1.sCode = this.formData.field101
       this.queryParams1.sName = this.formData.field102
       this.queryParams1.pageNum = 1
-      // 在这里执行模糊查询操作m,
+      // 在这里执行模糊查询操作,
       this.getList1()
     },
     query1() {

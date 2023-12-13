@@ -5,6 +5,7 @@ import com.hh.pms.mapper.NobidNonProMapper;
 import com.hh.pms.service.INobidNonProService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  * @date 2023-12-11
  */
 @Service
+@Transactional
 public class NobidNonProServiceImpl implements INobidNonProService
 {
     @Resource
