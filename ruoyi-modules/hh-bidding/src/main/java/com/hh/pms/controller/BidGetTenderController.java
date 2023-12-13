@@ -111,7 +111,6 @@ public class BidGetTenderController extends BaseController
     @GetMapping("/downloadZip")
     public AjaxResult downloadZip(BidNotice bidNotice)
     {
-//        FileUtil.downloadFiles();
         return AjaxResult.success();
     }
 
