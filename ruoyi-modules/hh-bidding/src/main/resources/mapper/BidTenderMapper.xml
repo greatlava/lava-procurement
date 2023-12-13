@@ -97,10 +97,14 @@
     <select id="selectNoEidTenderList" resultMap="BidTenderResult">
         select * from bid_tender
         <where>
-            <if test="sCode != null  and sCode != ''">and s_code like concat('%', #{sCode}, '%')</if>
-            <if test="sName != null  and sName != ''">and s_name like concat('%', #{sName}, '%')</if>
+            eid is null
+            <if test="sCode != null  and sCode != ''">
+                and s_code like concat('%', #{sCode}, '%')
+            </if>
+            <if test="sName != null  and sName != ''">
+                and s_name like concat('%', #{sName}, '%')
+            </if>
         </where>
-        where eid is null
     </select>
 
     <select id="selectTenderBySid" resultType="com.hh.pms.domain.BidTender">

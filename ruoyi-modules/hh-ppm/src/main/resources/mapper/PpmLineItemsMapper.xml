@@ -101,4 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <delete id="deletePpmLineItemsByAid">
         DELETE FROM ppm_line_items WHERE aid = #{aid}
     </delete>
+    <delete id="deletePpmLineItemByJhId">
+        DELETE FROM ppm_line_items WHERE jh_id = #{jhId}
+    </delete>
 </mapper>

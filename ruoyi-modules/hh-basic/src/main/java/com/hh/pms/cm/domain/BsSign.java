@@ -75,10 +75,6 @@ public class BsSign extends BaseEntity
     @Excel(name = "剩余金额")
     private Long gnPbbalance;
 
-    /** 丙方供应商ID */
-    @Excel(name = "丙方供应商ID")
-    private Long gnPcid;
-
     /** 丙方名称 */
     @Excel(name = "丙方名称")
     private String gnPcname;
@@ -258,15 +254,6 @@ public class BsSign extends BaseEntity
     {
         return gnPbbalance;
     }
-    public void setGnPcid(Long gnPcid)
-    {
-        this.gnPcid = gnPcid;
-    }
-
-    public Long getGnPcid()
-    {
-        return gnPcid;
-    }
     public void setGnPcname(String gnPcname)
     {
         this.gnPcname = gnPcname;
@@ -385,7 +372,6 @@ public class BsSign extends BaseEntity
                 .append("gnPbpayment", getGnPbpayment())
                 .append("gnPbfixedprice", getGnPbfixedprice())
                 .append("gnPbbalance", getGnPbbalance())
-                .append("gnPcid", getGnPcid())
                 .append("gnPcname", getGnPcname())
                 .append("gnPcaddress", getGnPcaddress())
                 .append("gnPccontact", getGnPccontact())

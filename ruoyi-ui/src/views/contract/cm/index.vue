@@ -3,7 +3,7 @@
 
     <div>
       <el-row :gutter="15">
-        <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="70px">
+        <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="70px" v-if="change===1">
           <el-col :span="23">
             <el-row type="flex" justify="start" align="middle" :gutter="30">
               <el-col :span="24">
@@ -29,8 +29,36 @@
             </el-row>
           </el-col>
         </el-form>
+
+        <el-form ref="elForm1" :model="formData1" :rules="rules" size="medium" label-width="70px" v-if="change===2">
+          <el-col :span="23">
+            <el-row type="flex" justify="start" align="middle" :gutter="30">
+              <el-col :span="24">
+                <el-form-item label="合同编号" prop="field101">
+                  <el-input v-model="formData1.field101" placeholder="请输入合同编号" clearable
+                            :style="{width: '100%'}"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="合同名称" prop="field102">
+                  <el-input v-model="formData1.field102" placeholder="请输入合同名称" clearable
+                            :style="{width: '100%'}"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item size="medium">
+                  <el-button type="primary" @click="query1">查询</el-button>
+                  <el-button @click="resetForm1">重置</el-button>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-form>
       </el-row>
     </div>
+
 
     <div class="tcl">
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -196,6 +224,7 @@ export default {
   name: 'Contract',
   data() {
     return {
+      change: 1,
       activeName: 'first',
       // 遮罩层
       loading: true,
@@ -232,9 +261,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         hid: null,
-        eXcode: null,
-        eXname: null,
-        eWinningPerson: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
@@ -247,9 +273,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         hid: null,
-        eXcode: null,
-        eXname: null,
-        eWinningPerson: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
@@ -260,6 +283,11 @@ export default {
       },
       // 表单参数
       formData: {
+        field101: null,
+        field102: undefined
+      },
+      // 表单参数
+      formData1: {
         field101: null,
         field102: undefined
       },
@@ -277,15 +305,18 @@ export default {
     handleClick(tab, event) {
       console.log('切换到标签页', tab.name)
       if (tab.name === 'first') {
+        this.change = 1
         // 执行标签页first的查询操作
         this.getList1(),
           console.log('执行标签页1的查询操作')
       } else if (tab.name === 'second') {
+        this.change = 2
         // 执行标签页second的查询操作
         this.getList2(),
           console.log('执行标签页2的查询操作')
       } else {
         // 执行标签页third的查询操作
+        this.change = 2
         this.getList3(),
           console.log('执行标签页3的查询操作')
       }
@@ -293,17 +324,22 @@ export default {
     query() {
       // 模糊查询按钮点击时的处理逻辑
       console.log('执行模糊查询')
-      this.queryParams1.eXcode = this.formData.field101
-      this.queryParams1.eXname = this.formData.field102
-      this.queryParams2.eXcode = this.formData.field101
-      this.queryParams2.eXname = this.formData.field102
-      this.queryParams3.eXcode = this.formData.field101
-      this.queryParams3.eXname = this.formData.field102
+      this.queryParams1.sCode = this.formData.field101
+      this.queryParams1.sName = this.formData.field102
       this.queryParams1.pageNum = 1
+      // 在这里执行模糊查询操作,
+      this.getList1()
+    },
+    query1() {
+      // 模糊查询按钮点击时的处理逻辑
+      console.log('执行模糊查询')
+      this.queryParams2.eHcode = this.formData1.field101
+      this.queryParams2.eHname = this.formData1.field102
+      this.queryParams3.eHcode = this.formData1.field101
+      this.queryParams3.eHname = this.formData1.field102
       this.queryParams2.pageNum = 1
       this.queryParams3.pageNum = 1
       // 在这里执行模糊查询操作m,
-      this.getList1()
       this.getList2()
       this.getList3()
     },
@@ -312,6 +348,9 @@ export default {
      */
     resetForm() {
       this.$refs.elForm.resetFields()
+    },
+    resetForm1() {
+      this.$refs.elForm1.resetFields()
     },
     /** 查询待创建合同列表 */
     getList1() {
@@ -340,91 +379,6 @@ export default {
         this.contractList3 = response.rows
         this.total3 = response.total
         this.loading = false
-      })
-    },
-    // 取消按钮
-    cancel() {
-      this.open = false
-      this.reset()
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        hid: null,
-        eid: null,
-        eXcode: null,
-        eXname: null,
-        sid: null,
-        scode: null,
-        sName: null,
-        eWinningPerson: null,
-        eHcode: null,
-        eHname: null,
-        eStatus: null,
-        createBy: null,
-        createTime: null,
-        eDeliveryTime: null,
-        updateBy: null,
-        updateTime: null,
-        oHstatus: null
-      }
-      this.resetForm('form')
-    },
-    /** 搜索按钮操作 */
-    handleQuery() {
-      this.queryParams.pageNum = 1
-      this.getList()
-    },
-    /** 重置按钮操作 */
-    resetQuery() {
-      this.resetForm('queryForm')
-      this.handleQuery()
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset()
-      this.open = true
-      this.title = '添加合同'
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset()
-      const eid = row.eid || this.ids
-      getContract(eid).then(response => {
-        this.form = response.data
-        this.open = true
-        this.title = '修改合同'
-      })
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.eid != null) {
-            updateContract(this.form).then(response => {
-              this.$modal.msgSuccess('修改成功')
-              this.open = false
-              this.getList()
-            })
-          } else {
-            addContract(this.form).then(response => {
-              this.$modal.msgSuccess('新增成功')
-              this.open = false
-              this.getList()
-            })
-          }
-        }
-      })
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const eids = row.eid || this.ids
-      this.$modal.confirm('是否确认删除合同编号为"' + eids + '"的数据项？').then(function() {
-        return delContract(eids)
-      }).then(() => {
-        this.getList()
-        this.$modal.msgSuccess('删除成功')
-      }).catch(() => {
       })
     }
   }

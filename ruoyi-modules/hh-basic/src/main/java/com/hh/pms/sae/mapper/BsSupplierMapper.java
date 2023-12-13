@@ -3,6 +3,7 @@ package com.hh.pms.sae.mapper;
 import java.util.List;
 
 import com.hh.pms.sae.domain.BsSupplier;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 供应商Mapper接口
@@ -82,4 +83,13 @@ public interface BsSupplierMapper {
      * @return 结果
      */
     public int deleteBsSupplierByHids(Long[] hids);
+
+    /**
+     * 登录
+     *
+     * @param hLoginAccount
+     * @param hPassword
+     * @return
+     */
+    public BsSupplier loginSupplier(@Param("hLoginAccount") String hLoginAccount,@Param("hPassword") String hPassword);
 }

@@ -1,6 +1,7 @@
 package com.hh.pms.service;
 
 import com.hh.pms.domain.PpmProcurementPlan;
+import com.ruoyi.system.api.domain.BidTender;
 
 import java.util.List;
 
@@ -66,4 +67,8 @@ public interface IPpmProcurementPlanService
      * @return
      */
     public PpmProcurementPlan selectProcurementPlanByIdForThreeTables(Integer aid);
+
+    public int insertTenders(BidTender bidTender);
+
+    public List<PpmProcurementPlan> FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan);
 }

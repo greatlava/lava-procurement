@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.mapper.NobidNonProMapper">
+
+    <resultMap type="com.hh.pms.domain.NobidNonPro" id="NobidNonProResult">
+        <result property="gid" column="gid"/>
+        <result property="xyId" column="xy_id"/>
+        <result property="gCode" column="g_code"/>
+        <result property="gName" column="g_name"/>
+        <result property="gIsPublic" column="g_is_public"/>
+        <result property="gSpawnTime" column="g_spawn_time"/>
+        <result property="gDeadline" column="g_deadline"/>
+        <result property="gStatus" column="g_status"/>
+        <result property="gCount" column="g_count"/>
+        <result property="gUnit" column="g_unit"/>
+        <result property="gRounds" column="g_rounds"/>
+        <result property="gTendertype" column="g_tenderType"/>
+    </resultMap>
+
+    <sql id="selectNobidNonProVo">
+        select gid,
+               xy_id,
+               g_code,
+               g_name,
+               g_is_public,
+               g_spawn_time,
+               g_deadline,
+               g_status,
+               g_count,
+               g_unit,
+               g_rounds,
+               g_tenderType
+        from nobid_non_pro
+    </sql>
+
+    <select id="selectNobidNonProList" parameterType="com.hh.pms.domain.NobidNonPro" resultMap="NobidNonProResult">
+        <include refid="selectNobidNonProVo"/>
+        <where>
+            <if test="xyId != null ">and xy_id = #{xyId}</if>
+            <if test="gCode != null  and gCode != ''">and g_code = #{gCode}</if>
+            <if test="gName != null  and gName != ''">and g_name like concat('%', #{gName}, '%')</if>
+            <if test="gIsPublic != null ">and g_is_public = #{gIsPublic}</if>
+            <if test="gSpawnTime != null and  gDeadline != null">
+                and Date(g_spawn_time) &gt;= #{gSpawnTime} and Date(g_deadline) &lt;= #{gDeadline}
+            </if>
+            <if test="gStatus != null ">and g_status = #{gStatus}</if>
+            <if test="gCount != null ">and g_count = #{gCount}</if>
+            <if test="gUnit != null  and gUnit != ''">and g_unit = #{gUnit}</if>
+            <if test="gRounds != null ">and g_rounds = #{gRounds}</if>
+            <if test="gTendertype != null ">and g_tenderType = #{gTendertype}</if>
+        </where>
+    </select>
+
+    <select id="selectNobidNonProByGid" parameterType="Long" resultMap="NobidNonProResult">
+        <include refid="selectNobidNonProVo"/>
+        where gid = #{gid}
+    </select>
+
+    <insert id="insertNobidNonPro" parameterType="com.hh.pms.domain.NobidNonPro">
+        insert into nobid_non_pro
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gid != null">gid,</if>
+            <if test="xyId != null">xy_id,</if>
+            <if test="gCode != null">g_code,</if>
+            <if test="gName != null">g_name,</if>
+            <if test="gIsPublic != null">g_is_public,</if>
+            <if test="gSpawnTime != null">g_spawn_time,</if>
+            <if test="gDeadline != null">g_deadline,</if>
+            <if test="gStatus != null">g_status,</if>
+            <if test="gCount != null">g_count,</if>
+            <if test="gUnit != null">g_unit,</if>
+            <if test="gRounds != null">g_rounds,</if>
+            <if test="gTendertype != null">g_tenderType,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gid != null">#{gid},</if>
+            <if test="xyId != null">#{xyId},</if>
+            <if test="gCode != null">#{gCode},</if>
+            <if test="gName != null">#{gName},</if>
+            <if test="gIsPublic != null">#{gIsPublic},</if>
+            <if test="gSpawnTime != null">#{gSpawnTime},</if>
+            <if test="gDeadline != null">#{gDeadline},</if>
+            <if test="gStatus != null">#{gStatus},</if>
+            <if test="gCount != null">#{gCount},</if>
+            <if test="gUnit != null">#{gUnit},</if>
+            <if test="gRounds != null">#{gRounds},</if>
+            <if test="gTendertype != null">#{gTendertype},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNobidNonPro" parameterType="com.hh.pms.domain.NobidNonPro">
+        update nobid_non_pro
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="xyId != null">xy_id = #{xyId},</if>
+            <if test="gCode != null">g_code = #{gCode},</if>
+            <if test="gName != null">g_name = #{gName},</if>
+            <if test="gIsPublic != null">g_is_public = #{gIsPublic},</if>
+            <if test="gSpawnTime != null">g_spawn_time = #{gSpawnTime},</if>
+            <if test="gDeadline != null">g_deadline = #{gDeadline},</if>
+            <if test="gStatus != null">g_status = #{gStatus},</if>
+            <if test="gCount != null">g_count = #{gCount},</if>
+            <if test="gUnit != null">g_unit = #{gUnit},</if>
+            <if test="gRounds != null">g_rounds = #{gRounds},</if>
+            <if test="gTendertype != null">g_tenderType = #{gTendertype},</if>
+        </trim>
+        where gid = #{gid}
+    </update>
+
+    <delete id="deleteNobidNonProByGid" parameterType="Long">
+        delete
+        from nobid_non_pro
+        where gid = #{gid}
+    </delete>
+
+    <delete id="deleteNobidNonProByGids" parameterType="String">
+        delete from nobid_non_pro where gid in
+        <foreach item="gid" collection="array" open="(" separator="," close=")">
+            #{gid}
+        </foreach>
+    </delete>
+</mapper>

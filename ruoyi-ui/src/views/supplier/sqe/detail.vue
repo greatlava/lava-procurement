@@ -178,18 +178,18 @@
             <el-row>
               <el-button @click="cancel">返回</el-button>
             </el-row>
-<!--            <el-upload ref="upload" class="upload-demo" :limit="2" accept=".doc, .docx, .rar, .txt, .png, .jpg"-->
-            <!--                       multiple-->
-            <!--                       :action="upload.url"-->
-            <!--                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"-->
-            <!--                       :on-progress="handleFileUploadProgress"-->
-            <!--                       :on-success="handleFileSuccess" :auto-upload="false">-->
-            <!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
-            <!--              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
-            <!--                         @click="submitUpload">上传到服务器-->
-            <!--              </el-button>-->
-            <!--              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>-->
-            <!--            </el-upload>-->
+<!--            <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"-->
+<!--                       multiple-->
+<!--                       :action="upload.url"-->
+<!--                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"-->
+<!--                       :on-progress="handleFileUploadProgress"-->
+<!--                       :on-success="handleFileSuccess" :auto-upload="false">-->
+<!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+<!--              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
+<!--                         @click="submitUpload">上传到服务器-->
+<!--              </el-button>-->
+<!--              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>-->
+<!--            </el-upload>-->
           </div>
         </el-tab-pane>
         <el-tab-pane label="业务经办人信息" name="second">

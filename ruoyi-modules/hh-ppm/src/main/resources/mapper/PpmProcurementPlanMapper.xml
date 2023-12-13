@@ -70,6 +70,15 @@
         where p.aid = #{aid}
     </select>
 
+    <select id="FindProcurementPlanBy" resultType="com.hh.pms.domain.PpmProcurementPlan">
+        <include refid="selectPpmProcurementPlanVo"/>
+        <where>
+            <if test="aName != null">and a_name like concat('%',#{aName},'%')</if>
+            <if test="aCreateDept != null">and a_create_dept  like concat('%',#{aCreateDept},'%') </if>
+            and ( a_astate = 2 or a_astate = 3 )
+        </where>
+    </select>
+
     <insert id="insertPpmProcurementPlan" parameterType="PpmProcurementPlan" useGeneratedKeys="true" keyProperty="aid">
         insert into ppm_procurement_plan
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -100,6 +109,20 @@
             <if test="aBtype != null">#{aBtype},</if>
             <if test="aAstate != null">#{aAstate},</if>
         </trim>
+    </insert>
+
+    <insert id="insertTenders">
+        INSERT
+        bid_tender (xy_id,s_code,s_name,s_way,s_type,create_by,update_by,s_project_state) VALUES (
+        #{xyId},
+        #{sCode},
+        #{sName},
+        #{sWay},
+        #{sType},
+        #{createBy},
+        #{updateBy},
+        #{sProjectState}
+        )
     </insert>
 
     <update id="updatePpmProcurementPlan" parameterType="PpmProcurementPlan">
