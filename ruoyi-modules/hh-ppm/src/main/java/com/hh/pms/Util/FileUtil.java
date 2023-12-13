@@ -25,7 +25,7 @@ import java.util.zip.ZipOutputStream;
 
 public class FileUtil {
 
-    public static final String FILENAME = "E:/java/PracticalTraining/file/";
+    public static final String FILENAME = "D:/rouyi/uploadPath/";
 
     private static final String HOST = "47.236.30.183";
 
@@ -34,7 +34,6 @@ public class FileUtil {
     private static final String PASSWORD = "clk962464A";
 
     private static final String REMOTE_FILE_PATH = "/opt/file/";
-
 
 
     public static void downloadFiles(String file, HttpServletResponse response) {
@@ -49,8 +48,10 @@ public class FileUtil {
             String[] fileNames = file.split(",");
             // 将多个文件打包到zip文件中
             for (String fileName : fileNames) {
-                Path filePath = Paths.get(fileName);
-                ZipEntry zipEntry = new ZipEntry(fileName);
+                String name = StringPathUtils.replaceHttpToNull(fileName);
+                System.out.println("name:" + FileUtil.FILENAME + name);
+                Path filePath = Paths.get(FileUtil.FILENAME + name);
+                ZipEntry zipEntry = new ZipEntry(StringPathUtils.subStringLastString(fileName));
                 zipOut.putNextEntry(zipEntry);
 
                 // 将文件内容写入ZipOutputStream
@@ -190,7 +191,6 @@ public class FileUtil {
 //        sysFile.setUrl(url);
         return R.ok(sysFile);
     }
-
 
 
 }

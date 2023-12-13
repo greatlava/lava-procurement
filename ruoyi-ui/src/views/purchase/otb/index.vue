@@ -121,8 +121,8 @@
                 <el-button type="primary" @click="download(form.fjAnnex)">
                   下载附件<i class="el-icon-download"></i>
                 </el-button>
-                <p v-for="item in fileNames">
-                  <a :href="item" target="_blank">{{ item }}</a>
+                <p v-for="i in file.names.length">
+                  <a :href="file.urls[i-1]" target="_blank">{{ file.names[i - 1] }}</a>
                 </p>
               </el-descriptions-item>
             </el-descriptions>
@@ -256,6 +256,7 @@ import {
 import {listRecord} from "@/api/system/approval";
 import {listRules} from "@/api/code/rules";
 import {Message} from "element-ui";
+import {selectedComPubAttamentsByAid} from "@/api/file/attachments";
 
 
 export default {
@@ -265,7 +266,11 @@ export default {
   props: [],
   data() {
     return {
-      fileNames: [],
+      fileUrls: "",
+      file: {
+        urls: [],
+        names: []
+      },
       fullscreenLoading: false,
       tableData: [/* 表格数据 */],
       tableColumns: [/* 表格列配置 */],
@@ -338,13 +343,12 @@ export default {
   },
   methods: {
     download(fileName) {
-      var url = fileName.split(',');
-      console.log(url, "url")
-      // const a = document.createElement('a')
-      // a.setAttribute('target', '_blank')
-      // a.setAttribute('href', url)
-      // debugger
-      // a.click()
+      let name = encodeURIComponent(this.fileUrls);
+      var url = `http://localhost:8080/ppm/file/downloadFiles?file=${name}`;
+      const a = document.createElement('a')
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
     },
     // 新增窗口关闭
     cancelInsert() {
@@ -385,7 +389,11 @@ export default {
             this.itemList = res.data.items;
             this.loading = false;
             this.form = res.data;
-            this.fileNames = res.data.fjAnnex.split(",");
+          })
+          selectedComPubAttamentsByAid(aid).then(res => {
+            this.fileUrls = res.data.anUrl;
+            this.file.urls = res.data.anUrl.split(",");
+            this.file.names = res.data.anName.split(",");
           })
           break;
       }

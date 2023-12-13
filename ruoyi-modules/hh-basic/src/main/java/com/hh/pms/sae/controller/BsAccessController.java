@@ -73,7 +73,7 @@ public class BsAccessController extends BaseController {
     @Log(title = "供应商准入", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsAccess bsAccess) {
-        return toAjax(bsAccessService.insertBsAccess(bsAccess));
+        return null;
     }
 
     /**
