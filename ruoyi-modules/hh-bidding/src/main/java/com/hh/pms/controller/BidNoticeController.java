@@ -125,4 +125,10 @@ public class BidNoticeController extends BaseController
     public AjaxResult findTwoInfo(@PathVariable Long uid) {
         return AjaxResult.success(bidNoticeService.findTwoInfo(uid));
     }
+
+    @GetMapping("/selMax")
+    public AjaxResult selMax()
+    {
+        return AjaxResult.success(bidNoticeService.selMax());
+    }
 }

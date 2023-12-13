@@ -58,7 +58,7 @@ public class BidNotice extends BaseEntity
 
     /** 附件 */
     @Excel(name = "附件")
-    private Long fjAnnex;
+    private String fjAnnex;
 
     /** 招标公告审批状态 */
     @Excel(name = "招标公告审批状态")
@@ -174,12 +174,12 @@ public class BidNotice extends BaseEntity
     {
         return uKaiTime;
     }
-    public void setFjAnnex(Long fjAnnex) 
+    public void setFjAnnex(String fjAnnex)
     {
         this.fjAnnex = fjAnnex;
     }
 
-    public Long getFjAnnex() 
+    public String getFjAnnex()
     {
         return fjAnnex;
     }

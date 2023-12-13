@@ -2,16 +2,18 @@ package com.hh.pms.controller;
 
 import java.util.List;
 import java.io.IOException;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.hh.pms.domain.BidNotice;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.system.api.RemoteFileService;
+import com.ruoyi.system.api.domain.SysFile;
+import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -21,6 +23,7 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 招标文件Controller
@@ -46,6 +49,13 @@ public class BidDocumentsController extends BaseController
         List<BidDocuments> list = bidDocumentsService.selectBidDocumentsList(bidDocuments);
         return getDataTable(list);
     }
+//    @GetMapping("/findTwoDocInfo")
+//    public TableDataInfo findTwoDocInfo(BidNotice bidNotice)
+//    {
+//        startPage();
+//        List<BidDocuments> list = bidDocumentsService.findTwoDocInfo(bidNotice);
+//        return getDataTable(list);
+//    }
 
     /**
      * 导出招标文件列表
@@ -102,4 +112,37 @@ public class BidDocumentsController extends BaseController
     {
         return toAjax(bidDocumentsService.deleteBidDocumentsByWids(wids));
     }
+    @Resource
+    private RemoteFileService remoteFileService;
+    @PostMapping("/upload1")
+    public AjaxResult upload1(MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            LoginUser loginUser = SecurityUtils.getLoginUser();
+            R<SysFile> fileResult = remoteFileService.upload(file);
+            System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
+            System.out.println("文件上传成功！。。。。");
+            //结果非空
+            if (!StringUtils.isNull(fileResult) || !StringUtils.isNull(fileResult.getData())) {
+                return AjaxResult.success("上传文件成功！");
+            }
+        }
+        return AjaxResult.error("上传文件异常，请联系管理员");
+    }
+
+    @PostMapping("/upload2")
+    public AjaxResult upload2(MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            LoginUser loginUser = SecurityUtils.getLoginUser();
+            R<SysFile> fileResult = remoteFileService.upload(file);
+            System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
+            System.out.println("文件上传成功！。。。。");
+            //结果非空
+            if (!StringUtils.isNull(fileResult) || !StringUtils.isNull(fileResult.getData())) {
+                return AjaxResult.success("上传文件成功！",fileResult.getData());
+            }
+        }
+        return AjaxResult.error("上传文件异常，请联系管理员");
+    }
+
+
 }

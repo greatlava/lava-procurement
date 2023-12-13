@@ -2,6 +2,7 @@ package com.hh.pms.mapper;
 
 import java.util.List;
 import com.hh.pms.domain.BidDocuments;
+import com.hh.pms.domain.BidNotice;
 
 /**
  * 招标文件Mapper接口
@@ -58,4 +59,7 @@ public interface BidDocumentsMapper
      * @return 结果
      */
     public int deleteBidDocumentsByWids(Long[] wids);
+
+
+//    public List<BidDocuments> findTwoDocInfo(BidNotice bidNotice);
 }

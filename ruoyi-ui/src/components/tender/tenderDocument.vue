@@ -33,16 +33,6 @@
           v-hasPermi="['system:documents:remove']"
         >删除</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:documents:export']"
-        >导出</el-button>
-      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -50,7 +40,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" align="center" prop="wid" />
       <el-table-column label="文件标题" align="center" prop="wTitle"/>
-      <el-table-column label="文件大小" align="center" prop="wSize" />
+      <el-table-column label="文件大小(kb)" align="center" prop="wSize" />
       <el-table-column label="上传时间" align="center" prop="wUploadTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.wUploadTime, '{y}-{m}-{d}') }}</span>
@@ -58,11 +48,15 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+<!--          <router-link :to="scope.row.url == null?'aaa':scope.row.url">-->
+          <a :href="scope.row.url">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-view"
           >预览</el-button>
+<!--          </router-link>-->
+          </a>
           <el-button
             size="mini"
             type="text"
@@ -89,8 +83,8 @@
 
     <!-- 添加或修改招标文件对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="招标项目ID" prop="sid">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px" v-loading="loading">
+        <el-form-item label="招标项目ID" prop="uid">
           <el-input v-model="form.sid" placeholder="请输入招标项目ID" :disabled="true"/>
         </el-form-item>
         <el-form-item label="文件标题" prop="wTitle">
@@ -99,13 +93,18 @@
         <el-form-item label="文件大小" prop="wSize">
           <el-input v-model="form.wSize" placeholder="请输入文件大小" />
         </el-form-item>
-        <el-form-item label="上传时间" prop="wUploadTime">
-          <el-date-picker clearable
-                          v-model="form.wUploadTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择上传时间">
-          </el-date-picker>
+        <el-form-item label="附件">
+          <el-upload ref="upload" class="upload-demo" :limit="1" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+                     multiple
+                     :action="upload.url"
+                     :data="upload"
+                     :on-change="changeFileLength"
+                     :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"
+                     :on-progress="handleFileUploadProgress"
+                     :on-success="handleFileSuccess" :auto-upload="false" :disabled="this.queryParams.type === 'update'">
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>
+          </el-upload>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -117,8 +116,10 @@
 </template>
 
 <script>
-import { listDocuments, getDocuments, delDocuments, addDocuments, updateDocuments } from "@/api/system/document";
-import { getTender,updateTender } from '@/api/system/tender';
+import { listDocuments, getDocuments, delDocuments, addDocuments, updateDocuments,findTwoDocInfo } from "@/api/system/document";
+import {addNotice, findStatus, updateNotice} from "@/api/system/tenderNotice";
+import {getToken} from "@/utils/auth";
+import * as url from "url";
 
 export default {
   name: "Documents",
@@ -147,10 +148,12 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        sid: null,
+        uid: null,
+        sid:null,
         wTitle: null,
         wSize: null,
-        wUploadTime: null
+        wUploadTime: null,
+        type:null,
       },
       // 表单参数
       form: {},
@@ -165,6 +168,28 @@ export default {
         wUploadTime:[
           { required: true, message: "上传时间不能为空", trigger: "blur" }
         ]
+      },
+      //附件
+      fileList:[],
+      // 收集——上传文件的列表
+      uploadFiles: [],
+      // 收集——上传文件的个数
+      filesLength: 0,
+      //收集已上传的文件名
+      fileNameList:[],
+      // 上传参数
+      upload: {
+        sid:this.$route.query.sid,
+        // 上传的文件列表
+        fileList: [],
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: {
+          Authorization: "Bearer " + getToken()
+        },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/bidding/documents/upload2",
       }
     };
   },
@@ -172,12 +197,18 @@ export default {
     this.getList();
   },
   methods: {
+    isTextOrImageFile(file) {
+      // 检查文件类型是否是可以直接在浏览器中预览的类型，这里只检查了文本文件和图像文件，你可以根据需要添加更多的类型检查
+      const validTypes = ['text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.document.12'];
+      return validTypes.includes(file.type);
+    },
     /** 查询招标文件列表 */
     getList() {
       this.loading = true;
-      listDocuments(this.queryParams).then(response => {
-        this.documentsList = response.rows;
-        this.total = response.total;
+      this.queryParams.sid = this.$route.query.sid;
+      listDocuments(this.queryParams).then(res=>{
+        this.documentsList = res.rows;
+        this.total = res.total;
         this.loading = false;
       });
     },
@@ -191,7 +222,7 @@ export default {
       this.form = {
         wid: null,
         wTitle: null,
-        sid:this.$route.query.sid,
+        sid:null,
         wSize: null,
         wUploadTime: null
       };
@@ -207,35 +238,23 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加招标文件";
+      this.loading =true;
+      this.queryParams.type='add';
+      this.form.sid = this.$route.query.sid;
+      setTimeout(()=>{
+        this.loading = false;
+      },500)
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
+      this.queryParams.type='update';
       const wid = row.wid || this.ids
       getDocuments(wid).then(response => {
         this.form = response.data;
+        this.upload.fileList=[{name:this.form.fileName,url:this.form.url}];
         this.open = true;
         this.title = "修改招标文件";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.wid != null) {
-            updateDocuments(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addDocuments(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
       });
     },
     /** 删除按钮操作 */
@@ -248,11 +267,102 @@ export default {
         this.$modal.msgSuccess("删除成功");
       }).catch(() => {});
     },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('system/documents/export', {
-        ...this.queryParams
-      }, `documents_${new Date().getTime()}.xlsx`)
+    /** 提交按钮 表单提交*/
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        //已发布状态 点击退出
+        if(this.form.fjStatus === 5){
+          this.open = false;
+        }else{
+          //表单验证
+          if (valid) {
+            //1:如果没有文件，直接上传form表单
+            if(this.filesLength == 0){
+              //判断type值  update：修改  add：新增
+              if (this.queryParams.type === 'update') {
+                updateDocuments(this.form).then(response => {
+                  this.$modal.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                });
+              } else if(this.queryParams.type === 'add'){
+                this.form.sid = this.$route.query.sid;//确定对应招标项目
+                //新增公告
+                addDocuments(this.form).then(response => {
+                  this.$modal.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                });
+              }
+            }else{
+              //2:如果有文件
+              //2.1文件上传执行submit  即触发 handleFileSuccess函数
+              this.$refs.upload.submit();
+              //2.2:上传返回的URL地址，在handleFileSuccess中处理
+              //2.3：表单提交
+            }
+          }
+        }
+      });
+    },
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 修改当前文件列表长度
+    changeFileLength(file, fileList){
+      this.filesLength = fileList.length;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      //拿到招标项目id
+      this.form.sid = this.$route.query.sid;
+      console.log(response,"res");
+      console.log(file,"file");
+      console.log(fileList,"filelist");
+
+      this.form.fileName = response.data.name;//文件名
+      this.form.url = response.data.url;//查询路径
+      this.uploadFiles.push(file);
+      //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
+      if (this.uploadFiles.length == this.filesLength){
+        //将上传文件信息从fileList中拼接
+        this.form.fileList=fileList;
+        if(this.queryParams.type ==='update'){
+          //修改文件
+          updateDocuments(this.form).then(response => {
+            this.$modal.msgSuccess("修改成功");
+            this.open = false;
+            this.getList();
+          });
+        }else if (this.queryParams.type ==='add'){
+          //新增文件
+          // this.form.
+          addDocuments(this.form).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          });
+
+        }
+        console.log("上传后文件列表:"+fileList);
+      }
+      this.upload.isUploading = false;
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    beforeUpload(file) {
+      const isLt5M = file.size / 1024 / 1024 < 5;
+
+      if (!isLt5M) {
+        this.$message.error('文件大小不能超过5MB');
+      }
+      return isLt5M;
     }
   }
 };

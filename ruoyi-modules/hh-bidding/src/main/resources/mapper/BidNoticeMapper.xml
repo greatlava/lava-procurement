@@ -152,4 +152,8 @@
             </association>
     </resultMap>
 
+    <select id="selMax">
+        select * from bid_notice order by uid desc limit 1;
+    </select>
+
 </mapper>

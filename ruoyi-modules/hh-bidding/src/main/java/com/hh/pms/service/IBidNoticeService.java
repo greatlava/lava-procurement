@@ -66,4 +66,6 @@ public interface IBidNoticeService
 
     public int deleteYfb(Long sid);
     public BidNotice findTwoInfo(Long uid);
+
+    public BidNotice selMax();
 }

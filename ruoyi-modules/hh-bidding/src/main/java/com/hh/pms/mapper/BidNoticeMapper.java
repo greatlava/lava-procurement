@@ -66,4 +66,6 @@ public interface BidNoticeMapper
     public List<BidNotice> findStatus(Long sid);
 
     public BidNotice findTwoInfo(Long uid);
+
+    public BidNotice selMax();
 }

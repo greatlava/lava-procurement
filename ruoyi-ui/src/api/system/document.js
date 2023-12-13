@@ -42,3 +42,14 @@ export function delDocuments(wid) {
     method: 'delete'
   })
 }
+
+// // 查询招标文件列表(两表联查)
+// export function findTwoDocInfo(query) {
+//   return request({
+//     url: '/bidding/documents/findTwoDocInfo',
+//     method: 'get',
+//     params: query
+//   })
+// }
+
+
