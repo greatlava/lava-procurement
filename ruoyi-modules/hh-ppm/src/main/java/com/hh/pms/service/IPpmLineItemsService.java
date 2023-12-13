@@ -61,4 +61,6 @@ public interface IPpmLineItemsService
     public int deletePpmLineItemsByVid(Integer vid);
 
     public int deletePpmLineItemsByAid(Integer aid);
+
+    public int deletePpmLineItemByJhId(Integer jhId);
 }

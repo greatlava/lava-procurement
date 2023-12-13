@@ -6,22 +6,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.Util.CodeRuleHelp;
 import com.hh.pms.Util.CodeRuleUtil;
+import com.hh.pms.Util.StringPathUtils;
 import com.hh.pms.domain.*;
+import com.hh.pms.service.IComPubAttachmentsService;
 import com.hh.pms.service.IPpmApprovalRecordService;
 import com.hh.pms.service.IPpmLineItemsService;
 import com.hh.pms.service.IPpmProcurementPlanService;
 import com.hh.pms.service.imp.ComCodeRulesServiceImpl;
 import com.ruoyi.common.security.service.TokenService;
+import com.ruoyi.system.api.RemoteBidWinningResultsService;
+import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -53,6 +50,10 @@ public class PpmProcurementPlanController extends BaseController {
 
     @Autowired
     private IPpmLineItemsService ppmLineItemsService;
+
+    @Autowired
+    private IComPubAttachmentsService comPubAttachmentsService;
+
 
     /**
      * 查询采购计划列表
@@ -93,8 +94,13 @@ public class PpmProcurementPlanController extends BaseController {
     @Log(title = "采购计划", businessType = BusinessType.INSERT)
     @Transactional
     @PostMapping
-    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
-        return toAjax(ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan));
+    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan, @RequestParam("url") String url,@RequestParam("fileName") String fileName) {
+        System.out.println("ppmProcurementPlan:" + ppmProcurementPlan + "\n url:" + url + "\n fileName:" + fileName);
+        return AjaxResult.success();
+//        ppmProcurementPlan.setFjAnnex(StringPathUtils.cutToTheEndStr(ppmProcurementPlan.getFjAnnex()));
+//        ComPubAttachments comPubAttachments = new ComPubAttachments();
+//        comPubAttachmentsService.insertComPubAttachments(comPubAttachments);
+//        return toAjax(ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan));
     }
 
     /**
@@ -138,8 +144,10 @@ public class PpmProcurementPlanController extends BaseController {
      */
     @RequiresPermissions("system:plan:remove")
     @Log(title = "采购计划", businessType = BusinessType.DELETE)
+    @Transactional
     @DeleteMapping("/{aids}")
     public AjaxResult remove(@PathVariable Integer[] aids) {
+        ppmLineItemsService.deletePpmLineItemsByAid(aids[0]);
         return toAjax(ppmProcurementPlanService.deletePpmProcurementPlanByAids(aids));
     }
 
@@ -179,5 +187,50 @@ public class PpmProcurementPlanController extends BaseController {
             ppmLineItemsService.insertPpmLineItems(item);
         }
         return AjaxResult.success(ppmProcurementPlanService.updatePpmProcurementPlan(ppmProcurementPlan));
+    }
+
+    @PostMapping("/updateStateAndAddBidWinning")
+    @Transactional
+    public AjaxResult updateStateAndAddBidWinning(@RequestBody List<PpmProcurementPlan> ppmProcurementPlan, Integer type) {
+        BidTender bidTender = new BidTender();
+
+        for (PpmProcurementPlan item : ppmProcurementPlan) {
+            item.setaAstate(3);
+            ppmProcurementPlanService.updatePpmProcurementPlan(item);
+            switch (type) {
+                case 1:
+                case 2:
+                    ComCodeRules rules = comCodeRulesService.selectComCodeRulesByTargetForm(CodeRuleUtil.INVITETENDERS);
+                    CodeRulesResult result = CodeRuleHelp.GetCodeRule(rules);
+                    rules.setMaxMantissa(result.getMax());
+                    comCodeRulesService.updateComCodeRules(rules);
+                    bidTender.setXyId(item.getAid());
+                    bidTender.setsCode(result.getCode());
+                    bidTender.setsName(item.getaName());
+                    bidTender.setsWay(type);
+                    bidTender.setsProjectState(2);
+                    bidTender.setsType(item.getaBtype());
+                    bidTender.setCreateBy(item.getCreateBy());
+                    ppmProcurementPlanService.insertTenders(bidTender);
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                    rules = comCodeRulesService.selectComCodeRulesByTargetForm(CodeRuleUtil.NOTINVITETENDERS);
+                    result = CodeRuleHelp.GetCodeRule(rules);
+                    rules.setMaxMantissa(result.getMax());
+                    comCodeRulesService.updateComCodeRules(rules);
+
+                    break;
+            }
+
+        }
+        return AjaxResult.success();
+    }
+
+    @RequestMapping("/FindProcurementPlanBy")
+    public TableDataInfo FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
+        return getDataTable(ppmProcurementPlanService.FindProcurementPlanBy(ppmProcurementPlan));
     }
 }

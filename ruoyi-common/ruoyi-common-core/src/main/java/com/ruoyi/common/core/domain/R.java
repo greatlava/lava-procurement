@@ -112,4 +112,13 @@ public class R<T> implements Serializable
     {
         return R.SUCCESS == ret.getCode();
     }
+
+    @Override
+    public String toString() {
+        return "R{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

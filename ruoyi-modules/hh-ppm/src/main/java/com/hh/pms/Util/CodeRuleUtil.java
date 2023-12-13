@@ -1,6 +1,7 @@
 package com.hh.pms.Util;
 
 public class CodeRuleUtil {
+
     /**
      * 采购
      */
@@ -8,7 +9,9 @@ public class CodeRuleUtil {
     /**
      * 招标
      */
-    public static final String INVITETENDERS = "招标";
+    public static final String INVITETENDERS = "招标项目";
+
+    public static final String NOTINVITETENDERS = "非招标项目";
     /**
      * 投标
      */
@@ -23,4 +26,9 @@ public class CodeRuleUtil {
      * 行项目
      */
     public static final String LINEITEM = "行项目";
+
+    /**
+     * 框架计划
+     */
+    public static final String FRAMEWORK = "框架计划";
 }

@@ -121,6 +121,9 @@
                 <el-button type="primary" @click="download(form.fjAnnex)">
                   下载附件<i class="el-icon-download"></i>
                 </el-button>
+                <p v-for="item in fileNames">
+                  <a :href="item" target="_blank">{{ item }}</a>
+                </p>
               </el-descriptions-item>
             </el-descriptions>
             <el-table max-height="250" :data="budgetData" style="margin-top: 20px">
@@ -262,6 +265,7 @@ export default {
   props: [],
   data() {
     return {
+      fileNames: [],
       fullscreenLoading: false,
       tableData: [/* 表格数据 */],
       tableColumns: [/* 表格列配置 */],
@@ -334,9 +338,13 @@ export default {
   },
   methods: {
     download(fileName) {
-      fileDownload(fileName).then(res => {
-        console.log("file", res)
-      })
+      var url = fileName.split(',');
+      console.log(url, "url")
+      // const a = document.createElement('a')
+      // a.setAttribute('target', '_blank')
+      // a.setAttribute('href', url)
+      // debugger
+      // a.click()
     },
     // 新增窗口关闭
     cancelInsert() {
@@ -377,7 +385,7 @@ export default {
             this.itemList = res.data.items;
             this.loading = false;
             this.form = res.data;
-            console.log("from", this.form)
+            this.fileNames = res.data.fjAnnex.split(",");
           })
           break;
       }

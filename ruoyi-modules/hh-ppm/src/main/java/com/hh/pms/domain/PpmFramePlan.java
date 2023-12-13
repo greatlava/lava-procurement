@@ -19,7 +19,7 @@ public class PpmFramePlan extends BaseEntity {
     /**
      * 框架计划ID
      */
-    private Long jhId;
+    private Integer jhId;
 
     /**
      * 框架协议ID
@@ -69,8 +69,44 @@ public class PpmFramePlan extends BaseEntity {
     @Excel(name = "采购方式")
     private String jhPmethod;
 
-    /** 行项目集合 */
+    @Excel(name = "创建人")
+    private String jhFounder;
+
+    @Excel(name = "供应商id")
+    private Integer hid;
+
+    @Excel(name = "业务类型")
+    private Integer businessType;
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
+    public Integer getHid() {
+        return hid;
+    }
+
+    public void setHid(Integer hid) {
+        this.hid = hid;
+    }
+
+    public String getJhFounder() {
+        return jhFounder;
+    }
+
+    public void setJhFounder(String jhFounder) {
+        this.jhFounder = jhFounder;
+    }
+
+    /**
+     * 行项目集合
+     */
     private List<PpmLineItems> items;
+
     public List<PpmLineItems> getItems() {
         return items;
     }
@@ -79,12 +115,12 @@ public class PpmFramePlan extends BaseEntity {
         this.items = items;
     }
 
-    public void setJhId(Long jhId) {
-        this.jhId = jhId;
+    public Integer getJhId() {
+        return jhId;
     }
 
-    public Long getJhId() {
-        return jhId;
+    public void setJhId(Integer jhId) {
+        this.jhId = jhId;
     }
 
     public void setOid(Long oid) {
@@ -163,6 +199,7 @@ public class PpmFramePlan extends BaseEntity {
                 .append("jhStatus", getJhStatus())
                 .append("jhPerson", getJhPerson())
                 .append("jhPmethod", getJhPmethod())
+                .append("items", getItems())
                 .toString();
     }
 }

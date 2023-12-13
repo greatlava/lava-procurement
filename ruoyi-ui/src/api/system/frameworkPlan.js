@@ -42,3 +42,32 @@ export function delPlan(jhId) {
     method: 'delete'
   })
 }
+
+export function AddPlanAndOther(data) {
+  return request({
+    url: "/ppm/framework/AddPlanAndOther",
+    method: "post",
+    data: data,
+  })
+}
+
+export function queryFrameworkPlanAndRelatedInformation(jhId) {
+  return request({
+    url: "/ppm/framework/PlanAndRelatedInformation?jhId=" + jhId,
+    method: "post"
+  })
+}
+
+export function deleteByJhId(jhid) {
+  return request({
+    url: '/ppm/framework/deleteByJhId?jhid=' + jhid,
+    method: "post"
+  })
+}
+
+export function updateFarmeworkPlanStatus(jhid, state) {
+  return request({
+    url: "/ppm/framework/updateFarmeworkPlanStatus?jhId=" + jhid + "&jhStatus=" + state,
+    method: 'post'
+  })
+}
