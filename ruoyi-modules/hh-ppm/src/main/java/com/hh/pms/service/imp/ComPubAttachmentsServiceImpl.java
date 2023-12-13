@@ -1,6 +1,7 @@
 package com.hh.pms.service.impl;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hh.pms.mapper.ComPubAttachmentsMapper;
@@ -14,8 +15,7 @@ import com.hh.pms.service.IComPubAttachmentsService;
  * @date 2023-12-13
  */
 @Service
-public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
-{
+public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService {
     @Autowired
     private ComPubAttachmentsMapper comPubAttachmentsMapper;
 
@@ -26,8 +26,7 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 公共附件
      */
     @Override
-    public ComPubAttachments selectComPubAttachmentsByAnId(Integer anId)
-    {
+    public ComPubAttachments selectComPubAttachmentsByAnId(Integer anId) {
         return comPubAttachmentsMapper.selectComPubAttachmentsByAnId(anId);
     }
 
@@ -38,8 +37,7 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 公共附件
      */
     @Override
-    public List<ComPubAttachments> selectComPubAttachmentsList(ComPubAttachments comPubAttachments)
-    {
+    public List<ComPubAttachments> selectComPubAttachmentsList(ComPubAttachments comPubAttachments) {
         return comPubAttachmentsMapper.selectComPubAttachmentsList(comPubAttachments);
     }
 
@@ -50,8 +48,7 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 结果
      */
     @Override
-    public int insertComPubAttachments(ComPubAttachments comPubAttachments)
-    {
+    public int insertComPubAttachments(ComPubAttachments comPubAttachments) {
         return comPubAttachmentsMapper.insertComPubAttachments(comPubAttachments);
     }
 
@@ -62,8 +59,7 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 结果
      */
     @Override
-    public int updateComPubAttachments(ComPubAttachments comPubAttachments)
-    {
+    public int updateComPubAttachments(ComPubAttachments comPubAttachments) {
         return comPubAttachmentsMapper.updateComPubAttachments(comPubAttachments);
     }
 
@@ -74,8 +70,7 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 结果
      */
     @Override
-    public int deleteComPubAttachmentsByAnIds(Integer[] anIds)
-    {
+    public int deleteComPubAttachmentsByAnIds(Integer[] anIds) {
         return comPubAttachmentsMapper.deleteComPubAttachmentsByAnIds(anIds);
     }
 
@@ -86,8 +81,12 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService
      * @return 结果
      */
     @Override
-    public int deleteComPubAttachmentsByAnId(Integer anId)
-    {
+    public int deleteComPubAttachmentsByAnId(Integer anId) {
         return comPubAttachmentsMapper.deleteComPubAttachmentsByAnId(anId);
+    }
+
+    @Override
+    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid) {
+        return comPubAttachmentsMapper.selectedComPubAttamentsByAid(aid);
     }
 }

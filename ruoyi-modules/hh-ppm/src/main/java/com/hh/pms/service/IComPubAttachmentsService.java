@@ -58,4 +58,7 @@ public interface IComPubAttachmentsService
      * @return 结果
      */
     public int deleteComPubAttachmentsByAnId(Integer anId);
+
+
+    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid);
 }
