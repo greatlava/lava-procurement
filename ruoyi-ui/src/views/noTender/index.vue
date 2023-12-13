@@ -14,8 +14,8 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="项目名称" prop="field108">
-                  <el-input v-model="form.field108" placeholder="请输入项目名称" clearable
+                <el-form-item label="项目名称" prop="field102">
+                  <el-input v-model="form.field102" placeholder="请输入项目名称" clearable
                             :style="{width: '100%'}"
                   ></el-input>
                 </el-form-item>
@@ -23,7 +23,7 @@
               <el-col :span="24">
                 <el-form-item size="medium">
                   <el-button type="primary" @click="query">查询</el-button>
-                  <el-button @click="resetForm">重置</el-button>
+                  <el-button @click="resetQuery">重置</el-button>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -339,10 +339,45 @@ export default {
   },
   methods: {
     //查询
-    query(tab, event) {
+    query() {
+      // 模糊查询按钮点击时的处理逻辑
+      console.log('执行模糊查询')
+      if (this.form.field101 != null) {
+        this.queryParams1.gSpawnTime = this.form.field101[0]
+        this.queryParams1.gDeadline = this.form.field101[1]
+        this.queryParams2.gSpawnTime = this.form.field101[0]
+        this.queryParams2.gDeadline = this.form.field101[1]
+        this.queryParams3.gSpawnTime = this.form.field101[0]
+        this.queryParams3.gDeadline = this.form.field101[1]
+        this.queryParams4.gSpawnTime = this.form.field101[0]
+        this.queryParams4.gDeadline = this.form.field101[1]
+      } else {
+        this.queryParams1.gSpawnTime = null
+        this.queryParams1.gDeadline = null
+        this.queryParams2.gSpawnTime = null
+        this.queryParams2.gDeadline = null
+        this.queryParams3.gSpawnTime = null
+        this.queryParams3.gDeadline = null
+        this.queryParams4.gSpawnTime = null
+        this.queryParams4.gDeadline = null
+      }
+      this.queryParams1.gName = this.form.field102
+      this.queryParams1.pageNum = 1
+      this.getList1()
+      this.queryParams2.gName = this.form.field102
+      this.queryParams2.pageNum = 1
+      this.getList2()
+      this.queryParams3.gName = this.form.field102
+      this.queryParams3.pageNum = 1
+      this.getList3()
+      this.queryParams4.gName = this.form.field102
+      this.queryParams4.pageNum = 1
+      this.getList4()
     },
     //重置
-    resetForm() {
+    resetQuery() {
+      this.$refs.elForm.resetFields()
+      this.query()
     },
     //切换标签页
     handleClick(tab, event) {
@@ -356,8 +391,7 @@ export default {
       } else {
         this.getList4()// 执行标签页fourth的查询操作
       }
-    }
-    ,
+    },
     //查询询价信息
     getList1() {
       this.loading = true
