@@ -30,13 +30,15 @@
                 <template slot="label">
                   机构类型
                 </template>
-                <el-tag size="small">{{ this.hInstitution }}</el-tag>
+                <span v-if="this.hInstitution == null" style="color: #cccccc">待填写</span>
+                <el-tag size="small" v-else>{{ this.hInstitution }}</el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   企业性质
                 </template>
-                {{ this.hQuality }}
+                <span v-if="this.hQuality == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hQuality }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -60,37 +62,41 @@
                 <template slot="label">
                   单位联系地址
                 </template>
-                {{ this.hAddress }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  经营范围
-                </template>
-                {{ this.hRange }}
+                <span v-if="this.hAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   公司简介
                 </template>
-                {{ this.hDesc }}
+                <span v-if="this.hDesc == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hDesc }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   营业执照扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  营业执照有效期
-                </template>
-                {{ this.hExpiration }}
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    fit="contain"
+                    :src="hCopies"
+                    :preview-src-list="hCopiesList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   法人/负责人身份证扫描件
                 </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    :src="idCardCopy"
+                    fit="contain"
+                    :preview-src-list="idCardCopyList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -101,49 +107,50 @@
                 <template slot="label">
                   开户行
                 </template>
-                {{ this.hBank }}
+                <span v-if="this.hBank == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hBank }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   银行账号
                 </template>
-                {{ this.hAccount }}
+                <span v-if="this.hAccount == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hAccount }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   开户行地址
                 </template>
-                {{ this.hBankAddress }}
+                <span v-if="this.hBankAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hBankAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   单位注册电话
                 </template>
-                {{ this.hSignPhone }}
+                <span v-if="this.hSignPhone == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hSignPhone }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   单位注册地址
                 </template>
-                {{ this.hSignAddress }}
+                <span v-if="this.hSignAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hSignAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   注册资本（万元）
                 </template>
-                {{ this.hCapital }}
+                <span v-if="this.hCapital == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hCapital }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   实缴资本（万元）
                 </template>
-                {{ this.hActualCapital }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  开户许可证/基本户存款信息证明
-                </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <span v-if="this.hActualCapital == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hActualCapital }}</span>
               </el-descriptions-item>
             </el-descriptions>
             <el-form style="margin-top: 20px" label-width="80px">
@@ -193,19 +200,14 @@
                 <template slot="label">
                   身份证扫描件
                 </template>
-                {{ this.operator.ywScanIdcard }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  授权书扫描件
-                </template>
-                {{ this.operator.ywScanEmpower }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  座机
-                </template>
-                {{ this.operator.ywLandline }}
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    :src="ywIdCardCopy"
+                    fit="contain"
+                    :preview-src-list="ywIdCardCopyList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -348,7 +350,6 @@ export default {
       hAddress: null,
       hRange: null,
       hDesc: null,
-      hCopies: null,
       hJuridicalCopies: null,
       hExpiration: null,
       hBank: null,
@@ -371,6 +372,15 @@ export default {
       financialStatusList: [],
       //相关附件
       accessoriesList: [],
+      //营业执照
+      hCopies: null,
+      hCopiesList: [],
+      //法人身份证
+      idCardCopy: null,
+      idCardCopyList: [],
+      //业务经办人身份证
+      ywIdCardCopy: null,
+      ywIdCardCopyList: [],
       //业务经办人
       operator: {
         ywName: null,
@@ -378,8 +388,6 @@ export default {
         ywIdcrad: null,
         ywMailbox: null,
         ywScanIdcard: null,
-        ywScanEmpower: null,
-        ywLandline: null
       },
       //核心技术人员
       total: 0,
@@ -478,9 +486,7 @@ export default {
         this.hJuridical = response.data.hJuridical
         this.hJuridicalIdentity = response.data.hJuridicalIdentity
         this.hAddress = response.data.hAddress
-        this.hRange = response.data.hRange
         this.hDesc = response.data.hDesc
-        this.hExpiration = response.data.hExpiration
         this.hBank = response.data.hBank
         this.hBankAddress = response.data.hBankAddress
         this.hSignPhone = response.data.hSignPhone
@@ -496,8 +502,6 @@ export default {
           this.operator.ywIdcrad = res.data.ywIdcrad
           this.operator.ywMailbox = res.data.ywMailbox
           this.operator.ywScanIdcard = res.data.ywScanIdcard
-          this.operator.ywScanEmpower = res.data.ywScanEmpower
-          this.operator.ywLandline = res.data.ywLandline
         })
         //核心技术人员
         this.personnel.hid = response.data.hid
