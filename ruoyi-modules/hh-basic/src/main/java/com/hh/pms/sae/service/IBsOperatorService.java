@@ -3,6 +3,7 @@ package com.hh.pms.sae.service;
 import java.util.List;
 
 import com.hh.pms.sae.domain.BsOperator;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 业务经办人信息Service接口
@@ -10,6 +11,7 @@ import com.hh.pms.sae.domain.BsOperator;
  * @author ruoyi
  * @date 2023-11-19
  */
+@Transactional
 public interface IBsOperatorService {
     /**
      * 查询业务经办人信息

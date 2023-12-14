@@ -217,9 +217,8 @@ public class BsSupplierController extends BaseController {
         access.setZrPromoter(map.get("hJuridical").toString());
         int res = bsAccessService.insertBsAccess(access);
         if (res > 0) {
-            map.put("zrId", access.getZrId());
             BsSupplier bsSupplier = new BsSupplier();
-            bsSupplier.setZrId(Long.parseLong(map.get("zrId").toString()));
+            bsSupplier.setZrId(access.getZrId());
             bsSupplier.sethName(map.get("hName").toString());
             bsSupplier.sethCreditCode(map.get("hCreditCode").toString());
             bsSupplier.sethIncorporation(map.get("hIncorporation").toString());
@@ -233,15 +232,17 @@ public class BsSupplierController extends BaseController {
             bsSupplier.sethCopies(map.get("hCopies").toString());
             bsSupplier.sethJuridicalCopies(map.get("hJuridicalCopies").toString());
 
-            //业务经办人
-            BsOperator operator = new BsOperator();
-            //bsSupplier.sethJuridicalCopies(map.get("ywName").toString());
-            //bsSupplier.sethJuridicalCopies(map.get("ywPhone").toString());
-            //bsSupplier.sethJuridicalCopies(map.get("ywIdcrad").toString());
-            //bsSupplier.sethJuridicalCopies(map.get("ywMailbox").toString());
             //插入数据库
             int ress = bsSupplierService.insertBsSupplier(bsSupplier);
             if (ress > 0) {
+                //业务经办人
+                BsOperator operator = new BsOperator();
+                operator.setHid(bsSupplier.getHid());
+                operator.setYwName(map.get("ywName").toString());
+                operator.setYwPhone(map.get("ywPhone").toString());
+                operator.setYwIdcrad(map.get("ywIdcrad").toString());
+                operator.setYwMailbox(map.get("ywMailbox").toString());
+                operator.setYwScanIdcard(map.get("ywScanIdcard").toString());
                 return toAjax(bsOperatorService.insertBsOperator(operator));
             }
         }
