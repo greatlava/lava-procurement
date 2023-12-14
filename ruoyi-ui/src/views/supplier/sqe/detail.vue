@@ -40,13 +40,15 @@
                 <template slot="label">
                   机构类型
                 </template>
-                <el-tag size="small">{{ this.hInstitution }}</el-tag>
+                <span v-if="this.hInstitution == null" style="color: #cccccc">待填写</span>
+                <el-tag size="small" v-else>{{ this.hInstitution }}</el-tag>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   企业性质
                 </template>
-                {{ this.hQuality }}
+                <span v-if="this.hQuality == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hQuality }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -70,19 +72,15 @@
                 <template slot="label">
                   单位联系地址
                 </template>
-                {{ this.hAddress }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  经营范围
-                </template>
-                {{ this.hRange }}
+                <span v-if="this.hAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   公司简介
                 </template>
-                {{ this.hDesc }}
+                <span v-if="this.hDesc == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hDesc }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -96,12 +94,6 @@
                     :preview-src-list="hCopiesList">
                   </el-image>
                 </div>
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  营业执照有效期
-                </template>
-                {{ this.hExpiration }}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
@@ -125,49 +117,50 @@
                 <template slot="label">
                   开户行
                 </template>
-                {{ this.hBank }}
+                <span v-if="this.hBank == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hBank }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   银行账号
                 </template>
-                {{ this.hAccount }}
+                <span v-if="this.hAccount == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hAccount }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   开户行地址
                 </template>
-                {{ this.hBankAddress }}
+                <span v-if="this.hBankAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hBankAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   单位注册电话
                 </template>
-                {{ this.hSignPhone }}
+                <span v-if="this.hSignPhone == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hSignPhone }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   单位注册地址
                 </template>
-                {{ this.hSignAddress }}
+                <span v-if="this.hSignAddress == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hSignAddress }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   注册资本（万元）
                 </template>
-                {{ this.hCapital }}
+                <span v-if="this.hCapital == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hCapital }}</span>
               </el-descriptions-item>
               <el-descriptions-item>
                 <template slot="label">
                   实缴资本（万元）
                 </template>
-                {{ this.hActualCapital }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  开户许可证/基本户存款信息证明
-                </template>
-                江苏省苏州市吴中区吴中大道 1188 号
+                <span v-if="this.hActualCapital == null" style="color: #cccccc">待填写</span>
+                <span v-else>{{ this.hActualCapital }}</span>
               </el-descriptions-item>
             </el-descriptions>
             <el-form style="margin-top: 20px" label-width="80px">
@@ -178,18 +171,18 @@
             <el-row>
               <el-button @click="cancel">返回</el-button>
             </el-row>
-<!--            <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"-->
-<!--                       multiple-->
-<!--                       :action="upload.url"-->
-<!--                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"-->
-<!--                       :on-progress="handleFileUploadProgress"-->
-<!--                       :on-success="handleFileSuccess" :auto-upload="false">-->
-<!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
-<!--              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
-<!--                         @click="submitUpload">上传到服务器-->
-<!--              </el-button>-->
-<!--              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>-->
-<!--            </el-upload>-->
+            <!--            <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"-->
+            <!--                       multiple-->
+            <!--                       :action="upload.url"-->
+            <!--                       :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"-->
+            <!--                       :on-progress="handleFileUploadProgress"-->
+            <!--                       :on-success="handleFileSuccess" :auto-upload="false">-->
+            <!--              <el-button slot="trigger" size="small" type="primary">选取文件</el-button>-->
+            <!--              <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
+            <!--                         @click="submitUpload">上传到服务器-->
+            <!--              </el-button>-->
+            <!--              <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>-->
+            <!--            </el-upload>-->
           </div>
         </el-tab-pane>
         <el-tab-pane label="业务经办人信息" name="second">
@@ -223,20 +216,27 @@
                 <template slot="label">
                   身份证扫描件
                 </template>
-                {{ this.operator.ywScanIdcard }}
+                <div class="demo-image__preview">
+                  <el-image
+                    style="width: 100px; height: 100px"
+                    :src="ywIdCardCopy"
+                    fit="contain"
+                    :preview-src-list="ywIdCardCopyList">
+                  </el-image>
+                </div>
               </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  授权书扫描件
-                </template>
-                {{ this.operator.ywScanEmpower }}
-              </el-descriptions-item>
-              <el-descriptions-item>
-                <template slot="label">
-                  座机
-                </template>
-                {{ this.operator.ywLandline }}
-              </el-descriptions-item>
+              <!--              <el-descriptions-item>-->
+              <!--                <template slot="label">-->
+              <!--                  授权书扫描件-->
+              <!--                </template>-->
+              <!--                {{ this.operator.ywScanEmpower }}-->
+              <!--              </el-descriptions-item>-->
+              <!--              <el-descriptions-item>-->
+              <!--                <template slot="label">-->
+              <!--                  座机-->
+              <!--                </template>-->
+              <!--                {{ this.operator.ywLandline }}-->
+              <!--              </el-descriptions-item>-->
             </el-descriptions>
           </div>
           <div style="text-align: center;padding: 0 100px">
@@ -447,8 +447,6 @@ export default {
       hAddress: null,
       hRange: null,
       hDesc: null,
-      hCopies: null,
-      hCopiesList: [],
       hJuridicalCopies: null,
       hExpiration: null,
       hBank: null,
@@ -461,18 +459,22 @@ export default {
       hProve: null,
       fState: null,
       fStatus: null,
+      //营业执照
+      hCopies: null,
+      hCopiesList: [],
       //法人身份证
       idCardCopy: null,
       idCardCopyList: [],
+      //业务经办人身份证
+      ywIdCardCopy: null,
+      ywIdCardCopyList: [],
       //业务经办人
       operator: {
         ywName: null,
         ywPhone: null,
         ywIdcrad: null,
         ywMailbox: null,
-        ywScanIdcard: null,
-        ywScanEmpower: null,
-        ywLandline: null
+        ywScanIdcard: null
       },
       //核心技术人员
       personnelList: [],
@@ -619,9 +621,7 @@ export default {
       this.hJuridical = response.data.hJuridical
       this.hJuridicalIdentity = response.data.hJuridicalIdentity
       this.hAddress = response.data.hAddress
-      this.hRange = response.data.hRange
       this.hDesc = response.data.hDesc
-      this.hExpiration = response.data.hExpiration
       this.hBank = response.data.hBank
       this.hBankAddress = response.data.hBankAddress
       this.hSignPhone = response.data.hSignPhone
@@ -656,8 +656,6 @@ export default {
         this.operator.ywIdcrad = response.data.ywIdcrad
         this.operator.ywMailbox = response.data.ywMailbox
         this.operator.ywScanIdcard = response.data.ywScanIdcard
-        this.operator.ywScanEmpower = response.data.ywScanEmpower
-        this.operator.ywLandline = response.data.ywLandline
       })
       //核心技术人员
       listPersonnel(this.personnel).then(response => {
