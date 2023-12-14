@@ -1,16 +1,8 @@
 <template>
     <div class="app-container">
-      <el-table v-loading="loading">
-        <el-table-column label="项目编号" align="center" prop="sCode">
-          <template slot-scope="scope">
-            <span>{{tenderInfo.sCode}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="项目名称" align="center" prop="sName">
-          <template slot-scope="scope">
-            <span>{{tenderInfo.sName}}</span>
-          </template>
-        </el-table-column>
+      <el-table v-loading="loading" :data="tenderList">
+        <el-table-column label="项目编号" align="center" prop="sCode"/>
+        <el-table-column label="项目名称" align="center" prop="sName"/>
         <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="180">
           <template slot-scope="scope">
             <span>{{}}</span>
@@ -141,7 +133,7 @@
           this.loading = true;
           getTender(sid).then(response => {
             console.log(response,"res");
-            this.tenderList[0] = response.data;
+            this.tenderList.push(response.data);
             this.total = response.total;
             this.loading = false;
           });
