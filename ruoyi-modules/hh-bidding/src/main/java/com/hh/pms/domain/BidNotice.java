@@ -1,6 +1,8 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -74,6 +76,16 @@ public class BidNotice extends BaseEntity
 
     private BidTender bidTender;//招标项目
 
+    private List<Result> results;
+    public void setResults(List<Result> results)
+    {
+        this.results = results;
+    }
+
+    public List<Result> getResults()
+    {
+        return results;
+    }
     public void setBidTender(BidTender bidTender)
     {
         this.bidTender = bidTender;

@@ -1,20 +1,23 @@
 package com.hh.pms.controller;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hh.pms.domain.BidNotice;
+import com.hh.pms.domain.Result;
 import com.hh.pms.utils.FileUtil;
+import com.hh.pms.utils.StringPathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -24,17 +27,17 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.page.TableDataInfo;
+import springfox.documentation.spring.web.json.Json;
 
 /**
  * 获取标书Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/tenderFile")
-public class BidGetTenderController extends BaseController
-{
+public class BidGetTenderController extends BaseController {
     @Autowired
     private IBidGetTenderService bidGetTenderService;
 
@@ -43,8 +46,7 @@ public class BidGetTenderController extends BaseController
      */
 //    @RequiresPermissions("system:tender:list")
     @GetMapping("/list")
-    public TableDataInfo list(BidGetTender bidGetTender)
-    {
+    public TableDataInfo list(BidGetTender bidGetTender) {
         startPage();
         List<BidGetTender> list = bidGetTenderService.selectBidGetTenderList(bidGetTender);
         return getDataTable(list);
@@ -56,8 +58,7 @@ public class BidGetTenderController extends BaseController
     @RequiresPermissions("system:tender:export")
     @Log(title = "获取标书", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BidGetTender bidGetTender)
-    {
+    public void export(HttpServletResponse response, BidGetTender bidGetTender) {
         List<BidGetTender> list = bidGetTenderService.selectBidGetTenderList(bidGetTender);
         ExcelUtil<BidGetTender> util = new ExcelUtil<BidGetTender>(BidGetTender.class);
         util.exportExcel(response, list, "获取标书数据");
@@ -68,8 +69,7 @@ public class BidGetTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:query")
     @GetMapping(value = "/{yid}")
-    public AjaxResult getInfo(@PathVariable("yid") Long yid)
-    {
+    public AjaxResult getInfo(@PathVariable("yid") Long yid) {
         return success(bidGetTenderService.selectBidGetTenderByYid(yid));
     }
 
@@ -79,8 +79,7 @@ public class BidGetTenderController extends BaseController
     @RequiresPermissions("system:tender:add")
     @Log(title = "获取标书", businessType = BusinessType.INSERT)
     @PostMapping("/addBs")
-    public AjaxResult add(@RequestBody BidGetTender bidGetTender)
-    {
+    public AjaxResult add(@RequestBody BidGetTender bidGetTender) {
         return toAjax(bidGetTenderService.insertBidGetTender(bidGetTender));
     }
 
@@ -90,8 +89,7 @@ public class BidGetTenderController extends BaseController
     @RequiresPermissions("system:tender:edit")
     @Log(title = "获取标书", businessType = BusinessType.UPDATE)
     @PutMapping("/putBs")
-    public AjaxResult edit(@RequestBody BidGetTender bidGetTender)
-    {
+    public AjaxResult edit(@RequestBody BidGetTender bidGetTender) {
         return toAjax(bidGetTenderService.updateBidGetTender(bidGetTender));
     }
 
@@ -100,18 +98,22 @@ public class BidGetTenderController extends BaseController
      */
     @RequiresPermissions("system:tender:remove")
     @Log(title = "获取标书", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{yids}")
-    public AjaxResult remove(@PathVariable Long[] yids)
-    {
+    @DeleteMapping("/{yids}")
+    public AjaxResult remove(@PathVariable Long[] yids) {
         return toAjax(bidGetTenderService.deleteBidGetTenderByYids(yids));
     }
 
 
     //下载招标书
     @GetMapping("/downloadZip")
-    public AjaxResult downloadZip(BidNotice bidNotice)
-    {
-        return AjaxResult.success();
+    public void downloadZip(@RequestParam String obj, HttpServletResponse response) {
+        BidNotice bidNotice = JSON.parseObject(obj, BidNotice.class);
+        String url = "";
+        for (Result b : bidNotice.getResults()) {
+            url += b.getUrl() + ",";
+        }
+        url = StringPathUtils.cutToTheEndStr(url);
+        FileUtil.downloadFiles(url,response);
     }
 
 

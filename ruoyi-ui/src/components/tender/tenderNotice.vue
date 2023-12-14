@@ -251,6 +251,10 @@ export default {
     };
   },
   created() {
+    this.loading = true;
+    setTimeout(()=>{
+      this.loading = false;
+    },"3000");
     this.queryParams.sid = this.$route.query.sid;
     this.getList();
   },
@@ -325,7 +329,11 @@ export default {
       const uid = row.uid || this.ids;
       getNotice(uid).then(response => {
         this.form = response.data;
-        this.upload.fileList = JSON.parse(this.form.fjAnnex);
+        // console.log(this.form.fjAnnex,"fileList1");
+        if(this.form.fjAnnex != null){
+          this.upload.fileList = JSON.parse(this.form.fjAnnex);
+        }
+        console.log(this.upload.fileList,"fileList2");
         getTender(this.queryParams.sid).then(res=>{
           this.form.uProject =res.data.sName;
         });
@@ -490,14 +498,14 @@ export default {
           delete newObj.raw;
           delete newObj.percentage;
           delete newObj.status;
-          obj.url = response.data.url;
+          obj.url = response.data.data.url;
+          delete newObj.response;
           return newObj;
         });
         this.form.fjAnnex = JSON.stringify(updatedArray);
-
-        console.log(this.uploadFiles,"uploadFiles");
-        console.log(this.form.fjAnnex,"fileList");
-        console.log(JSON.parse(this.form.fjAnnex),"fileList2");
+        // console.log(this.uploadFiles,"uploadFiles");
+        // console.log(this.form.fjAnnex,"fileList");
+        // console.log(JSON.parse(this.form.fjAnnex),"fileList2");
        if(this.queryParams.type ==='update'){
          //修改公告
          updateNotice(this.form).then(response => {
