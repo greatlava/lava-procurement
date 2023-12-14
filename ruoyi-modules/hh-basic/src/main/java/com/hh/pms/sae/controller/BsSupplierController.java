@@ -3,6 +3,7 @@ package com.hh.pms.sae.controller;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hh.pms.sae.domain.BsAccess;
+import com.hh.pms.sae.domain.BsOperator;
 import com.hh.pms.sae.service.IBsAccessService;
+import com.hh.pms.sae.service.IBsOperatorService;
 import com.hh.pms.sae.utils.CodeUtils;
 import com.hh.pms.sae.utils.TokenUtil;
 import com.ruoyi.common.core.domain.R;
@@ -52,6 +55,9 @@ public class BsSupplierController extends BaseController {
 
     @Autowired
     private IBsAccessService bsAccessService;
+
+    @Autowired
+    private IBsOperatorService bsOperatorService;
 
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
@@ -191,7 +197,7 @@ public class BsSupplierController extends BaseController {
 //    @RequiresPermissions("system:supplier:add")
     @Log(title = "供应商", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BsSupplier bsSupplier) {
+    public AjaxResult add(@RequestBody Map<String, Object> map) throws ParseException {
         // 生成年月日字符串
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         String dateStr = dateFormat.format(new Date());
@@ -208,12 +214,36 @@ public class BsSupplierController extends BaseController {
 
         BsAccess access = new BsAccess();
         access.setZrBnumber(result);
-        access.setZrPromoter(bsSupplier.gethJuridical());
-        BsAccess s = bsAccessService.insertBsAccess(access);
-        System.out.println(s);
-        if (s != null) {
-            bsSupplier.setZrId(s.getZrId());
-            return toAjax(bsSupplierService.insertBsSupplier(bsSupplier));
+        access.setZrPromoter(map.get("hJuridical").toString());
+        int res = bsAccessService.insertBsAccess(access);
+        if (res > 0) {
+            map.put("zrId", access.getZrId());
+            BsSupplier bsSupplier = new BsSupplier();
+            bsSupplier.setZrId(Long.parseLong(map.get("zrId").toString()));
+            bsSupplier.sethName(map.get("hName").toString());
+            bsSupplier.sethCreditCode(map.get("hCreditCode").toString());
+            bsSupplier.sethIncorporation(map.get("hIncorporation").toString());
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            bsSupplier.sethStartTime(format.parse(map.get("hStartTime").toString()));
+            bsSupplier.sethJuridical(map.get("hJuridical").toString());
+            bsSupplier.sethJuridicalIdentity(map.get("hJuridicalIdentity").toString());
+            bsSupplier.sethLoginAccount(map.get("hLoginAccount").toString());
+            bsSupplier.sethPassword(map.get("hPassword").toString());
+            bsSupplier.sethCopies(map.get("hCopies").toString());
+            bsSupplier.sethJuridicalCopies(map.get("hJuridicalCopies").toString());
+
+            //业务经办人
+            BsOperator operator = new BsOperator();
+            //bsSupplier.sethJuridicalCopies(map.get("ywName").toString());
+            //bsSupplier.sethJuridicalCopies(map.get("ywPhone").toString());
+            //bsSupplier.sethJuridicalCopies(map.get("ywIdcrad").toString());
+            //bsSupplier.sethJuridicalCopies(map.get("ywMailbox").toString());
+            //插入数据库
+            int ress = bsSupplierService.insertBsSupplier(bsSupplier);
+            if (ress > 0) {
+                return toAjax(bsOperatorService.insertBsOperator(operator));
+            }
         }
         return AjaxResult.error("操作失败");
     }

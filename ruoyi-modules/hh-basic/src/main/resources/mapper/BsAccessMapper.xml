@@ -63,8 +63,8 @@
         where zr_id = #{zrId}
     </select>
 
-    <insert id="insertBsAccess" parameterType="com.hh.pms.sae.domain.BsAccess" keyProperty="zrId"
-            useGeneratedKeys="true">
+    <insert id="insertBsAccess" parameterType="com.hh.pms.sae.domain.BsAccess" useGeneratedKeys="true"
+            keyProperty="zrId">
         insert into bs_access
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="zrBnumber != null">zr_bnumber,</if>

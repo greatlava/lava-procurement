@@ -33,7 +33,7 @@ public interface BsAccessMapper {
      * @param bsAccess 供应商准入
      * @return 结果
      */
-    public BsAccess insertBsAccess(BsAccess bsAccess);
+    public int insertBsAccess(BsAccess bsAccess);
 
     /**
      * 修改供应商准入

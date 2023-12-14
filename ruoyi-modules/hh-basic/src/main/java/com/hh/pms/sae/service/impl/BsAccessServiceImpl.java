@@ -49,7 +49,7 @@ public class BsAccessServiceImpl implements IBsAccessService {
      * @return 结果
      */
     @Override
-    public BsAccess insertBsAccess(BsAccess bsAccess) {
+    public int insertBsAccess(BsAccess bsAccess) {
         return bsAccessMapper.insertBsAccess(bsAccess);
     }
 
