@@ -65,12 +65,12 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="框架计划编号" align="center" prop="jhCode"/>
             <el-table-column label="框架计划名称" align="center" prop="jhName"/>
-            <el-table-column label="采购方式" align="center" prop="sName"/>
-            <el-table-column label="供应商" align="center" prop="sName"/>
+            <el-table-column label="采购方式" align="center" prop="jhPmethod"/>
+            <el-table-column label="供应商" align="center" prop="bsSupplier.hName"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <!--创建合同-->
-                <router-link :to="'add?sid='+scope.row.sid">
+                <!--创建框架协议-->
+                <router-link :to="'addFa?jhId='+scope.row.jhId">
                   <el-button
                     size="mini"
                     type="text"
@@ -161,7 +161,7 @@
 
 <script>
 import { listContract, listTender } from '@/api/system/cm'
-import {getFrameworkPlan} from "@/api/system/frameworkPlan"
+import { getFrameworkPlan } from '@/api/system/frameworkPlan'
 
 export default {
   name: 'Contract',
@@ -178,6 +178,7 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      Pmethod: [],
       // 总条数
       total1: 0,
       total2: 0,
@@ -234,6 +235,9 @@ export default {
   },
   created() {
     this.getList1()
+    this.getDicts('ppm_procurement_plan').then(res => {
+      this.Pmethod = res.data
+    })
   },
   methods: {
     handleClick(tab) {
@@ -249,7 +253,7 @@ export default {
     query() {
       // 模糊查询按钮点击时的处理逻辑
       console.log('执行模糊查询')
-      this.queryParams1.eXcode = this.formData.field101
+      this.queryParams1.jhCode = this.formData.field101
       this.queryParams1.jhName = this.formData.field102
       this.queryParams1.pageNum = 1
       this.getList1()

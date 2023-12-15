@@ -103,4 +103,10 @@ public class PpmLineItemsController extends BaseController
     {
         return toAjax(ppmLineItemsService.deletePpmLineItemsByVids(vids));
     }
+
+    //查询框架计划内的设备信息
+    @GetMapping("/selectItemsDevice")
+    public TableDataInfo selectItemsDevice(Long jhId) {
+        return getDataTable(ppmLineItemsService.selectItemsDevice(jhId));
+    }
 }

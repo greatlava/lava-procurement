@@ -63,4 +63,7 @@ public interface IPpmLineItemsService
     public int deletePpmLineItemsByAid(Integer aid);
 
     public int deletePpmLineItemByJhId(Integer jhId);
+
+    //查询框架计划内的设备信息
+    public List<PpmLineItems> selectItemsDevice(Long jhId);
 }
