@@ -347,18 +347,22 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.rmId != null) {
-            updateMonitor(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+          if (this.contractName == null || this.contractName == '' || this.form.rmIllustrate == null || this.form.rmIllustrate == '' || this.form.rmHappenDate == null || this.form.rmHappenDate == '' || this.form.rmItem == null || this.form.rmItem == '') {
+            this.$message.error("信息不能为空")
           } else {
-            addMonitor(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+            if (this.form.rmId != null) {
+              updateMonitor(this.form).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.open = false;
+                this.getList();
+              });
+            } else {
+              addMonitor(this.form).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+            }
           }
         }
       });

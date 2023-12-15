@@ -1,6 +1,8 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -58,7 +60,7 @@ public class BidNotice extends BaseEntity
 
     /** 附件 */
     @Excel(name = "附件")
-    private Long fjAnnex;
+    private String fjAnnex;
 
     /** 招标公告审批状态 */
     @Excel(name = "招标公告审批状态")
@@ -74,6 +76,16 @@ public class BidNotice extends BaseEntity
 
     private BidTender bidTender;//招标项目
 
+    private List<Result> results;
+    public void setResults(List<Result> results)
+    {
+        this.results = results;
+    }
+
+    public List<Result> getResults()
+    {
+        return results;
+    }
     public void setBidTender(BidTender bidTender)
     {
         this.bidTender = bidTender;
@@ -174,12 +186,12 @@ public class BidNotice extends BaseEntity
     {
         return uKaiTime;
     }
-    public void setFjAnnex(Long fjAnnex) 
+    public void setFjAnnex(String fjAnnex)
     {
         this.fjAnnex = fjAnnex;
     }
 
-    public Long getFjAnnex() 
+    public String getFjAnnex()
     {
         return fjAnnex;
     }

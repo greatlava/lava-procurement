@@ -3,6 +3,8 @@ package com.hh.pms.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import com.hh.pms.domain.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +21,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 招标公告Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-19
  */
 @RestController
 @RequestMapping("/notice")
-public class BidNoticeController extends BaseController
-{
+public class BidNoticeController extends BaseController {
     @Autowired
     private IBidNoticeService bidNoticeService;
 
@@ -35,10 +36,12 @@ public class BidNoticeController extends BaseController
      * 查询招标公告列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(BidNotice bidNotice)
-    {
+    public TableDataInfo list(BidNotice bidNotice) {
         startPage();
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
+        for (BidNotice b : list) {
+            b.setResults(JSON.parseArray(b.getFjAnnex(), Result.class));
+        }
         return getDataTable(list);
     }
 
@@ -48,8 +51,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:export")
     @Log(title = "招标公告", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BidNotice bidNotice)
-    {
+    public void export(HttpServletResponse response, BidNotice bidNotice) {
         List<BidNotice> list = bidNoticeService.selectBidNoticeList(bidNotice);
         ExcelUtil<BidNotice> util = new ExcelUtil<BidNotice>(BidNotice.class);
         util.exportExcel(response, list, "招标公告数据");
@@ -60,8 +62,7 @@ public class BidNoticeController extends BaseController
      */
     @RequiresPermissions("system:notice:query")
     @GetMapping(value = "/{uid}")
-    public AjaxResult getInfo(@PathVariable("uid") Long uid)
-    {
+    public AjaxResult getInfo(@PathVariable("uid") Long uid) {
         return success(bidNoticeService.selectBidNoticeByUid(uid));
     }
 
@@ -71,8 +72,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:add")
     @Log(title = "招标公告", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody BidNotice bidNotice)
-    {
+    public AjaxResult add(@Validated @RequestBody BidNotice bidNotice) {
         return toAjax(bidNoticeService.insertBidNotice(bidNotice));
     }
 
@@ -82,8 +82,7 @@ public class BidNoticeController extends BaseController
     @RequiresPermissions("system:notice:edit")
     @Log(title = "招标公告", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated  @RequestBody BidNotice bidNotice)
-    {
+    public AjaxResult edit(@Validated @RequestBody BidNotice bidNotice) {
         return toAjax(bidNoticeService.updateBidNotice(bidNotice));
     }
 
@@ -92,9 +91,8 @@ public class BidNoticeController extends BaseController
      */
     @RequiresPermissions("system:notice:remove")
     @Log(title = "招标公告", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{uids}")
-    public AjaxResult remove(@PathVariable Long[] uids)
-    {
+    @DeleteMapping("/{uids}")
+    public AjaxResult remove(@PathVariable Long[] uids) {
         return toAjax(bidNoticeService.deleteBidNoticeByUids(uids));
     }
 
@@ -115,8 +113,7 @@ public class BidNoticeController extends BaseController
      */
     @Log(title = "招标公告", businessType = BusinessType.DELETE)
     @DeleteMapping("/sc/{sid}")
-    public AjaxResult remove123(@PathVariable Long sid)
-    {
+    public AjaxResult remove123(@PathVariable Long sid) {
         return toAjax(bidNoticeService.deleteYfb(sid));
     }
 
@@ -125,4 +122,10 @@ public class BidNoticeController extends BaseController
     public AjaxResult findTwoInfo(@PathVariable Long uid) {
         return AjaxResult.success(bidNoticeService.findTwoInfo(uid));
     }
+
+    @GetMapping("/selMax")
+    public AjaxResult selMax() {
+        return AjaxResult.success(bidNoticeService.selMax());
+    }
+
 }

@@ -114,4 +114,9 @@ public class BidNoticeServiceImpl implements IBidNoticeService
     public BidNotice findTwoInfo(Long uid) {
         return bidNoticeMapper.findTwoInfo(uid);
     }
+
+    @Override
+    public BidNotice selMax() {
+        return bidNoticeMapper.selMax();
+    }
 }

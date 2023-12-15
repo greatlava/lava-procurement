@@ -6,6 +6,7 @@ import com.ruoyi.common.swagger.annotation.EnableCustomSwagger2;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableRyFeignClients
 @SpringBootApplication
 @EnableWebMvc
+@EnableTransactionManagement
 public class HhBasicApplication {
     public static void main(String[] args) {
         SpringApplication.run(HhBasicApplication.class, args);

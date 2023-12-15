@@ -59,3 +59,10 @@ export function delYfb(sid) {
     method: 'delete'
   })
 }
+
+export function selMax() {
+  return request({
+    url: '/bidding/notice/selMax',
+    method: 'get'
+  })
+}

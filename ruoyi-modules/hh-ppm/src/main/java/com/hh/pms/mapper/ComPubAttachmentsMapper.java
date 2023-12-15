@@ -58,4 +58,6 @@ public interface ComPubAttachmentsMapper
      * @return 结果
      */
     public int deleteComPubAttachmentsByAnIds(Integer[] anIds);
+
+    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid);
 }

@@ -2,6 +2,7 @@ package com.hh.pms.service;
 
 import java.util.List;
 import com.hh.pms.domain.BidDocuments;
+import com.hh.pms.domain.BidNotice;
 
 /**
  * 招标文件Service接口
@@ -58,4 +59,6 @@ public interface IBidDocumentsService
      * @return 结果
      */
     public int deleteBidDocumentsByWid(Long wid);
+
+//    public List<BidDocuments> findTwoDocInfo(BidNotice bidNotice);
 }

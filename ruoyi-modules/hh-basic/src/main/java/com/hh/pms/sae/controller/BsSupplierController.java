@@ -1,17 +1,20 @@
 package com.hh.pms.sae.controller;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.List;
-import javax.imageio.ImageIO;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hh.pms.sae.domain.BsAccess;
+import com.hh.pms.sae.domain.BsOperator;
+import com.hh.pms.sae.service.IBsAccessService;
+import com.hh.pms.sae.service.IBsOperatorService;
 import com.hh.pms.sae.utils.CodeUtils;
 import com.hh.pms.sae.utils.TokenUtil;
 import com.ruoyi.common.core.domain.R;
@@ -50,6 +53,12 @@ public class BsSupplierController extends BaseController {
     @Autowired
     private RemoteFileService remoteFileService;
 
+    @Autowired
+    private IBsAccessService bsAccessService;
+
+    @Autowired
+    private IBsOperatorService bsOperatorService;
+
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
@@ -60,7 +69,7 @@ public class BsSupplierController extends BaseController {
             if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
                 return AjaxResult.error("文件服务异常，请联系管理员");
             }
-            return AjaxResult.success(fileResult);
+            return AjaxResult.success(fileResult.getData());
         }
         return AjaxResult.error("上传文件异常，请联系管理员");
     }
@@ -185,11 +194,59 @@ public class BsSupplierController extends BaseController {
     /**
      * 新增供应商
      */
-    @RequiresPermissions("system:supplier:add")
+//    @RequiresPermissions("system:supplier:add")
     @Log(title = "供应商", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BsSupplier bsSupplier) {
-        return toAjax(bsSupplierService.insertBsSupplier(bsSupplier));
+    public AjaxResult add(@RequestBody Map<String, Object> map) throws ParseException {
+        // 生成年月日字符串
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String dateStr = dateFormat.format(new Date());
+
+        // 生成UUID
+        UUID uuid = UUID.randomUUID();
+        String uuidString = uuid.toString();
+
+        // 取UUID的后六位作为六位随机数
+        String randomStr = uuidString.substring(uuidString.length() - 6);
+
+        //准入编号
+        String result = "ZR" + dateStr + randomStr;
+
+        BsAccess access = new BsAccess();
+        access.setZrBnumber(result);
+        access.setZrPromoter(map.get("hJuridical").toString());
+        int res = bsAccessService.insertBsAccess(access);
+        if (res > 0) {
+            BsSupplier bsSupplier = new BsSupplier();
+            bsSupplier.setZrId(access.getZrId());
+            bsSupplier.sethName(map.get("hName").toString());
+            bsSupplier.sethCreditCode(map.get("hCreditCode").toString());
+            bsSupplier.sethIncorporation(map.get("hIncorporation").toString());
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            bsSupplier.sethStartTime(format.parse(map.get("hStartTime").toString()));
+            bsSupplier.sethJuridical(map.get("hJuridical").toString());
+            bsSupplier.sethJuridicalIdentity(map.get("hJuridicalIdentity").toString());
+            bsSupplier.sethLoginAccount(map.get("hLoginAccount").toString());
+            bsSupplier.sethPassword(map.get("hPassword").toString());
+            bsSupplier.sethCopies(map.get("hCopies").toString());
+            bsSupplier.sethJuridicalCopies(map.get("hJuridicalCopies").toString());
+
+            //插入数据库
+            int ress = bsSupplierService.insertBsSupplier(bsSupplier);
+            if (ress > 0) {
+                //业务经办人
+                BsOperator operator = new BsOperator();
+                operator.setHid(bsSupplier.getHid());
+                operator.setYwName(map.get("ywName").toString());
+                operator.setYwPhone(map.get("ywPhone").toString());
+                operator.setYwIdcrad(map.get("ywIdcrad").toString());
+                operator.setYwMailbox(map.get("ywMailbox").toString());
+                operator.setYwScanIdcard(map.get("ywScanIdcard").toString());
+                return toAjax(bsOperatorService.insertBsOperator(operator));
+            }
+        }
+        return AjaxResult.error("操作失败");
     }
 
     /**

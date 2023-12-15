@@ -207,10 +207,10 @@
         where zr_id = #{zrId}
     </select>
 
-    <insert id="insertBsSupplier" parameterType="com.hh.pms.sae.domain.BsSupplier">
+    <insert id="insertBsSupplier" parameterType="com.hh.pms.sae.domain.BsSupplier" useGeneratedKeys="true"
+            keyProperty="hid">
         insert into bs_supplier
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="hid != null">hid,</if>
             <if test="zrId != null">zr_id,</if>
             <if test="hName != null">h_name,</if>
             <if test="hCreditCode != null">h_credit_code,</if>
@@ -242,7 +242,6 @@
             <if test="hPassword != null ">h_password,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="hid != null">#{hid},</if>
             <if test="zrId != null">#{zrId},</if>
             <if test="hName != null">#{hName},</if>
             <if test="hCreditCode != null">#{hCreditCode},</if>

@@ -3,6 +3,7 @@ package com.hh.pms.sae.service;
 import java.util.List;
 
 import com.hh.pms.sae.domain.BsAccess;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 供应商准入Service接口
@@ -10,6 +11,7 @@ import com.hh.pms.sae.domain.BsAccess;
  * @author ruoyi
  * @date 2023-11-19
  */
+@Transactional
 public interface IBsAccessService {
     /**
      * 查询供应商准入

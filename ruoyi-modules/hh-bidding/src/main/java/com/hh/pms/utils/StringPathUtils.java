@@ -1,4 +1,4 @@
-package com.hh.pms.Util;
+package com.hh.pms.utils;
 
 public class StringPathUtils {
     public static String cutToTheEndStr(String originalString) {

@@ -3,6 +3,7 @@ package com.hh.pms.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +31,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/attachments")
-public class ComPubAttachmentsController extends BaseController
-{
+public class ComPubAttachmentsController extends BaseController {
     @Autowired
     private IComPubAttachmentsService comPubAttachmentsService;
 
@@ -40,8 +40,7 @@ public class ComPubAttachmentsController extends BaseController
      */
     @RequiresPermissions("system:attachments:list")
     @GetMapping("/list")
-    public TableDataInfo list(ComPubAttachments comPubAttachments)
-    {
+    public TableDataInfo list(ComPubAttachments comPubAttachments) {
         startPage();
         List<ComPubAttachments> list = comPubAttachmentsService.selectComPubAttachmentsList(comPubAttachments);
         return getDataTable(list);
@@ -53,8 +52,7 @@ public class ComPubAttachmentsController extends BaseController
     @RequiresPermissions("system:attachments:export")
     @Log(title = "公共附件", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ComPubAttachments comPubAttachments)
-    {
+    public void export(HttpServletResponse response, ComPubAttachments comPubAttachments) {
         List<ComPubAttachments> list = comPubAttachmentsService.selectComPubAttachmentsList(comPubAttachments);
         ExcelUtil<ComPubAttachments> util = new ExcelUtil<ComPubAttachments>(ComPubAttachments.class);
         util.exportExcel(response, list, "公共附件数据");
@@ -65,8 +63,7 @@ public class ComPubAttachmentsController extends BaseController
      */
     @RequiresPermissions("system:attachments:query")
     @GetMapping(value = "/{anId}")
-    public AjaxResult getInfo(@PathVariable("anId") Integer anId)
-    {
+    public AjaxResult getInfo(@PathVariable("anId") Integer anId) {
         return success(comPubAttachmentsService.selectComPubAttachmentsByAnId(anId));
     }
 
@@ -76,8 +73,7 @@ public class ComPubAttachmentsController extends BaseController
     @RequiresPermissions("system:attachments:add")
     @Log(title = "公共附件", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ComPubAttachments comPubAttachments)
-    {
+    public AjaxResult add(@RequestBody ComPubAttachments comPubAttachments) {
         return toAjax(comPubAttachmentsService.insertComPubAttachments(comPubAttachments));
     }
 
@@ -87,8 +83,7 @@ public class ComPubAttachmentsController extends BaseController
     @RequiresPermissions("system:attachments:edit")
     @Log(title = "公共附件", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ComPubAttachments comPubAttachments)
-    {
+    public AjaxResult edit(@RequestBody ComPubAttachments comPubAttachments) {
         return toAjax(comPubAttachmentsService.updateComPubAttachments(comPubAttachments));
     }
 
@@ -98,8 +93,13 @@ public class ComPubAttachmentsController extends BaseController
     @RequiresPermissions("system:attachments:remove")
     @Log(title = "公共附件", businessType = BusinessType.DELETE)
     @DeleteMapping("/{anIds}")
-    public AjaxResult remove(@PathVariable Integer[] anIds)
-    {
+    public AjaxResult remove(@PathVariable Integer[] anIds) {
         return toAjax(comPubAttachmentsService.deleteComPubAttachmentsByAnIds(anIds));
+    }
+
+    @RequiresPermissions("system:attachments:query")
+    @PostMapping("/selectedComPubAttamentsByAid")
+    public AjaxResult selectedComPubAttamentsByAid(Integer aid) {
+        return success(comPubAttachmentsService.selectedComPubAttamentsByAid(aid));
     }
 }

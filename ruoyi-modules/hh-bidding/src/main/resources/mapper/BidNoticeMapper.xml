@@ -41,6 +41,7 @@
     <select id="selectBidNoticeList" parameterType="com.hh.pms.domain.BidNotice" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
         <where>
+            <if test="uid != null ">and uid = #{uid}</if>
             <if test="sid != null ">and sid = #{sid}</if>
             <if test="uTitle != null  and uTitle != ''">and u_title = #{uTitle}</if>
             <if test="uProject != null ">and u_project = #{uProject}</if>
@@ -151,5 +152,9 @@
                 <id column="sid" property="sid"/>
             </association>
     </resultMap>
+
+    <select id="selMax">
+        select * from bid_notice order by uid desc limit 1;
+    </select>
 
 </mapper>

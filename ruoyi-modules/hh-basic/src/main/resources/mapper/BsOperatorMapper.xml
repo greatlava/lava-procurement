@@ -61,7 +61,6 @@
     <insert id="insertBsOperator" parameterType="com.hh.pms.sae.domain.BsOperator">
         insert into bs_operator
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="ywId != null">yw_id,</if>
             <if test="hid != null">hid,</if>
             <if test="ywName != null">yw_name,</if>
             <if test="ywPhone != null">yw_phone,</if>
@@ -73,7 +72,6 @@
             <if test="ywEmpowerContent != null">yw_empower_content,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="ywId != null">#{ywId},</if>
             <if test="hid != null">#{hid},</if>
             <if test="ywName != null">#{ywName},</if>
             <if test="ywPhone != null">#{ywPhone},</if>

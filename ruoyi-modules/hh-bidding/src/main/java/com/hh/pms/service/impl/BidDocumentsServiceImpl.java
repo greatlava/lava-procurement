@@ -1,6 +1,8 @@
 package com.hh.pms.service.impl;
 
 import java.util.List;
+
+import com.hh.pms.domain.BidNotice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hh.pms.mapper.BidDocumentsMapper;
@@ -92,4 +94,9 @@ public class BidDocumentsServiceImpl implements IBidDocumentsService
     {
         return bidDocumentsMapper.deleteBidDocumentsByWid(wid);
     }
+
+//    @Override
+//    public List<BidDocuments> findTwoDocInfo(BidNotice bidNotice) {
+//        return bidDocumentsMapper.findTwoDocInfo(bidNotice);
+//    }
 }

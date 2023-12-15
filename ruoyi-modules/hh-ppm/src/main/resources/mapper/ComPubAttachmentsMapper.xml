@@ -41,6 +41,10 @@
         where an_id = #{anId}
     </select>
 
+    <select id="selectedComPubAttamentsByAid" resultType="com.hh.pms.domain.ComPubAttachments">
+        <include refid="selectComPubAttachmentsVo"/> where aid = #{aid}
+    </select>
+
     <insert id="insertComPubAttachments" parameterType="ComPubAttachments">
         insert into com_pub_attachments
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -95,4 +99,6 @@
             #{anId}
         </foreach>
     </delete>
+
+
 </mapper>

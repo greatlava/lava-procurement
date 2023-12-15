@@ -37,6 +37,48 @@ public class BidDocuments extends BaseEntity
     @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date wUploadTime;
 
+    /** 文件大小 */
+    @Excel(name = "文件名")
+    private String fileName;
+
+    /** 文件大小 */
+    @Excel(name = "上传路径")
+    private String url;
+
+    private BidNotice bidNotice;
+
+
+
+    public String getFileName()
+    {
+        return fileName;
+    }
+    public void setFileName(String fileName)
+    {
+        this.fileName = fileName;
+    }
+
+
+
+    public String getUrl()
+    {
+        return url;
+    }
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
+
+    public void setBidNotice(BidNotice bidNotice)
+    {
+        this.bidNotice = bidNotice;
+    }
+
+    public BidNotice getBidNotice()
+    {
+        return bidNotice;
+    }
+
     public void setWid(Long wid) 
     {
         this.wid = wid;
@@ -46,12 +88,12 @@ public class BidDocuments extends BaseEntity
     {
         return wid;
     }
-    public void setSid(Long sid) 
+    public void setSid(Long sid)
     {
         this.sid = sid;
     }
 
-    public Long getSid() 
+    public Long getSid()
     {
         return sid;
     }
@@ -91,6 +133,8 @@ public class BidDocuments extends BaseEntity
             .append("wTitle", getwTitle())
             .append("wSize", getwSize())
             .append("wUploadTime", getwUploadTime())
+            .append("fileName", getFileName())
+            .append("url", getUrl())
             .toString();
     }
 }

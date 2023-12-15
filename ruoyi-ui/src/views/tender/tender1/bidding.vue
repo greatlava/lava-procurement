@@ -1,15 +1,15 @@
 <template>
 <div>
   <div class="div1">
-    <el-steps :active="index" simple style="background: #e8f4ff;">
-      <el-step title="招标" icon="el-icon-edit" @click="selected(1)"></el-step>
-      <el-step title="投标" icon="el-icon-message"  @click="selected(2)"></el-step>
-      <el-step title="开标" icon="el-icon-connection" @click="selected(3)"></el-step>
-      <el-step title="评标" icon="el-icon-chat-line-square" @click="selected(4)"></el-step>
-      <el-step title="定标" icon="el-icon-position" @click="selected(5)"></el-step>
+    <el-steps :active="currentStep" simple style="background: #e8f4ff;">
+      <el-step title="招标" icon="el-icon-edit" @click.native="changeStep(0)"></el-step>
+      <el-step title="投标" icon="el-icon-message"  @click.native="changeStep(1)"></el-step>
+      <el-step title="开标" icon="el-icon-connection" @click.native="changeStep(2)"></el-step>
+      <el-step title="评标" icon="el-icon-chat-line-square" @click.native="changeStep(3)"></el-step>
+      <el-step title="定标" icon="el-icon-position" @click.native="changeStep(4)"></el-step>
     </el-steps>
   </div>
-  <div v-if="index === 1" class="div2">
+  <div v-if="currentStep === 0" class="div2">
     <el-tabs v-model="activeName" >
       <el-tab-pane label="招标项目" name="subject">
         <tender-details></tender-details>
@@ -23,6 +23,16 @@
       </el-tab-pane>
     </el-tabs>
   </div>
+  <div v-if="currentStep === 1" class="div2">
+   <el-tabs v-model="activeName1">
+     <el-tab-pane label="获取标书" name="getTender" style="font-size: 16px">
+       <get-tender></get-tender>
+     </el-tab-pane>
+     <el-tab-pane label="投递标书" name="operator" style="font-size: 16px">
+       <tender-notice></tender-notice>
+     </el-tab-pane>
+   </el-tabs>
+  </div>
 </div>
 
 </template>
@@ -32,6 +42,7 @@ import TenderDetails from '@/components/tender/tenderDetails.vue'
 import DeviceDetails from '@/components/device/deviceDetails.vue'
 import TenderNotice from "@/components/tender/tenderNotice.vue"
 import TenderDocument from "@/components/tender/tenderDocument.vue";
+import GetTender from "@/components/tender/getTender.vue";
 
 export default {
   components: {
@@ -39,16 +50,19 @@ export default {
     'device-details': DeviceDetails,
     'tender-notice': TenderNotice,
     'tender-document': TenderDocument,
+    'getTender':GetTender,
   },
   data() {
     return {
-      index: 1, // 当前活动的步骤索引
-      activeName: 'subject'
+      currentStep: 0, // 当前活动的步骤索引
+      activeName: 'subject',
+      activeName1:'getTender',
     };
   },
   methods: {
-    selected(stepIndex) {
-      this.index = stepIndex;
+    changeStep(stepIndex) {
+      console.log(stepIndex);
+      this.currentStep = stepIndex;
     }
   }
 };

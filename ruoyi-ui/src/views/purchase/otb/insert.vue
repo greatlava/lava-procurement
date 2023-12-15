@@ -616,13 +616,16 @@ export default {
           let url = "";
           let fileName = "";
           this.upload.fileSecuss.forEach((e, i) => {
-            if (e.response.data.data.url) {
+            if (e.response.code == 200) {
               url += e.response.data.data.url + ",";
               fileName += e.response.data.data.name + ",";
             }
           })
-          this.form["url"] = url;
-          this.form["fileName"] = fileName;
+          let files = {
+            anUrl: url,
+            anName: fileName
+          }
+          this.form["file"] = files;
           this.form['items'] = this.device;
           this.form["aCode"] = localStorage.getItem("procurementPlanID");
           addPlan(this.form).then(res => {

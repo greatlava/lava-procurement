@@ -10,10 +10,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="wTitle"    column="w_title"    />
         <result property="wSize"    column="w_size"    />
         <result property="wUploadTime"    column="w_upload_time"    />
+        <result property="fileName"    column="fileName"    />
+        <result property="url"    column="url"    />
     </resultMap>
 
     <sql id="selectBidDocumentsVo">
-        select wid, sid, w_title, w_size, w_upload_time from bid_documents
+        select wid, sid, w_title, w_size, w_upload_time,fileName,url from bid_documents
     </sql>
 
     <select id="selectBidDocumentsList" parameterType="com.hh.pms.domain.BidDocuments" resultMap="BidDocumentsResult">
@@ -23,6 +25,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wTitle != null  and wTitle != ''"> and w_title = #{wTitle}</if>
             <if test="wSize != null "> and w_size = #{wSize}</if>
             <if test="wUploadTime != null "> and w_upload_time = #{wUploadTime}</if>
+            <if test="fileName != null "> and fileName = #{fileName}</if>
+            <if test="url != null "> and url = #{url}</if>
         </where>
     </select>
     
@@ -39,6 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wTitle != null">w_title,</if>
             <if test="wSize != null">w_size,</if>
             <if test="wUploadTime != null">w_upload_time,</if>
+            <if test="fileName != null "> fileName,</if>
+            <if test="url != null "> url,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="wid != null">#{wid},</if>
@@ -46,6 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wTitle != null">#{wTitle},</if>
             <if test="wSize != null">#{wSize},</if>
             <if test="wUploadTime != null">#{wUploadTime},</if>
+            <if test="fileName != null "> #{fileName},</if>
+            <if test="url != null "> #{url},</if>
          </trim>
     </insert>
 
@@ -56,6 +64,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wTitle != null">w_title = #{wTitle},</if>
             <if test="wSize != null">w_size = #{wSize},</if>
             <if test="wUploadTime != null">w_upload_time = #{wUploadTime},</if>
+            <if test="fileName != null ">fileName = #{fileName},</if>
+            <if test="url != null ">url = #{url}</if>
         </trim>
         where wid = #{wid}
     </update>
@@ -70,4 +80,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{wid}
         </foreach>
     </delete>
+
+<!--    <select id="findTwoDocInfo" resultMap="TwoTableResult" parameterType="Long">-->
+<!--        select wid,w_title,w_size,w_upload_time,n.* from bid_documents d inner join bid_notice n on d.uid = n.uid-->
+<!--        <where>-->
+<!--            <if test="uid != null "> and n.uid = #{uid}</if>-->
+<!--            <if test="fjStatus == 5"> and n.fj_status=5</if>-->
+<!--        </where>-->
+<!--    </select>-->
+
+<!--    <resultMap id="TwoTableResult" type="com.hh.pms.domain.BidDocuments">-->
+<!--        <id column="wid" property="wid"/>-->
+<!--        <association property="bidNotice" >-->
+<!--            <id column="uid" property="uid"/>-->
+<!--        </association>-->
+<!--    </resultMap>-->
 </mapper>

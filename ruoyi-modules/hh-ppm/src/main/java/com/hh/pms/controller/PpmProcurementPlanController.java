@@ -2,6 +2,7 @@ package com.hh.pms.controller;
 
 import java.util.List;
 import java.io.IOException;
+import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.Util.CodeRuleHelp;
@@ -94,13 +95,13 @@ public class PpmProcurementPlanController extends BaseController {
     @Log(title = "采购计划", businessType = BusinessType.INSERT)
     @Transactional
     @PostMapping
-    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan, @RequestParam("url") String url,@RequestParam("fileName") String fileName) {
-        System.out.println("ppmProcurementPlan:" + ppmProcurementPlan + "\n url:" + url + "\n fileName:" + fileName);
-        return AjaxResult.success();
-//        ppmProcurementPlan.setFjAnnex(StringPathUtils.cutToTheEndStr(ppmProcurementPlan.getFjAnnex()));
-//        ComPubAttachments comPubAttachments = new ComPubAttachments();
-//        comPubAttachmentsService.insertComPubAttachments(comPubAttachments);
-//        return toAjax(ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan));
+    public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+        ComPubAttachments comPubAttachments = ppmProcurementPlan.getFile();
+        comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));
+        comPubAttachments.setAnUrl(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnUrl()));
+        ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
+        comPubAttachments.setAid(ppmProcurementPlan.getAid());
+        return toAjax(comPubAttachmentsService.insertComPubAttachments(comPubAttachments));
     }
 
     /**
