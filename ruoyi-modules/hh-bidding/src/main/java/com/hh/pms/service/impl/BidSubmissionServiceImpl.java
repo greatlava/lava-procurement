@@ -92,4 +92,9 @@ public class BidSubmissionServiceImpl implements IBidSubmissionService
     {
         return bidSubmissionMapper.deleteBidSubmissionByTdId(tdId);
     }
+
+    @Override
+    public List<BidSubmission> findSubmission(Long sid) {
+        return bidSubmissionMapper.findSubmission(sid);
+    }
 }

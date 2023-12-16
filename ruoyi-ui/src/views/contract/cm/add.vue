@@ -377,7 +377,7 @@
 
 
 <script>
-import { getTender } from '../../../api/system/tender'
+import { getTender } from '../../../api/system/tender/tender'
 import { listDevice } from '../../../api/system/addContract'
 import { listSupplier } from '../../../api/system/supplier'
 

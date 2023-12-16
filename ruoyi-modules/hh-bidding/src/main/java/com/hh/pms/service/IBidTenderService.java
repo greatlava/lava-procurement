@@ -63,4 +63,7 @@ public interface IBidTenderService
 
     //获取未签订合同的招标项目
     public List<BidTender> selectNoEidTenderList(BidTender bidTender);
+
+
+    public BidTender findTenderAndNotice(Long sid);
 }

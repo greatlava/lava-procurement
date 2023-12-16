@@ -94,4 +94,9 @@ public class BidTenderServiceImpl implements IBidTenderService {
     public List<BidTender> selectNoEidTenderList(BidTender bidTender) {
         return bidTenderMapper.selectNoEidTenderList(bidTender);
     }
+
+    @Override
+    public BidTender findTenderAndNotice(Long sid) {
+        return bidTenderMapper.findTenderAndNotice(sid);
+    }
 }

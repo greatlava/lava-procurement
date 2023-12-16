@@ -1,46 +1,61 @@
 <template>
     <div class="app-container">
-      <el-table v-loading="loading" :data="tenderList">
-        <el-table-column label="项目编号" align="center" prop="sCode"/>
+      <el-table v-loading="loading" :data="tenderList" border style="width: 80%;margin: 0 auto 60px">
+        <el-table-column label="项目编号" align="center" prop="sCode" width="200"/>
         <el-table-column label="项目名称" align="center" prop="sName"/>
-        <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="180">
+        <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="200">
           <template slot-scope="scope">
-            <span>{{}}</span>
+            <span>{{ scope.row.bidNotices[0].uEndTime }}</span>
           </template>
         </el-table-column>
       </el-table>
-
-      <el-table v-loading="loading" :data="tenderList">
-        <el-table-column label="投标单位名称" align="center" prop="tdName" />
-        <el-table-column label="联系人" align="center" prop="tdPerson" />
-        <el-table-column label="联系方式" align="center" prop="tdPhone" />
-        <el-table-column label="邮箱" align="center" prop="email" />
-        <el-table-column label="下载时间" align="center" prop="yDownloadTime" width="180">
-          <template slot-scope="scope">
-            <span>{{ parseTime(scope.row.yDownloadTime, '{y}-{m}-{d}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="投标状态" align="center" prop="tdStatus" />
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-zoom-in"
-              @click="handleDetail"
-              v-hasPermi="['system:tender:edit']"
-            >详情</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
-      />
+      <el-tabs v-model="activeName">
+        <el-tab-pane label="获取详细信息" name="info">
+          <el-table v-loading="loading" :data="operatorList">
+            <el-table-column
+              label="序号"
+              type="index"
+              align="center"
+              width="50">
+            </el-table-column>
+            <el-table-column label="投标单位名称" align="center" prop="bsSuppliers">
+              <template slot-scope="scope">
+                <span>{{ scope.row.bsSuppliers[0].hName}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="联系人" align="center" prop="tdPerson">
+              <template slot-scope="scope">
+                <span>{{ scope.row.bsSuppliers[0].bsOperator.ywName}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="联系方式" align="center" prop="tdPhone">
+              <template slot-scope="scope">
+                <span>{{ scope.row.bsSuppliers[0].bsOperator.ywPhone}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="邮箱" align="center" prop="email">
+              <template slot-scope="scope">
+                <span>{{ scope.row.bsSuppliers[0].bsOperator.ywMailbox}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="下载时间" align="center" prop="yDownloadTime" width="180">
+              <template slot-scope="scope">
+                <span>{{ scope.row.yDownloadTime }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-zoom-in"
+                  @click="handleDetail"
+                >详情</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
 
       <!-- 添加或修改获取标书对话框 -->
       <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
@@ -70,7 +85,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
@@ -78,12 +93,14 @@
   </template>
 
   <script>
-    import { listTender, getTender, delTender, addTender, updateTender } from "@/api/system/tender";
+    import { listTender, getTender, delTender, addTender, updateTender ,findTenderNotice} from "@/api/system/tender/tender";
+    import {operatorList} from "@/api/system/tender/getTender"
 
     export default {
       name: "Tender",
       data() {
         return {
+          activeName:'info',
           // 遮罩层
           loading: true,
           // 选中数组
@@ -96,8 +113,10 @@
           showSearch: true,
           // 总条数
           total: 0,
-          // 获取标书表格数据
+          // 获取项目和公告数据
           tenderList: [],
+          //获取下载标书供应商信息
+          operatorList:[],
           //项目数据
           tenderInfo:null,
           // 弹出层标题
@@ -126,17 +145,25 @@
       created() {
         this.queryParams.sid = this.$route.query.sid;
         this.getList(this.queryParams.sid);
+        this.getOperator(this.queryParams.sid);
       },
       methods: {
         /** 查询获取标书列表 */
         getList(sid) {
           this.loading = true;
-          getTender(sid).then(response => {
+          findTenderNotice(sid).then(response => {
             console.log(response,"res");
             this.tenderList.push(response.data);
-            this.total = response.total;
+            console.log(this.tenderList,"tenderList");
             this.loading = false;
           });
+        },
+        getOperator(sid){
+           operatorList(sid).then(res=>{
+             this.operatorList = res.data;
+             console.log(res,"operator");
+             console.log(this.operatorList,"list");
+           });
         },
         // 取消按钮
         cancel() {

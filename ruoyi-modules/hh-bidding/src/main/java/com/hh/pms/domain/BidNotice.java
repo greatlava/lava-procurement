@@ -77,6 +77,9 @@ public class BidNotice extends BaseEntity
     private BidTender bidTender;//招标项目
 
     private List<Result> results;
+
+
+    private Long hid;
     public void setResults(List<Result> results)
     {
         this.results = results;
@@ -230,5 +233,13 @@ public class BidNotice extends BaseEntity
             .append("fjStatus", getFjStatus())
             .append("fjRemark", getFjRemark())
             .toString();
+    }
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void setHid(Long hid) {
+        this.hid = hid;
     }
 }

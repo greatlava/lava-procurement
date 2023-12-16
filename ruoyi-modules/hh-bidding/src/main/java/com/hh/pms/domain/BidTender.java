@@ -1,6 +1,7 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -160,6 +161,16 @@ public class BidTender extends BaseEntity {
      */
     @Excel(name = "合同ID")
     private Long eid;
+
+    private List<BidNotice> bidNotices;
+
+    public void setBidNotices(List<BidNotice> bidNotices) {
+        this.bidNotices = bidNotices;
+    }
+
+    public List<BidNotice> getBidNotices() {
+        return bidNotices;
+    }
 
     public void setSid(Long sid) {
         this.sid = sid;

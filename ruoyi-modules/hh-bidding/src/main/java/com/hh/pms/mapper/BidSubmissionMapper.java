@@ -58,4 +58,6 @@ public interface BidSubmissionMapper
      * @return 结果
      */
     public int deleteBidSubmissionByTdIds(Long[] tdIds);
+
+    public List<BidSubmission> findSubmission(Long sid);
 }

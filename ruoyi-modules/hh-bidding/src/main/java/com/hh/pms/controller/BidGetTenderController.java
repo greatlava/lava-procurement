@@ -113,8 +113,26 @@ public class BidGetTenderController extends BaseController {
             url += b.getUrl() + ",";
         }
         url = StringPathUtils.cutToTheEndStr(url);
+        //下载压缩包
         FileUtil.downloadFiles(url,response);
+
+        //添加下载标书的供应商
+        BidGetTender bg = new BidGetTender();
+        bg.setHid(bidNotice.getHid());
+        //已存在的供应商可以下载但不添加入表
+        if(bidGetTenderService.selectBidGetTenderList(bg) != null){
+            bg.setSid(bidNotice.getSid());
+            bidGetTenderService.insertBidGetTender(bg);
+        }
     }
+
+
+    //查询下载标书的所有供应商
+    @GetMapping(value = "/operatorList/{sid}")
+    public AjaxResult operatorList(@PathVariable("sid") Long sid) {
+        return success(bidGetTenderService.findOper(sid));
+    }
+
 
 
 }

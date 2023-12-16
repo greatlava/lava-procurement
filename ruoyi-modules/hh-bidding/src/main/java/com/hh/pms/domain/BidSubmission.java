@@ -1,6 +1,8 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -24,35 +26,29 @@ public class BidSubmission extends BaseEntity
     @Excel(name = "招标项目ID")
     private Long sid;
 
-    /** 投标人名称 */
-    @Excel(name = "投标人名称")
-    private String tdName;
+    /** 供应商ID */
+    @Excel(name = "供应商ID")
+    private Long hid;
 
-    /** 联系人 */
-    @Excel(name = "联系人")
-    private String tdPerson;
-
-    /** 联系方式 */
-    @Excel(name = "联系方式")
-    private String tdPhone;
 
     /** 投标状态 */
     @Excel(name = "投标状态")
     private Long tdStatus;
 
     /** 成功递交时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "成功递交时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "成功递交时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date tdSuccessTime;
 
     /** 文件撤回时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date tdFailTime;
 
-    /** IP地址 */
-    @Excel(name = "IP地址")
-    private String tdIp;
+    @Excel(name = "上传标书")
+    private String fjFiles;
+
+    private List<BsSupplier> bsSuppliers;
 
     public void setTdId(Long tdId) 
     {
@@ -71,33 +67,6 @@ public class BidSubmission extends BaseEntity
     public Long getSid() 
     {
         return sid;
-    }
-    public void setTdName(String tdName) 
-    {
-        this.tdName = tdName;
-    }
-
-    public String getTdName() 
-    {
-        return tdName;
-    }
-    public void setTdPerson(String tdPerson) 
-    {
-        this.tdPerson = tdPerson;
-    }
-
-    public String getTdPerson() 
-    {
-        return tdPerson;
-    }
-    public void setTdPhone(String tdPhone) 
-    {
-        this.tdPhone = tdPhone;
-    }
-
-    public String getTdPhone() 
-    {
-        return tdPhone;
     }
     public void setTdStatus(Long tdStatus) 
     {
@@ -126,28 +95,40 @@ public class BidSubmission extends BaseEntity
     {
         return tdFailTime;
     }
-    public void setTdIp(String tdIp) 
-    {
-        this.tdIp = tdIp;
-    }
-
-    public String getTdIp() 
-    {
-        return tdIp;
-    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("tdId", getTdId())
             .append("sid", getSid())
-            .append("tdName", getTdName())
-            .append("tdPerson", getTdPerson())
-            .append("tdPhone", getTdPhone())
+            .append("hid", getHid())
             .append("tdStatus", getTdStatus())
             .append("tdSuccessTime", getTdSuccessTime())
             .append("tdFailTime", getTdFailTime())
-            .append("tdIp", getTdIp())
             .toString();
+    }
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void setHid(Long hid) {
+        this.hid = hid;
+    }
+
+    public List<BsSupplier> getBsSuppliers() {
+        return bsSuppliers;
+    }
+
+    public void setBsSuppliers(List<BsSupplier> bsSuppliers) {
+        this.bsSuppliers = bsSuppliers;
+    }
+
+    public String getFjFiles() {
+        return fjFiles;
+    }
+
+    public void setFjFiles(String fjFiles) {
+        this.fjFiles = fjFiles;
     }
 }

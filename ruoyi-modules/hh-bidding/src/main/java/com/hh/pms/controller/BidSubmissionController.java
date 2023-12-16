@@ -102,4 +102,10 @@ public class BidSubmissionController extends BaseController
     {
         return toAjax(bidSubmissionService.deleteBidSubmissionByTdIds(tdIds));
     }
+
+    //查询下载标书的所有供应商
+    @GetMapping(value = "/submissionList/{sid}")
+    public AjaxResult operatorList(@PathVariable("sid") Long sid) {
+        return success(bidSubmissionService.findSubmission(sid));
+    }
 }

@@ -1,6 +1,7 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -29,44 +30,20 @@ public class BidGetTender extends BaseEntity {
     private Long sid;
 
     /**
-     * 投标人名称
+     * 供应商ID
      */
-    @Excel(name = "投标人名称")
-    private String tdName;
-
-    /**
-     * 联系人
-     */
-    @Excel(name = "联系人")
-    private String tdPerson;
-
-    /**
-     * 联系方式
-     */
-    @Excel(name = "联系方式")
-    private String tdPhone;
-
-    /**
-     * 邮箱
-     */
-    @Excel(name = "邮箱")
-    private String email;
+    @Excel(name = "供应商ID")
+    private Long hid;
 
     /**
      * 下载时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "下载时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "下载时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date yDownloadTime;
 
-    /**
-     * 投标状态
-     */
-    @Excel(name = "投标状态")
-    private Long tdStatus;
 
-
-
+    private List<BsSupplier> bsSuppliers;
     public void setYid(Long yid) {
         this.yid = yid;
     }
@@ -83,38 +60,6 @@ public class BidGetTender extends BaseEntity {
         return sid;
     }
 
-    public void setTdName(String tdName) {
-        this.tdName = tdName;
-    }
-
-    public String getTdName() {
-        return tdName;
-    }
-
-    public void setTdPerson(String tdPerson) {
-        this.tdPerson = tdPerson;
-    }
-
-    public String getTdPerson() {
-        return tdPerson;
-    }
-
-    public void setTdPhone(String tdPhone) {
-        this.tdPhone = tdPhone;
-    }
-
-    public String getTdPhone() {
-        return tdPhone;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     public void setyDownloadTime(Date yDownloadTime) {
         this.yDownloadTime = yDownloadTime;
     }
@@ -123,27 +68,30 @@ public class BidGetTender extends BaseEntity {
         return yDownloadTime;
     }
 
-    public void setTdStatus(Long tdStatus) {
-        this.tdStatus = tdStatus;
-    }
-
-    public Long getTdStatus() {
-        return tdStatus;
-    }
-
-
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("yid", getYid())
                 .append("sid", getSid())
-                .append("tdName", getTdName())
-                .append("tdPerson", getTdPerson())
-                .append("tdPhone", getTdPhone())
-                .append("email", getEmail())
                 .append("yDownloadTime", getyDownloadTime())
-                .append("tdStatus", getTdStatus())
+                .append("hid", getHid())
                 .toString();
+    }
+
+    public List<BsSupplier> getBsSuppliers() {
+        return bsSuppliers;
+    }
+
+    public void setBsSuppliers(List<BsSupplier> bsSuppliers) {
+        this.bsSuppliers = bsSuppliers;
+    }
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void setHid(Long hid) {
+        this.hid = hid;
     }
 }

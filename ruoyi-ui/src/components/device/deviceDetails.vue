@@ -128,7 +128,7 @@
 
 <script>
 
-import { listDevice,getDevice } from '@/api/system/tenderDetails'
+import { listDevice,getDevice } from '@/api/system/tender/tenderDetails'
 
 export default {
   data() {

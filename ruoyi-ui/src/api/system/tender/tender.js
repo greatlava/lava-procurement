@@ -42,3 +42,11 @@ export function delTender(sid) {
     method: 'delete'
   })
 }
+
+// 查询招标项目与公告详细
+export function findTenderNotice(sid) {
+  return request({
+    url: '/bidding/tender/findTenderAndNotice/' + sid,
+    method: 'get'
+  })
+}

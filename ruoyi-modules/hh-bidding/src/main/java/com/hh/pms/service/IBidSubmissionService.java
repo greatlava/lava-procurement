@@ -58,4 +58,6 @@ public interface IBidSubmissionService
      * @return 结果
      */
     public int deleteBidSubmissionByTdId(Long tdId);
+
+    public List<BidSubmission> findSubmission(Long sid);
 }

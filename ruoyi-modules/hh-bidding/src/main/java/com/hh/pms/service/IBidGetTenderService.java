@@ -59,4 +59,7 @@ public interface IBidGetTenderService {
      */
     public int deleteBidGetTenderByYid(Long yid);
 
+
+    public List<BidGetTender> findOper(Long sid);
+
 }

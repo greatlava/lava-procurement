@@ -108,4 +108,13 @@ public class BidTenderController extends BaseController {
         List<BidTender> list = bidTenderService.selectNoEidTenderList(bidTender);
         return getDataTable(list);
     }
+
+    /**
+     * 获取招标项目与公告详细信息
+     */
+    @GetMapping(value = "/findTenderAndNotice/{sid}")
+    public AjaxResult findTenderAndNotice(@PathVariable("sid") Long sid) {
+        System.out.println("sid:"+sid);
+        return success(bidTenderService.findTenderAndNotice(sid));
+    }
 }

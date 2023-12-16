@@ -58,4 +58,6 @@ public interface BidGetTenderMapper
      * @return 结果
      */
     public int deleteBidGetTenderByYids(Long[] yids);
+
+    public List<BidGetTender> findOper(Long sid);
 }

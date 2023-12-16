@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { getTender,updateTender } from '@/api/system/tender'
+import { getTender,updateTender } from '@/api/system/tender/tender'
 
 export default {
   dicts:["ppm_procurement_plan"],

@@ -211,4 +211,15 @@
             #{sid}
         </foreach>
     </delete>
+
+
+    <select id="findTenderAndNotice" parameterType="Long" resultMap="twoTable">
+        select t.*,n.u_end_time,n.fj_status from bid_tender t inner join bid_notice n on t.sid = n.sid where t.sid = #{sid} and n.fj_status = 5
+    </select>
+    <resultMap id="twoTable" type="com.hh.pms.domain.BidTender">
+        <id column="sid" property="sid"/>
+        <collection property="bidNotices" ofType="com.hh.pms.domain.BidNotice">
+            <id property="uid" column="uid"/>
+        </collection>
+    </resultMap>
 </mapper>

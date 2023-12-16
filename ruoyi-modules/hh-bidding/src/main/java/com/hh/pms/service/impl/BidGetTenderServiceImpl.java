@@ -93,4 +93,9 @@ public class BidGetTenderServiceImpl implements IBidGetTenderService
         return bidGetTenderMapper.deleteBidGetTenderByYid(yid);
     }
 
+    @Override
+    public List<BidGetTender> findOper(Long sid) {
+        return bidGetTenderMapper.findOper(sid);
+    }
+
 }

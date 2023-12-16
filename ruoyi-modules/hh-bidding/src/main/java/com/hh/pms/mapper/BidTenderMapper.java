@@ -61,4 +61,8 @@ public interface BidTenderMapper
 
     //获取未签订合同的招标项目
     public List<BidTender> selectNoEidTenderList(BidTender bidTender);
+
+
+    //项目 公告   两表
+    public BidTender findTenderAndNotice(Long sid);
 }

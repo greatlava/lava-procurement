@@ -150,8 +150,8 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice,findStatus,delYfb,selMax} from "@/api/system/tenderNotice";
-import { getTender } from '@/api/system/tender'
+import { listNotice, getNotice, delNotice, addNotice, updateNotice,findStatus,delYfb,selMax} from "@/api/system/tender/tenderNotice";
+import { getTender } from '@/api/system/tender/tender'
 import {findTwoDocInfo,addDocuments} from "@/api/system/document";
 import {getToken} from "@/utils/auth";
 
