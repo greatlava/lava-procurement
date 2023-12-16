@@ -8,6 +8,8 @@ import com.hh.pms.service.IPpmLineItemsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * 行项目Service业务层处理
  *
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PpmLineItemsServiceImpl implements IPpmLineItemsService {
-    @Autowired
+    @Resource
     private PpmLineItemsMapper ppmLineItemsMapper;
 
     /**
@@ -92,6 +94,12 @@ public class PpmLineItemsServiceImpl implements IPpmLineItemsService {
     @Override
     public int deletePpmLineItemByJhId(Integer jhId) {
         return ppmLineItemsMapper.deletePpmLineItemByJhId(jhId);
+    }
+
+    //查询框架计划内的设备信息
+    @Override
+    public List<PpmLineItems> selectItemsDevice(Long jhId) {
+        return ppmLineItemsMapper.selectItemsDevice(jhId);
     }
 
 }

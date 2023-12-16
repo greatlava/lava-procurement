@@ -17,3 +17,12 @@ export function listDevice(query) {
     params: query
   })
 }
+
+// 查询框架计划内的设备信息
+export function selectItemsDevice(jhId) {
+  return request({
+    url: '/ppm/items/selectItemsDevice',
+    method: 'get',
+    params: jhId
+  })
+}

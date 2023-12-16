@@ -674,6 +674,7 @@ export default {
       })
       newRow.id = this.lTableData.length + 1
       newRow.inSubtotal = (0).toFixed(2)
+      newRow.inCount = 1
       this.lTableData.push(newRow)
     },
     lDeleteRows() {

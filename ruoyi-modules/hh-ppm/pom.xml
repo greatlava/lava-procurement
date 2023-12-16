@@ -28,11 +28,11 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-api</artifactId>
-            <version>3.6.3</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.ruoyi</groupId>-->
+<!--            <artifactId>ruoyi-api</artifactId>-->
+<!--            <version>3.6.3</version>-->
+<!--        </dependency>-->
 <!-- SpringCloud Alibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -1,5 +1,6 @@
 package com.hh.pms.mapper;
 
+import com.hh.pms.domain.PpmFramePlan;
 import com.hh.pms.domain.PpmLineItems;
 
 import java.util.List;
@@ -64,5 +65,6 @@ public interface PpmLineItemsMapper
 
     public int deletePpmLineItemByJhId(Integer jhId);
 
-
+    //查询框架计划内的设备信息
+    public List<PpmLineItems> selectItemsDevice(Long jhId);
 }

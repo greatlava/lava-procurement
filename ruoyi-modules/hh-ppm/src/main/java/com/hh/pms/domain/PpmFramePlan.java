@@ -1,5 +1,6 @@
 package com.hh.pms.domain;
 
+import com.hh.pms.sae.domain.BsSupplier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -77,6 +78,15 @@ public class PpmFramePlan extends BaseEntity {
 
     @Excel(name = "业务类型")
     private Integer businessType;
+
+    private BsSupplier bsSupplier;
+
+    public BsSupplier getBsSupplier() {
+        return bsSupplier;
+    }
+    public void setBsSupplier(BsSupplier bsSupplier) {
+        this.bsSupplier = bsSupplier;
+    }
 
     public Integer getBusinessType() {
         return businessType;

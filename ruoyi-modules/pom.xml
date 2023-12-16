@@ -19,6 +19,15 @@
         <module>hh-nonbidding</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.hh.pms</groupId>
+            <artifactId>hh-basic</artifactId>
+            <version>3.6.3</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
     <artifactId>ruoyi-modules</artifactId>
     <packaging>pom</packaging>
 

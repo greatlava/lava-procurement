@@ -67,7 +67,6 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="项目编号" align="center" prop="sCode"/>
             <el-table-column label="项目名称" align="center" prop="sName"/>
-            <!--            <el-table-column label="中标人" align="center" prop="eWinningPerson"/>-->
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建合同-->
