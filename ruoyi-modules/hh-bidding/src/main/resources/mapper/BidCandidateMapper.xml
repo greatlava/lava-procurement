@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.mapper.BidCandidateMapper">
+<mapper namespace="com.hh.bid.mapper.BidCandidateMapper">
     
-    <resultMap type="com.hh.pms.domain.BidCandidate" id="BidCandidateResult">
+    <resultMap type="com.hh.bid.domain.BidCandidate" id="BidCandidateResult">
         <result property="zid"    column="zid"    />
         <result property="sid"    column="sid"    />
         <result property="zBname"    column="z_bname"    />
@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select zid, sid, z_bname, z_final, z_fraction, z_recommend, z_ranking, z_sign, z_censor, z_review, z_summary, z_bidder, z_send_time from bid_candidate
     </sql>
 
-    <select id="selectBidCandidateList" parameterType="com.hh.pms.domain.BidCandidate" resultMap="BidCandidateResult">
+    <select id="selectBidCandidateList" parameterType="com.hh.bid.domain.BidCandidate" resultMap="BidCandidateResult">
         <include refid="selectBidCandidateVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where zid = #{zid}
     </select>
         
-    <insert id="insertBidCandidate" parameterType="com.hh.pms.domain.BidCandidate">
+    <insert id="insertBidCandidate" parameterType="com.hh.bid.domain.BidCandidate">
         insert into bid_candidate
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="zid != null">zid,</if>
@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateBidCandidate" parameterType="com.hh.pms.domain.BidCandidate">
+    <update id="updateBidCandidate" parameterType="com.hh.bid.domain.BidCandidate">
         update bid_candidate
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.pms.mapper.NobidNonProMapper">
 
-    <resultMap type="com.hh.pms.domain.NobidNonPro" id="NobidNonProResult">
+    <resultMap type="com.hh.bid.domain.NobidNonPro" id="NobidNonProResult">
         <result property="gid" column="gid"/>
         <result property="xyId" column="xy_id"/>
         <result property="gCode" column="g_code"/>
@@ -35,7 +35,7 @@
         from nobid_non_pro
     </sql>
 
-    <select id="selectNobidNonProList" parameterType="com.hh.pms.domain.NobidNonPro" resultMap="NobidNonProResult">
+    <select id="selectNobidNonProList" parameterType="com.hh.bid.domain.NobidNonPro" resultMap="NobidNonProResult">
         <include refid="selectNobidNonProVo"/>
         <where>
             <if test="xyId != null ">and xy_id = #{xyId}</if>
@@ -58,7 +58,7 @@
         where gid = #{gid}
     </select>
 
-    <insert id="insertNobidNonPro" parameterType="com.hh.pms.domain.NobidNonPro">
+    <insert id="insertNobidNonPro" parameterType="com.hh.bid.domain.NobidNonPro">
         insert into nobid_non_pro
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gid != null">gid,</if>
@@ -90,7 +90,7 @@
         </trim>
     </insert>
 
-    <update id="updateNobidNonPro" parameterType="com.hh.pms.domain.NobidNonPro">
+    <update id="updateNobidNonPro" parameterType="com.hh.bid.domain.NobidNonPro">
         update nobid_non_pro
         <trim prefix="SET" suffixOverrides=",">
             <if test="xyId != null">xy_id = #{xyId},</if>

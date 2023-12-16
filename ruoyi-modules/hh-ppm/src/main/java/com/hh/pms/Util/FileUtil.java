@@ -2,12 +2,7 @@ package com.hh.pms.Util;
 
 import com.jcraft.jsch.*;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.utils.file.FileUtils;
-import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.domain.SysFile;
-import com.ruoyi.system.api.model.LoginUser;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 

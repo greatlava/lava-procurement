@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.mapper.BidWinningResultsMapper">
+<mapper namespace="com.hh.bid.mapper.BidWinningResultsMapper">
     
-    <resultMap type="com.hh.pms.domain.BidWinningResults" id="BidWinningResultsResult">
+    <resultMap type="com.hh.bid.domain.BidWinningResults" id="BidWinningResultsResult">
         <result property="gsId"    column="gs_id"    />
         <result property="sid"    column="sid"    />
         <result property="gsName"    column="gs_name"    />
@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select gs_id, sid, gs_name, gs_state, gs_release from bid_winning_results
     </sql>
 
-    <select id="selectBidWinningResultsList" parameterType="com.hh.pms.domain.BidWinningResults" resultMap="BidWinningResultsResult">
+    <select id="selectBidWinningResultsList" parameterType="com.hh.bid.domain.BidWinningResults" resultMap="BidWinningResultsResult">
         <include refid="selectBidWinningResultsVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where gs_id = #{gsId}
     </select>
         
-    <insert id="insertBidWinningResults" parameterType="com.hh.pms.domain.BidWinningResults">
+    <insert id="insertBidWinningResults" parameterType="com.hh.bid.domain.BidWinningResults">
         insert into bid_winning_results
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gsId != null">gs_id,</if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateBidWinningResults" parameterType="com.hh.pms.domain.BidWinningResults">
+    <update id="updateBidWinningResults" parameterType="com.hh.bid.domain.BidWinningResults">
         update bid_winning_results
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>

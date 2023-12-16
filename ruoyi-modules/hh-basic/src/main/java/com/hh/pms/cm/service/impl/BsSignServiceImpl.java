@@ -3,7 +3,6 @@ package com.hh.pms.cm.service.impl;
 import com.hh.pms.cm.domain.BsSign;
 import com.hh.pms.cm.mapper.BsSignMapper;
 import com.hh.pms.cm.service.IBsSignService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

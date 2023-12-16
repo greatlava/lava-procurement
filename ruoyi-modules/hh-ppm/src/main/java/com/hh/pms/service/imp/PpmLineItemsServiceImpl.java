@@ -5,7 +5,6 @@ import java.util.List;
 import com.hh.pms.domain.PpmLineItems;
 import com.hh.pms.mapper.PpmLineItemsMapper;
 import com.hh.pms.service.IPpmLineItemsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

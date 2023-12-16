@@ -1,6 +1,5 @@
 package com.hh.pms.mapper;
 
-import com.hh.pms.domain.PpmFramePlan;
 import com.hh.pms.domain.PpmLineItems;
 
 import java.util.List;

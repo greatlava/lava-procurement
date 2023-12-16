@@ -1,21 +1,19 @@
 package com.hh.pms.controller;
 
 import java.util.List;
-import java.io.IOException;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.Util.CodeRuleHelp;
 import com.hh.pms.Util.CodeRuleUtil;
 import com.hh.pms.Util.StringPathUtils;
-import com.hh.pms.domain.*;
+import com.hh.bid.domain.*;
 import com.hh.pms.service.IComPubAttachmentsService;
 import com.hh.pms.service.IPpmApprovalRecordService;
 import com.hh.pms.service.IPpmLineItemsService;
 import com.hh.pms.service.IPpmProcurementPlanService;
 import com.hh.pms.service.imp.ComCodeRulesServiceImpl;
+import com.hh.pms.domain.*;
 import com.ruoyi.common.security.service.TokenService;
-import com.ruoyi.system.api.RemoteBidWinningResultsService;
 import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;

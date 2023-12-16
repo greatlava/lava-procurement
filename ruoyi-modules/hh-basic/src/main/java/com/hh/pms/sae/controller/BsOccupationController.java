@@ -3,6 +3,7 @@ package com.hh.pms.sae.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hh.pms.sae.domain.BsOccupation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.hh.pms.sae.domain.BsOccupation;
 import com.hh.pms.sae.service.IBsOccupationService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;

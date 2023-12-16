@@ -61,7 +61,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.hh.pms.tenderapi.TenderApiApplication</mainClass>
+                    <mainClass>com.hh.bid.tenderapi.TenderApiApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

@@ -23,7 +23,7 @@
             <artifactId>ruoyi-common-core</artifactId>
         </dependency>
 <!--        <dependency>-->
-<!--            <groupId>com.hh.pms</groupId>-->
+<!--            <groupId>com.hh.bid</groupId>-->
 <!--            <artifactId>hh-bidding</artifactId>-->
 <!--            <version>3.6.3</version>-->
 <!--            <scope>compile</scope>-->

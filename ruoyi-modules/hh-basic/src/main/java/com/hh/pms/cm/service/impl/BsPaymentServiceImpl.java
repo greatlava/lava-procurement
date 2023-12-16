@@ -3,7 +3,6 @@ package com.hh.pms.cm.service.impl;
 import com.hh.pms.cm.domain.BsPayment;
 import com.hh.pms.cm.mapper.BsPaymentMapper;
 import com.hh.pms.cm.service.IBsPaymentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

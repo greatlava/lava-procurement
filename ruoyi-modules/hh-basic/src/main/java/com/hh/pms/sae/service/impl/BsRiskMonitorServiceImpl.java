@@ -2,11 +2,11 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.mapper.BsRiskMonitorMapper;
+import com.hh.pms.sae.service.IBsRiskMonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.hh.pms.sae.mapper.BsRiskMonitorMapper;
 import com.hh.pms.sae.domain.BsRiskMonitor;
-import com.hh.pms.sae.service.IBsRiskMonitorService;
 
 /**
  * 供应商风险监控Service业务层处理

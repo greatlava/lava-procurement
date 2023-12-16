@@ -2,11 +2,10 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.service.IBsSupplierService;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsSupplierMapper;
 import com.hh.pms.sae.domain.BsSupplier;
-import com.hh.pms.sae.service.IBsSupplierService;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
