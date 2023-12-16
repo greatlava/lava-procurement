@@ -105,6 +105,7 @@ public class BidSubmission extends BaseEntity
             .append("tdStatus", getTdStatus())
             .append("tdSuccessTime", getTdSuccessTime())
             .append("tdFailTime", getTdFailTime())
+            .append("fjFiles", getFjFiles())
             .toString();
     }
 
