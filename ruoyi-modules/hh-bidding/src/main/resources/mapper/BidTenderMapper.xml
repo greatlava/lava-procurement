@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.bid.mapper.BidTenderMapper">
 
-    <resultMap type="com.hh.bid.domain.BidTender" id="BidTenderResult">
+    <resultMap type="com.hh.nobidding.domain.BidTender" id="BidTenderResult">
         <result property="sid" column="sid"/>
         <result property="xyId" column="xy_id"/>
         <result property="sCode" column="s_code"/>
@@ -60,7 +60,7 @@
         from bid_tender
     </sql>
 
-    <select id="selectBidTenderList" parameterType="com.hh.bid.domain.BidTender" resultMap="BidTenderResult">
+    <select id="selectBidTenderList" parameterType="com.hh.nobidding.domain.BidTender" resultMap="BidTenderResult">
         <include refid="selectBidTenderVo"/>
         <where>
             <if test="xyId != null ">and xy_id = #{xyId}</if>
@@ -107,13 +107,13 @@
         </where>
     </select>
 
-    <select id="selectTenderBySid" resultType="com.hh.bid.domain.BidTender">
+    <select id="selectTenderBySid" resultType="com.hh.nobidding.domain.BidTender">
         select s_code, s_name, s_way, s_type
         from bid_tender
         WHERE sid = #{sid}
     </select>
 
-    <insert id="insertBidTender" parameterType="com.hh.bid.domain.BidTender">
+    <insert id="insertBidTender" parameterType="com.hh.nobidding.domain.BidTender">
         insert into bid_tender
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="sid != null">sid,</if>
@@ -169,7 +169,7 @@
         </trim>
     </insert>
 
-    <update id="updateBidTender" parameterType="com.hh.bid.domain.BidTender">
+    <update id="updateBidTender" parameterType="com.hh.nobidding.domain.BidTender">
         update bid_tender
         <trim prefix="SET" suffixOverrides=",">
             <if test="xyId != null">xy_id = #{xyId},</if>
@@ -216,9 +216,9 @@
     <select id="findTenderAndNotice" parameterType="Long" resultMap="twoTable">
         select t.*,n.u_end_time,n.fj_status from bid_tender t inner join bid_notice n on t.sid = n.sid where t.sid = #{sid} and n.fj_status = 5
     </select>
-    <resultMap id="twoTable" type="com.hh.bid.domain.BidTender">
+    <resultMap id="twoTable" type="com.hh.nobidding.domain.BidTender">
         <id column="sid" property="sid"/>
-        <collection property="bidNotices" ofType="com.hh.bid.domain.BidNotice">
+        <collection property="bidNotices" ofType="com.hh.nobidding.domain.BidNotice">
             <id property="uid" column="uid"/>
         </collection>
     </resultMap>

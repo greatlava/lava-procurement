@@ -33,6 +33,7 @@
             <artifactId>ruoyi-api</artifactId>
             <version>3.6.3</version>
         </dependency>
+
         <!-- SpringCloud Alibaba Nacos -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>

@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.hh.pms.Util.CodeRuleHelp;
 import com.hh.pms.Util.CodeRuleUtil;
 import com.hh.pms.Util.StringPathUtils;
-import com.hh.bid.domain.*;
+import com.hh.nobidding.domain.*;
 import com.hh.pms.service.IComPubAttachmentsService;
 import com.hh.pms.service.IPpmApprovalRecordService;
 import com.hh.pms.service.IPpmLineItemsService;
