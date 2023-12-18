@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select zid, sid, z_bname, z_final, z_fraction, z_recommend, z_ranking, z_sign, z_censor, z_review, z_summary, z_bidder, z_send_time from bid_candidate
     </sql>
 
-    <select id="selectBidCandidateList" parameterType="com.hh.bidding.domain.BidCandidate" resultMap="BidCandidateResult">
+    <select id="selectBidCandidateList" parameterType="com.hh.nobidding.domain.BidCandidate" resultMap="BidCandidateResult">
         <include refid="selectBidCandidateVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where zid = #{zid}
     </select>
         
-    <insert id="insertBidCandidate" parameterType="com.hh.bidding.domain.BidCandidate">
+    <insert id="insertBidCandidate" parameterType="com.hh.nobidding.domain.BidCandidate">
         insert into bid_candidate
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="zid != null">zid,</if>
@@ -81,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateBidCandidate" parameterType="com.hh.bidding.domain.BidCandidate">
+    <update id="updateBidCandidate" parameterType="com.hh.nobidding.domain.BidCandidate">
         update bid_candidate
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>

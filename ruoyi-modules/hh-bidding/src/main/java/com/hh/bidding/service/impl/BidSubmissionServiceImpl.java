@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @date 2023-11-19
  */
 @Service
-public class BidSubmissionServiceImpl implements IBidSubmissionService 
+public class BidSubmissionServiceImpl implements IBidSubmissionService
 {
     @Resource
     private BidSubmissionMapper bidSubmissionMapper;
