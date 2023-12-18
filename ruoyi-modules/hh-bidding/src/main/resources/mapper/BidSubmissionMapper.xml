@@ -2,80 +2,65 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.mapper.BidSubmissionMapper">
-    
-    <resultMap type="com.hh.pms.domain.BidSubmission" id="BidSubmissionResult">
+<mapper namespace="com.hh.bidding.mapper.BidSubmissionMapper">
+
+    <resultMap type="com.hh.bidding.domain.BidSubmission" id="BidSubmissionResult">
         <result property="tdId"    column="td_id"    />
         <result property="sid"    column="sid"    />
-        <result property="tdName"    column="td_name"    />
-        <result property="tdPerson"    column="td_person"    />
-        <result property="tdPhone"    column="td_phone"    />
+        <result property="hid"    column="hid"    />
         <result property="tdStatus"    column="td_status"    />
         <result property="tdSuccessTime"    column="td_success_time"    />
         <result property="tdFailTime"    column="td_fail_time"    />
-        <result property="tdIp"    column="td_IP"    />
     </resultMap>
 
     <sql id="selectBidSubmissionVo">
-        select td_id, sid, td_name, td_person, td_phone, td_status, td_success_time, td_fail_time, td_IP from bid_submission
+        select td_id, sid, hid, td_status, td_success_time, td_fail_time from bid_submission
     </sql>
 
-    <select id="selectBidSubmissionList" parameterType="com.hh.pms.domain.BidSubmission" resultMap="BidSubmissionResult">
+    <select id="selectBidSubmissionList" parameterType="com.hh.bidding.domain.BidSubmission" resultMap="BidSubmissionResult">
         <include refid="selectBidSubmissionVo"/>
-        <where>  
+        <where>
             <if test="sid != null "> and sid = #{sid}</if>
-            <if test="tdName != null  and tdName != ''"> and td_name like concat('%', #{tdName}, '%')</if>
-            <if test="tdPerson != null  and tdPerson != ''"> and td_person = #{tdPerson}</if>
-            <if test="tdPhone != null  and tdPhone != ''"> and td_phone = #{tdPhone}</if>
+            <if test="hid != null"> and hid = #{hid}</if>
             <if test="tdStatus != null "> and td_status = #{tdStatus}</if>
             <if test="tdSuccessTime != null "> and td_success_time = #{tdSuccessTime}</if>
             <if test="tdFailTime != null "> and td_fail_time = #{tdFailTime}</if>
-            <if test="tdIp != null  and tdIp != ''"> and td_IP = #{tdIp}</if>
         </where>
     </select>
-    
+
     <select id="selectBidSubmissionByTdId" parameterType="Long" resultMap="BidSubmissionResult">
         <include refid="selectBidSubmissionVo"/>
         where td_id = #{tdId}
     </select>
-        
-    <insert id="insertBidSubmission" parameterType="com.hh.pms.domain.BidSubmission">
+
+    <insert id="insertBidSubmission" parameterType="com.hh.bidding.domain.BidSubmission">
         insert into bid_submission
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tdId != null">td_id,</if>
             <if test="sid != null">sid,</if>
-            <if test="tdName != null">td_name,</if>
-            <if test="tdPerson != null">td_person,</if>
-            <if test="tdPhone != null">td_phone,</if>
+            <if test="hid != null">hid,</if>
             <if test="tdStatus != null">td_status,</if>
             <if test="tdSuccessTime != null">td_success_time,</if>
             <if test="tdFailTime != null">td_fail_time,</if>
-            <if test="tdIp != null">td_IP,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tdId != null">#{tdId},</if>
             <if test="sid != null">#{sid},</if>
-            <if test="tdName != null">#{tdName},</if>
-            <if test="tdPerson != null">#{tdPerson},</if>
-            <if test="tdPhone != null">#{tdPhone},</if>
+            <if test="hid != null">#{hid},</if>
             <if test="tdStatus != null">#{tdStatus},</if>
             <if test="tdSuccessTime != null">#{tdSuccessTime},</if>
             <if test="tdFailTime != null">#{tdFailTime},</if>
-            <if test="tdIp != null">#{tdIp},</if>
          </trim>
     </insert>
 
-    <update id="updateBidSubmission" parameterType="com.hh.pms.domain.BidSubmission">
+    <update id="updateBidSubmission" parameterType="com.hh.bidding.domain.BidSubmission">
         update bid_submission
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
-            <if test="tdName != null">td_name = #{tdName},</if>
-            <if test="tdPerson != null">td_person = #{tdPerson},</if>
-            <if test="tdPhone != null">td_phone = #{tdPhone},</if>
+            <if test="hid != null">hid = #{hid},</if>
             <if test="tdStatus != null">td_status = #{tdStatus},</if>
             <if test="tdSuccessTime != null">td_success_time = #{tdSuccessTime},</if>
             <if test="tdFailTime != null">td_fail_time = #{tdFailTime},</if>
-            <if test="tdIp != null">td_IP = #{tdIp},</if>
         </trim>
         where td_id = #{tdId}
     </update>
@@ -85,9 +70,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteBidSubmissionByTdIds" parameterType="String">
-        delete from bid_submission where td_id in 
+        delete from bid_submission where td_id in
         <foreach item="tdId" collection="array" open="(" separator="," close=")">
             #{tdId}
         </foreach>
     </delete>
+
+    <select id="findSubmission" parameterType="Long" resultMap="findOperator">
+        select b.td_id,b.sid,b.td_status,b.td_success_time,b.td_fail_time,s.h_name,o.* from bid_submission b
+                                                                                                inner join bs_supplier s on b.hid = s.hid
+                                                                                                inner join bs_operator o on o.hid = s.hid where b.sid = #{sid}
+    </select>
+    <resultMap id="findOperator" type="com.hh.bidding.domain.BidSubmission">
+        <id column="td_id" property="tdId"/>
+        <collection property="bsSuppliers" ofType="com.hh.bidding.domain.BsSupplier">
+            <id property="hid" column="hid"/>
+            <association property="bsOperator"/>
+        </collection>
+    </resultMap>
 </mapper>

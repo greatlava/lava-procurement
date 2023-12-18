@@ -24,7 +24,7 @@
         <id column="p_aid" property="aid"/>
         <collection property="items" ofType="com.hh.pms.domain.PpmLineItems">
             <id property="vid" column="vid"/>
-            <association property="ppmDevice" >
+            <association property="ppmDevice">
                 <id column="d_tid" property="tid"/>
             </association>
             <association property="ppmBudget">
@@ -74,8 +74,28 @@
         <include refid="selectPpmProcurementPlanVo"/>
         <where>
             <if test="aName != null">and a_name like concat('%',#{aName},'%')</if>
-            <if test="aCreateDept != null">and a_create_dept  like concat('%',#{aCreateDept},'%') </if>
+            <if test="aCreateDept != null">and a_create_dept like concat('%',#{aCreateDept},'%')</if>
             and ( a_astate = 2 or a_astate = 3 )
+        </where>
+    </select>
+
+    <resultMap id="PpmProcurementPlanAndComPubAttament" type="com.hh.pms.domain.PpmProcurementPlan">
+        <id property="aid" column="p_aid"/>
+        <association property="file">
+            <id property="anId" column="an_id"/>
+        </association>
+    </resultMap>
+
+    <select id="selectePpmProcurementPlanAndComPubAttamentByAid" resultMap="PpmProcurementPlanAndComPubAttament">
+        SELECT
+        p.aid
+        p_aid,p.a_code,p.a_name,p.create_by,p.a_create_dept,p.create_time,p.update_by,p.a_opinion,p.a_project_count,p.a_btype,p.a_astate,f.*
+        FROM `ppm_procurement_plan` p left join com_pub_attachments f on p.aid = f.aid
+        <where>
+            <if test="aid != null">and p.aid = #{aid}</if>
+            <if test="aCode != null  and aCode != ''">and a_code = #{aCode}</if>
+            <if test="aBtype != null  and aBtype != ''">and a_btype = #{aBtype}</if>
+            <if test="aAstate != null ">and a_astate = #{aAstate}</if>
         </where>
     </select>
 
@@ -125,6 +145,17 @@
         )
     </insert>
 
+    <insert id="insertNoBidPro">
+        INSERT
+        nobid_non_pro (xy_id,g_code,g_name,g_is_public,g_tenderType) VALUES (
+        #{xyId},
+        #{gCode},
+        #{gName},
+        #{gIsPublic},
+        #{tendertype}
+        )
+    </insert>
+
     <update id="updatePpmProcurementPlan" parameterType="PpmProcurementPlan">
         update ppm_procurement_plan
         <trim prefix="SET" suffixOverrides=",">
@@ -167,7 +198,7 @@
                p.fj_annex,
                p.a_astate,
                i.*,
-               d.tid     d_tid,
+               d.tid d_tid,
                d.t_name,
                d.category,
                d.t_unit,

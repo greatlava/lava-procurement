@@ -1,21 +1,18 @@
 package com.hh.pms.controller;
 
 import java.util.List;
-import java.io.IOException;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.Util.CodeRuleHelp;
 import com.hh.pms.Util.CodeRuleUtil;
 import com.hh.pms.Util.StringPathUtils;
-import com.hh.pms.domain.*;
 import com.hh.pms.service.IComPubAttachmentsService;
 import com.hh.pms.service.IPpmApprovalRecordService;
 import com.hh.pms.service.IPpmLineItemsService;
 import com.hh.pms.service.IPpmProcurementPlanService;
 import com.hh.pms.service.imp.ComCodeRulesServiceImpl;
+import com.hh.pms.domain.*;
 import com.ruoyi.common.security.service.TokenService;
-import com.ruoyi.system.api.RemoteBidWinningResultsService;
 import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,11 +94,14 @@ public class PpmProcurementPlanController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         ComPubAttachments comPubAttachments = ppmProcurementPlan.getFile();
-        comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));
-        comPubAttachments.setAnUrl(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnUrl()));
-        ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
-        comPubAttachments.setAid(ppmProcurementPlan.getAid());
-        return toAjax(comPubAttachmentsService.insertComPubAttachments(comPubAttachments));
+        int i = ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
+        if (comPubAttachments != null) {
+            comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));
+            comPubAttachments.setAnUrl(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnUrl()));
+            comPubAttachments.setAid(ppmProcurementPlan.getAid());
+            return toAjax(comPubAttachmentsService.insertComPubAttachments(comPubAttachments));
+        }
+        return toAjax(i);
     }
 
     /**
@@ -149,6 +149,7 @@ public class PpmProcurementPlanController extends BaseController {
     @DeleteMapping("/{aids}")
     public AjaxResult remove(@PathVariable Integer[] aids) {
         ppmLineItemsService.deletePpmLineItemsByAid(aids[0]);
+        comPubAttachmentsService.deleteComPubAttamentsByAid(aids[0]);
         return toAjax(ppmProcurementPlanService.deletePpmProcurementPlanByAids(aids));
     }
 
@@ -192,9 +193,10 @@ public class PpmProcurementPlanController extends BaseController {
 
     @PostMapping("/updateStateAndAddBidWinning")
     @Transactional
-    public AjaxResult updateStateAndAddBidWinning(@RequestBody List<PpmProcurementPlan> ppmProcurementPlan, Integer type) {
+    public AjaxResult updateStateAndAddBidWinning(@RequestBody List<PpmProcurementPlan> ppmProcurementPlan, Integer type, Integer noBidType) {
+        System.out.println("noBidType:" + noBidType);
         BidTender bidTender = new BidTender();
-
+        NobidNonPro nobidNonPro = new NobidNonPro();
         for (PpmProcurementPlan item : ppmProcurementPlan) {
             item.setaAstate(3);
             ppmProcurementPlanService.updatePpmProcurementPlan(item);
@@ -222,7 +224,12 @@ public class PpmProcurementPlanController extends BaseController {
                     result = CodeRuleHelp.GetCodeRule(rules);
                     rules.setMaxMantissa(result.getMax());
                     comCodeRulesService.updateComCodeRules(rules);
-
+                    nobidNonPro.setgCode(result.getCode());
+                    nobidNonPro.setXyId(item.getAid());
+                    nobidNonPro.setgName(item.getaName());
+                    nobidNonPro.setgIsPublic(noBidType);
+                    nobidNonPro.setTendertype(item.getaBtype());
+                    ppmProcurementPlanService.insertNoBidPro(nobidNonPro);
                     break;
             }
 
@@ -233,5 +240,14 @@ public class PpmProcurementPlanController extends BaseController {
     @RequestMapping("/FindProcurementPlanBy")
     public TableDataInfo FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
         return getDataTable(ppmProcurementPlanService.FindProcurementPlanBy(ppmProcurementPlan));
+    }
+
+    @RequiresPermissions("system:plan:list")
+    @PostMapping("/PpmProcurementPlanAndComPubAttament")
+    public TableDataInfo selectePpmProcurementPlanAndComPubAttamentByAid(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+        System.out.println("执行了PpmProcurementPlanAndComPubAttament：" + ppmProcurementPlan);
+        startPage();
+        List<PpmProcurementPlan> list = ppmProcurementPlanService.selectePpmProcurementPlanAndComPubAttamentByAid(ppmProcurementPlan);
+        return getDataTable(list);
     }
 }

@@ -1,7 +1,8 @@
-package com.hh.pms.service.impl;
+package com.hh.pms.service.imp;
 
 import java.util.List;
 
+import com.hh.pms.domain.PpmProcurementPlan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.hh.pms.mapper.ComPubAttachmentsMapper;
@@ -89,4 +90,16 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService {
     public ComPubAttachments selectedComPubAttamentsByAid(Integer aid) {
         return comPubAttachmentsMapper.selectedComPubAttamentsByAid(aid);
     }
+
+    @Override
+    public int updateComPubAttamentsByAid(ComPubAttachments comPubAttachments) {
+        return comPubAttachmentsMapper.updateComPubAttamentsByAid(comPubAttachments);
+    }
+
+    @Override
+    public int deleteComPubAttamentsByAid(Integer aid) {
+        return comPubAttachmentsMapper.deleteComPubAttamentsByAid(aid);
+    }
+
+
 }

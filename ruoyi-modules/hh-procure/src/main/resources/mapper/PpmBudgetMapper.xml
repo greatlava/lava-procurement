@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.procure.mapper.PpmBudgetMapper">
+    
+    <resultMap type="com.hh.procure.domain.PpmBudget" id="PpmBudgetResult">
+        <result property="duId"    column="du_id"    />
+        <result property="aid"    column="aid"    />
+        <result property="duDept"    column="du_dept"    />
+        <result property="duName"    column="du_name"    />
+        <result property="duTotal"    column="du_total"    />
+    </resultMap>
+
+    <sql id="selectPpmBudgetVo">
+        select du_id, vid, aid, du_dept,  du_name, du_total from ppm_budget
+    </sql>
+
+    <select id="selectPpmBudgetList" parameterType="com.hh.procure.domain.PpmBudget" resultMap="PpmBudgetResult">
+        <include refid="selectPpmBudgetVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectPpmBudgetByDuId" parameterType="String" resultMap="PpmBudgetResult">
+        <include refid="selectPpmBudgetVo"/>
+        where du_id = #{duId}
+    </select>
+    <select id="selectPpmBudgetByAid" resultType="com.hh.procure.domain.PpmBudget">
+        SELECT * FROM ppm_budget WHERE aid = #{aid}
+    </select>
+
+    <insert id="insertPpmBudget" parameterType="com.hh.procure.domain.PpmBudget">
+        insert into ppm_budget
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="duId != null">du_id,</if>
+            <if test="aid != null">aid,</if>
+            <if test="duDept != null">du_dept,</if>
+            <if test="duName != null">du_name,</if>
+            <if test="duTotal != null">du_total,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="duId != null">#{duId},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="duDept != null">#{duDept},</if>
+            <if test="duName != null">#{duName},</if>
+            <if test="duTotal != null">#{duTotal},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePpmBudget" parameterType="com.hh.procure.domain.PpmBudget">
+        update ppm_budget
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vid != null">vid = #{vid},</if>
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="duDept != null">du_dept = #{duDept},</if>
+            <if test="duName != null">du_name = #{duName},</if>
+            <if test="duTotal != null">du_total = #{duTotal},</if>
+        </trim>
+        where du_id = #{duId}
+    </update>
+
+    <delete id="deletePpmBudgetByDuId" parameterType="String">
+        delete from ppm_budget where du_id = #{duId}
+    </delete>
+
+    <delete id="deletePpmBudgetByDuIds" parameterType="String">
+        delete from ppm_budget where du_id in 
+        <foreach item="duId" collection="array" open="(" separator="," close=")">
+            #{duId}
+        </foreach>
+    </delete>
+</mapper>

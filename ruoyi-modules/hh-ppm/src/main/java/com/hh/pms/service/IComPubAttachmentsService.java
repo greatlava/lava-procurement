@@ -2,6 +2,7 @@ package com.hh.pms.service;
 
 import java.util.List;
 import com.hh.pms.domain.ComPubAttachments;
+import com.hh.pms.domain.PpmProcurementPlan;
 
 /**
  * 公共附件Service接口
@@ -61,4 +62,9 @@ public interface IComPubAttachmentsService
 
 
     public ComPubAttachments selectedComPubAttamentsByAid(Integer aid);
+
+    public int updateComPubAttamentsByAid(ComPubAttachments comPubAttachments);
+
+    public int deleteComPubAttamentsByAid(Integer aid);
+
 }

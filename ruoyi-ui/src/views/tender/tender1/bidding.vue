@@ -29,7 +29,7 @@
        <get-tender></get-tender>
      </el-tab-pane>
      <el-tab-pane label="投递标书" name="operator" style="font-size: 16px">
-       <tender-notice></tender-notice>
+       <bid_submission></bid_submission>
      </el-tab-pane>
    </el-tabs>
   </div>
@@ -43,6 +43,7 @@ import DeviceDetails from '@/components/device/deviceDetails.vue'
 import TenderNotice from "@/components/tender/tenderNotice.vue"
 import TenderDocument from "@/components/tender/tenderDocument.vue";
 import GetTender from "@/components/tender/getTender.vue";
+import Bid_submission from "@/components/tender/bid_submission.vue";
 
 export default {
   components: {
@@ -51,6 +52,7 @@ export default {
     'tender-notice': TenderNotice,
     'tender-document': TenderDocument,
     'getTender':GetTender,
+    'bid_submission':Bid_submission
   },
   data() {
     return {

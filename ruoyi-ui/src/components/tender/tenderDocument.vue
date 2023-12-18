@@ -117,7 +117,7 @@
 
 <script>
 import { listDocuments, getDocuments, delDocuments, addDocuments, updateDocuments,findTwoDocInfo } from "@/api/system/document";
-import {addNotice, findStatus, updateNotice} from "@/api/system/tenderNotice";
+import {addNotice, findStatus, updateNotice} from "@/api/system/tender/tenderNotice";
 import {getToken} from "@/utils/auth";
 import * as url from "url";
 

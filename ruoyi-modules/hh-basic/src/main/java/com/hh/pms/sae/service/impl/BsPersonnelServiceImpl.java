@@ -2,10 +2,10 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-import com.hh.pms.sae.mapper.BsPersonnelMapper;
 import com.hh.pms.sae.domain.BsPersonnel;
 import com.hh.pms.sae.service.IBsPersonnelService;
+import org.springframework.stereotype.Service;
+import com.hh.pms.sae.mapper.BsPersonnelMapper;
 
 import javax.annotation.Resource;
 

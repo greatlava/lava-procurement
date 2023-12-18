@@ -2,10 +2,10 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.service.IBsOperatorService;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsOperatorMapper;
 import com.hh.pms.sae.domain.BsOperator;
-import com.hh.pms.sae.service.IBsOperatorService;
 
 import javax.annotation.Resource;
 

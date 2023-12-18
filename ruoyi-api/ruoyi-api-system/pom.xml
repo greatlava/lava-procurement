@@ -22,12 +22,6 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common-core</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.hh.pms</groupId>-->
-<!--            <artifactId>hh-bidding</artifactId>-->
-<!--            <version>3.6.3</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
 
     </dependencies>
 

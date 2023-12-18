@@ -46,7 +46,7 @@
                   }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>
+            <!--            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
             <el-table-column label="创建人" align="center" prop="createBy"/>
             <el-table-column label="创建日期" align="center" prop="createTime"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -73,16 +73,32 @@
         </el-tab-pane>
 
         <el-tab-pane label="待审批" name="second">
-          <el-table v-loading="loading" :data="planList">
+          <el-table border v-loading="loading" :data="planList">
+            <el-table-column type="expand" label="附件" align="center">
+              <template slot-scope="scope">
+                <el-descriptions border :column="4" direction="vertical">
+                  <el-descriptions-item label="附件名称">
+                    <p v-for="i in scope.row.file.anName.length">
+                      <a target="_blank" :href="scope.row.file.anUrl.split(',')[i - 1]">
+                        {{ scope.row.file.anName.split(",")[i - 1] }}
+                      </a>
+                    </p>
+                  </el-descriptions-item>
+                </el-descriptions>
+              </template>
+            </el-table-column>
             <el-table-column label="序号" align="center" prop="aid" width="80"/>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
             <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
-            <el-table-column label="附件" align="center" prop="fjAnnex"/>
-            <el-table-column label="采购计划审核意见" align="center" prop="aOpinion"/>
-            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>
+            <!--            <el-table-column label="采购计划审核意见" align="center" prop="aOpinion"/>-->
+            <!--            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
             <el-table-column label="采购业务类型名称" align="center" prop="aBtype"/>
-            <el-table-column label="采购审批状态" align="center" prop="aAstate"/>
+            <el-table-column label="采购审批状态" align="center" prop="aAstate">
+              <template slot-scope="scop">
+                <el-tag size="danger">待审批</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
@@ -97,7 +113,7 @@
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aCreateDept"/>
             <el-table-column label="采购计划名称" align="center" prop="aName"/>
-            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>
+            <!--            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
             <el-table-column label="创建人" align="center" prop="createBy"/>
             <el-table-column label="创建日期" align="center" prop="createTime"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -123,6 +139,8 @@
                 </el-button>
                 <p v-for="i in file.names.length">
                   <a :href="file.urls[i-1]" target="_blank">{{ file.names[i - 1] }}</a>
+                  <i @click="onlinePreViewFile(file.urls[i-1],file.names[i - 1])"
+                     class="el-icon-folder-opened file_icon"></i>
                 </p>
               </el-descriptions-item>
             </el-descriptions>
@@ -251,7 +269,7 @@ import {
   delPlan,
   selectProcurementPlanByIdForThreeTables,
   fileDownload,
-  updatePlan
+  updatePlan, selectePpmProcurementPlanAndComPubAttamentByAid
 } from '@/api/system/plan'
 import {listRecord} from "@/api/system/approval";
 import {listRules} from "@/api/code/rules";
@@ -342,7 +360,15 @@ export default {
     this.getList()
   },
   methods: {
+    //点击在线预览文件
+    onlinePreViewFile(url, fileName) {
+      console.log("url", url)
+    },
     download(fileName) {
+      if (this.fileUrls.length==0){
+        this.$modal.msgError("没有附件可下载，请上传附件！！")
+        return;
+      }
       let name = encodeURIComponent(this.fileUrls);
       var url = `http://localhost:8080/ppm/file/downloadFiles?file=${name}`;
       const a = document.createElement('a')
@@ -391,9 +417,16 @@ export default {
             this.form = res.data;
           })
           selectedComPubAttamentsByAid(aid).then(res => {
-            this.fileUrls = res.data.anUrl;
-            this.file.urls = res.data.anUrl.split(",");
-            this.file.names = res.data.anName.split(",");
+            if (res.data) {
+              this.fileUrls = res.data.anUrl;
+              this.file.urls = res.data.anUrl.split(",");
+              this.file.names = res.data.anName.split(",");
+            } else {
+              this.fileUrls = [];
+              this.file.urls = [];
+              this.file.names = [];
+            }
+
           })
           break;
       }
@@ -416,11 +449,11 @@ export default {
     getList() {
       this.loading = true
       this.planList = [];
-      listPlan(this.queryParams).then(response => {
-        this.total = response.total;
+      selectePpmProcurementPlanAndComPubAttamentByAid(this.queryParams).then(response => {
         this.loading = false;
+        this.total = response.total;
         this.planList = response.rows;
-      });
+      })
     },
     // 取消按钮
     cancel() {
@@ -470,7 +503,6 @@ export default {
     },
     selectRluesForm() {
       listRules(null).then(res => {
-        console.log("res", res.rows)
         this.codeRuleForm = res.rows;
       })
     },
@@ -566,6 +598,11 @@ export default {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
+}
+
+.file_icon {
+  cursor: pointer;
+  margin-left: 20px;
 }
 </style>
 

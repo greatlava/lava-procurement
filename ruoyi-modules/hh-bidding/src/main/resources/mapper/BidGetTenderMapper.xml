@@ -2,34 +2,25 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.mapper.BidGetTenderMapper">
-    
-    <resultMap type="com.hh.pms.domain.BidGetTender" id="BidGetTenderResult">
+<mapper namespace="com.hh.bidding.mapper.BidGetTenderMapper">
+
+    <resultMap type="com.hh.bidding.domain.BidGetTender" id="BidGetTenderResult">
         <result property="yid"    column="yid"    />
         <result property="sid"    column="sid"    />
-        <result property="tdName"    column="td_name"    />
-        <result property="tdPerson"    column="td_person"    />
-        <result property="tdPhone"    column="td_phone"    />
-        <result property="email"    column="email"    />
+        <result property="hid"    column="hid"    />
         <result property="yDownloadTime"    column="y_download_time"    />
-        <result property="tdStatus"    column="td_status"    />
     </resultMap>
 
     <sql id="selectBidGetTenderVo">
-        select yid, sid, td_name, td_person, td_phone, email, y_download_time, td_status from bid_get_tender
+        select yid, sid, hid, y_download_time from bid_get_tender
     </sql>
 
-    <select id="selectBidGetTenderList" parameterType="com.hh.pms.domain.BidGetTender" resultMap="BidGetTenderResult">
+    <select id="selectBidGetTenderList" parameterType="com.hh.bidding.domain.BidGetTender" resultMap="BidGetTenderResult">
         <include refid="selectBidGetTenderVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
-            <if test="tdName != null  and tdName != ''"> and td_name like concat('%', #{tdName}, '%')</if>
-            <if test="tdPerson != null  and tdPerson != ''"> and td_person = #{tdPerson}</if>
-            <if test="tdPhone != null  and tdPhone != ''"> and td_phone = #{tdPhone}</if>
-            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="hid != null"> and hid = #{hid}</if>
             <if test="yDownloadTime != null "> and y_download_time = #{yDownloadTime}</if>
-            <if test="tdStatus != null "> and td_status = #{tdStatus}</if>
-            <if test="eid != null "> and eid = #{eid}</if>
         </where>
     </select>
     
@@ -38,40 +29,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where yid = #{yid}
     </select>
 
-    <insert id="insertBidGetTender" parameterType="com.hh.pms.domain.BidGetTender">
+    <insert id="insertBidGetTender" parameterType="com.hh.bidding.domain.BidGetTender">
         insert into bid_get_tender
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="yid != null">yid,</if>
             <if test="sid != null">sid,</if>
-            <if test="tdName != null">td_name,</if>
-            <if test="tdPerson != null">td_person,</if>
-            <if test="tdPhone != null">td_phone,</if>
-            <if test="email != null">email,</if>
+            <if test="hid != null">hid,</if>
             <if test="yDownloadTime != null">y_download_time,</if>
-            <if test="tdStatus != null">td_status,</if>
+
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="yid != null">#{yid},</if>
             <if test="sid != null">#{sid},</if>
-            <if test="tdName != null">#{tdName},</if>
-            <if test="tdPerson != null">#{tdPerson},</if>
-            <if test="tdPhone != null">#{tdPhone},</if>
-            <if test="email != null">#{email},</if>
+            <if test="hid != null">#{hid},</if>
             <if test="yDownloadTime != null">#{yDownloadTime},</if>
-            <if test="tdStatus != null">#{tdStatus},</if>
          </trim>
     </insert>
 
-    <update id="updateBidGetTender" parameterType="com.hh.pms.domain.BidGetTender">
+    <update id="updateBidGetTender" parameterType="com.hh.bidding.domain.BidGetTender">
         update bid_get_tender
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
-            <if test="tdName != null">td_name = #{tdName},</if>
-            <if test="tdPerson != null">td_person = #{tdPerson},</if>
-            <if test="tdPhone != null">td_phone = #{tdPhone},</if>
-            <if test="email != null">email = #{email},</if>
+            <if test="hid != null">hid = #{hid},</if>
             <if test="yDownloadTime != null">y_download_time = #{yDownloadTime},</if>
-            <if test="tdStatus != null">td_status = #{tdStatus},</if>
         </trim>
         where yid = #{yid}
     </update>
@@ -86,4 +66,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{yid}
         </foreach>
     </delete>
+
+    <select id="findOper" parameterType="Long" resultMap="findOperator">
+        select g.yid,g.sid,g.y_download_time,s.h_name,o.* from bid_get_tender g
+                                                 inner join bs_supplier s on g.hid = s.hid
+                                                 inner join bs_operator o on o.hid = s.hid where g.sid = #{sid}
+    </select>
+    <resultMap id="findOperator" type="com.hh.bidding.domain.BidGetTender">
+        <id column="yid" property="yid"/>
+        <collection property="bsSuppliers" ofType="com.hh.bidding.domain.BsSupplier">
+            <id property="hid" column="hid"/>
+            <association property="bsOperator"/>
+        </collection>
+    </resultMap>
 </mapper>

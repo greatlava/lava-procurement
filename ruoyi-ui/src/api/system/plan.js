@@ -71,9 +71,9 @@ export function ModifyPlanAndOtherInformation(data) {
   })
 }
 
-export function updateStateAndAddBidWinning(data, type) {
+export function updateStateAndAddBidWinning(data, type, noBidType) {
   return request({
-    url: "/ppm/plan/updateStateAndAddBidWinning?type=" + type,
+    url: "/ppm/plan/updateStateAndAddBidWinning?type=" + type + "&noBidType=" + noBidType,
     method: "post",
     data: data
   })
@@ -84,5 +84,13 @@ export function FindProcurementPlanBy(data) {
     url: "/ppm/plan/FindProcurementPlanBy",
     params: data,
     method: "post"
+  })
+}
+
+export function selectePpmProcurementPlanAndComPubAttamentByAid(data) {
+  return request({
+    url: "/ppm/plan/PpmProcurementPlanAndComPubAttament",
+    method: "post",
+    data: data
   })
 }

@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender'
+import { listTender, getTender, delTender, addTender, updateTender } from '@/api/system/tender/tender'
 
 export default {
   dicts:["bid_tender_biddingmethod","bid_tender_state"],

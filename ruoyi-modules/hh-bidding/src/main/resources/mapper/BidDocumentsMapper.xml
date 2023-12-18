@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.mapper.BidDocumentsMapper">
-    
-    <resultMap type="com.hh.pms.domain.BidDocuments" id="BidDocumentsResult">
+<mapper namespace="com.hh.bidding.mapper.BidDocumentsMapper">
+
+    <resultMap type="com.hh.bidding.domain.BidDocuments" id="BidDocumentsResult">
         <result property="wid"    column="wid"    />
         <result property="sid"    column="sid"    />
         <result property="wTitle"    column="w_title"    />
@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select wid, sid, w_title, w_size, w_upload_time,fileName,url from bid_documents
     </sql>
 
-    <select id="selectBidDocumentsList" parameterType="com.hh.pms.domain.BidDocuments" resultMap="BidDocumentsResult">
+    <select id="selectBidDocumentsList" parameterType="com.hh.bidding.domain.BidDocuments" resultMap="BidDocumentsResult">
         <include refid="selectBidDocumentsVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where wid = #{wid}
     </select>
         
-    <insert id="insertBidDocuments" parameterType="com.hh.pms.domain.BidDocuments">
+    <insert id="insertBidDocuments" parameterType="com.hh.bidding.domain.BidDocuments">
         insert into bid_documents
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="wid != null">wid,</if>
@@ -57,7 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateBidDocuments" parameterType="com.hh.pms.domain.BidDocuments">
+    <update id="updateBidDocuments" parameterType="com.hh.bidding.domain.BidDocuments">
         update bid_documents
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!--        </where>-->
 <!--    </select>-->
 
-<!--    <resultMap id="TwoTableResult" type="com.hh.pms.domain.BidDocuments">-->
+<!--    <resultMap id="TwoTableResult" type="com.hh.nobidding.domain.BidDocuments">-->
 <!--        <id column="wid" property="wid"/>-->
 <!--        <association property="bidNotice" >-->
 <!--            <id column="uid" property="uid"/>-->

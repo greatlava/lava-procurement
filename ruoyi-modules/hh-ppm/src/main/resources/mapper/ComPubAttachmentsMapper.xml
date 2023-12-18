@@ -5,34 +5,44 @@
 <mapper namespace="com.hh.pms.mapper.ComPubAttachmentsMapper">
 
     <resultMap type="ComPubAttachments" id="ComPubAttachmentsResult">
-        <result property="anId"    column="an_id"    />
-        <result property="aid"    column="aid"    />
-        <result property="jhid"    column="jhid"    />
-        <result property="eid"    column="eid"    />
-        <result property="anName"    column="an_name"    />
-        <result property="anType"    column="an_type"    />
-        <result property="anDan"    column="an_dan"    />
-        <result property="anUrl"    column="an_url"    />
-        <result property="anSize"    column="an_size"    />
-        <result property="anUploadTime"    column="an_upload_time"    />
+        <result property="anId" column="an_id"/>
+        <result property="aid" column="aid"/>
+        <result property="jhid" column="jhid"/>
+        <result property="eid" column="eid"/>
+        <result property="anName" column="an_name"/>
+        <result property="anType" column="an_type"/>
+        <result property="anDan" column="an_dan"/>
+        <result property="anUrl" column="an_url"/>
+        <result property="anSize" column="an_size"/>
+        <result property="anUploadTime" column="an_upload_time"/>
     </resultMap>
 
     <sql id="selectComPubAttachmentsVo">
-        select an_id, aid, jhid, eid, an_name, an_type, an_dan, an_url, an_size, an_upload_time from com_pub_attachments
+        select an_id,
+               aid,
+               jhid,
+               eid,
+               an_name,
+               an_type,
+               an_dan,
+               an_url,
+               an_size,
+               an_upload_time
+        from com_pub_attachments
     </sql>
 
     <select id="selectComPubAttachmentsList" parameterType="ComPubAttachments" resultMap="ComPubAttachmentsResult">
         <include refid="selectComPubAttachmentsVo"/>
         <where>
-            <if test="aid != null "> and aid = #{aid}</if>
-            <if test="jhid != null "> and jhid = #{jhid}</if>
-            <if test="eid != null "> and eid = #{eid}</if>
-            <if test="anName != null  and anName != ''"> and an_name like concat('%', #{anName}, '%')</if>
-            <if test="anType != null "> and an_type = #{anType}</if>
-            <if test="anDan != null  and anDan != ''"> and an_dan = #{anDan}</if>
-            <if test="anUrl != null  and anUrl != ''"> and an_url = #{anUrl}</if>
-            <if test="anSize != null "> and an_size = #{anSize}</if>
-            <if test="anUploadTime != null "> and an_upload_time = #{anUploadTime}</if>
+            <if test="aid != null ">and aid = #{aid}</if>
+            <if test="jhid != null ">and jhid = #{jhid}</if>
+            <if test="eid != null ">and eid = #{eid}</if>
+            <if test="anName != null  and anName != ''">and an_name like concat('%', #{anName}, '%')</if>
+            <if test="anType != null ">and an_type = #{anType}</if>
+            <if test="anDan != null  and anDan != ''">and an_dan = #{anDan}</if>
+            <if test="anUrl != null  and anUrl != ''">and an_url = #{anUrl}</if>
+            <if test="anSize != null ">and an_size = #{anSize}</if>
+            <if test="anUploadTime != null ">and an_upload_time = #{anUploadTime}</if>
         </where>
     </select>
 
@@ -42,7 +52,8 @@
     </select>
 
     <select id="selectedComPubAttamentsByAid" resultType="com.hh.pms.domain.ComPubAttachments">
-        <include refid="selectComPubAttachmentsVo"/> where aid = #{aid}
+        <include refid="selectComPubAttachmentsVo"/>
+        where aid = #{aid}
     </select>
 
     <insert id="insertComPubAttachments" parameterType="ComPubAttachments">
@@ -89,8 +100,25 @@
         where an_id = #{anId}
     </update>
 
+    <update id="updateComPubAttamentsByAid" parameterType="ComPubAttachments">
+        update com_pub_attachments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jhid != null">jhid = #{jhid},</if>
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="anName != null">an_name = #{anName},</if>
+            <if test="anType != null">an_type = #{anType},</if>
+            <if test="anDan != null">an_dan = #{anDan},</if>
+            <if test="anUrl != null">an_url = #{anUrl},</if>
+            <if test="anSize != null">an_size = #{anSize},</if>
+            <if test="anUploadTime != null">an_upload_time = #{anUploadTime},</if>
+        </trim>
+        where aid = #{aid}
+    </update>
+
     <delete id="deleteComPubAttachmentsByAnId" parameterType="Integer">
-        delete from com_pub_attachments where an_id = #{anId}
+        delete
+        from com_pub_attachments
+        where an_id = #{anId}
     </delete>
 
     <delete id="deleteComPubAttachmentsByAnIds" parameterType="String">
@@ -98,6 +126,12 @@
         <foreach item="anId" collection="array" open="(" separator="," close=")">
             #{anId}
         </foreach>
+    </delete>
+
+    <delete id="deleteComPubAttamentsByAid">
+        DELETE
+        FROM com_pub_attachments
+        WHERE aid = #{aid}
     </delete>
 
 

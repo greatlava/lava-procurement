@@ -2,9 +2,9 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.domain.BsOccupation;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsOccupationMapper;
-import com.hh.pms.sae.domain.BsOccupation;
 import com.hh.pms.sae.service.IBsOccupationService;
 
 import javax.annotation.Resource;

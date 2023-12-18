@@ -3,9 +3,9 @@ package com.hh.pms.sae.service.impl;
 import java.util.List;
 
 import com.hh.pms.sae.domain.BsEducate;
+import com.hh.pms.sae.service.IBsEducateService;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsEducateMapper;
-import com.hh.pms.sae.service.IBsEducateService;
 
 import javax.annotation.Resource;
 

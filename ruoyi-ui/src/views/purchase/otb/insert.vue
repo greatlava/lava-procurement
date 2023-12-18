@@ -46,6 +46,8 @@ import {addBudget} from "@/api/system/budget";
                   :on-exceed="exceedingMaximumLimit"
                   :on-error="uploadError"
                   :before-upload="beforeUpload"
+                  :before-remove="beforeRemove"
+                  :on-remove="removeFile"
                   :auto-upload="false">
                   <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                   <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
@@ -313,6 +315,8 @@ import {
   ModifyPlanAndOtherInformation
 } from '@/api/system/plan'
 import {Message} from "element-ui";
+import {selectedComPubAttamentsByAid, updateComPubAttamentsByAid} from "@/api/file/attachments";
+import log from "@/views/monitor/job/log.vue";
 
 export default {
   dicts: ['ppm_procurement_plan'],
@@ -409,7 +413,6 @@ export default {
     if (planId == null && planId == undefined) {
       generatePlanID().then((res) => {
         localStorage.setItem("procurementPlanID", res);
-        console.log('res', res)
       }).catch((err) => {
         Message.error("服务器异常请稍后重试！！");
         setTimeout(() => {
@@ -423,6 +426,30 @@ export default {
     console.log("页面销毁---------------")
   },
   methods: {
+    //文件移除钩子
+    removeFile(file, fileList) {
+      console.log(file, this.upload.fileSecuss)
+      if (this.form.aid) {
+        if (file.status == "success") {
+          let obj = file;
+          obj["aid"] = this.form.aid;
+          obj["anName"] = obj["name"];
+          obj["anUrl"] = obj["url"];
+          updateComPubAttamentsByAid(obj, "success").then(res => {
+            console.log("删除文件", res)
+          })
+        }
+      } else {
+        this.upload.fileSecuss = this.upload.fileSecuss.filter(item => {
+          return !item["name"].includes(file["name"].substring(0, file["name"].indexOf(".")))
+        })
+      }
+    },
+    //文件删除之前的钩子
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+      return true;
+    },
     //上传文件之前
     beforeUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -433,7 +460,6 @@ export default {
     },
     //文件上传失败
     uploadError(err, file, fileList) {
-
       this.upload.isUploading = false;
       this.$modal.msgError(err);
     },
@@ -450,10 +476,28 @@ export default {
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.fileSecuss.push(file);
+      if (response.code == 200) {
+        if (this.form.aid) {
+          let obj = response.data.data;
+          obj["aid"] = this.form.aid;
+          obj["anName"] = obj["name"];
+          obj["anUrl"] = obj["url"];
+          updateComPubAttamentsByAid(obj, "insert").then(res => {
+            console.log("Promise", res)
+            if (res.code == 200) {
+              this.$modal.msgSuccess(res.msg);
+              return 1;
+            } else {
+              this.$modal.msgSuccess("文件上传失败");
+            }
+          })
+        } else {
+          this.upload.fileSecuss.push(response.data.data);
+          this.$modal.msgSuccess("文件上成功，需要点击提交按钮才可生效！！");
+        }
+      }
       this.upload.isUploading = false;
-      this.form.filePath = response.url;
-      this.$modal.msgSuccess(response.msg);
+
     },
     handleAdd() {
       this.upload.fileList = [];
@@ -543,7 +587,9 @@ export default {
 
           })
         } else {
-          console.log('error submit!!');
+          console.log("324")
+          // 使用动画效果
+
           return false;
         }
       })
@@ -609,41 +655,72 @@ export default {
             return; // 跳出整个函数
           }
           if (this.upload.fileSecuss.length == 0) {
-            this.$modal.msgError("请上传附件！！");
-            return;
-          }
-          console.log('res', this.upload.fileSecuss)
-          let url = "";
-          let fileName = "";
-          this.upload.fileSecuss.forEach((e, i) => {
-            if (e.response.code == 200) {
-              url += e.response.data.data.url + ",";
-              fileName += e.response.data.data.name + ",";
+            this.$modal.confirm("系统检测到你还未上传附件是否需要继续提交？").then(() => {
+              this.form['items'] = this.device;
+              this.form["aCode"] = localStorage.getItem("procurementPlanID");
+              addPlan(this.form).then(res => {
+                Message.success("操作成功");
+                setTimeout(() => {
+                  this.$router.back();
+                }, 1000)
+              })
+            }).catch(() => {
+              this.$modal.msgError("请上传附件！！");
+              window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+              });
+            })
+          } else {
+            let url = "";
+            let fileName = "";
+            this.upload.fileSecuss.forEach((e, i) => {
+              url += e.url + ",";
+              fileName += e.name + ",";
+            })
+            let files = {
+              anUrl: url,
+              anName: fileName
             }
-          })
-          let files = {
-            anUrl: url,
-            anName: fileName
+            this.form['items'] = this.device;
+            this.form["file"] = files;
+            this.form["aCode"] = localStorage.getItem("procurementPlanID");
+            addPlan(this.form).then(res => {
+              Message.success("操作成功");
+              setTimeout(() => {
+                this.$router.back();
+              }, 1000)
+            })
           }
-          this.form["file"] = files;
-          this.form['items'] = this.device;
-          this.form["aCode"] = localStorage.getItem("procurementPlanID");
-          addPlan(this.form).then(res => {
-            Message.success("操作成功");
-            setTimeout(() => {
-              this.$router.back();
-            }, 1000)
-          })
+        } else {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
         }
       })
     },
     getItemsByPlanId() {
       selectProcurementPlanByIdForThreeTables(this.form.aid).then(res => {
-        console.log("data", res)
         this.device = res.data.items;
       })
       selectPpmBudgetByAid(this.form.aCode).then(res => {
         this.budgetList = res.data;
+      })
+      selectedComPubAttamentsByAid(this.form.aid).then(res => {
+        console.log("file", res)
+        if (res.data) {
+          let names = res.data.anName.split(",");
+          let urls = res.data.anUrl.split(",");
+          urls.forEach((e, i) => {
+            this.upload.fileList.push({
+              name: names[i],
+              url: urls[i]
+            })
+          })
+        }
+      }).catch(err => {
+        this.$modal.msgError("文件加载失败，请联系管理员！！")
       })
     },
     updatePlanByAid() {
