@@ -263,14 +263,6 @@ export default {
     addFa() {
       // this.queryParams['lTableData'] = this.lTableData
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
-
-      // this.queryParams.lTableData.forEach(e => {
-      //   if (e.tid == null) {
-      //     return // 如果存在空的tid，直接跳过当前元素
-      //   }
-      //   this.queryParams['lTableData'] = [...this.lTableData]
-      // })
-
       this.queryParams['lTableData'] = [...this.lTableData].filter(e => {
         delete e.id
         if (e.tid == null) {

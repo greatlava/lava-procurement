@@ -30,7 +30,7 @@ export function selectItemsDevice(jhId) {
 // 新增框架协议管理
 export function addManagement(data) {
   return request({
-    url: '/ppm/management',
+    url: '/basic/management',
     method: 'post',
     data: data
   })
