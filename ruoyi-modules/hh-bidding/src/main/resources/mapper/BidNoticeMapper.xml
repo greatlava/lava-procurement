@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.bid.mapper.BidNoticeMapper">
+<mapper namespace="com.hh.bidding.mapper.BidNoticeMapper">
 
-    <resultMap type="com.hh.nobidding.domain.BidNotice" id="BidNoticeResult">
+    <resultMap type="com.hh.bidding.domain.BidNotice" id="BidNoticeResult">
         <result property="uid" column="uid"/>
         <result property="sid" column="sid"/>
         <result property="uTitle" column="u_title"/>
@@ -38,7 +38,7 @@
     </sql>
 
 
-    <select id="selectBidNoticeList" parameterType="com.hh.nobidding.domain.BidNotice" resultMap="BidNoticeResult">
+    <select id="selectBidNoticeList" parameterType="com.hh.bidding.domain.BidNotice" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
         <where>
             <if test="uid != null ">and uid = #{uid}</if>
@@ -62,17 +62,17 @@
         <include refid="selectBidNoticeVo"/>
         where uid = #{uid}
     </select>
-    <select id="findAllByEndTime" resultType="com.hh.nobidding.domain.BidNotice">
+    <select id="findAllByEndTime" resultType="com.hh.bidding.domain.BidNotice">
         select *
         from bid_notice
         WHERE  fj_status = 5 and now() >= u_end_time
     </select>
 
-    <select id="findStatus" resultType="com.hh.nobidding.domain.BidNotice">
+    <select id="findStatus" resultType="com.hh.bidding.domain.BidNotice">
         select * from bid_notice where fj_status=5 and sid=#{sid}
     </select>
 
-    <insert id="insertBidNotice" parameterType="com.hh.nobidding.domain.BidNotice">
+    <insert id="insertBidNotice" parameterType="com.hh.bidding.domain.BidNotice">
         insert into bid_notice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="uid != null">uid,</if>
@@ -104,7 +104,7 @@
         </trim>
     </insert>
 
-    <update id="updateBidNotice" parameterType="com.hh.nobidding.domain.BidNotice">
+    <update id="updateBidNotice" parameterType="com.hh.bidding.domain.BidNotice">
         update bid_notice
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
@@ -146,7 +146,7 @@
         from bid_notice n inner join bid_tender t on n.sid = t.sid where uid=#{uid}
     </select>
 
-    <resultMap id="TwoTableResult" type="com.hh.nobidding.domain.BidNotice">
+    <resultMap id="TwoTableResult" type="com.hh.bidding.domain.BidNotice">
         <id column="uid" property="uid"/>
             <association property="bidTender" >
                 <id column="sid" property="sid"/>
