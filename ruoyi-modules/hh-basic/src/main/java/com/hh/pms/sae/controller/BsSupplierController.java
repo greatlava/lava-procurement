@@ -161,7 +161,7 @@ public class BsSupplierController extends BaseController {
     /**
      * 获取供应商详细信息
      */
-    @RequiresPermissions("system:supplier:query")
+//    @RequiresPermissions("system:supplier:query")
     @GetMapping(value = "/{hid}")
     public AjaxResult getInfo(@PathVariable("hid") Long hid) {
         BsSupplier bsSupplier = bsSupplierService.selectBsSupplierByHid(hid);
