@@ -1,6 +1,6 @@
 package com.hh.procure.domain;
 
-import com.hh.pms.sae.domain.BsSupplier;
+
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
