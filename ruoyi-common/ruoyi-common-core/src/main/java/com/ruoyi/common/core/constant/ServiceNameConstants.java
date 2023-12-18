@@ -17,6 +17,7 @@ public class ServiceNameConstants
      */
     public static final String SYSTEM_SERVICE = "ruoyi-system";
 
+
     /**
      * 文件服务的serviceid
      */
