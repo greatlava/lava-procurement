@@ -50,3 +50,11 @@ export function selectedComPubAttamentsByAid(aid) {
     method: "post"
   })
 }
+
+export function updateComPubAttamentsByAid(data, status) {
+  return request({
+    url: "/ppm/attachments/updateComPubAttamentsByAid?status=" + status,
+    method: "post",
+    data: data
+  })
+}

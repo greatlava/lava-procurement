@@ -187,5 +187,19 @@ public class FileUtil {
         return R.ok(sysFile);
     }
 
+    public static R deleteFile(String fileName) {
+        fileName = StringPathUtils.replaceHttpToNull(fileName);
+        // 创建Path对象
+        Path path = Paths.get(FILENAME + fileName);
+        try {
+
+            Files.delete(path);
+            R.ok(null,"删除成功！！");
+        } catch (Exception e) {
+            System.out.println();
+            return R.fail("文件删除失败");
+        }
+        return R.ok();
+    }
 
 }

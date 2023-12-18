@@ -1,5 +1,6 @@
 package com.hh.pms.mapper;
 
+import com.hh.pms.domain.NobidNonPro;
 import com.hh.pms.domain.PpmProcurementPlan;
 import com.ruoyi.system.api.domain.BidTender;
 
@@ -66,5 +67,10 @@ public interface PpmProcurementPlanMapper
     public int insertTenders(BidTender bidTender);
 
     public List<PpmProcurementPlan> FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan);
+
+    public List<PpmProcurementPlan> selectePpmProcurementPlanAndComPubAttamentByAid(PpmProcurementPlan ppmProcurementPlan);
+
+
+    public int insertNoBidPro(NobidNonPro nobidNonPro);
 
 }

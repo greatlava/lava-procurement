@@ -48,6 +48,12 @@
       <el-table-column label="创建人" align="center" prop="createBy"/>
       <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
       <el-table-column label="创建日期" align="center" prop="createTime"/>
+      <el-table-column label="采购计划状态" align="center" prop="aAstate">
+        <template slot-scope="scope">
+          <el-tag type="danger" v-if="scope.row.aAstate == 3">已寻源</el-tag>
+          <el-tag v-else>待寻源</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -142,13 +148,28 @@
     </el-dialog>
     <el-dialog @close="cancelType" :visible.sync="openByType" title="选择采购方式" width="35%">
       <div class="radio" style="text-align: center">
-        <el-radio v-model="radio" :label="1">公开</el-radio>
-        <el-radio v-model="radio" :label="2">邀请</el-radio>
-        <el-radio v-model="radio" :label="3">询价</el-radio>
-        <el-radio v-model="radio" :label="4">委托</el-radio>
-        <el-radio v-model="radio" :label="5">竞争性谈判</el-radio>
-        <el-radio v-model="radio" :label="6">单一来源</el-radio>
+        <el-radio-group v-model="typeRadio">
+          <el-radio :label="1">公开</el-radio>
+          <el-radio :label="2">邀请</el-radio>
+          <el-radio :label="3">询价</el-radio>
+          <el-radio :label="4">委托</el-radio>
+          <el-radio :label="5">竞争性谈判</el-radio>
+          <el-radio :label="6">单一来源</el-radio>
+        </el-radio-group>
       </div>
+      <el-card shadow="never" v-if="typeRadio != 1 && typeRadio != 2" class="box-card">
+        <div slot="header" class="clearfix">
+          <span>是否公开/邀请</span>
+          <!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
+        </div>
+        <div class="text item">
+          <el-radio-group v-model="noBidType">
+            <el-radio :label="1">公开</el-radio>
+            <el-radio :label="2">邀请</el-radio>
+          </el-radio-group>
+        </div>
+      </el-card>
+
       <div slot="footer" class="dialog-footer">
         <el-button v-loading.fullscreen.lock="fullscreenLoading" type="primary" @click="sumbitType">确 定</el-button>
         <el-button @click="cancelType">取 消</el-button>
@@ -180,7 +201,8 @@ export default {
       itemList: [],
       openByType: false,
       fullscreenLoading: false,
-      radio: 1,
+      typeRadio: 1,
+      noBidType: 1,
       form: {},
       queryParams: {
         pageNum: 1,
@@ -226,14 +248,13 @@ export default {
     },
     //关闭采购寻源方式选择
     cancelType() {
-      this.radio = 1;
+      this.typeRadio = 1;
       this.openByType = false;
     },
     //采购寻源方式选择确定按钮
     sumbitType() {
-      console.log(this.radio, "radio")
       this.fullscreenLoading = true;
-      updateStateAndAddBidWinning(this.yilist, this.radio).then(res => {
+      updateStateAndAddBidWinning(this.yilist, this.typeRadio, this.noBidType).then(res => {
         console.log("res-----", res);
         this.fullscreenLoading = false
         this.openByType = false;
@@ -316,3 +337,28 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+
+.clearfix:after {
+  clear: both
+}
+
+.box-card {
+  margin: 20px auto;
+//padding-left: 20px; width: 550px;
+}
+</style>

@@ -1,17 +1,15 @@
 package com.hh.pms.controller;
 
 import java.util.List;
+ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hh.pms.Util.FileUtil;
+import com.hh.pms.Util.StringPathUtils;
+import com.ruoyi.common.core.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
@@ -100,5 +98,45 @@ public class ComPubAttachmentsController extends BaseController {
     @PostMapping("/selectedComPubAttamentsByAid")
     public AjaxResult selectedComPubAttamentsByAid(Integer aid) {
         return success(comPubAttachmentsService.selectedComPubAttamentsByAid(aid));
+    }
+
+    @PostMapping("/updateComPubAttamentsByAid")
+    @Transactional
+    public synchronized R updateComPubAttamentsByAid(@RequestBody ComPubAttachments comPubAttachments, String status) {
+        System.out.println("comPubAttachments:" + comPubAttachments + "\n status:" + status);
+        ComPubAttachments item = comPubAttachmentsService.selectedComPubAttamentsByAid(comPubAttachments.getAid());
+        if (item != null) {
+            if (status.equals("success")) {
+                if (item.getAnName().contains(comPubAttachments.getAnName() + ",")) {
+                    comPubAttachments.setAnName(item.getAnName().replace(comPubAttachments.getAnName() + ",", ""));
+                } else {
+                    comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(item.getAnName().replace(comPubAttachments.getAnName(), "")));
+                }
+
+                if (item.getAnUrl().contains(comPubAttachments.getAnUrl() + ",")) {
+                    comPubAttachments.setAnUrl(item.getAnUrl().replace(comPubAttachments.getAnUrl() + ",", ""));
+                } else {
+                    comPubAttachments.setAnUrl(StringPathUtils.cutToTheEndStr(item.getAnUrl().replace(comPubAttachments.getAnUrl(), "")));
+                }
+                int i = comPubAttachmentsService.updateComPubAttamentsByAid(comPubAttachments);
+                if (i > 0) {
+                    return FileUtil.deleteFile(comPubAttachments.getAnUrl());
+                } else {
+                    return R.fail("上传失败");
+                }
+            } else {
+                comPubAttachments.setAnName(item.getAnName() + "," + comPubAttachments.getAnName());
+                comPubAttachments.setAnUrl(item.getAnUrl() + "," + comPubAttachments.getAnUrl());
+                int i = comPubAttachmentsService.updateComPubAttamentsByAid(comPubAttachments);
+                if (i > 0) {
+                    return R.ok(null,"上传成功！！");
+                } else {
+                    return R.fail("上传失败");
+                }
+            }
+        } else {
+            comPubAttachmentsService.insertComPubAttachments(comPubAttachments);
+            return R.ok("上传成功");
+        }
     }
 }

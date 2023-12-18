@@ -4,10 +4,7 @@ import java.util.List;
 
 import com.hh.pms.Util.CodeRuleHelp;
 import com.hh.pms.Util.CodeRuleUtil;
-import com.hh.pms.domain.CodeRulesResult;
-import com.hh.pms.domain.ComCodeRules;
-import com.hh.pms.domain.PpmLineItems;
-import com.hh.pms.domain.PpmProcurementPlan;
+import com.hh.pms.domain.*;
 import com.hh.pms.mapper.PpmProcurementPlanMapper;
 import com.hh.pms.service.IPpmLineItemsService;
 import com.hh.pms.service.IPpmProcurementPlanService;
@@ -133,5 +130,15 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
     @Override
     public List<PpmProcurementPlan> FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
         return ppmProcurementPlanMapper.FindProcurementPlanBy(ppmProcurementPlan);
+    }
+
+    @Override
+    public List<PpmProcurementPlan> selectePpmProcurementPlanAndComPubAttamentByAid(PpmProcurementPlan ppmProcurementPlan) {
+        return ppmProcurementPlanMapper.selectePpmProcurementPlanAndComPubAttamentByAid(ppmProcurementPlan);
+    }
+
+    @Override
+    public int insertNoBidPro(NobidNonPro nobidNonPro) {
+        return ppmProcurementPlanMapper.insertNoBidPro(nobidNonPro);
     }
 }
