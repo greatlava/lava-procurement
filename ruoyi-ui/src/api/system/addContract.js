@@ -26,3 +26,12 @@ export function selectItemsDevice(jhId) {
     params: jhId
   })
 }
+
+// 新增框架协议管理
+export function addManagement(data) {
+  return request({
+    url: '/ppm/management',
+    method: 'post',
+    data: data
+  })
+}
