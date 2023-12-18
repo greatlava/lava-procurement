@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.bid.mapper.BidSubmissionMapper">
+<mapper namespace="com.hh.bidding.mapper.BidSubmissionMapper">
     
-    <resultMap type="com.hh.nobidding.domain.BidSubmission" id="BidSubmissionResult">
+    <resultMap type="com.hh.bidding.domain.BidSubmission" id="BidSubmissionResult">
         <result property="tdId"    column="td_id"    />
         <result property="sid"    column="sid"    />
         <result property="hid"    column="hid"    />
@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select td_id, sid, hid, td_status, td_success_time, td_fail_time from bid_submission
     </sql>
 
-    <select id="selectBidSubmissionList" parameterType="com.hh.nobidding.domain.BidSubmission" resultMap="BidSubmissionResult">
+    <select id="selectBidSubmissionList" parameterType="com.hh.bidding.domain.BidSubmission" resultMap="BidSubmissionResult">
         <include refid="selectBidSubmissionVo"/>
         <where>
             <if test="sid != null "> and sid = #{sid}</if>
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where td_id = #{tdId}
     </select>
 
-    <insert id="insertBidSubmission" parameterType="com.hh.nobidding.domain.BidSubmission">
+    <insert id="insertBidSubmission" parameterType="com.hh.bidding.domain.BidSubmission">
         insert into bid_submission
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tdId != null">td_id,</if>
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updateBidSubmission" parameterType="com.hh.nobidding.domain.BidSubmission">
+    <update id="updateBidSubmission" parameterType="com.hh.bidding.domain.BidSubmission">
         update bid_submission
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
@@ -81,9 +81,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                                                                                                 inner join bs_supplier s on b.hid = s.hid
                                                                                                 inner join bs_operator o on o.hid = s.hid where b.sid = #{sid}
     </select>
-    <resultMap id="findOperator" type="com.hh.nobidding.domain.BidSubmission">
+    <resultMap id="findOperator" type="com.hh.bidding.domain.BidSubmission">
         <id column="td_id" property="tdId"/>
-        <collection property="bsSuppliers" ofType="com.hh.nobidding.domain.BsSupplier">
+        <collection property="bsSuppliers" ofType="com.hh.bidding.domain.BsSupplier">
             <id property="hid" column="hid"/>
             <association property="bsOperator"/>
         </collection>
