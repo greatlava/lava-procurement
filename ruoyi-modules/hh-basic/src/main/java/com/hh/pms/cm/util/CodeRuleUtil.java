@@ -33,4 +33,6 @@ public class CodeRuleUtil {
     public static final String FRAMEWORK = "框架计划";
 
     public static final String FRAMEWORK_MANAHEMENT = "框架协议";
+
+    public static final String SUPPLIER_ACCESS = "供应商准入";
 }

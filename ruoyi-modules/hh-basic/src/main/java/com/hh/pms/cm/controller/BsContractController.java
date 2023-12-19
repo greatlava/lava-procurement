@@ -37,7 +37,7 @@ public class BsContractController extends BaseController {
     /**
      * 查询合同列表
      */
-    @RequiresPermissions("system:contract:list")
+//    @RequiresPermissions("system:contract:list")
     @GetMapping("/list")
     public TableDataInfo list(BsContract bsContract) {
         startPage();
