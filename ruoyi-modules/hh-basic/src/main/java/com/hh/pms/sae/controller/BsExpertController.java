@@ -37,7 +37,7 @@ public class BsExpertController extends BaseController {
     /**
      * 查询专家列表
      */
-    @RequiresPermissions("system:expert:list")
+//    @RequiresPermissions("system:expert:list")
     @GetMapping("/list")
     public TableDataInfo list(BsExpert bsExpert) {
         startPage();

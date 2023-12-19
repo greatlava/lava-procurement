@@ -113,7 +113,8 @@ public class BidGetTenderController extends BaseController {
         BidGetTender bg = new BidGetTender();
         bg.setHid(bidNotice.getHid());
         //已存在的供应商可以下载但不添加入表
-        if(bidGetTenderService.selectBidGetTenderList(bg) != null){
+        System.out.println(bidGetTenderService.selectBidGetTenderList(bg));
+        if(bidGetTenderService.selectBidGetTenderList(bg).size() == 0){
             bg.setSid(bidNotice.getSid());
             bidGetTenderService.insertBidGetTender(bg);
         }

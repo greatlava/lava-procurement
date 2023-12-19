@@ -45,6 +45,9 @@ public class BidSubmission extends BaseEntity
     @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date tdFailTime;
 
+    @Excel(name = "上传标书")
+    private String fjFiles;
+
     private List<BsSupplier> bsSuppliers;
 
     public void setTdId(Long tdId) 
@@ -102,6 +105,7 @@ public class BidSubmission extends BaseEntity
             .append("tdStatus", getTdStatus())
             .append("tdSuccessTime", getTdSuccessTime())
             .append("tdFailTime", getTdFailTime())
+            .append("fjFiles", getFjFiles())
             .toString();
     }
 
@@ -119,5 +123,13 @@ public class BidSubmission extends BaseEntity
 
     public void setBsSuppliers(List<BsSupplier> bsSuppliers) {
         this.bsSuppliers = bsSuppliers;
+    }
+
+    public String getFjFiles() {
+        return fjFiles;
+    }
+
+    public void setFjFiles(String fjFiles) {
+        this.fjFiles = fjFiles;
     }
 }

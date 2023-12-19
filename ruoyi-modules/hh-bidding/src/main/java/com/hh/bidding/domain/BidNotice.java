@@ -39,23 +39,23 @@ public class BidNotice extends BaseEntity
     private Long uMoney;
 
     /** 标注获取时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "标注获取时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "标注获取时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date uGetTime;
 
     /** 接受答疑时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "接受答疑时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "接受答疑时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date uAcceptTime;
 
     /** 投标截止时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "投标截止时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "投标截止时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date uEndTime;
 
     /** 开标时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开标时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "开标时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date uKaiTime;
 
     /** 附件 */
@@ -70,8 +70,8 @@ public class BidNotice extends BaseEntity
     @Excel(name = "内容")
     private String fjRemark;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "公示时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "公示时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date uUpdateTime;
 
     private BidTender bidTender;//招标项目
