@@ -36,7 +36,11 @@
     </el-row>
     <el-table @selection-change="handleSelectionChange" v-loading="loading" :data="planList">
       <el-table-column :selectable="selectable" type="selection" width="55" align="center"/>
-      <el-table-column label="序号" align="center" prop="aid" width="80"/>
+      <el-table-column label="序号" align="center" prop="aid" width="80">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column label="采购计划编号" align="center" prop="aCode"/>
       <el-table-column label="采购业务类型" align="center" prop="aBtype">
         <template slot-scope="scope">
@@ -73,7 +77,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <el-dialog title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog  @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
       <el-tabs @tab-click="handleClick" v-model="paneName">
         <el-descriptions direction="vertical" class="margin-top" :column="4" size="medium" border>
           <el-descriptions-item label="采购计划编号">{{ form.aCode }}</el-descriptions-item>
@@ -84,11 +88,20 @@
             <el-button type="primary" @click="download(form.fjAnnex)">
               下载附件<i class="el-icon-download"></i>
             </el-button>
+            <p v-for="i in file.fileUrls.length">
+              <a :href="file.fileUrls[i-1]" target="_blank">{{ file.fileName[i - 1] }}</a>
+              <!--              <i @click="onlinePreViewFile(file.urls[i-1],file.names[i - 1])"-->
+              <!--                 class="el-icon-folder-opened file_icon"></i>-->
+            </p>
           </el-descriptions-item>
         </el-descriptions>
         <el-table max-height="250" :data="budgetData" style="margin-top: 20px">
+          <el-table-column label="序号" align="center">
+            <template slot-scope="scope">
+              {{ scope.$index }}
+            </template>
+          </el-table-column>
           <el-table-column
-            fixed
             height="250"
             align="center"
             header-align="center"
@@ -96,7 +109,7 @@
             label="部门名称">
           </el-table-column>
           <el-table-column
-            prop="duCode"
+            prop="duId"
             align="center"
             label="预算科目编号">
           </el-table-column>
@@ -197,6 +210,10 @@ export default {
   props: [],
   data() {
     return {
+      file: {
+        fileUrls: [],
+        fileName: []
+      },
       planList: [],
       itemList: [],
       openByType: false,
@@ -222,6 +239,11 @@ export default {
     this.getList()
   },
   methods: {
+    closeDialog() {
+      this.file.fileUrls = [];
+      this.file.fileName = [];
+      this.budgetData = [];
+    },
     selectable(row, index) {
       if (row.aAstate == 2) {
         return true;
@@ -250,6 +272,7 @@ export default {
     cancelType() {
       this.typeRadio = 1;
       this.openByType = false;
+
     },
     //采购寻源方式选择确定按钮
     sumbitType() {
@@ -280,7 +303,6 @@ export default {
       }
       this.queryParams.aBtype = null;
       this.resetForm('form')
-
     },
     resetForm() {
       this.$nextTick(() => {
@@ -297,6 +319,18 @@ export default {
         this.itemList = res.data.items;
         this.loading = false;
         this.form = res.data;
+        if (res.data.items) {
+          res.data.items.forEach((e, i) => {
+            if (e.ppmBudget.duId){
+              this.budgetData.push(e.ppmBudget);
+            }
+          })
+        }
+        if (res.data.file.anName && res.data.file.anUrl) {
+          this.file.fileUrls = res.data.file.anUrl.split(",");
+          this.file.fileName = res.data.file.anName.split(",");
+          console.log(this.file.anName, "data")
+        }
       })
     },
     //采购寻源按钮
@@ -323,12 +357,14 @@ export default {
     handleSelectionChange(e) {
       this.yilist = e;
     },
-    download(name) {
-      console.log("file", name)
-      name = encodeURIComponent(name)
-      var url = `http://localhost:8080/ppm/file/RemoteFileDownloader?file=${name}`;
+    download() {
+      if (this.file.fileUrls.length == 0) {
+        this.$modal.msgError("没有附件可下载，请上传附件！！")
+        return;
+      }
+      let name = encodeURIComponent(this.file.fileUrls);
+      var url = `http://localhost:8080/ppm/file/downloadFiles?file=${name}`;
       const a = document.createElement('a')
-      a.setAttribute('file', name)
       a.setAttribute('target', '_blank')
       a.setAttribute('href', url)
       a.click()

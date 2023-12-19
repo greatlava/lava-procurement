@@ -18,6 +18,7 @@ public class PpmBudget extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 预算ID */
+    @Excel(name = "预算ID")
     private String duId;
 
 

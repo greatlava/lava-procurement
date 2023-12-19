@@ -60,7 +60,7 @@ public interface ComPubAttachmentsMapper
      */
     public int deleteComPubAttachmentsByAnIds(Integer[] anIds);
 
-    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid);
+    public ComPubAttachments selectedComPubAttamentsByAid(ComPubAttachments comPubAttachments);
 
     public int deleteComPubAttamentsByAid(Integer aid);
 

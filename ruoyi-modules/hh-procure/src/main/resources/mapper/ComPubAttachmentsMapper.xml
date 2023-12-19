@@ -53,7 +53,10 @@
 
     <select id="selectedComPubAttamentsByAid" resultType="com.hh.procure.domain.ComPubAttachments">
         <include refid="selectComPubAttachmentsVo"/>
-        where aid = #{aid}
+        <where>
+            <if test="aid != null">and aid = #{aid}</if>
+            <if test="jhid != null">and jhid = #{jhid}</if>
+        </where>
     </select>
 
     <insert id="insertComPubAttachments" parameterType="com.hh.procure.domain.ComPubAttachments">
@@ -112,7 +115,10 @@
             <if test="anSize != null">an_size = #{anSize},</if>
             <if test="anUploadTime != null">an_upload_time = #{anUploadTime},</if>
         </trim>
-        where aid = #{aid}
+        <where>
+            <if test="aid != null">and aid = #{aid}</if>
+            <if test="jhid != null">and jhid = #{jhid}</if>
+        </where>
     </update>
 
     <delete id="deleteComPubAttachmentsByAnId" parameterType="Integer">

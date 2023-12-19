@@ -96,15 +96,15 @@ public class ComPubAttachmentsController extends BaseController {
 
     @RequiresPermissions("system:attachments:query")
     @PostMapping("/selectedComPubAttamentsByAid")
-    public AjaxResult selectedComPubAttamentsByAid(Integer aid) {
-        return success(comPubAttachmentsService.selectedComPubAttamentsByAid(aid));
+    public AjaxResult selectedComPubAttamentsByAid(@RequestBody ComPubAttachments comPubAttachments) {
+        return success(comPubAttachmentsService.selectedComPubAttamentsByAid(comPubAttachments));
     }
 
     @PostMapping("/updateComPubAttamentsByAid")
     @Transactional
     public synchronized R updateComPubAttamentsByAid(@RequestBody ComPubAttachments comPubAttachments, String status) {
         System.out.println("comPubAttachments:" + comPubAttachments + "\n status:" + status);
-        ComPubAttachments item = comPubAttachmentsService.selectedComPubAttamentsByAid(comPubAttachments.getAid());
+        ComPubAttachments item = comPubAttachmentsService.selectedComPubAttamentsByAid(comPubAttachments);
         if (item != null) {
             if (status.equals("success")) {
                 if (item.getAnName().contains(comPubAttachments.getAnName() + ",")) {
@@ -120,23 +120,24 @@ public class ComPubAttachmentsController extends BaseController {
                 }
                 int i = comPubAttachmentsService.updateComPubAttamentsByAid(comPubAttachments);
                 if (i > 0) {
-                    return FileUtil.deleteFile(comPubAttachments.getAnUrl());
+                    FileUtil.deleteFile(comPubAttachments.getAnUrl());
+                    return R.ok("文件删除成功！！");
                 } else {
-                    return R.fail("上传失败");
+                    return R.fail("操作失败");
                 }
             } else {
                 comPubAttachments.setAnName(item.getAnName() + "," + comPubAttachments.getAnName());
                 comPubAttachments.setAnUrl(item.getAnUrl() + "," + comPubAttachments.getAnUrl());
                 int i = comPubAttachmentsService.updateComPubAttamentsByAid(comPubAttachments);
                 if (i > 0) {
-                    return R.ok(null,"上传成功！！");
+                    return R.ok(null, "上传成功！！");
                 } else {
                     return R.fail("上传失败");
                 }
             }
         } else {
             comPubAttachmentsService.insertComPubAttachments(comPubAttachments);
-            return R.ok("上传成功");
+            return R.ok(null, "上传成功");
         }
     }
 }
