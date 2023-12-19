@@ -58,4 +58,6 @@ public interface IBidApplicationsService
      * @return 结果
      */
     public int deleteBidApplicationsByXid(Long xid);
+
+    public BidApplications selectMaxApplications(Long sid);
 }

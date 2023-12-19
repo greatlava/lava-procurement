@@ -58,4 +58,6 @@ public interface BidApplicationsMapper
      * @return 结果
      */
     public int deleteBidApplicationsByXids(Long[] xids);
+
+    public BidApplications selectMaxApplications(Long sid);
 }

@@ -1,9 +1,12 @@
 package com.hh.bidding.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
 import com.hh.bidding.domain.CodeRulesResult;
 import com.hh.bidding.service.IComCodeRulesService;
 import com.hh.bidding.util.CodeRuleHelp;
@@ -113,5 +116,11 @@ public class BidApplicationsController extends BaseController
     public AjaxResult remove(@PathVariable Long[] xids)
     {
         return toAjax(bidApplicationsService.deleteBidApplicationsByXids(xids));
+    }
+
+    @GetMapping(value = "/maxApp/{sid}")
+    public AjaxResult maxApp(@PathVariable("sid") Long sid)
+    {
+        return success(bidApplicationsService.selectMaxApplications(sid));
     }
 }

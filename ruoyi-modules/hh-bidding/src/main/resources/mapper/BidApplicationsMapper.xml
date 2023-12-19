@@ -16,10 +16,11 @@
         <result property="xCount"    column="x_count"    />
         <result property="xDaiCount"    column="x_dai_count"    />
         <result property="xArea"    column="x_area"    />
+        <result property="sid"    column="sid"    />
     </resultMap>
 
     <sql id="selectBidApplicationsVo">
-        select xid, pb_id, x_code, x_name, x_way, x_type, x_start_time, x_end_time, x_count, x_dai_count, x_area from bid_applications
+        select xid, pb_id, x_code, x_name, x_way, x_type, x_start_time, x_end_time, x_count, x_dai_count, x_area,sid from bid_applications
     </sql>
 
     <select id="selectBidApplicationsList" parameterType="com.hh.bidding.domain.BidApplications" resultMap="BidApplicationsResult">
@@ -35,6 +36,7 @@
             <if test="xCount != null "> and x_count = #{xCount}</if>
             <if test="xDaiCount != null "> and x_dai_count = #{xDaiCount}</if>
             <if test="xArea != null  and xArea != ''"> and x_area = #{xArea}</if>
+            <if test="sid != null"> and sid = #{sid}</if>
         </where>
     </select>
 
@@ -57,6 +59,7 @@
             <if test="xCount != null">x_count,</if>
             <if test="xDaiCount != null">x_dai_count,</if>
             <if test="xArea != null">x_area,</if>
+            <if test="sid != null">sid,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="xid != null">#{xid},</if>
@@ -70,6 +73,7 @@
             <if test="xCount != null">#{xCount},</if>
             <if test="xDaiCount != null">#{xDaiCount},</if>
             <if test="xArea != null">#{xArea},</if>
+            <if test="sid != null">#{sid},</if>
         </trim>
     </insert>
 
@@ -86,6 +90,7 @@
             <if test="xCount != null">x_count = #{xCount},</if>
             <if test="xDaiCount != null">x_dai_count = #{xDaiCount},</if>
             <if test="xArea != null">x_area = #{xArea},</if>
+            <if test="sid != null">sid = #{sid},</if>
         </trim>
         where xid = #{xid}
     </update>
@@ -100,4 +105,7 @@
             #{xid}
         </foreach>
     </delete>
+    <select id="selectMaxApplications" parameterType="Long">
+        SELECT * FROM `bid_applications` where sid=#{sid} order by xid desc limit 1;
+    </select>
 </mapper>

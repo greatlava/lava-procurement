@@ -90,4 +90,9 @@ public class BidApplicationsServiceImpl implements IBidApplicationsService
     {
         return bidApplicationsMapper.deleteBidApplicationsByXid(xid);
     }
+
+    @Override
+    public BidApplications selectMaxApplications(Long sid) {
+        return bidApplicationsMapper.selectMaxApplications(sid);
+    }
 }

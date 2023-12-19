@@ -46,7 +46,7 @@ public class BidApplications extends BaseEntity
     private Date xStartTime;
 
     /** 评标结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Excel(name = "评标结束时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date xEndTime;
 
@@ -61,6 +61,8 @@ public class BidApplications extends BaseEntity
     /** 评标地点 */
     @Excel(name = "评标地点")
     private String xArea;
+    @Excel(name = "招标项目ID")
+    private Long sid;
 
     public void setXid(Long xid)
     {
@@ -176,6 +178,15 @@ public class BidApplications extends BaseEntity
                 .append("xCount", getxCount())
                 .append("xDaiCount", getxDaiCount())
                 .append("xArea", getxArea())
+                .append("sid", getSid())
                 .toString();
+    }
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
     }
 }
