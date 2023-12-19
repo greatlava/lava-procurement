@@ -87,7 +87,7 @@
         select * from bs_contract c
         inner join bs_supplier s on c.hid = s.hid
         <where>
-            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="hid != null ">and c.hid = #{hid}</if>
             <if test="gnId != null ">and gn_id = #{gnId}</if>
             <if test="eHcode != null  and eHcode != ''">and e_hcode like concat('%', #{eHcode}, '%')</if>
             <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
@@ -104,6 +104,7 @@
             <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
             <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
         </where>
+        order by c.create_time desc
     </select>
 
     <select id="selectBsContractByEid" parameterType="Long" resultMap="BsContractResult">

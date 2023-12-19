@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hh.pms.cm.domain.CodeRulesResult;
+import com.hh.pms.cm.service.IComCodeRulesService;
+import com.hh.pms.cm.util.CodeRuleHelp;
+import com.hh.pms.cm.util.CodeRuleUtil;
 import com.hh.pms.sae.domain.BsAccess;
 import com.hh.pms.sae.domain.BsOperator;
 import com.hh.pms.sae.service.IBsAccessService;
@@ -55,6 +59,9 @@ public class BsSupplierController extends BaseController {
 
     @Autowired
     private IBsOperatorService bsOperatorService;
+
+    @Autowired
+    private IComCodeRulesService codeRulesService;
 
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
@@ -161,7 +168,7 @@ public class BsSupplierController extends BaseController {
     /**
      * 获取供应商详细信息
      */
-    @RequiresPermissions("system:supplier:query")
+//    @RequiresPermissions("system:supplier:query")
     @GetMapping(value = "/{hid}")
     public AjaxResult getInfo(@PathVariable("hid") Long hid) {
         BsSupplier bsSupplier = bsSupplierService.selectBsSupplierByHid(hid);
@@ -195,22 +202,25 @@ public class BsSupplierController extends BaseController {
     @Log(title = "供应商", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Map<String, Object> map) throws ParseException {
-        // 生成年月日字符串
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-        String dateStr = dateFormat.format(new Date());
+        CodeRulesResult result = CodeRuleHelp.createCode(codeRulesService, CodeRuleUtil.SUPPLIER_ACCESS);
 
-        // 生成UUID
-        UUID uuid = UUID.randomUUID();
-        String uuidString = uuid.toString();
-
-        // 取UUID的后六位作为六位随机数
-        String randomStr = uuidString.substring(uuidString.length() - 6);
-
-        //准入编号
-        String result = "ZR" + dateStr + randomStr;
+        String code = result.getCode();
+//        // 生成年月日字符串
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+//        String dateStr = dateFormat.format(new Date());
+//
+//        // 生成UUID
+//        UUID uuid = UUID.randomUUID();
+//        String uuidString = uuid.toString();
+//
+//        // 取UUID的后六位作为六位随机数
+//        String randomStr = uuidString.substring(uuidString.length() - 6);
+//
+//        //准入编号
+//        String result = "ZR" + dateStr + randomStr;
 
         BsAccess access = new BsAccess();
-        access.setZrBnumber(result);
+        access.setZrBnumber(code);
         access.setZrPromoter(map.get("hJuridical").toString());
         int res = bsAccessService.insertBsAccess(access);
         if (res > 0) {
@@ -249,7 +259,7 @@ public class BsSupplierController extends BaseController {
     /**
      * 修改供应商
      */
-    @RequiresPermissions("system:supplier:edit")
+//    @RequiresPermissions("system:supplier:edit")
     @Log(title = "供应商", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsSupplier bsSupplier) {
