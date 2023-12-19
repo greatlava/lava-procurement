@@ -2,6 +2,7 @@ package com.hh.procure.controller;
 
 import com.hh.procure.Util.FileConfig;
 import com.hh.procure.Util.FileUtil;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public AjaxResult handleFileUpload(MultipartFile file) {
+    public R handleFileUpload(MultipartFile file) {
         return fileConfig.ruoyiFileUpload(file);
     }
 
