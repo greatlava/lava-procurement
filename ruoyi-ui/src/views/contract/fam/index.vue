@@ -72,8 +72,8 @@
                 <!--创建框架协议-->
                 <router-link :to="'addFa?jhId='+scope.row.jhId">
                   <el-button
-                    size="mini"
-                    type="text"
+                      size="mini"
+                      type="text"
                   >下单
                   </el-button>
                 </router-link>
@@ -81,66 +81,66 @@
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total1>0"
-            :total="total1"
-            :page.sync="queryParams1.pageNum"
-            :limit.sync="queryParams1.pageSize"
-            @pagination="getList1"
+              v-show="total1>0"
+              :total="total1"
+              :page.sync="queryParams1.pageNum"
+              :limit.sync="queryParams1.pageSize"
+              @pagination="getList1"
           />
         </el-tab-pane>
 
         <el-tab-pane label="已创建" name="second">
           <el-table stripe v-loading="loading" :data="contractList2">
             <el-table-column type="index" label="序号" align="center"/>
-            <el-table-column label="框架计划编号" align="center" prop="eHname"/>
-            <el-table-column label="框架计划名称" align="center" prop="eHname"/>
+            <el-table-column label="框架协议编号" align="center" prop="oCode"/>
+            <el-table-column label="框架协议名称" align="center" prop="oName"/>
             <el-table-column label="创建人" align="center" prop="createBy"/>
             <el-table-column label="创建日期" align="center" prop="createTime"/>
-            <el-table-column label="协议状态" align="center" prop="eStatus">
+            <el-table-column label="协议状态" align="center" prop="oHstatus">
               <template slot-scope="scope">
-                <el-tag v-if="scope.row.eStatus === 1">已通过</el-tag>
-                <el-tag v-else-if="scope.row.eStatus === 2" type="info">草稿</el-tag>
-                <el-tag v-else-if="scope.row.eStatus === 3" type="warning">待审核</el-tag>
-                <el-tag v-else-if="scope.row.eStatus === 4" type="info">未通过</el-tag>
+                <el-tag v-if="scope.row.oHstatus === 1" type="info">草稿</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 2" type="warning">待审核</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 3" type="warning">已通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 4" type="info">未通过</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <!--状态1-->
+                <!--状态3-->
                 <el-button
-                  v-if="scope.row.eStatus === 1"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-upload"
-                  @click=""
-                  v-hasPermi="['system:contract:upload']"
+                    v-if="scope.row.oHstatus === 3"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-upload"
+                    @click=""
+                    v-hasPermi="['system:contract:upload']"
                 >作废
                 </el-button>
-                <!--状态2-->
+                <!--状态2|4-->
                 <el-button
-                  v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-edit"
-                  @click=""
-                  v-hasPermi="['system:contract:edit']"
+                    v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-edit"
+                    @click=""
+                    v-hasPermi="['system:contract:edit']"
                 >编辑
                 </el-button>
                 <el-button
-                  v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click=""
-                  v-hasPermi="['system:contract:delete']"
+                    v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click=""
+                    v-hasPermi="['system:contract:delete']"
                 >删除
                 </el-button>
-                <!--状态3-->
+                <!--状态2-->
                 <el-button
-                  v-if="scope.row.eStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.oHstatus === 2"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >--
                 </el-button>
               </template>
@@ -160,8 +160,8 @@
 </template>
 
 <script>
-import { listContract, listTender } from '@/api/system/cm'
 import { getFrameworkPlan } from '@/api/system/frameworkPlan'
+import { listManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'Contract',
@@ -207,7 +207,9 @@ export default {
       },
       queryParams2: {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        oCode: null,
+        oName: null
       },
       //根据不同的表单显示不同的查询对象
       change: 1,
@@ -235,9 +237,9 @@ export default {
   },
   created() {
     this.getList1()
-    this.getDicts('ppm_procurement_plan').then(res => {
-      this.Pmethod = res.data
-    })
+    // this.getDicts('ppm_procurement_plan').then(res => {
+    //   this.Pmethod = res.data
+    // })
   },
   methods: {
     handleClick(tab) {
@@ -259,8 +261,8 @@ export default {
       this.getList1()
     },
     query1() {
-      this.queryParams2.eXcode = this.formData.field101
-      this.queryParams2.jhName = this.formData.field102
+      this.queryParams2.oCode = this.formData1.field101
+      this.queryParams2.oName = this.formData1.field102
       this.queryParams2.pageNum = 1
       this.getList2()
     },
@@ -285,11 +287,11 @@ export default {
         this.loading = false
       })
     },
-    /** 查询签订中3合同列表 */
+    /** 查询已签订的框架协议 */
     getList2() {
       this.loading = true
-      listContract(this.queryParams2).then(response => {
-        console.log(response.row)
+      listManagement(this.queryParams2).then(response => {
+        console.log(response)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false
@@ -308,4 +310,3 @@ export default {
   }
 }
 </script>
-

@@ -35,3 +35,12 @@ export function addManagement(data) {
     data: data
   })
 }
+
+// 查询框架协议管理列表
+export function listManagement(query) {
+  return request({
+    url: '/basic/management/list',
+    method: 'get',
+    params: query
+  })
+}

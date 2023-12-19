@@ -79,14 +79,16 @@
           </template>
           <template>
             <el-upload
+                ref="up1"
                 class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="url"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
-                multiple
-                :limit="3"
+                :auto-upload="false"
+                :limit="1"
                 :on-exceed="handleExceed"
+                :on-success="success"
                 :file-list="fileList"
             >
               <el-button size="small" type="primary">上传框架协议文件</el-button>
@@ -113,7 +115,7 @@
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tName" readonly>
+              <el-input v-model="scope.row.inName" readonly>
                 <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px"/>
               </el-input>
               <el-dialog title="产品名称" :visible.sync="cpDialog">
@@ -148,23 +150,23 @@
           </el-table-column>
           <el-table-column label="规格型号" prop="inModel" width="180">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tModel" readonly/>
+              <el-input v-model="scope.row.inModel" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="单位" prop="inUnit" width="120">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tUnit" readonly/>
+              <el-input v-model="scope.row.inUnit" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="含税单价" prop="inVat" width="130">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.tPrice" readonly/>
+              <el-input v-model="scope.row.inVat" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="数量" prop="inCount" width="150">
             <template slot-scope="scope">
               <el-input-number
-                  v-model="scope.row.vCount"
+                  v-model="scope.row.inCount"
                   :min="1"
                   :precision="0"
                   controls-position="right"
@@ -177,7 +179,7 @@
           <el-table-column label="小计" prop="inSubtotal" width="140">
             <template slot-scope="scope">
               <!--              <el-input v-model="k[scope.$index]" readonly/>-->
-              <el-input v-model="scope.row.subtotal" readonly/>
+              <el-input v-model="scope.row.inSubtotal" readonly/>
             </template>
           </el-table-column>
         </el-table>
@@ -198,6 +200,7 @@ export default {
   name: 'AddFa',
   data() {
     return {
+      url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
       oTotalprice: 0,
       //获取框架计划ID
       jhId: this.$route.query.jhId,
@@ -263,14 +266,17 @@ export default {
     addFa() {
       // this.queryParams['lTableData'] = this.lTableData
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
-      this.queryParams['lTableData'] = [...this.lTableData].filter(e => {
+      this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         if (e.tid == null) {
           // 如果存在空的tid，直接跳过当前元素
-          return false;
+          return false
         }
-        return true;
-      });
+        return true
+      })
+      this.$refs.up1.submit()
+      console.log(111)
+      console.log(this.queryParams.oFile)
       addManagement(this.queryParams).then(response => {
         console.log(response)
       })
@@ -287,19 +293,41 @@ export default {
           console.log('e', e)
           this.lTableData.push({
             id: i + 1,
-            tName: e.ppmDevice.tName,
-            tModel: e.ppmDevice.tModel,
-            tPrice: (e.ppmDevice.tPrice * 1.13).toFixed(2),
-            tUnit: e.ppmDevice.tUnit,
-            subtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inName: e.ppmDevice.tName,
+            inModel: e.ppmDevice.tModel,
+            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inUnit: e.ppmDevice.tUnit,
+            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
             tid: e.tid,
-            vCount: e.vCount
+            inCount: e.vCount
           })
           this.oTotalprice += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
         })
       })
     },
     //上传协议文件-------------------------------------------------
+    success(response, file, fileList) {
+      console.log(222)
+      this.fileList.push(file)
+      let hhh = fileList.map(obj => {
+        let newObj = obj
+        delete newObj.url
+        newObj.url = obj.response.data.url
+        delete newObj.name
+        newObj.name = obj.response.data.name
+        delete newObj.response
+        delete newObj.raw
+        delete newObj.percentage
+        delete newObj.status
+        delete newObj.uid
+        return newObj
+      })
+      this.queryParams.oFile = JSON.stringify(hhh)
+      console.log(this.queryParams.oFile)
+      addManagement(this.queryParams).then(response => {
+        console.log(response)
+      })
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList)
     },
@@ -307,7 +335,7 @@ export default {
       console.log(file)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
@@ -321,9 +349,9 @@ export default {
         newRow[column.prop] = ''
       })
       newRow.id = this.lTableData.length + 1
-      newRow.tPrice = (0).toFixed(2)
-      newRow.subtotal = (0).toFixed(2)
-      newRow.vCount = 1
+      newRow.inVat = (0).toFixed(2)
+      newRow.inSubtotal = (0).toFixed(2)
+      newRow.inCount = 1
       this.lTableData.push(newRow)
     },
     //删除
@@ -387,16 +415,15 @@ export default {
       //     return
       //   }
       // })
-      this.selectRow.tName = row.tName
+      this.selectRow.inName = row.tName
       this.selectRow.tid = row.tid
-      this.selectRow.tModel = row.tModel
-      this.selectRow.tUnit = row.tUnit
-      this.selectRow.tPrice = (row.tPrice * 1.13).toFixed(2)
-      this.selectRow.vCount = 1
-      this.selectRow.subtotal = (this.selectRow.vCount * this.selectRow.tPrice).toFixed(2)
+      this.selectRow.inModel = row.tModel
+      this.selectRow.inUnit = row.tUnit
+      this.selectRow.inVat = (row.tPrice * 1.13).toFixed(2)
+      this.selectRow.inCount = 1
+      this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
       this.cpDialog = false
       this.lCalculateTotalSubtotal()
-      return
     },
     //查询产品信息
     selectBdList() {
@@ -408,25 +435,25 @@ export default {
     },
     //产品数量输入框失去焦点时
     spCountBlur(row) {
-      if (row.tPrice == null) {
-        row.tPrice = 0.00
+      if (row.inVat == null) {
+        row.inVat = 0.00
       }
-      row.subtotal = (row.vCount * row.tPrice).toFixed(2)
+      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
       this.lCalculateTotalSubtotal()
     },
     //产品数量输入框的值改变时
     spCountChange(row) {
-      if (row.tPrice == null) {
-        row.tPrice = 0.00
+      if (row.inVat == null) {
+        row.inVat = 0.00
       }
-      row.subtotal = (row.vCount * row.tPrice).toFixed(2)
+      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
       this.lCalculateTotalSubtotal()
     },
     // 计算产品总价格方法
     lCalculateTotalSubtotal() {
       this.oTotalprice = this.lTableData.reduce((total, row) => {
         // let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
-        let totalValue = row.subtotal ? parseFloat(row.subtotal) : 0
+        let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
         let kk = total + totalValue // 将每行的小计相加得到总价格
         return kk
       }, 0)

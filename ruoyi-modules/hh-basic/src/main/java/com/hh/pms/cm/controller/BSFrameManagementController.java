@@ -3,8 +3,10 @@ package com.hh.pms.cm.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hh.pms.cm.domain.BsInventory;
 import com.hh.pms.cm.domain.CodeRulesResult;
 import com.hh.pms.cm.domain.ComCodeRules;
+import com.hh.pms.cm.service.IBsInventoryService;
 import com.hh.pms.cm.service.IComCodeRulesService;
 import com.hh.pms.cm.service.impl.ComCodeRulesServiceImpl;
 import com.hh.pms.cm.util.CodeRuleHelp;
@@ -42,6 +44,9 @@ public class BSFrameManagementController extends BaseController {
 
     @Autowired
     private IComCodeRulesService codeRulesService;
+
+    @Autowired
+    private IBsInventoryService inventoryService;
 
     /**
      * 查询框架协议管理列表
@@ -82,16 +87,27 @@ public class BSFrameManagementController extends BaseController {
     @Log(title = "框架协议管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BSFrameManagement bSFrameManagement) {
-
+        System.out.println(bSFrameManagement);
+        //创建编码
         CodeRulesResult result = CodeRuleHelp.createCode(codeRulesService, CodeRuleUtil.FRAMEWORK_MANAHEMENT);
-
         //获取已经匹配的规则
         String oCode = result.getCode();
-        BSFrameManagement management = new BSFrameManagement();
-        management.setoCode(oCode);
-        System.out.println(oCode);
-        return null;
-//        return toAjax(bSFrameManagementService.insertBSFrameManagement(bSFrameManagement));
+        //生成协议编号
+        bSFrameManagement.setoCode(oCode);
+        //协议创建人
+        bSFrameManagement.setCreateBy("欧");
+        int k = bSFrameManagementService.insertBSFrameManagement(bSFrameManagement);
+        if (k != 0) {
+            long oid = bSFrameManagement.getOid();
+            List<BsInventory> list = bSFrameManagement.getBsInventoryList();
+            for (BsInventory bsInventory : list) {
+                bsInventory.setOid(oid);
+                inventoryService.insertBsInventory(bsInventory);
+                System.out.println(bsInventory);
+            }
+            return AjaxResult.success("添加成功");
+        }
+        return AjaxResult.error("添加异常");
     }
 
     /**

@@ -5,46 +5,64 @@
 <mapper namespace="com.hh.pms.cm.mapper.BSFrameManagementMapper">
 
     <resultMap type="com.hh.pms.cm.domain.BSFrameManagement" id="BSFrameManagementResult">
-        <result property="oid"    column="oid"    />
-        <result property="jhId"    column="jh_id"    />
-        <result property="oCode"    column="o_code"    />
-        <result property="oName"    column="o_name"    />
-        <result property="oSubject"    column="o_subject"    />
-        <result property="hid"    column="hid"    />
-        <result property="hName"    column="h_name"    />
-        <result property="oStartdate"    column="o_startDate"    />
-        <result property="oEnddate"    column="o_endDate"    />
-        <result property="oFile"    column="o_file"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="oHstatus"    column="o_hstatus"    />
-        <result property="oType"    column="o_type"    />
-        <result property="oDescribe"    column="o_describe"    />
-        <result property="oOpinion"    column="o_opinion"    />
-        <result property="oTotalprice"    column="o_totalPrice"    />
+        <result property="oid" column="oid"/>
+        <result property="jhId" column="jh_id"/>
+        <result property="oCode" column="o_code"/>
+        <result property="oName" column="o_name"/>
+        <result property="oSubject" column="o_subject"/>
+        <result property="hid" column="hid"/>
+        <result property="hName" column="h_name"/>
+        <result property="oStartdate" column="o_startDate"/>
+        <result property="oEnddate" column="o_endDate"/>
+        <result property="oFile" column="o_file"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="oHstatus" column="o_hstatus"/>
+        <result property="oType" column="o_type"/>
+        <result property="oDescribe" column="o_describe"/>
+        <result property="oOpinion" column="o_opinion"/>
+        <result property="oTotalprice" column="o_totalPrice"/>
     </resultMap>
 
     <sql id="selectBSFrameManagementVo">
-        select oid, jh_id, o_code, o_name, o_subject, hid, h_name, o_startDate, o_endDate, o_file, create_by, create_time, o_hstatus, o_type, o_describe, o_opinion, o_totalPrice from bs_frame_management
+        select oid,
+               jh_id,
+               o_code,
+               o_name,
+               o_subject,
+               hid,
+               h_name,
+               o_startDate,
+               o_endDate,
+               o_file,
+               create_by,
+               create_time,
+               o_hstatus,
+               o_type,
+               o_describe,
+               o_opinion,
+               o_totalPrice
+        from bs_frame_management
     </sql>
 
-    <select id="selectBSFrameManagementList" parameterType="com.hh.pms.cm.domain.BSFrameManagement" resultMap="BSFrameManagementResult">
+    <select id="selectBSFrameManagementList" parameterType="com.hh.pms.cm.domain.BSFrameManagement"
+            resultMap="BSFrameManagementResult">
         <include refid="selectBSFrameManagementVo"/>
         <where>
-            <if test="jhId != null "> and jh_id = #{jhId}</if>
-            <if test="oCode != null  and oCode != ''"> and o_code = #{oCode}</if>
-            <if test="oName != null  and oName != ''"> and o_name like concat('%', #{oName}, '%')</if>
-            <if test="oSubject != null  and oSubject != ''"> and o_subject = #{oSubject}</if>
-            <if test="hid != null "> and hid = #{hid}</if>
-            <if test="hName != null  and hName != ''"> and h_name like concat('%', #{hName}, '%')</if>
-            <if test="oStartdate != null "> and o_startDate = #{oStartdate}</if>
-            <if test="oEnddate != null "> and o_endDate = #{oEnddate}</if>
-            <if test="oFile != null  and oFile != ''"> and o_file = #{oFile}</if>
-            <if test="oHstatus != null "> and o_hstatus = #{oHstatus}</if>
-            <if test="oType != null  and oType != ''"> and o_type = #{oType}</if>
-            <if test="oDescribe != null  and oDescribe != ''"> and o_describe = #{oDescribe}</if>
-            <if test="oOpinion != null  and oOpinion != ''"> and o_opinion = #{oOpinion}</if>
-            <if test="oTotalprice != null "> and o_totalPrice = #{oTotalprice}</if>
+            <if test="jhId != null ">and jh_id = #{jhId}</if>
+            <if test="oCode != null  and oCode != ''">and o_code = #{oCode}</if>
+            <if test="oName != null  and oName != ''">and o_name like concat('%', #{oName}, '%')</if>
+            <if test="oSubject != null  and oSubject != ''">and o_subject = #{oSubject}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="hName != null  and hName != ''">and h_name like concat('%', #{hName}, '%')</if>
+            <if test="oStartdate != null ">and o_startDate = #{oStartdate}</if>
+            <if test="oEnddate != null ">and o_endDate = #{oEnddate}</if>
+            <if test="oFile != null  and oFile != ''">and o_file = #{oFile}</if>
+            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="oType != null  and oType != ''">and o_type = #{oType}</if>
+            <if test="oDescribe != null  and oDescribe != ''">and o_describe = #{oDescribe}</if>
+            <if test="oOpinion != null  and oOpinion != ''">and o_opinion = #{oOpinion}</if>
+            <if test="oTotalprice != null ">and o_totalPrice = #{oTotalprice}</if>
         </where>
     </select>
 
@@ -53,7 +71,8 @@
         where oid = #{oid}
     </select>
 
-    <insert id="insertBSFrameManagement" parameterType="com.hh.pms.cm.domain.BSFrameManagement">
+    <insert id="insertBSFrameManagement" parameterType="com.hh.pms.cm.domain.BSFrameManagement"
+            keyProperty="oid" useGeneratedKeys="true">
         insert into bs_frame_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="oid != null">oid,</if>
@@ -119,7 +138,9 @@
     </update>
 
     <delete id="deleteBSFrameManagementByOid" parameterType="Long">
-        delete from bs_frame_management where oid = #{oid}
+        delete
+        from bs_frame_management
+        where oid = #{oid}
     </delete>
 
     <delete id="deleteBSFrameManagementByOids" parameterType="String">

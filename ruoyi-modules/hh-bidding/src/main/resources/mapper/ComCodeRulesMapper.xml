@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hh.pms.cm.mapper.ComCodeRulesMapper">
+<mapper namespace="com.hh.bidding.mapper.ComCodeRulesMapper">
 
-    <resultMap type="com.hh.pms.cm.domain.ComCodeRules" id="ComCodeRulesResult">
+    <resultMap type="com.hh.bidding.domain.ComCodeRules" id="ComCodeRulesResult">
         <result property="id" column="id"/>
         <result property="targetForm" column="target_form"/>
         <result property="prefix" column="prefix"/>
@@ -34,7 +34,7 @@
         from com_code_rules
     </sql>
 
-    <select id="selectComCodeRulesList" parameterType="com.hh.pms.cm.domain.ComCodeRules"
+    <select id="selectComCodeRulesList" parameterType="com.hh.bidding.domain.ComCodeRules"
             resultMap="ComCodeRulesResult">
         <include refid="selectComCodeRulesVo"/>
         <where>
@@ -58,13 +58,13 @@
         where id = #{id}
     </select>
 
-    <select id="selectComCodeRulesByTargetForm" resultType="com.hh.pms.cm.domain.ComCodeRules">
+    <select id="selectComCodeRulesByTargetForm" resultType="com.hh.bidding.domain.ComCodeRules">
         SELECT *
         from com_code_rules
         WHERE target_form = #{targetForm}
     </select>
 
-    <insert id="insertComCodeRules" parameterType="com.hh.pms.cm.domain.ComCodeRules" useGeneratedKeys="true"
+    <insert id="insertComCodeRules" parameterType="com.hh.bidding.domain.ComCodeRules" useGeneratedKeys="true"
             keyProperty="id">
         insert into com_code_rules
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -101,7 +101,7 @@
         </trim>
     </insert>
 
-    <update id="updateComCodeRules" parameterType="com.hh.pms.cm.domain.ComCodeRules">
+    <update id="updateComCodeRules" parameterType="com.hh.bidding.domain.ComCodeRules">
         update com_code_rules
         <trim prefix="SET" suffixOverrides=",">
             <if test="targetForm != null">target_form = #{targetForm},</if>

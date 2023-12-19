@@ -2,6 +2,8 @@ package com.hh.pms.cm.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -74,6 +76,16 @@ public class BSFrameManagement extends BaseEntity
     /** 审核意见 */
     @Excel(name = "审核意见")
     private String oOpinion;
+
+    private List<BsInventory> bsInventoryList;
+
+    public List<BsInventory> getBsInventoryList() {
+        return bsInventoryList;
+    }
+
+    public void setBsInventoryList(List<BsInventory> bsInventoryList) {
+        this.bsInventoryList = bsInventoryList;
+    }
 
     /** 总价 */
     @Excel(name = "总价")
@@ -235,6 +247,7 @@ public class BSFrameManagement extends BaseEntity
                 .append("oDescribe", getoDescribe())
                 .append("oOpinion", getoOpinion())
                 .append("oTotalprice", getoTotalprice())
+                .append("bsInventoryList", getBsInventoryList())
                 .toString();
     }
 }
