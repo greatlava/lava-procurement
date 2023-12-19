@@ -67,7 +67,7 @@
           <template slot="label">
             评标结束时间
           </template>
-          <template> 
+          <template>
              <el-date-picker
                  v-model="queryParams.xEndTime" id="input-common2"
                   type="date"
@@ -407,7 +407,7 @@
     }
   };
 </script>
-<style>
+<style scoped>
   .box {
     margin: 10px 0 15px 0px;
     color: #409eff;
