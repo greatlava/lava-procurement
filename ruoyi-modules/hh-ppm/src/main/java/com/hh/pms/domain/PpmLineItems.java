@@ -1,8 +1,6 @@
 package com.hh.pms.domain;
 
 import java.util.Date;
-
-import com.hh.pms.sae.domain.BsSupplier;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -104,15 +102,15 @@ public class PpmLineItems extends BaseEntity {
 
     private PpmFramePlan ppmFramePlan;
 
-    private BsSupplier bsSupplier;
-
-    public BsSupplier getBsSupplier() {
-        return bsSupplier;
-    }
-
-    public void setBsSupplier(BsSupplier bsSupplier) {
-        this.bsSupplier = bsSupplier;
-    }
+//    private BsSupplier bsSupplier;
+//
+//    public BsSupplier getBsSupplier() {
+//        return bsSupplier;
+//    }
+//
+//    public void setBsSupplier(BsSupplier bsSupplier) {
+//        this.bsSupplier = bsSupplier;
+//    }
 
     public PpmFramePlan getPpmFramePlan() {
         return ppmFramePlan;

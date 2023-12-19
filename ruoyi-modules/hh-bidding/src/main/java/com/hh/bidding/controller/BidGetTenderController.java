@@ -4,8 +4,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.hh.bidding.domain.BidGetTender;
 import com.hh.bidding.domain.BidNotice;
 import com.hh.bidding.domain.Result;
+import com.hh.bidding.service.IBidGetTenderService;
 import com.hh.bidding.utils.FileUtil;
 import com.hh.bidding.utils.StringPathUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +113,8 @@ public class BidGetTenderController extends BaseController {
         BidGetTender bg = new BidGetTender();
         bg.setHid(bidNotice.getHid());
         //已存在的供应商可以下载但不添加入表
-        if(bidGetTenderService.selectBidGetTenderList(bg) != null){
+        System.out.println(bidGetTenderService.selectBidGetTenderList(bg));
+        if(bidGetTenderService.selectBidGetTenderList(bg).size() == 0){
             bg.setSid(bidNotice.getSid());
             bidGetTenderService.insertBidGetTender(bg);
         }

@@ -26,3 +26,21 @@ export function selectItemsDevice(jhId) {
     params: jhId
   })
 }
+
+// 新增框架协议管理
+export function addManagement(data) {
+  return request({
+    url: '/basic/management',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询框架协议管理列表
+export function listManagement(query) {
+  return request({
+    url: '/basic/management/list',
+    method: 'get',
+    params: query
+  })
+}

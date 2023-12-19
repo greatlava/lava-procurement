@@ -25,7 +25,7 @@ public class BsInventory extends BaseEntity {
      * 产品编码
      */
     @Excel(name = "产品编码")
-    private Long tid;
+    private String tid;
 
     /**
      * 合同ID
@@ -83,12 +83,12 @@ public class BsInventory extends BaseEntity {
         return inId;
     }
 
-    public void setTid(Long tid) {
-        this.tid = tid;
+    public String getTid() {
+        return tid;
     }
 
-    public Long getTid() {
-        return tid;
+    public void setTid(String tid) {
+        this.tid = tid;
     }
 
     public void setEid(Long eid) {

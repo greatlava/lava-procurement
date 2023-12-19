@@ -37,7 +37,7 @@ public class BidSubmissionController extends BaseController
     /**
      * 查询投递标书列表
      */
-    @RequiresPermissions("system:submission:list")
+//    @RequiresPermissions("system:submission:list")
     @GetMapping("/list")
     public TableDataInfo list(BidSubmission bidSubmission)
     {
@@ -72,7 +72,7 @@ public class BidSubmissionController extends BaseController
     /**
      * 新增投递标书
      */
-    @RequiresPermissions("system:submission:add")
+//    @RequiresPermissions("system:submission:add")
     @Log(title = "投递标书", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BidSubmission bidSubmission)
@@ -102,7 +102,7 @@ public class BidSubmissionController extends BaseController
         return toAjax(bidSubmissionService.deleteBidSubmissionByTdIds(tdIds));
     }
 
-    //查询下载标书的所有供应商
+    //查询上传投标书的所有供应商
     @GetMapping(value = "/submissionList/{sid}")
     public AjaxResult operatorList(@PathVariable("sid") Long sid) {
         return success(bidSubmissionService.findSubmission(sid));

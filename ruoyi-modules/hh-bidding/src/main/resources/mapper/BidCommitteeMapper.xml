@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.bidding.mapper.BidCommitteeMapper">
+
+    <resultMap type="com.hh.bidding.domain.BidCommittee" id="BidCommitteeResult">
+        <result property="pbId"    column="pb_id"    />
+        <result property="xid"    column="xid"    />
+        <result property="pbName"    column="pb_name"    />
+        <result property="pbSex"    column="pb_sex"    />
+        <result property="pbIdCard"    column="pb_idcard"    />
+        <result property="pbPhone"    column="pb_phone"    />
+        <result property="pbGenre"    column="pb_genre"    />
+        <result property="pbTypes"    column="pb_types"    />
+        <result property="jid"    column="jid"    />
+    </resultMap>
+
+    <sql id="selectBidCommitteeVo">
+        select pb_id, xid, pb_name, pb_sex, pb_idcard, pb_phone, pb_genre, pb_types, jid from bid_committee
+    </sql>
+
+    <select id="selectBidCommitteeList" parameterType="com.hh.bidding.domain.BidCommittee" resultMap="BidCommitteeResult">
+        <include refid="selectBidCommitteeVo"/>
+        <where>
+            <if test="xid != null "> and xid = #{xid}</if>
+            <if test="pbName != null  and pbName != ''"> and pb_name like concat('%', #{pbName}, '%')</if>
+            <if test="pbSex != null  and pbSex != ''"> and pb_sex = #{pbSex}</if>
+            <if test="pbIdCard != null  and pbIdCard != ''"> and pb_idcard = #{pbIdCard}</if>
+            <if test="pbPhone != null  and pbPhone != ''"> and pb_phone = #{pbPhone}</if>
+            <if test="pbGenre != null  and pbGenre != ''"> and pb_genre = #{pbGenre}</if>
+            <if test="pbTypes != null  and pbTypes != ''"> and pb_types = #{pbTypes}</if>
+            <if test="jid != null "> and jid = #{jid}</if>
+        </where>
+    </select>
+
+    <select id="selectBidCommitteeByPbId" parameterType="Long" resultMap="BidCommitteeResult">
+        <include refid="selectBidCommitteeVo"/>
+        where pb_id = #{pbId}
+    </select>
+
+    <insert id="insertBidCommittee" parameterType="com.hh.bidding.domain.BidCommittee">
+        insert into bid_committee
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pbId != null">pb_id,</if>
+            <if test="xid != null">xid,</if>
+            <if test="pbName != null">pb_name,</if>
+            <if test="pbSex != null">pb_sex,</if>
+            <if test="pbIdCard != null">pb_idcard,</if>
+            <if test="pbPhone != null">pb_phone,</if>
+            <if test="pbGenre != null">pb_genre,</if>
+            <if test="pbTypes != null">pb_types,</if>
+            <if test="jid != null">jid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pbId != null">#{pbId},</if>
+            <if test="xid != null">#{xid},</if>
+            <if test="pbName != null">#{pbName},</if>
+            <if test="pbSex != null">#{pbSex},</if>
+            <if test="pbIdCard != null">#{pbIdCard},</if>
+            <if test="pbPhone != null">#{pbPhone},</if>
+            <if test="pbGenre != null">#{pbGenre},</if>
+            <if test="pbTypes != null">#{pbTypes},</if>
+            <if test="jid != null">#{jid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBidCommittee" parameterType="com.hh.bidding.domain.BidCommittee">
+        update bid_committee
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="xid != null">xid = #{xid},</if>
+            <if test="pbName != null">pb_name = #{pbName},</if>
+            <if test="pbSex != null">pb_sex = #{pbSex},</if>
+            <if test="pbIdCard != null">pb_idcard = #{pbIdCard},</if>
+            <if test="pbPhone != null">pb_phone = #{pbPhone},</if>
+            <if test="pbGenre != null">pb_genre = #{pbGenre},</if>
+            <if test="pbTypes != null">pb_types = #{pbTypes},</if>
+            <if test="jid != null">jid = #{jid},</if>
+        </trim>
+        where pb_id = #{pbId}
+    </update>
+
+    <delete id="deleteBidCommitteeByPbId" parameterType="Long">
+        delete from bid_committee where pb_id = #{pbId}
+    </delete>
+
+    <delete id="deleteBidCommitteeByPbIds" parameterType="String">
+        delete from bid_committee where pb_id in
+        <foreach item="pbId" collection="array" open="(" separator="," close=")">
+            #{pbId}
+        </foreach>
+    </delete>
+</mapper>

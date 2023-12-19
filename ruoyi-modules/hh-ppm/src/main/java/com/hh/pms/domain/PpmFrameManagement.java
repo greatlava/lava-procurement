@@ -1,5 +1,10 @@
 package com.hh.pms.domain;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -7,117 +12,254 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 框架协议管理对象 ppm_frame_management
- * 
+ *
  * @author ruoyi
- * @date 2023-11-19
+ * @date 2023-12-18
  */
-public class PpmFrameManagement extends BaseEntity
-{
+public class PpmFrameManagement extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** 框架协议ID */
+    /**
+     * 框架协议ID
+     */
     private Long oid;
 
-    /** 框架计划ID */
+    /**
+     * 框架计划ID
+     */
     @Excel(name = "框架计划ID")
     private Long jhId;
 
-    /** 框架计划编号 */
-    @Excel(name = "框架计划编号")
+    /**
+     * 框架协议编号
+     */
+    @Excel(name = "框架协议编号")
     private String oCode;
 
-    /** 框架计划名称 */
-    @Excel(name = "框架计划名称")
+    /**
+     * 框架协议名称
+     */
+    @Excel(name = "框架协议名称")
     private String oName;
 
-    /** 采购方式 */
-    @Excel(name = "采购方式")
-    private String oWay;
+    /**
+     * 签署主体
+     */
+    @Excel(name = "签署主体")
+    private String oSubject;
 
-    /** 协议供应商ID */
-    @Excel(name = "协议供应商ID")
-    private Long oBid;
+    /**
+     * 相对方ID
+     */
+    @Excel(name = "相对方ID")
+    private Long hid;
 
-    /** 合同管理状态 */
-    @Excel(name = "合同管理状态")
+    /**
+     * 相对方名称
+     */
+    @Excel(name = "相对方名称")
+    private String hName;
+
+    /**
+     * 签署时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date oStartdate;
+
+    /**
+     * 失效时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "失效时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date oEnddate;
+
+    /**
+     * 协议文件
+     */
+    @Excel(name = "协议文件")
+    private String oFile;
+
+    /**
+     * 协议状态
+     */
+    @Excel(name = "协议状态")
     private Long oHstatus;
 
-    public void setOid(Long oid) 
-    {
+    /**
+     * 协议类型
+     */
+    @Excel(name = "协议类型")
+    private String oType;
+
+    /**
+     * 说明
+     */
+    @Excel(name = "说明")
+    private String oDescribe;
+
+    /**
+     * 审核意见
+     */
+    @Excel(name = "审核意见")
+    private String oOpinion;
+
+    /** 总价 */
+    @Excel(name = "总价")
+    private BigDecimal oTotalprice;
+
+    private List lTableData;
+
+
+    public BigDecimal getoTotalprice() {
+        return oTotalprice;
+    }
+
+    public void setoTotalprice(BigDecimal oTotalprice) {
+        this.oTotalprice = oTotalprice;
+    }
+
+    public List getlTableData() {
+        return lTableData;
+    }
+
+    public void setlTableData(List lTableData) {
+        this.lTableData = lTableData;
+    }
+
+    public void setOid(Long oid) {
         this.oid = oid;
     }
 
-    public Long getOid() 
-    {
+    public Long getOid() {
         return oid;
     }
-    public void setJhId(Long jhId) 
-    {
+
+    public void setJhId(Long jhId) {
         this.jhId = jhId;
     }
 
-    public Long getJhId() 
-    {
+    public Long getJhId() {
         return jhId;
     }
-    public void setoCode(String oCode) 
-    {
+
+    public void setoCode(String oCode) {
         this.oCode = oCode;
     }
 
-    public String getoCode() 
-    {
+    public String getoCode() {
         return oCode;
     }
-    public void setoName(String oName) 
-    {
+
+    public void setoName(String oName) {
         this.oName = oName;
     }
 
-    public String getoName() 
-    {
+    public String getoName() {
         return oName;
     }
-    public void setoWay(String oWay) 
-    {
-        this.oWay = oWay;
+
+    public void setoSubject(String oSubject) {
+        this.oSubject = oSubject;
     }
 
-    public String getoWay() 
-    {
-        return oWay;
-    }
-    public void setoBid(Long oBid) 
-    {
-        this.oBid = oBid;
+    public String getoSubject() {
+        return oSubject;
     }
 
-    public Long getoBid() 
-    {
-        return oBid;
+    public void setHid(Long hid) {
+        this.hid = hid;
     }
-    public void setoHstatus(Long oHstatus) 
-    {
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void sethName(String hName) {
+        this.hName = hName;
+    }
+
+    public String gethName() {
+        return hName;
+    }
+
+    public void setoStartdate(Date oStartdate) {
+        this.oStartdate = oStartdate;
+    }
+
+    public Date getoStartdate() {
+        return oStartdate;
+    }
+
+    public void setoEnddate(Date oEnddate) {
+        this.oEnddate = oEnddate;
+    }
+
+    public Date getoEnddate() {
+        return oEnddate;
+    }
+
+    public void setoFile(String oFile) {
+        this.oFile = oFile;
+    }
+
+    public String getoFile() {
+        return oFile;
+    }
+
+    public void setoHstatus(Long oHstatus) {
         this.oHstatus = oHstatus;
     }
 
-    public Long getoHstatus() 
-    {
+    public Long getoHstatus() {
         return oHstatus;
+    }
+
+    public void setoType(String oType) {
+        this.oType = oType;
+    }
+
+    public String getoType() {
+        return oType;
+    }
+
+    public void setoDescribe(String oDescribe) {
+        this.oDescribe = oDescribe;
+    }
+
+    public String getoDescribe() {
+        return oDescribe;
+    }
+
+    public void setoOpinion(String oOpinion) {
+        this.oOpinion = oOpinion;
+    }
+
+    public String getoOpinion() {
+        return oOpinion;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("oid", getOid())
-            .append("jhId", getJhId())
-            .append("oCode", getoCode())
-            .append("oName", getoName())
-            .append("oWay", getoWay())
-            .append("oBid", getoBid())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("oHstatus", getoHstatus())
-            .toString();
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("oid", getOid())
+                .append("jhId", getJhId())
+                .append("oCode", getoCode())
+                .append("oName", getoName())
+                .append("oSubject", getoSubject())
+                .append("hid", getHid())
+                .append("hName", gethName())
+                .append("oStartdate", getoStartdate())
+                .append("oEnddate", getoEnddate())
+                .append("oFile", getoFile())
+                .append("createBy", getCreateBy())
+                .append("createTime", getCreateTime())
+                .append("oHstatus", getoHstatus())
+                .append("oType", getoType())
+                .append("oDescribe", getoDescribe())
+                .append("oOpinion", getoOpinion())
+                .append("lTableData", getlTableData())
+                .append("oTotalprice", getoTotalprice())
+                .toString();
     }
 }

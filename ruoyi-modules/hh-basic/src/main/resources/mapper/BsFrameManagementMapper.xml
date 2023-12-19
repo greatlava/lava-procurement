@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.cm.mapper.BSFrameManagementMapper">
+
+    <resultMap type="com.hh.pms.cm.domain.BSFrameManagement" id="BSFrameManagementResult">
+        <result property="oid" column="oid"/>
+        <result property="jhId" column="jh_id"/>
+        <result property="oCode" column="o_code"/>
+        <result property="oName" column="o_name"/>
+        <result property="oSubject" column="o_subject"/>
+        <result property="hid" column="hid"/>
+        <result property="hName" column="h_name"/>
+        <result property="oStartdate" column="o_startDate"/>
+        <result property="oEnddate" column="o_endDate"/>
+        <result property="oFile" column="o_file"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="oHstatus" column="o_hstatus"/>
+        <result property="oType" column="o_type"/>
+        <result property="oDescribe" column="o_describe"/>
+        <result property="oOpinion" column="o_opinion"/>
+        <result property="oTotalprice" column="o_totalPrice"/>
+    </resultMap>
+
+    <sql id="selectBSFrameManagementVo">
+        select oid,
+               jh_id,
+               o_code,
+               o_name,
+               o_subject,
+               hid,
+               h_name,
+               o_startDate,
+               o_endDate,
+               o_file,
+               create_by,
+               create_time,
+               o_hstatus,
+               o_type,
+               o_describe,
+               o_opinion,
+               o_totalPrice
+        from bs_frame_management
+    </sql>
+
+    <select id="selectBSFrameManagementList" parameterType="com.hh.pms.cm.domain.BSFrameManagement"
+            resultMap="BSFrameManagementResult">
+        <include refid="selectBSFrameManagementVo"/>
+        <where>
+            <if test="jhId != null ">and jh_id = #{jhId}</if>
+            <if test="oCode != null  and oCode != ''">and o_code = #{oCode}</if>
+            <if test="oName != null  and oName != ''">and o_name like concat('%', #{oName}, '%')</if>
+            <if test="oSubject != null  and oSubject != ''">and o_subject = #{oSubject}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="hName != null  and hName != ''">and h_name like concat('%', #{hName}, '%')</if>
+            <if test="oStartdate != null ">and o_startDate = #{oStartdate}</if>
+            <if test="oEnddate != null ">and o_endDate = #{oEnddate}</if>
+            <if test="oFile != null  and oFile != ''">and o_file = #{oFile}</if>
+            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="oType != null  and oType != ''">and o_type = #{oType}</if>
+            <if test="oDescribe != null  and oDescribe != ''">and o_describe = #{oDescribe}</if>
+            <if test="oOpinion != null  and oOpinion != ''">and o_opinion = #{oOpinion}</if>
+            <if test="oTotalprice != null ">and o_totalPrice = #{oTotalprice}</if>
+        </where>
+    </select>
+
+    <select id="selectBSFrameManagementByOid" parameterType="Long" resultMap="BSFrameManagementResult">
+        <include refid="selectBSFrameManagementVo"/>
+        where oid = #{oid}
+    </select>
+
+    <insert id="insertBSFrameManagement" parameterType="com.hh.pms.cm.domain.BSFrameManagement"
+            keyProperty="oid" useGeneratedKeys="true">
+        insert into bs_frame_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oid != null">oid,</if>
+            <if test="jhId != null">jh_id,</if>
+            <if test="oCode != null">o_code,</if>
+            <if test="oName != null">o_name,</if>
+            <if test="oSubject != null">o_subject,</if>
+            <if test="hid != null">hid,</if>
+            <if test="hName != null">h_name,</if>
+            <if test="oStartdate != null">o_startDate,</if>
+            <if test="oEnddate != null">o_endDate,</if>
+            <if test="oFile != null">o_file,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="oHstatus != null">o_hstatus,</if>
+            <if test="oType != null">o_type,</if>
+            <if test="oDescribe != null">o_describe,</if>
+            <if test="oOpinion != null">o_opinion,</if>
+            <if test="oTotalprice != null">o_totalPrice,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oid != null">#{oid},</if>
+            <if test="jhId != null">#{jhId},</if>
+            <if test="oCode != null">#{oCode},</if>
+            <if test="oName != null">#{oName},</if>
+            <if test="oSubject != null">#{oSubject},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="hName != null">#{hName},</if>
+            <if test="oStartdate != null">#{oStartdate},</if>
+            <if test="oEnddate != null">#{oEnddate},</if>
+            <if test="oFile != null">#{oFile},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="oHstatus != null">#{oHstatus},</if>
+            <if test="oType != null">#{oType},</if>
+            <if test="oDescribe != null">#{oDescribe},</if>
+            <if test="oOpinion != null">#{oOpinion},</if>
+            <if test="oTotalprice != null">#{oTotalprice},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBSFrameManagement" parameterType="com.hh.pms.cm.domain.BSFrameManagement">
+        update bs_frame_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jhId != null">jh_id = #{jhId},</if>
+            <if test="oCode != null">o_code = #{oCode},</if>
+            <if test="oName != null">o_name = #{oName},</if>
+            <if test="oSubject != null">o_subject = #{oSubject},</if>
+            <if test="hid != null">hid = #{hid},</if>
+            <if test="hName != null">h_name = #{hName},</if>
+            <if test="oStartdate != null">o_startDate = #{oStartdate},</if>
+            <if test="oEnddate != null">o_endDate = #{oEnddate},</if>
+            <if test="oFile != null">o_file = #{oFile},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="oHstatus != null">o_hstatus = #{oHstatus},</if>
+            <if test="oType != null">o_type = #{oType},</if>
+            <if test="oDescribe != null">o_describe = #{oDescribe},</if>
+            <if test="oOpinion != null">o_opinion = #{oOpinion},</if>
+            <if test="oTotalprice != null">o_totalPrice = #{oTotalprice},</if>
+        </trim>
+        where oid = #{oid}
+    </update>
+
+    <delete id="deleteBSFrameManagementByOid" parameterType="Long">
+        delete
+        from bs_frame_management
+        where oid = #{oid}
+    </delete>
+
+    <delete id="deleteBSFrameManagementByOids" parameterType="String">
+        delete from bs_frame_management where oid in
+        <foreach item="oid" collection="array" open="(" separator="," close=")">
+            #{oid}
+        </foreach>
+    </delete>
+</mapper>
