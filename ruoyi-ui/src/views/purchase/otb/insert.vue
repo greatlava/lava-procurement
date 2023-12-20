@@ -656,9 +656,11 @@ export default {
           }
           if (this.upload.fileSecuss.length == 0) {
             this.$modal.confirm("系统检测到你还未上传附件是否需要继续提交？").then(() => {
+              this.$modal.loading("添加中！！");
               this.form['items'] = this.device;
               this.form["aCode"] = localStorage.getItem("procurementPlanID");
               addPlan(this.form).then(res => {
+                this.$modal.closeLoading();
                 Message.success("操作成功");
                 setTimeout(() => {
                   this.$router.back();
@@ -685,7 +687,9 @@ export default {
             this.form['items'] = this.device;
             this.form["file"] = files;
             this.form["aCode"] = localStorage.getItem("procurementPlanID");
+            this.$modal.loading("添加中！！");
             addPlan(this.form).then(res => {
+              this.$modal.closeLoading();
               Message.success("操作成功");
               setTimeout(() => {
                 this.$router.back();

@@ -61,7 +61,7 @@ public interface IComPubAttachmentsService
     public int deleteComPubAttachmentsByAnId(Integer anId);
 
 
-    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid);
+    public ComPubAttachments selectedComPubAttamentsByAid(ComPubAttachments comPubAttachments);
 
     public int updateComPubAttamentsByAid(ComPubAttachments comPubAttachments);
 

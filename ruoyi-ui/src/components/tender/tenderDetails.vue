@@ -219,7 +219,7 @@ export default {
   color: black;
   font-weight: bold;
 }
-#input-common,#input-common1,#input-common2,#input-common3,#input-common4,#input-common5,#input-common6{
+#input-common,#input-common1,#input-common2,#input-common3,#input-common4,#input-common5,#input-common6,#input-common7,#input-common8,#input-common9,#input-common10{
   border: none;
 }
 

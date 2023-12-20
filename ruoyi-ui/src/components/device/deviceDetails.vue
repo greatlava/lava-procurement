@@ -166,14 +166,14 @@ export default {
   methods: {
     getList(){
       this.queryParams.tSid = this.$route.query.sid;
-      listDevice(this.queryParams).then(response => {
-        response.rows.forEach((e,i)=>{
-          e.orderNum = i+1;
-          this.tableData.push(e);
-        })
-        this.total = response.total;
-        this.loading = false;
-      });
+      // listDevice(this.queryParams).then(response => {
+      //   response.rows.forEach((e,i)=>{
+      //     e.orderNum = i+1;
+      //     this.tableData.push(e);
+      //   })
+      //   this.total = response.total;
+      //   this.loading = false;
+      // });
     }
   },
   created() {

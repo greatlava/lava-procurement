@@ -200,21 +200,34 @@
             </el-col>
             <el-col :span="24" class="grid-cell">
               <el-form-item label="上传附件" prop="annex" class="label-center-align">
-                <template #label><span class="custom-label"><i class="el-icon-upload"></i>上传附件
-                </span></template>
-                <el-upload action="" :file-list="annexFileList" :headers="annexUploadHeaders" :data="annexUploadData"
-                           list-type="picture-card" show-file-list :limit="3">
-                  <template #default>
-                    <i class="el-icon-plus"> </i>
-                  </template>
+                <el-upload
+                  ref="upload"
+                  :action="upload.url"
+                  :headers="upload.headers"
+                  :file-list="upload.fileList"
+                  :multiple="true"
+                  :on-progress="handleFileUploadProgress"
+                  :on-success="handleFileSuccess"
+                  :limit="5"
+                  :on-exceed="exceedingMaximumLimit"
+                  :on-error="uploadError"
+                  :before-upload="beforeUpload"
+                  :before-remove="beforeRemove"
+                  :on-remove="removeFile"
+                  :auto-upload="false">
+                  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                  <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
+                             @click="submitUpload">上传到服务器
+                  </el-button>
+                  <!--                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
                 </el-upload>
               </el-form-item>
             </el-col>
-            <el-col :span="24" class="grid-cell">
-              <el-form-item label="备注" prop="notes" class="label-center-align">
-                <el-input type="textarea" v-model="form.notes" rows="3"></el-input>
-              </el-form-item>
-            </el-col>
+<!--            <el-col :span="24" class="grid-cell">-->
+<!--              <el-form-item label="备注" prop="notes" class="label-center-align">-->
+<!--                <el-input type="textarea" v-model="form.notes" rows="3"></el-input>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
           </el-row>
         </div>
         <div class="static-content-item" v-show="false">
@@ -330,7 +343,7 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="openFrameworkDetails">
-      <el-descriptions direction="vertical" class="margin-top" title="查看框架详情" :column="3" size="medium" border>
+      <el-descriptions direction="vertical" class="margin-top" title="查看框架详情" :column="4" size="medium" border>
         <el-descriptions-item>
           <template slot="label">
             框架计划名称
@@ -377,7 +390,15 @@
           <template slot="label">
             附件
           </template>
-          <el-button type="primary" icon="el-icon-download">下载附件</el-button>
+          <el-button @click="downloadFile" type="primary" icon="el-icon-download">下载附件</el-button>
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            附件名称
+          </template>
+          <p v-for="i in file.fileUrls.length" :key="i">
+            <a :href="file.fileUrls[i-1]">{{ file.fileName[i - 1] }}</a>
+          </p>
         </el-descriptions-item>
       </el-descriptions>
       <el-table border @cell-click="click" max-height="250" v-loading="loading" :data="form.items"
@@ -407,7 +428,7 @@
         </el-table-column>
         <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="150"/>
         <el-table-column label="需求说明" align="center" prop="vIllustrate" width="120"/>
-        <el-table-column label="采购方式" align="center" prop="procurementMethod"/>
+<!--        <el-table-column label="采购方式" align="center" prop="procurementMethod"/>-->
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="allowFarmeworkPlan" v-if="form.jhStatus == 1" type="success">同 意</el-button>
@@ -431,6 +452,8 @@ import {
 } from "@/api/system/frameworkPlan";
 import {listDevice} from "@/api/device/device";
 import {listSupplier} from "@/api/system/supplier";
+import {updateComPubAttamentsByAid} from "@/api/file/attachments";
+import {getToken} from "@/utils/auth";
 
 export default {
   dicts: ['ppm_procurement_plan', "procurement_method"],
@@ -467,6 +490,24 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      //文件
+      file: {
+        fileUrls: [],
+        fileName: []
+      },
+      //上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: {Authorization: "Bearer " + getToken()},
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/ppm/file/upload",
+        // 上传的文件列表
+        fileList: [],
+        //上传成功列表
+        fileSecuss: [],
+      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -531,6 +572,86 @@ export default {
     this.getList();
   },
   methods: {
+    //文件移除钩子
+    removeFile(file, fileList) {
+     this.$modal.loading("文件删除中");
+      if (this.form.jhId) {
+        if (file.status == "success") {
+          let obj = file;
+          obj["jhid"] = this.form.jhId;
+          obj["anName"] = obj["name"];
+          obj["anUrl"] = obj["url"];
+          updateComPubAttamentsByAid(obj, "success").then(res => {
+            this.$modal.closeLoading();
+            this.$modal.msgSuccess("删除成功！！")
+          })
+        }
+      } else {
+        this.upload.fileSecuss = this.upload.fileSecuss.filter(item => {
+          return !item["name"].includes(file["name"].substring(0, file["name"].indexOf(".")))
+        })
+      }
+    },
+    //文件删除之前的钩子
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    //上传文件之前
+    beforeUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$modal.msgError("文件大小不可超过2MB")
+      }
+      return isLt2M;
+    },
+    //文件上传失败
+    uploadError(err, file, fileList) {
+      this.upload.isUploading = false;
+      this.$modal.msgError(err);
+    },
+    exceedingMaximumLimit(file, fileList) {
+      this.$modal.msgError("最多上传文件5个！！")
+    },
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      if (response.code == 200) {
+        if (this.form.jhId) {
+          let obj = response.data.data;
+          obj["jhid"] = this.form.jhId;
+          obj["anName"] = obj["name"];
+          obj["anUrl"] = obj["url"];
+          updateComPubAttamentsByAid(obj, "insert").then(res => {
+            console.log("Promise", res)
+            if (res.code == 200) {
+              this.$modal.msgSuccess(res.msg);
+              return 1;
+            } else {
+              this.$modal.msgSuccess("文件上传失败");
+            }
+          })
+        } else {
+          this.upload.fileSecuss.push(response.data.data);
+          this.$modal.msgSuccess("文件上成功，需要点击提交按钮才可生效！！");
+        }
+      }
+      this.upload.isUploading = false;
+
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    //下载文件
+    downloadFile() {
+      if (this.file.fileUrls.length == 0 || this.file.fileName.length == 0) {
+        this.$modal.msgError("没有附件可下载，请上传附件！！")
+        return;
+      }
+    },
     deleteItems(row, index) {
       this.items.splice(index, 1)
     },
@@ -598,6 +719,10 @@ export default {
       });
       queryFrameworkPlanAndRelatedInformation(row.jhId).then(res => {
         this.form = res.data;
+        if (res.data.comPubAttachments.anUrl && res.data.comPubAttachments.anName) {
+          this.file.fileUrls = res.data.comPubAttachments.anUrl.split(",");
+          this.file.fileName = res.data.comPubAttachments.anName.split(",");
+        }
         loading.close();
         this.openFrameworkDetails = true;
       })
@@ -613,6 +738,7 @@ export default {
     },
     // 取消按钮
     cancel() {
+
       this.open = false;
       this.items = [];
       this.reset();
@@ -631,6 +757,9 @@ export default {
         jhPmethod: null
       };
       this.resetForm("form");
+      this.file.fileName = [];
+      this.file.fileUrls = [];
+      this.upload.fileList = [];
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -671,6 +800,16 @@ export default {
       queryFrameworkPlanAndRelatedInformation(jhId).then(response => {
         this.form = response.data;
         this.items = response.data.items;
+        if (response.data.comPubAttachments.anUrl && response.data.comPubAttachments.anName) {
+          this.file.fileUrls = response.data.comPubAttachments.anUrl.split(",");
+          this.file.fileName = response.data.comPubAttachments.anName.split(",");
+          this.file.fileUrls.forEach((e, i) => {
+            this.upload.fileList.push({
+              name: this.file.fileName[i],
+              url: this.file.fileUrls[i]
+            })
+          })
+        }
         this.open = true;
         loading.close();
         this.title = "修改框架计划";

@@ -196,7 +196,7 @@ public class FileUtil {
             Files.delete(path);
             R.ok(null,"删除成功！！");
         } catch (Exception e) {
-            System.out.println();
+            e.printStackTrace();
             return R.fail("文件删除失败");
         }
         return R.ok();

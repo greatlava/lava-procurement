@@ -25,6 +25,9 @@
 
     <resultMap id="threeTables" type="com.hh.procure.domain.PpmFramePlan">
         <id column="jh_id" property="jhId"/>
+        <association property="comPubAttachments">
+            <id property="anId" column="an_id"/>
+        </association>
         <collection property="items" ofType="com.hh.procure.domain.PpmLineItems">
             <id property="vid" column="vid"/>
             <association property="ppmDevice">
@@ -75,19 +78,23 @@
     </select>
 
     <select id="queryFrameworkPlanAndRelatedInformation" resultMap="threeTables">
-        select p.*,
-               i.vid,
-               i.v_code,
-               i.v_person,
-               i.v_delivery_time,
-               i.v_delivery_area,
-               i.v_illustrate,
-               i.v_count,
-               i.procurement_method,
-               d.*
-        from ppm_line_items i
-                 join ppm_frame_plan p on p.jh_id = i.jh_id
-                 join ppm_device d on d.tid = i.tid
+        SELECT
+            p.*,
+            f.*,
+            i.vid,
+            i.v_code,
+            i.v_person,
+            i.v_delivery_time,
+            i.v_delivery_area,
+            i.v_illustrate,
+            i.v_count,
+            i.procurement_method,
+            d.*
+        FROM
+            ppm_line_items i
+                JOIN ppm_frame_plan p ON p.jh_id = i.jh_id
+                LEFT JOIN com_pub_attachments f ON f.jhid = p.jh_id
+                JOIN ppm_device d ON d.tid = i.tid
         WHERE p.jh_id = #{jhId}
     </select>
 

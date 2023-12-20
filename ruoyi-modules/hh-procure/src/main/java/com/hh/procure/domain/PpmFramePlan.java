@@ -81,6 +81,16 @@ public class PpmFramePlan extends BaseEntity {
 
     private BsSupplier bsSupplier;
 
+    private ComPubAttachments comPubAttachments;
+
+    public ComPubAttachments getComPubAttachments() {
+        return comPubAttachments;
+    }
+
+    public void setComPubAttachments(ComPubAttachments comPubAttachments) {
+        this.comPubAttachments = comPubAttachments;
+    }
+
     public BsSupplier getBsSupplier() {
         return bsSupplier;
     }
@@ -210,6 +220,7 @@ public class PpmFramePlan extends BaseEntity {
                 .append("jhPerson", getJhPerson())
                 .append("jhPmethod", getJhPmethod())
                 .append("items", getItems())
+                .append("comPubAttachments",getComPubAttachments())
                 .toString();
     }
 }

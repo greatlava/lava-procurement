@@ -139,8 +139,8 @@
                 </el-button>
                 <p v-for="i in file.names.length">
                   <a :href="file.urls[i-1]" target="_blank">{{ file.names[i - 1] }}</a>
-                  <i @click="onlinePreViewFile(file.urls[i-1],file.names[i - 1])"
-                     class="el-icon-folder-opened file_icon"></i>
+                  <!--                  <i @click="onlinePreViewFile(file.urls[i-1],file.names[i - 1])"-->
+                  <!--                     class="el-icon-folder-opened file_icon"></i>-->
                 </p>
               </el-descriptions-item>
             </el-descriptions>
@@ -154,7 +154,7 @@
                 label="部门名称">
               </el-table-column>
               <el-table-column
-                prop="duCode"
+                prop="duId"
                 align="center"
                 label="预算科目编号">
               </el-table-column>
@@ -365,7 +365,7 @@ export default {
       console.log("url", url)
     },
     download(fileName) {
-      if (this.fileUrls.length==0){
+      if (this.fileUrls.length == 0) {
         this.$modal.msgError("没有附件可下载，请上传附件！！")
         return;
       }
@@ -415,6 +415,13 @@ export default {
             this.itemList = res.data.items;
             this.loading = false;
             this.form = res.data;
+            if (res.data.items) {
+              res.data.items.forEach((e, i) => {
+                if (e.ppmBudget.duId){
+                  this.budgetData.push(e.ppmBudget);
+                }
+              })
+            }
           })
           selectedComPubAttamentsByAid(aid).then(res => {
             if (res.data) {

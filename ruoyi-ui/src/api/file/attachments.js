@@ -46,8 +46,9 @@ export function delAttachments(anId) {
 
 export function selectedComPubAttamentsByAid(aid) {
   return request({
-    url: "/ppm/attachments/selectedComPubAttamentsByAid?aid=" + aid,
-    method: "post"
+    url: "/ppm/attachments/selectedComPubAttamentsByAid",
+    method: "post",
+    data: {aid: aid}
   })
 }
 

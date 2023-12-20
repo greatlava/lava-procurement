@@ -33,6 +33,16 @@
      </el-tab-pane>
    </el-tabs>
   </div>
+  <div v-if="currentStep === 2" class="div2">
+    <el-tabs v-model="activeName2">
+      <el-tab-pane label="组件评标委员会" name="expert" style="font-size: 16px">
+       <expert></expert>
+      </el-tab-pane>
+      <el-tab-pane label="开标" name="kb" style="font-size: 16px">
+        <bid_submission></bid_submission>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </div>
 
 </template>
@@ -44,6 +54,7 @@ import TenderNotice from "@/components/tender/tenderNotice.vue"
 import TenderDocument from "@/components/tender/tenderDocument.vue";
 import GetTender from "@/components/tender/getTender.vue";
 import Bid_submission from "@/components/tender/bid_submission.vue";
+import Expert from "@/components/tender/expert.vue";
 
 export default {
   components: {
@@ -52,13 +63,15 @@ export default {
     'tender-notice': TenderNotice,
     'tender-document': TenderDocument,
     'getTender':GetTender,
-    'bid_submission':Bid_submission
+    'bid_submission':Bid_submission,
+    'expert':Expert
   },
   data() {
     return {
       currentStep: 0, // 当前活动的步骤索引
       activeName: 'subject',
       activeName1:'getTender',
+      activeName2:'expert',
     };
   },
   methods: {

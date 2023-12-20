@@ -22,14 +22,17 @@
 
     <resultMap id="fourTableResult" type="com.hh.procure.domain.PpmProcurementPlan">
         <id column="p_aid" property="aid"/>
+        <association property="file">
+            <id property="anId" column="an_id"/>
+        </association>
         <collection property="items" ofType="com.hh.procure.domain.PpmLineItems">
             <id property="vid" column="vid"/>
             <association property="ppmDevice">
                 <id column="d_tid" property="tid"/>
             </association>
             <association property="ppmBudget">
-                <id property="duId" column="du_id"/>
-                <result property="duCode" column="b_code"/>
+                <id property="duId" column="duId"/>
+                <result property="aid" column="duAid"/>
             </association>
         </collection>
     </resultMap>
@@ -190,15 +193,18 @@
 
 
     <sql id="fourTableLinkedQuery">
-        SELECT p.aid p_aid,
+        SELECT p.aid   p_aid,
                p.a_code,
                p.a_name,
                p.create_by,
                p.a_create_dept,
                p.fj_annex,
                p.a_astate,
+               f.an_id,
+               f.an_name,
+               f.an_url,
                i.*,
-               d.tid d_tid,
+               d.tid   d_tid,
                d.t_name,
                d.category,
                d.t_unit,
@@ -206,12 +212,15 @@
                d.t_illustrate,
                d.t_notes,
                d.t_model,
+               b.du_id duId,
+               b.aid   duAid,
                b.du_dept,
                b.du_name,
                b.du_total
         FROM ppm_procurement_plan p
-                 inner join ppm_line_items i on p.aid = i.aid
-                 left join ppm_device d on i.tid = d.tid
-                 left join ppm_budget b on b.du_id = i.did
+                 LEFT JOIN com_pub_attachments f ON p.aid = f.aid
+                 INNER JOIN ppm_line_items i ON p.aid = i.aid
+                 LEFT JOIN ppm_device d ON i.tid = d.tid
+                 LEFT JOIN ppm_budget b ON b.du_id = i.did
     </sql>
 </mapper>

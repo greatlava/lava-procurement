@@ -16,16 +16,16 @@ public class FileConfig {
     @Autowired
     private RemoteFileService remoteFileService;
 
-    public AjaxResult ruoyiFileUpload(MultipartFile file) {
+    public R ruoyiFileUpload(MultipartFile file) {
 
         if (!file.isEmpty()) {
             LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
             if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
-                return AjaxResult.error("文件服务异常，请联系管理员");
+                return R.fail("文件服务异常，请联系管理员");
             }
-            return AjaxResult.success(fileResult);
+            return R.ok(fileResult);
         }
-        return AjaxResult.error("上传文件异常，请联系管理员");
+        return R.fail("上传文件异常，请联系管理员");
     }
 }

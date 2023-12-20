@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.bidding.mapper.BidApplicationsMapper">
+
+    <resultMap type="com.hh.bidding.domain.BidApplications" id="BidApplicationsResult">
+        <result property="xid"    column="xid"    />
+        <result property="pbId"    column="pb_id"    />
+        <result property="xCode"    column="x_code"    />
+        <result property="xName"    column="x_name"    />
+        <result property="xWay"    column="x_way"    />
+        <result property="xType"    column="x_type"    />
+        <result property="xStartTime"    column="x_start_time"    />
+        <result property="xEndTime"    column="x_end_time"    />
+        <result property="xCount"    column="x_count"    />
+        <result property="xDaiCount"    column="x_dai_count"    />
+        <result property="xArea"    column="x_area"    />
+        <result property="sid"    column="sid"    />
+    </resultMap>
+
+    <sql id="selectBidApplicationsVo">
+        select xid, pb_id, x_code, x_name, x_way, x_type, x_start_time, x_end_time, x_count, x_dai_count, x_area,sid from bid_applications
+    </sql>
+
+    <select id="selectBidApplicationsList" parameterType="com.hh.bidding.domain.BidApplications" resultMap="BidApplicationsResult">
+        <include refid="selectBidApplicationsVo"/>
+        <where>
+            <if test="pbId != null "> and pb_id = #{pbId}</if>
+            <if test="xCode != null  and xCode != ''"> and x_code = #{xCode}</if>
+            <if test="xName != null  and xName != ''"> and x_name like concat('%', #{xName}, '%')</if>
+            <if test="xWay != null "> and x_way = #{xWay}</if>
+            <if test="xType != null "> and x_type = #{xType}</if>
+            <if test="xStartTime != null "> and x_start_time = #{xStartTime}</if>
+            <if test="xEndTime != null "> and x_end_time = #{xEndTime}</if>
+            <if test="xCount != null "> and x_count = #{xCount}</if>
+            <if test="xDaiCount != null "> and x_dai_count = #{xDaiCount}</if>
+            <if test="xArea != null  and xArea != ''"> and x_area = #{xArea}</if>
+            <if test="sid != null"> and sid = #{sid}</if>
+        </where>
+    </select>
+
+    <select id="selectBidApplicationsByXid" parameterType="Long" resultMap="BidApplicationsResult">
+        <include refid="selectBidApplicationsVo"/>
+        where xid = #{xid}
+    </select>
+
+    <insert id="insertBidApplications" parameterType="com.hh.bidding.domain.BidApplications">
+        insert into bid_applications
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="xid != null">xid,</if>
+            <if test="pbId != null">pb_id,</if>
+            <if test="xCode != null">x_code,</if>
+            <if test="xName != null">x_name,</if>
+            <if test="xWay != null">x_way,</if>
+            <if test="xType != null">x_type,</if>
+            <if test="xStartTime != null">x_start_time,</if>
+            <if test="xEndTime != null">x_end_time,</if>
+            <if test="xCount != null">x_count,</if>
+            <if test="xDaiCount != null">x_dai_count,</if>
+            <if test="xArea != null">x_area,</if>
+            <if test="sid != null">sid,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="xid != null">#{xid},</if>
+            <if test="pbId != null">#{pbId},</if>
+            <if test="xCode != null">#{xCode},</if>
+            <if test="xName != null">#{xName},</if>
+            <if test="xWay != null">#{xWay},</if>
+            <if test="xType != null">#{xType},</if>
+            <if test="xStartTime != null">#{xStartTime},</if>
+            <if test="xEndTime != null">#{xEndTime},</if>
+            <if test="xCount != null">#{xCount},</if>
+            <if test="xDaiCount != null">#{xDaiCount},</if>
+            <if test="xArea != null">#{xArea},</if>
+            <if test="sid != null">#{sid},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBidApplications" parameterType="com.hh.bidding.domain.BidApplications">
+        update bid_applications
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pbId != null">pb_id = #{pbId},</if>
+            <if test="xCode != null">x_code = #{xCode},</if>
+            <if test="xName != null">x_name = #{xName},</if>
+            <if test="xWay != null">x_way = #{xWay},</if>
+            <if test="xType != null">x_type = #{xType},</if>
+            <if test="xStartTime != null">x_start_time = #{xStartTime},</if>
+            <if test="xEndTime != null">x_end_time = #{xEndTime},</if>
+            <if test="xCount != null">x_count = #{xCount},</if>
+            <if test="xDaiCount != null">x_dai_count = #{xDaiCount},</if>
+            <if test="xArea != null">x_area = #{xArea},</if>
+            <if test="sid != null">sid = #{sid},</if>
+        </trim>
+        where xid = #{xid}
+    </update>
+
+    <delete id="deleteBidApplicationsByXid" parameterType="Long">
+        delete from bid_applications where xid = #{xid}
+    </delete>
+
+    <delete id="deleteBidApplicationsByXids" parameterType="String">
+        delete from bid_applications where xid in
+        <foreach item="xid" collection="array" open="(" separator="," close=")">
+            #{xid}
+        </foreach>
+    </delete>
+    <select id="selectMaxApplications" parameterType="Long">
+        SELECT * FROM `bid_applications` where sid=#{sid} order by xid desc limit 1;
+    </select>
+</mapper>

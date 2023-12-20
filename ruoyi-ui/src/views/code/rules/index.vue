@@ -92,7 +92,7 @@
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog title="添加编号规则" :visible.sync="open" width="500px" append-to-body>
       <el-form style="display: flex; flex-wrap: wrap; justify-content: space-evenly" :rules="rules" :inline="true"
-               label-position="top" ref="form" :model="form" label-width="80px">
+               label-position="top" ref="updateForm" :model="form" label-width="80px">
         <el-form-item label="目标表单" prop="targetForm">
           <el-input v-model="form.targetForm" placeholder="请输入目标表单"/>
         </el-form-item>
@@ -139,7 +139,7 @@
       ref="drawer"
     >
       <div class="demo-drawer__content">
-        <el-form style="display: flex; flex-wrap: wrap; justify-content: space-between" size="small" :rules="rules"
+        <el-form ref="form" style="display: flex; flex-wrap: wrap; justify-content: space-between" size="small" :rules="rules"
                  :inline="true" label-position="top" :model="form">
           <el-form-item label="目标表单" prop="targetForm">
             <el-input style="width: 200px" v-model="form.targetForm" disabled/>
@@ -181,6 +181,7 @@
 
 <script>
 import {listRules, getRules, delRules, addRules, updateRules} from "@/api/code/rules";
+import Log from "@/views/monitor/job/log.vue";
 
 export default {
   name: "Rules",
@@ -327,10 +328,13 @@ export default {
         this.form = response.data;
         this.show.edit = true;
         this.splitDateString();
+      }).catch(err=>{
+        this.$modal.msgError("错误"+err)
       });
     },
     /** 提交按钮 */
     submitForm() {
+      debugger;
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.checkTimeVule.length == 0) {
@@ -339,6 +343,7 @@ export default {
           }
           this.splitDate();
           if (this.form.id != null) {
+            console.log("maxMantissa",this.form)
             updateRules(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
@@ -347,7 +352,7 @@ export default {
             });
           } else {
             listRules({targetForm: this.form.targetForm}).then((res => {
-              if (res.rows[0] != null && res.rows[0] != undefined) {
+              if (res.rows[0]) {
                 this.$modal.confirm("检测你的目标表单已存在是否需要覆盖？").then(() => {
                   this.form.id = res.rows[0].id;
                   updateRules(this.form).then(response => {

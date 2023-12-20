@@ -86,8 +86,8 @@ public class ComPubAttachmentsServiceImpl implements IComPubAttachmentsService {
     }
 
     @Override
-    public ComPubAttachments selectedComPubAttamentsByAid(Integer aid) {
-        return comPubAttachmentsMapper.selectedComPubAttamentsByAid(aid);
+    public ComPubAttachments selectedComPubAttamentsByAid(ComPubAttachments comPubAttachments) {
+        return comPubAttachmentsMapper.selectedComPubAttamentsByAid(comPubAttachments);
     }
 
     @Override

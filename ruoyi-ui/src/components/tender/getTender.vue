@@ -1,8 +1,10 @@
 <template>
     <div class="app-container">
-      <el-table v-loading="loading" :data="tenderList" border style="width: 80%;margin: 0 auto 60px">
+      <el-table v-loading="loading" :data="tenderList" border style="margin: 0 auto 60px">
         <el-table-column label="项目编号" align="center" prop="sCode" width="200"/>
-        <el-table-column label="项目名称" align="center" prop="sName"/>
+         <el-table-column label="项目名称" align="center" prop="sName"/>
+        <el-table-column label="招标单位" align="center" prop="sUnit" />
+        <el-table-column label="负责人" align="center" prop="sLeader" />
         <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="200">
           <template slot-scope="scope">
             <span>{{ scope.row.bidNotices[0].uEndTime }}</span>
@@ -11,6 +13,9 @@
       </el-table>
       <el-tabs v-model="activeName">
         <el-tab-pane label="获取详细信息" name="info">
+          <el-row :gutter="10" class="mb8">
+            <right-toolbar  @queryTable="getOperator(queryParams.sid)"></right-toolbar>
+          </el-row>
           <el-table v-loading="loading" :data="operatorList">
             <el-table-column
               label="序号"
