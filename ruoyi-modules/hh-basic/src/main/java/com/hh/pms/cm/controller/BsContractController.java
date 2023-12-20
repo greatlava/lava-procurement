@@ -1,6 +1,8 @@
 package com.hh.pms.cm.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hh.pms.cm.domain.BsContract;
@@ -72,8 +74,10 @@ public class BsContractController extends BaseController {
     @RequiresPermissions("system:contract:add")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BsContract bsContract) {
-        return toAjax(bsContractService.insertBsContract(bsContract));
+    public AjaxResult add(@RequestBody Map<String, Object> map) {
+        System.out.println(map);
+        return null;
+//        return toAjax(bsContractService.insertBsContract(bsContract));
     }
 
     /**

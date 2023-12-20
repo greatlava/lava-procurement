@@ -1,6 +1,7 @@
 package com.hh.pms.cm.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hh.pms.sae.domain.BsSupplier;
@@ -111,6 +112,7 @@ public class BsContract extends BaseEntity {
     /** 合同文件 */
     @Excel(name = "合同文件")
     private String eDocuments;
+
 
     public void setEid(Long eid)
     {

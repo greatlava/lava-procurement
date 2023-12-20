@@ -71,3 +71,12 @@ export function updateFarmeworkPlanStatus(jhid, state) {
     method: 'post'
   })
 }
+
+// 查询框架计划列表
+export function getFrameworkPlan1(query) {
+  return request({
+    url: '/ppm/framework/list1',
+    method: 'get',
+    params: query
+  })
+}

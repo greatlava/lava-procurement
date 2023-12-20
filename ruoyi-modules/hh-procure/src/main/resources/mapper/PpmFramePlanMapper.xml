@@ -51,7 +51,8 @@
                  INNER JOIN bs_supplier b on p.hid = b.hid
     </sql>
 
-    <select id="selectPpmFramePlanList" parameterType="com.hh.procure.domain.PpmFramePlan" resultMap="PpmFramePlanResult">
+    <select id="selectPpmFramePlanList" parameterType="com.hh.procure.domain.PpmFramePlan"
+            resultMap="PpmFramePlanResult">
         <include refid="selectPpmFramePlanVo"/>
         <where>
             <if test="oid != null ">and oid = #{oid}</if>
@@ -184,4 +185,43 @@
                  left join ppm_budget b on b.du_id = i.did
                  left join ppm_frame_plan f on f.jh_id = i.jh_id
     </sql>
+
+
+    <sql id="selectBsFramePlanVo">
+        select jh_id,
+               oid,
+               jh_code,
+               jh_name,
+               jh_yu,
+               dept,
+               jh_status,
+               jh_person,
+               jh_pmethod,
+               jh_founder,
+               p.hid,
+               business_type,
+               b.h_name
+        from ppm_frame_plan p
+                 INNER JOIN bs_supplier b on p.hid = b.hid
+    </sql>
+    <!--    查询已完成并且未创建框架协议的框架计划-->
+    <select id="selectBsFramePlanList" parameterType="com.hh.procure.domain.PpmFramePlan"
+            resultMap="PpmFramePlanResult">
+        <include refid="selectPpmFramePlanVo"/>
+        <where>
+            <if test="oid != null ">and oid = #{oid}</if>
+            <if test="jhCode != null  and jhCode != ''">and jh_code = #{jhCode}</if>
+            <if test="jhName != null  and jhName != ''">and jh_name like concat('%', #{jhName}, '%')</if>
+            <if test="jhYu != null ">and jh_yu = #{jhYu}</if>
+            <if test="dept != null  and dept != ''">and dept = #{dept}</if>
+            <if test="jhStatus != null ">and jh_status = #{jhStatus}</if>
+            <if test="jhPerson != null  and jhPerson != ''">and jh_person = #{jhPerson}</if>
+            <if test="jhPmethod != null  and jhPmethod != ''">and jh_pmethod = #{jhPmethod}</if>
+            <if test="jhFounder != null  and jhFounder != ''">and jh_founder = #{jhFounder}</if>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="businessType != null ">and business_type = #{businessType}</if>
+            and NOT EXISTS (SELECT * FROM bs_frame_management f WHERE f.jh_id = p.jh_id)
+        </where>
+    </select>
+
 </mapper>

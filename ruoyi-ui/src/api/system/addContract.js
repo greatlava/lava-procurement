@@ -44,3 +44,12 @@ export function listManagement(query) {
     params: query
   })
 }
+
+// 新增合同
+export function addContract(data) {
+  return request({
+    url: '/basic/contract',
+    method: 'post',
+    data: data
+  })
+}
