@@ -2,6 +2,7 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.domain.BidSubmission;
 import com.hh.pms.sae.domain.NobidNonPro;
 import com.hh.pms.sae.domain.PpmDevice;
 import com.hh.pms.sae.service.IBsSupplierService;
@@ -121,5 +122,10 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
     @Override
     public List<PpmDevice> listDev(Long gid) {
         return bsSupplierMapper.listDev(gid);
+    }
+
+    @Override
+    public List<BidSubmission> listSubmission(Long hid, String sName) {
+        return bsSupplierMapper.listSubmission(hid, sName);
     }
 }

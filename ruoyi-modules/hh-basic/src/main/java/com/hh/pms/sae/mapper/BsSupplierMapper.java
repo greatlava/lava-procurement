@@ -2,6 +2,7 @@ package com.hh.pms.sae.mapper;
 
 import java.util.List;
 
+import com.hh.pms.sae.domain.BidSubmission;
 import com.hh.pms.sae.domain.BsSupplier;
 import com.hh.pms.sae.domain.NobidNonPro;
 import com.hh.pms.sae.domain.PpmDevice;
@@ -101,4 +102,6 @@ public interface BsSupplierMapper {
     public NobidNonPro queryOneByCode(String code);
 
     public List<PpmDevice> listDev(Long gid);
+
+    public List<BidSubmission> listSubmission(@Param("hid") Long hid, @Param("sName") String sName);
 }

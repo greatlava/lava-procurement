@@ -296,4 +296,11 @@ public class BsSupplierController extends BaseController {
     public AjaxResult getNobid(String code) {
         return success(bsSupplierService.queryOneByCode(code));
     }
+
+    @GetMapping("/listSubmission")
+    public TableDataInfo listSubmission(Long hid, String sName) {
+        startPage();
+        List<BidSubmission> list = bsSupplierService.listSubmission(hid, sName);
+        return getDataTable(list);
+    }
 }

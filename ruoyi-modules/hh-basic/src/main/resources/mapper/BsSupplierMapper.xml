@@ -67,6 +67,24 @@
         <result property="vPerson" column="v_person"/>
     </resultMap>
 
+    <resultMap type="com.hh.pms.sae.domain.BidSubmission" id="BidSubmissionResult">
+        <result property="tdId" column="td_id"/>
+        <result property="sid" column="sid"/>
+        <result property="hid" column="hid"/>
+        <result property="tdStatus" column="td_status"/>
+        <result property="tdSuccessTime" column="td_success_time"/>
+        <result property="tdFailTime" column="td_fail_time"/>
+        <result property="fjFiles" column="fj_files"/>
+        <result property="sCode" column="s_code"/>
+        <result property="sName" column="s_name"/>
+        <result property="sWay" column="s_way"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sEndTime" column="s_end_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
     <sql id="selectBsSupplierVo">
         select hid,
                zr_id,
@@ -383,5 +401,15 @@
                  JOIN ppm_line_items i ON p.gid = i.gid
                  JOIN ppm_device e ON i.tid = e.tid
         WHERE p.gid = #{gid}
+    </select>
+
+    <select id="listSubmission" resultMap="BidSubmissionResult">
+        select *
+        from bid_submission s
+        inner join bid_tender t on s.sid = t.sid
+        <where>
+            s.hid = #{hid}
+            <if test="sName != null and sName != ''">and s_name like concat('%',#{sName},'%')</if>
+        </where>
     </select>
 </mapper>
