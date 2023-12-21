@@ -118,15 +118,18 @@
                 >上传签订合同
                 </el-button>
                 <!--状态2-->
-                <el-button
-                    v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-edit"
-                    @click=""
-                    v-hasPermi="['system:contract:edit']"
-                >编辑
-                </el-button>
+                <!--进入合同-->
+                <router-link :to="'update?eid='+scope.row.eid">
+                  <el-button
+                      v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-edit"
+                      @click=""
+                      v-hasPermi="['system:contract:edit']"
+                  >编辑
+                  </el-button>
+                </router-link>
                 <el-button
                     v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
                     size="mini"
@@ -142,7 +145,7 @@
                     size="mini"
                     type="text"
                     @click=""
-                >--
+                >审核
                 </el-button>
               </template>
             </el-table-column>
@@ -204,7 +207,7 @@
 </template>
 
 <script>
-import { listContract, getContract, delContract, addContract, updateContract, listTender } from '@/api/system/cm'
+import { listContract, listTender } from '@/api/system/cm'
 
 export default {
   name: 'Contract',

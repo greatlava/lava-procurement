@@ -32,6 +32,11 @@ public class BsContract extends BaseEntity {
     private Long eid;
 
     /**
+     * 招标项目ID
+     */
+    private Long sid;
+
+    /**
      * 合同编号
      */
     @Excel(name = "合同编号")
@@ -127,6 +132,24 @@ public class BsContract extends BaseEntity {
      */
     @Excel(name = "合同文件")
     private String eDocuments;
+
+//    private BidTender bidTender;
+//
+//    public BidTender getBidTender() {
+//        return bidTender;
+//    }
+//
+//    public void setBidTender(BidTender bidTender) {
+//        this.bidTender = bidTender;
+//    }
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
 
     private List<BsInventory> bsInventoryList;
 
@@ -301,6 +324,7 @@ public class BsContract extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("eid", getEid())
                 .append("hid", getHid())
+                .append("sid", getSid())
                 .append("eHcode", geteHcode())
                 .append("eHname", geteHname())
                 .append("eStatus", geteStatus())
@@ -322,6 +346,7 @@ public class BsContract extends BaseEntity {
                 .append("BsInventoryList", getBsInventoryList())
                 .append("PaymentList", getBsPaymentList())
                 .append("BsSign", getBsSign())
+//                .append("BidTender", getBidTender())
                 .toString();
     }
 }

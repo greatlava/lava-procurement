@@ -5,34 +5,44 @@
 <mapper namespace="com.hh.pms.cm.mapper.BsInventoryMapper">
 
     <resultMap type="com.hh.pms.cm.domain.BsInventory" id="BsInventoryResult">
-        <result property="inId"    column="in_id"    />
-        <result property="tid"    column="tid"    />
-        <result property="eid"    column="eid"    />
-        <result property="oid"    column="oid"    />
-        <result property="inName"    column="in_name"    />
-        <result property="inModel"    column="in_model"    />
-        <result property="inUnit"    column="in_unit"    />
-        <result property="inVat"    column="in_vat"    />
-        <result property="inCount"    column="in_count"    />
-        <result property="inSubtotal"    column="in_subtotal"    />
+        <result property="inId" column="in_id"/>
+        <result property="tid" column="tid"/>
+        <result property="eid" column="eid"/>
+        <result property="oid" column="oid"/>
+        <result property="inName" column="in_name"/>
+        <result property="inModel" column="in_model"/>
+        <result property="inUnit" column="in_unit"/>
+        <result property="inVat" column="in_vat"/>
+        <result property="inCount" column="in_count"/>
+        <result property="inSubtotal" column="in_subtotal"/>
     </resultMap>
 
     <sql id="selectBsInventoryVo">
-        select in_id, tid, eid, oid, in_name, in_model, in_unit, in_vat, in_count, in_subtotal from bs_inventory
+        select in_id,
+               tid,
+               eid,
+               oid,
+               in_name,
+               in_model,
+               in_unit,
+               in_vat,
+               in_count,
+               in_subtotal
+        from bs_inventory
     </sql>
 
     <select id="selectBsInventoryList" parameterType="com.hh.pms.cm.domain.BsInventory" resultMap="BsInventoryResult">
         <include refid="selectBsInventoryVo"/>
         <where>
-            <if test="tid != null "> and tid = #{tid}</if>
-            <if test="eid != null "> and eid = #{eid}</if>
-            <if test="oid != null "> and oid = #{oid}</if>
-            <if test="inName != null  and inName != ''"> and in_name like concat('%', #{inName}, '%')</if>
-            <if test="inModel != null  and inModel != ''"> and in_model = #{inModel}</if>
-            <if test="inUnit != null  and inUnit != ''"> and in_unit = #{inUnit}</if>
-            <if test="inVat != null "> and in_vat = #{inVat}</if>
-            <if test="inCount != null "> and in_count = #{inCount}</if>
-            <if test="inSubtotal != null "> and in_subtotal = #{inSubtotal}</if>
+            <if test="tid != null ">and tid = #{tid}</if>
+            <if test="eid != null ">and eid = #{eid}</if>
+            <if test="oid != null ">and oid = #{oid}</if>
+            <if test="inName != null  and inName != ''">and in_name like concat('%', #{inName}, '%')</if>
+            <if test="inModel != null  and inModel != ''">and in_model = #{inModel}</if>
+            <if test="inUnit != null  and inUnit != ''">and in_unit = #{inUnit}</if>
+            <if test="inVat != null ">and in_vat = #{inVat}</if>
+            <if test="inCount != null ">and in_count = #{inCount}</if>
+            <if test="inSubtotal != null ">and in_subtotal = #{inSubtotal}</if>
         </where>
     </select>
 
@@ -41,7 +51,8 @@
         where in_id = #{inId}
     </select>
 
-    <insert id="insertBsInventory" parameterType="com.hh.pms.cm.domain.BsInventory" useGeneratedKeys="true" keyProperty="inId">
+    <insert id="insertBsInventory" parameterType="com.hh.pms.cm.domain.BsInventory" useGeneratedKeys="true"
+            keyProperty="inId">
         insert into bs_inventory
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tid != null">tid,</if>
@@ -84,7 +95,9 @@
     </update>
 
     <delete id="deleteBsInventoryByInId" parameterType="Long">
-        delete from bs_inventory where in_id = #{inId}
+        delete
+        from bs_inventory
+        where in_id = #{inId}
     </delete>
 
     <delete id="deleteBsInventoryByInIds" parameterType="String">

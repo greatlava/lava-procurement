@@ -79,7 +79,9 @@ public class BsContractController extends BaseController {
     @RequiresPermissions("system:contract:query")
     @GetMapping(value = "/{eid}")
     public AjaxResult getInfo(@PathVariable("eid") Long eid) {
-        return success(bsContractService.selectBsContractByEid(eid));
+        BsContract bsContract = bsContractService.selectBidTenderSid(eid);
+        System.out.println(bsContract);
+        return success(bsContract);
     }
 
     /**
@@ -101,24 +103,40 @@ public class BsContractController extends BaseController {
         int k = bsContractService.insertBsContract(bsContract);
         if (k > 0) {
             Long eid = bsContract.getEid();
+            BidTender bidTender = new BidTender();
+            bidTender.setEid(eid);
+            bidTender.setSid(bsContract.getSid());
+            int i1 = bsContractService.updateBidTenderEid(bidTender);
+            if (i1 == 0) {
+                return AjaxResult.error("添加异常");
+            }
             //添加设备信息
             List<BsInventory> list1 = bsContract.getBsInventoryList();
             if (list1 != null) {
                 for (BsInventory bsInventory : list1) {
                     bsInventory.setEid(eid);
-                    inventoryService.insertBsInventory(bsInventory);
+                    int i = inventoryService.insertBsInventory(bsInventory);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
                 }
             }
             List<BsPayment> list2 = bsContract.getBsPaymentList();
             if (list2 != null) {
                 for (BsPayment bsPayment : list2) {
                     bsPayment.setEid(eid);
-                    paymentService.insertBsPayment(bsPayment);
+                    int i = paymentService.insertBsPayment(bsPayment);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
                 }
             }
             BsSign bsSign = bsContract.getBsSign();
             bsSign.setEid(eid);
-            signService.insertBsSign(bsSign);
+            int i = signService.insertBsSign(bsSign);
+            if (i == 0) {
+                return AjaxResult.error("添加异常");
+            }
             return AjaxResult.success("添加成功");
         }
         return AjaxResult.error("添加异常");
