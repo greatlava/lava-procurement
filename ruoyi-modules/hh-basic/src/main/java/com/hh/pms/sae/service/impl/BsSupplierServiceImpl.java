@@ -2,6 +2,8 @@ package com.hh.pms.sae.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.sae.domain.NobidNonPro;
+import com.hh.pms.sae.domain.PpmDevice;
 import com.hh.pms.sae.service.IBsSupplierService;
 import org.springframework.stereotype.Service;
 import com.hh.pms.sae.mapper.BsSupplierMapper;
@@ -104,5 +106,20 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
     @Override
     public BsSupplier loginSupplier(String hLoginAccount, String hPassword) {
         return bsSupplierMapper.loginSupplier(hLoginAccount, hPassword);
+    }
+
+    @Override
+    public List<NobidNonPro> selectAllNoBid(NobidNonPro nobidNonPro) {
+        return bsSupplierMapper.selectAllNoBid(nobidNonPro);
+    }
+
+    @Override
+    public NobidNonPro queryOneByCode(String code) {
+        return bsSupplierMapper.queryOneByCode(code);
+    }
+
+    @Override
+    public List<PpmDevice> listDev(Long gid) {
+        return bsSupplierMapper.listDev(gid);
     }
 }
