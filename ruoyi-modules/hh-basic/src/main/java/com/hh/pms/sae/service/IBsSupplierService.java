@@ -3,6 +3,8 @@ package com.hh.pms.sae.service;
 import java.util.List;
 
 import com.hh.pms.sae.domain.BsSupplier;
+import com.hh.pms.sae.domain.NobidNonPro;
+import com.hh.pms.sae.domain.PpmDevice;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -93,4 +95,11 @@ public interface IBsSupplierService {
      * @return
      */
     public BsSupplier loginSupplier(String hLoginAccount, String hPassword);
+
+    //查询非招标项目
+    public List<NobidNonPro> selectAllNoBid(NobidNonPro nobidNonPro);
+
+    public NobidNonPro queryOneByCode(String code);
+
+    public List<PpmDevice> listDev(Long gid);
 }

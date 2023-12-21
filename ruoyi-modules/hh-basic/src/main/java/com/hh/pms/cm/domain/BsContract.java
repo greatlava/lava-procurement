@@ -29,7 +29,9 @@ public class BsContract extends BaseEntity {
      */
     private Long eid;
 
-    /** 签署执行状态ID */
+    /**
+     * 签署执行状态ID
+     */
     @Excel(name = "签署执行状态ID")
     private Long gnId;
 
@@ -74,202 +76,201 @@ public class BsContract extends BaseEntity {
         this.bsSupplier = bsSupplier;
     }
 
-    /** 合同类型 */
+    /**
+     * 合同类型
+     */
     @Excel(name = "合同类型")
-    private Long eType;
+    private String eType;
 
-    /** 密级 */
+    /**
+     * 密级
+     */
     @Excel(name = "密级")
     private Long eCon;
 
-    /** 开始时间 */
+    /**
+     * 开始时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "开始时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date eStartdate;
 
-    /** 结束时间 */
+    /**
+     * 结束时间
+     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date eEnddate;
 
-    /** 合同金额 */
+    /**
+     * 合同金额
+     */
     @Excel(name = "合同金额")
     private Long eAmount;
 
-    /** 合同情况说明 */
+    /**
+     * 合同情况说明
+     */
     @Excel(name = "合同情况说明")
     private String eDescription;
 
-    /** 意见 */
+    /**
+     * 意见
+     */
     @Excel(name = "意见")
     private String eOpinion;
 
-    /** 合同影像 */
+    /**
+     * 合同影像
+     */
     @Excel(name = "合同影像")
     private String eImage;
 
-    /** 合同文件 */
+    /**
+     * 合同文件
+     */
     @Excel(name = "合同文件")
     private String eDocuments;
 
-    public void setEid(Long eid)
-    {
+    public void setEid(Long eid) {
         this.eid = eid;
     }
 
-    public Long getEid()
-    {
+    public Long getEid() {
         return eid;
     }
-    public void setHid(Long hid)
-    {
+
+    public void setHid(Long hid) {
         this.hid = hid;
     }
 
-    public Long getHid()
-    {
+    public Long getHid() {
         return hid;
     }
 
-    public void setGnId(Long gnId)
-    {
+    public void setGnId(Long gnId) {
         this.gnId = gnId;
     }
 
-    public Long getGnId()
-    {
+    public Long getGnId() {
         return gnId;
     }
-    public void seteHcode(String eHcode)
-    {
+
+    public void seteHcode(String eHcode) {
         this.eHcode = eHcode;
     }
 
-    public String geteHcode()
-    {
+    public String geteHcode() {
         return eHcode;
     }
-    public void seteHname(String eHname)
-    {
+
+    public void seteHname(String eHname) {
         this.eHname = eHname;
     }
 
-    public String geteHname()
-    {
+    public String geteHname() {
         return eHname;
     }
-    public void seteStatus(Long eStatus)
-    {
+
+    public void seteStatus(Long eStatus) {
         this.eStatus = eStatus;
     }
 
-    public Long geteStatus()
-    {
+    public Long geteStatus() {
         return eStatus;
     }
-    public void seteDeliveryTime(Date eDeliveryTime)
-    {
+
+    public void seteDeliveryTime(Date eDeliveryTime) {
         this.eDeliveryTime = eDeliveryTime;
     }
 
-    public Date geteDeliveryTime()
-    {
+    public Date geteDeliveryTime() {
         return eDeliveryTime;
     }
-    public void setoHstatus(Long oHstatus)
-    {
+
+    public void setoHstatus(Long oHstatus) {
         this.oHstatus = oHstatus;
     }
 
-    public Long getoHstatus()
-    {
+    public Long getoHstatus() {
         return oHstatus;
     }
-    public void seteType(Long eType)
-    {
+
+    public void seteType(String eType) {
         this.eType = eType;
     }
 
-    public Long geteType()
-    {
+    public String geteType() {
         return eType;
     }
-    public void seteCon(Long eCon)
-    {
+
+    public void seteCon(Long eCon) {
         this.eCon = eCon;
     }
 
-    public Long geteCon()
-    {
+    public Long geteCon() {
         return eCon;
     }
-    public void seteStartdate(Date eStartdate)
-    {
+
+    public void seteStartdate(Date eStartdate) {
         this.eStartdate = eStartdate;
     }
 
-    public Date geteStartdate()
-    {
+    public Date geteStartdate() {
         return eStartdate;
     }
-    public void seteEnddate(Date eEnddate)
-    {
+
+    public void seteEnddate(Date eEnddate) {
         this.eEnddate = eEnddate;
     }
 
-    public Date geteEnddate()
-    {
+    public Date geteEnddate() {
         return eEnddate;
     }
-    public void seteAmount(Long eAmount)
-    {
+
+    public void seteAmount(Long eAmount) {
         this.eAmount = eAmount;
     }
 
-    public Long geteAmount()
-    {
+    public Long geteAmount() {
         return eAmount;
     }
-    public void seteDescription(String eDescription)
-    {
+
+    public void seteDescription(String eDescription) {
         this.eDescription = eDescription;
     }
 
-    public String geteDescription()
-    {
+    public String geteDescription() {
         return eDescription;
     }
-    public void seteOpinion(String eOpinion)
-    {
+
+    public void seteOpinion(String eOpinion) {
         this.eOpinion = eOpinion;
     }
 
-    public String geteOpinion()
-    {
+    public String geteOpinion() {
         return eOpinion;
     }
-    public void seteImage(String eImage)
-    {
+
+    public void seteImage(String eImage) {
         this.eImage = eImage;
     }
 
-    public String geteImage()
-    {
+    public String geteImage() {
         return eImage;
     }
-    public void seteDocuments(String eDocuments)
-    {
+
+    public void seteDocuments(String eDocuments) {
         this.eDocuments = eDocuments;
     }
 
-    public String geteDocuments()
-    {
+    public String geteDocuments() {
         return eDocuments;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("eid", getEid())
                 .append("hid", getHid())
                 .append("gnId", getGnId())
