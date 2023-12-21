@@ -3,7 +3,7 @@
     <div class="con">
       <h2>采购合同</h2>
       <el-divider direction="horizontal"/>
-      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="180px" label-position="left">
+      <el-form ref="elForm" :model="form" :rules="rules1" size="medium" label-width="180px" label-position="left">
         <h3>合同基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同名称" prop="eHname" style="width: 45%">
@@ -16,24 +16,27 @@
             <el-input v-model="form.eType" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="密级" prop="eCon" style="width: 45%">
-            <el-select v-model="mjValue" placeholder="请选择" class="cInput">
+            <el-select v-model="form.eCon" placeholder="请选择" class="cInput">
               <el-option
-                v-for="item in mjOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  v-for="item in mjOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="开始时间" prop="eStartDate" style="width: 45%">
-            <el-date-picker v-model="form.eStartDate" type="date" class="cInput"/>
+          <el-form-item label="开始时间" prop="eStartdate" style="width: 45%">
+            <el-date-picker v-model="form.eStartdate" type="date" class="cInput"/>
           </el-form-item>
-          <el-form-item label="结束时间" prop="eEndDate" style="width: 45%">
-            <el-date-picker v-model="form.eEndDate" type="date" class="cInput"/>
+          <el-form-item label="结束时间" prop="eEnddate" style="width: 45%">
+            <el-date-picker v-model="form.eEnddate" type="date" class="cInput"/>
+          </el-form-item>
+          <el-form-item label="交付日期" prop="eDeliveryTime" style="width: 45%">
+            <el-date-picker v-model="form.eDeliveryTime" type="date" class="cInput"/>
           </el-form-item>
           <el-form-item label="合同金额" prop="eAmount" style="width: 45%">
             <el-input v-model="form.eAmount" clearable class="cInput" readonly/>
-            <span style="color: red"> * </span>合同标的清单总价
+            <span style="color: red"> * 合同标的清单总价</span>
           </el-form-item>
           <el-form-item label="合同情况说明" prop="eDescription" style="width: 100%">
             <el-col>
@@ -69,12 +72,12 @@
         <el-button @click="lDeleteRows" :disabled="lSelectedRows.length === 0">删除</el-button>
         <el-button @click="lCopyRows" :disabled="lSelectedRows.length === 0">复制</el-button>
         <el-table
-          :data="lTableData"
-          :row-key="row => row.id"
-          @selection-change="lHandleSelectionChange"
-          border
-          stripe
-          :style="{marginTop:'10px'}"
+            :data="lTableData"
+            :row-key="row => row.id"
+            @selection-change="lHandleSelectionChange"
+            border
+            stripe
+            :style="{marginTop:'10px'}"
         >
           <el-table-column type="selection" width="55"/>
           <el-table-column label="序号" prop="id" width="60"/>
@@ -85,11 +88,11 @@
               </el-input>
               <el-dialog title="产品名称" :visible.sync="cpDialog">
                 <el-table
-                  ref="singleTable"
-                  :data="deviceList"
-                  highlight-current-row
-                  style="width: 100%"
-                  @row-click="handleRowClick"
+                    ref="singleTable"
+                    :data="deviceList"
+                    highlight-current-row
+                    style="width: 100%"
+                    @row-click="handleRowClick"
                 >
                   <el-table-column prop="tName" label="产品名称" width="140"/>
                   <el-table-column prop="tid" label="产品编号" width="130"/>
@@ -99,11 +102,11 @@
                   <el-table-column prop="shui" label="税点" width="100"/>
                 </el-table>
                 <pagination
-                  v-show="total>0"
-                  :total="total"
-                  :page.sync="queryParams.pageNum"
-                  :limit.sync="queryParams.pageSize"
-                  @pagination="selectBdList"
+                    v-show="total>0"
+                    :total="total"
+                    :page.sync="queryParams.pageNum"
+                    :limit.sync="queryParams.pageSize"
+                    @pagination="selectBdList"
                 />
                 <div style="margin-top: 20px">
                   <el-button @click="closeDialog1">取消</el-button>
@@ -134,13 +137,13 @@
           <el-table-column label="数量" prop="inCount" width="150">
             <template slot-scope="scope">
               <el-input-number
-                v-model="scope.row.inCount"
-                :min="1"
-                :precision="0"
-                controls-position="right"
-                style="width: 120px;"
-                @blur="spCountBlur(scope.row)"
-                @change="spCountChange(scope.row)"
+                  v-model="scope.row.inCount"
+                  :min="1"
+                  :precision="0"
+                  controls-position="right"
+                  style="width: 120px;"
+                  @blur="spCountBlur(scope.row)"
+                  @change="spCountChange(scope.row)"
               />
             </template>
           </el-table-column>
@@ -163,23 +166,23 @@
         <el-button @click="payDeleteRows" :disabled="paySelectedRows.length === 0">删除</el-button>
         <el-button @click="payCopyRows" :disabled="paySelectedRows.length === 0">复制</el-button>
         <el-table
-          :data="payTableData"
-          :row-key="row => row.id"
-          @selection-change="payHandleSelectionChange"
-          border
-          stripe
-          :style="{marginTop:'10px'}"
+            :data="payTableData"
+            :row-key="row => row.id"
+            @selection-change="payHandleSelectionChange"
+            border
+            stripe
+            :style="{marginTop:'10px'}"
         >
           <el-table-column type="selection" width="55"/>
           <el-table-column label="序号" prop="id" width="60"/>
-          <el-table-column label="款项内容" prop="name">
+          <el-table-column label="款项内容" prop="payContent">
             <template slot-scope="scope">
               <el-select v-model="scope.row.payContent" class="cInput">
                 <el-option
-                  v-for="item in payTypes"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="Number(item.dictValue)"
+                    v-for="item in payTypes"
+                    :key="item.dictValue"
+                    :label="item.dictLabel"
+                    :value="Number(item.dictValue)"
                 />
               </el-select>
             </template>
@@ -198,31 +201,7 @@
           </el-table-column>
           <el-table-column label="收款合同方" prop="hName">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.hName" readonly>
-                <i slot="suffix" class="el-icon-search" @click="openGys(scope.row)" style="margin-top: 10px"/>
-              </el-input>
-              <el-dialog title="供应商信息" :visible.sync="GysDialog">
-                <el-table
-                  ref="singleTable"
-                  :data="supplierList"
-                  highlight-current-row
-                  style="width: 100%"
-                  @row-click="handleRowClick1"
-                >
-                  <el-table-column prop="hName" label="供应商名称"/>
-                  <el-table-column prop="hQuality" label="公司类型"/>
-                </el-table>
-                <pagination
-                  v-show="total1>0"
-                  :total="total1"
-                  :page.sync="queryParams1.pageNum"
-                  :limit.sync="queryParams1.pageSize"
-                  @pagination="selectGysList"
-                />
-                <div style="margin-top: 20px">
-                  <el-button @click="closeDialog2">取消</el-button>
-                </div>
-              </el-dialog>
+              <el-input v-model="scope.row.hName" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="付款条件" prop="payTerms">
@@ -232,7 +211,7 @@
           </el-table-column>
           <el-table-column label="付款金额" prop="payAmount">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="i(scope.row)"/>
+              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="payHandleInput(scope.row)"/>
             </template>
           </el-table-column>
           <el-table-column label="违约责任" prop="debty">
@@ -244,15 +223,15 @@
       </div>
 
       <h3>合同签署状态</h3>
-      <el-form ref="qsForm" :model="qsFormData" :rules="rules" size="medium" label-width="180px" label-position="left">
+      <el-form ref="qsForm" :model="qsFormData" :rules="rules2" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
-          <el-form-item label="签署方数" prop="gnSignatoryCount" style="width: 45%">
-            <el-select v-model="qsValue" class="cInput" @change="qsHandleChange">
+          <el-form-item label="签署方数" prop="gnSignatorycount" style="width: 45%">
+            <el-select v-model="qsFormData.gnSignatorycount" class="cInput" @change="qsHandleChange">
               <el-option
-                v-for="item in qsOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                  v-for="item in qsOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
               >
               </el-option>
             </el-select>
@@ -260,75 +239,75 @@
           <el-form-item label="我方主体" prop="gnSub" style="width: 45%">
             <el-input v-model="qsFormData.gnSub" class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方供应商" prop="gnPbName" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbName" class="cInput"/>
+          <el-form-item label="乙方供应商" prop="gnPbname" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbname" class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方供应商地址" prop="gnPbAddress" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbAddress" clearable class="cInput"/>
+          <el-form-item label="乙方供应商地址" prop="gnPbaddress" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbaddress" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方联系人" prop="gnPbContact" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbContact" clearable class="cInput"/>
+          <el-form-item label="乙方联系人" prop="gnPbcontact" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbcontact" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方联系方式" prop="gnPbCif" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbCif" clearable class="cInput"/>
+          <el-form-item label="乙方联系方式" prop="gnPbcif" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbcif" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方开户行" prop="gnPbBank" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbBank" clearable class="cInput"/>
+          <el-form-item label="乙方开户行" prop="gnPbbank" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbbank" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="乙方开户行账户" prop="gnPbAccount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbAccount" clearable class="cInput"/>
+          <el-form-item label="乙方开户行账户" prop="gnPbaccount" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbaccount" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="合同方金额" prop="gnPbAmount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbAmount" clearable class="cInput"/>
+          <el-form-item label="合同方金额" prop="gnPbamount" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="币别" prop="gnPbCurrency" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbCurrency" clearable class="cInput"/>
+          <el-form-item label="币别" prop="gnPbcurrency" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbcurrency" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="已支付金额" prop="gnPbPayment" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbPayment" clearable class="cInput"/>
+          <el-form-item label="已支付金额" prop="gnPbpayment" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbpayment" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="锁定金额" prop="gnPbFixedprice" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbFixedprice" clearable class="cInput"/>
+          <el-form-item label="锁定金额" prop="gnPbfixedprice" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbfixedprice" clearable class="cInput"/>
           </el-form-item>
-          <el-form-item label="剩余金额" prop="gnPbBalance" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbBalance" clearable class="cInput"/>
+          <el-form-item label="剩余金额" prop="gnPbbalance" style="width: 45%">
+            <el-input v-model="qsFormData.gnPbbalance" clearable class="cInput"/>
           </el-form-item>
         </el-row>
-        <div v-if="qsValue === 1">
+        <div v-if="qsFormData.gnSignatorycount === 1">
           <el-divider direction="horizontal"/>
           <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
-            <el-form-item label="丙方供应商" prop="gnPcName" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcName" clearable class="cInput"/>
+            <el-form-item label="丙方供应商" prop="gnPcname" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcname" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="丙方供应商地址" prop="gnPcAddress" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcAddress" clearable class="cInput"/>
+            <el-form-item label="丙方供应商地址" prop="gnPcaddress" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcaddress" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="丙方联系人" prop="gnPcContact" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcContact" clearable class="cInput"/>
+            <el-form-item label="丙方联系人" prop="gnPccontact" style="width: 45%">
+              <el-input v-model="qsFormData.gnPccontact" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="丙方联系方式" prop="gnPcCif" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcCif" clearable class="cInput"/>
+            <el-form-item label="丙方联系方式" prop="gnPccif" style="width: 45%">
+              <el-input v-model="qsFormData.gnPccif" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="丙方开户行" prop="gnPcBank" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcBank" clearable class="cInput"/>
+            <el-form-item label="丙方开户行" prop="gnPcbank" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcbank" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="丙方开户行账户" prop="gnPcAccount" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcAccount" clearable class="cInput"/>
+            <el-form-item label="丙方开户行账户" prop="gnPcaccount" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcaccount" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="合同方金额" prop="gnPcAmount" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcAmount" clearable class="cInput"/>
+            <el-form-item label="合同方金额" prop="gnPcamount" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcamount" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="币别" prop="gnPcCurrency" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcCurrency" clearable class="cInput"/>
+            <el-form-item label="币别" prop="gnPccurrency" style="width: 45%">
+              <el-input v-model="qsFormData.gnPccurrency" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="已支付金额" prop="gnPcPayment" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcPayment" clearable class="cInput"/>
+            <el-form-item label="已支付金额" prop="gnPcpayment" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcpayment" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="锁定金额" prop="gnPcFixedprice" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcFixedprice" clearable class="cInput"/>
+            <el-form-item label="锁定金额" prop="gnPcfixedprice" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcfixedprice" clearable class="cInput"/>
             </el-form-item>
-            <el-form-item label="剩余金额" prop="gnPcBalance" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcBalance" clearable class="cInput"/>
+            <el-form-item label="剩余金额" prop="gnPcbalance" style="width: 45%">
+              <el-input v-model="qsFormData.gnPcbalance" clearable class="cInput"/>
             </el-form-item>
           </el-row>
         </div>
@@ -336,58 +315,55 @@
 
       <!--合同签署文件-->
       <h3>合同签署文件</h3>
-      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="180px" label-position="left">
+      <el-form ref="elForm" :model="form" :rules="rules3" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同影像上传" prop="eImage" style="width: 45%">
             <el-upload
-              ref="up1"
-              class="upload-demo"
-              multiple
-              :action="url"
-              :before-remove="beforeRemove"
-              :auto-upload="false"
-              :limit="5"
-              :on-exceed="handleExceed"
-              :on-success="success"
-              :file-list="fileList1"
-              accept=".jpg, .png"
+                ref="up1"
+                class="upload-demo"
+                multiple
+                :action="url"
+                :before-remove="beforeRemove1"
+                :auto-upload="true"
+                :limit="5"
+                :on-exceed="handleExceed1"
+                :on-success="success1"
+                :file-list="fileList1"
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
             </el-upload>
           </el-form-item>
-          <el-form-item label="附件上传" prop="field102" style="width: 45%">
+          <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
-              ref="up1"
-              class="upload-demo"
-              multiple
-              :action="url"
-              :before-remove="beforeRemove"
-              :auto-upload="false"
-              :limit="5"
-              :on-exceed="handleExceed"
-              :on-success="success"
-              :file-list="fileList2"
+                ref="up2"
+                class="upload-demo"
+                multiple
+                :action="url"
+                :before-remove="beforeRemove2"
+                :auto-upload="true"
+                :limit="5"
+                :on-exceed="handleExceed2"
+                :on-success="success2"
+                :file-list="fileList2"
             >
               <el-button size="small" type="primary">上传附件</el-button>
-              <!--                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>-->
             </el-upload>
           </el-form-item>
           <el-form-item label="合同文件" prop="eDocuments" style="width: 45%">
             <el-upload
-              ref="up1"
-              class="upload-demo"
-              multiple
-              :action="url"
-              :before-remove="beforeRemove"
-              :auto-upload="false"
-              :limit="1"
-              :on-exceed="handleExceed"
-              :on-success="success"
-              :file-list="fileList3"
+                ref="up3"
+                class="upload-demo"
+                multiple
+                :action="url"
+                :before-remove="beforeRemove3"
+                :auto-upload="true"
+                :limit="1"
+                :on-exceed="handleExceed3"
+                :on-success="success3"
+                :file-list="fileList3"
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
-              <!--                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>-->
             </el-upload>
           </el-form-item>
           <!--          <el-form-item label="意见" prop="eOpinion" style="width: 100%">-->
@@ -424,8 +400,6 @@ export default {
       /* 标的清单 */
       //合同标的表格
       lTableData: [],
-      //合同标的验证表单
-      inRules: {},
       total: 0,
       total1: 0,
       //产品信息参数
@@ -457,10 +431,9 @@ export default {
       cpDialog: false,
       GysDialog: false,
       //签署方数下拉框
-      qsValue: 0,  // 默认值
       qsOptions: [
-        { value: 0, label: '选项1' },
-        { value: 1, label: '选项2' }
+        { value: 0, label: '双方签署' },
+        { value: 1, label: '三方签署' }
       ],
       payTimeValue: '',
       /* //合同标的清单 */
@@ -481,7 +454,6 @@ export default {
         value: 2,
         label: '商密'
       }],
-      mjValue: 1,
       //采购方式
       cgOptions: [{
         value: 1,
@@ -499,13 +471,14 @@ export default {
       open: false,
       // 表单参数
       form: {
+        hid: null,
         eHname: null,
         eHcode: null,
         eType: null,
-        eCon: null,
-        eStartDate: null,
-        eEndDate: null,
-        eAmount: parseFloat(0).toFixed(2),
+        eCon: 1,
+        eStartdate: null,
+        eEnddate: null,
+        eAmount: 0,
         eDescription: null,
         tenderName: null,
         tenderNo: null,
@@ -513,7 +486,9 @@ export default {
         tenderType: null,
         eImage: null,
         eDocuments: null,
-        eOpinion: null
+        eOpinion: null,
+        eDeliveryTime: null,
+        bsSign: {}
       },
       //付款yued
       payForm: {
@@ -524,7 +499,7 @@ export default {
         hid: null,
         hName: null,
         payTerms: null,
-        payAmount: null,
+        payAmount: 0,
         debty: null
       },
       //业务类型字典数据
@@ -532,38 +507,59 @@ export default {
       payTypes: [],
       //合同签署状态
       qsFormData: {
-        gnSignatoryCount: null, //签署方数
+        gnSignatorycount: 0, //签署方数
         gnSub: '鸿鹄科技有限公司',//我方主体
-        gnPbId: null,//乙方供应商ID
-        gnPbName: null,//乙方名称
-        gnPbAddress: null,//乙方地址
-        gnPbContact: null,//乙方联系人
-        gnPbCif: null,//乙方联系方式
-        gnPbBank: null,//乙方开户行
-        gnPbAccount: null,//乙方开户账号
-        gnPbAmount: parseFloat(0).toFixed(2),//合同方金额
-        gnPbCurrency: '人民币',//币别
-        gnPbPayment: null,//已支付金额
-        gnPbFixedprice: null,//锁定金额
-        gnPbBalance: parseFloat(0).toFixed(2),//剩余金额
-        gnPcName: null,//丙方名称
-        gnPcAddress: null,//乙方地址
-        gnPcContact: null,//乙方联系人
-        gnPcCif: null,//乙方联系方式
-        gnPcBank: null,//乙方开户行
-        gnPcAccount: null,//乙方开户账号
-        gnPcAmount: null,//合同方金额
-        gnPcCurrency: null,//币别
-        gnPcPayment: null,//已支付金额
-        gnPcFixedprice: null,//锁定金额
-        gnPcBalance: null//剩余金额
+        gnPbid: null,//乙方供应商ID
+        gnPbname: null,//乙方名称
+        gnPbaddress: null,//乙方地址
+        gnPbcontact: null,//乙方联系人
+        gnPbcif: null,//乙方联系方式
+        gnPbbank: null,//乙方开户行
+        gnPbaccount: null,//乙方开户账号
+        gnPbamount: null,//合同方金额
+        gnPbcurrency: '人民币',//币别
+        gnPbpayment: null,//已支付金额
+        gnPbfixedprice: null,//锁定金额
+        gnPbbalance: null,//剩余金额
+        gnPcname: null,//丙方名称
+        gnPcaddress: null,//乙方地址
+        gnPccontact: null,//乙方联系人
+        gnPccif: null,//乙方联系方式
+        gnPcbank: null,//乙方开户行
+        gnPcaccount: null,//乙方开户账号
+        gnPcamount: null,//合同方金额
+        gnPccurrency: null,//币别
+        gnPcpayment: null,//已支付金额
+        gnPcfixedprice: null,//锁定金额
+          gnPcbalance: null//剩余金额
       },
       hid: 2,
       // 表单校验
-      rules: {},
+      rules1: {
+        eHname: [
+          { required: true, message: '合同名称不能为空', trigger: 'blur' }
+        ],
+        eStartdate: [
+          { required: true, message: '开始时间不能为空', trigger: 'blur' }
+        ],
+        eEnddate: [
+          { required: true, message: '结束时间不能为空', trigger: 'blur' }
+        ]
+      },
+      rules2: {
+        // gnPbcif: [
+        //   { required: true, message: '乙方联系方式不能为空', trigger: 'blur' },
+        //   {
+        //     pattern: /^1[3456789]\d{9}$/,
+        //     message: '请输入正确的手机号码',
+        //     trigger: 'blur'
+        //   }
+        // ]
+      },
+      rules3: {},
       selectRow: null,
-      //添加的值
-      date: {}
+      //附件
+      ComPubAttachments: null
     }
   },
   mounted() {
@@ -580,18 +576,42 @@ export default {
   methods: {
     //创建合同
     addXy() {
-      this.date['bsContract'] = { ...this.form }
-      this.date['bsInventoryList'] = [...this.lTableData]
-      this.date['bsPaymentList'] = [...this.payTableData]
-      this.date['bsSign'] = { ...this.qsFormData }
-      addContract(this.date).then(response => {
+      this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
+        delete e.id
+        if (e.tid == null) {
+          // 如果存在空的tid，直接跳过当前元素
+          return false
+        }
+        return true
+      })
+      this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
+        delete e.id
+        if (e.payContent == null || e.payAmount == null) {
+          // 如果存在空的tid，直接跳过当前元素
+          return false
+        }
+        return true
+      })
+
+      this.form.bsSign = this.qsFormData
+      this.form['ComPubAttachments'] = this.ComPubAttachments
+      addContract(this.form).then(response => {
         console.log(response)
       })
     },
     //上传协议文件-------------------------------------------------
-    success(response, file, fileList) {
-      console.log(222)
-      this.fileList.push(file)
+    handleExceed1(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove1(file) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    success1(response, file, fileList) {
+      console.log(111)
+      this.fileList1.push(file)
+      console.log(fileList)
+      console.log(response)
+      console.log(file)
       let hhh = fileList.map(obj => {
         let newObj = obj
         delete newObj.url
@@ -606,16 +626,57 @@ export default {
         return newObj
       })
       this.form.eImage = JSON.stringify(hhh)
-      console.log(this.queryParams.eImage)
-      // addManagement(this.queryParams).then(response => {
-      //   console.log(response)
-      // })
+      console.log(this.form.eImage)
     },
-    handleExceed(files, fileList1) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList1.length} 个文件`)
+    handleExceed2(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
-    beforeRemove(file, fileList1) {
+    beforeRemove2(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    success2(response, file, fileList) {
+      console.log(222)
+      this.fileList2.push(file)
+      let hhh = fileList.map(obj => {
+        let newObj = obj
+        delete newObj.url
+        newObj.url = obj.response.data.url
+        delete newObj.name
+        newObj.name = obj.response.data.name
+        delete newObj.response
+        delete newObj.raw
+        delete newObj.percentage
+        delete newObj.status
+        delete newObj.uid
+        return newObj
+      })
+      this.form.eDocuments = JSON.stringify(hhh)
+      console.log(this.form.eDocuments)
+    },
+    handleExceed3(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove3(file) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    success3(response, file, fileList) {
+      console.log(333)
+      this.fileList3.push(file)
+      let hhh = fileList.map(obj => {
+        let newObj = obj
+        delete newObj.url
+        newObj.url = obj.response.data.url
+        delete newObj.name
+        newObj.name = obj.response.data.name
+        delete newObj.response
+        delete newObj.raw
+        delete newObj.percentage
+        delete newObj.status
+        delete newObj.uid
+        return newObj
+      })
+      this.ComPubAttachments = JSON.stringify(hhh)
+      console.log(this.ComPubAttachments)
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
@@ -640,6 +701,7 @@ export default {
         let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
         let kk = total + totalValue // 将每行的小计相加得到总价格
         this.form.eAmount = kk.toFixed(2)
+        this.qsFormData.gnPbamount = kk.toFixed(2)
         return kk
       }, 0)
     },
@@ -656,17 +718,20 @@ export default {
       getOperator(this.hid).then(response => {
         console.log(response)
         let k = response.data
-        this.qsFormData.gnPbContact = k.ywName
-        this.qsFormData.gnPbCif = k.ywPhone
+        this.qsFormData.gnPbcontact = k.ywName
+        this.qsFormData.gnPbcif = k.ywPhone
       })
       /* 供应商信息 */
       getSupplier(this.hid).then(res => {
+        console.log('打印了供应商的信息')
         console.log(res)
         let k = res.data
-        this.qsFormData.gnPbName = k.hName
-        this.qsFormData.gnPbAddress = k.hAddress
-        this.qsFormData.gnPbBank = k.hBankAddress
-        this.qsFormData.gnPbAccount = k.hAccount
+        this.qsFormData.gnPbname = k.hName
+        this.qsFormData.gnPbaddress = k.hAddress
+        this.qsFormData.gnPbbank = k.hBankAddress
+        this.qsFormData.gnPbaccount = k.hAccount
+        this.qsFormData.gnPbid = k.hid
+        this.form.hid = k.hid
       })
     },
     //产品行点击事件
@@ -744,11 +809,11 @@ export default {
     },
     /* 签署执行状态 */
     qsHandleChange(value) {
-      this.qsValue = value  // 更新选择项的值
-      if (this.qsValue == 0) {
-        this.qsFormData.gnPcCurrency = null
+      this.qsFormData.gnSignatorycount = value  // 更新选择项的值
+      if (this.gnSignatorycount == 0) {
+        this.qsFormData.gnPccurrency = null
       } else {
-        this.qsFormData.gnPcCurrency = '人民币'
+        this.qsFormData.gnPccurrency = '人民币'
       }
     },
     back1() {
@@ -810,6 +875,8 @@ export default {
       const newRow = {}
       newRow.id = this.payTableData.length + 1
       newRow.payer = '鸿鹄科技有限公司'
+      newRow.hName = this.qsFormData.gnPbname
+      newRow.hid = this.form.hid
       this.payTableData.push(newRow)
     },
     //删除
