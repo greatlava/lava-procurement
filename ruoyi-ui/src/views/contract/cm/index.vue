@@ -71,10 +71,10 @@
                 <!--创建合同-->
                 <router-link :to="'add?sid='+scope.row.sid">
                   <el-button
-                    size="mini"
-                    type="text"
-                    icon="el-icon-folder-add"
-                    v-hasPermi="['system:contract:add']"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-folder-add"
+                      v-hasPermi="['system:contract:add']"
                   >创建合同
                   </el-button>
                 </router-link>
@@ -82,11 +82,11 @@
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total1>0"
-            :total="total1"
-            :page.sync="queryParams1.pageNum"
-            :limit.sync="queryParams1.pageSize"
-            @pagination="getList1"
+              v-show="total1>0"
+              :total="total1"
+              :page.sync="queryParams1.pageNum"
+              :limit.sync="queryParams1.pageSize"
+              @pagination="getList1"
           />
         </el-tab-pane>
 
@@ -109,39 +109,39 @@
               <template slot-scope="scope">
                 <!--状态1-->
                 <el-button
-                  v-if="scope.row.eStatus === 1"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-upload"
-                  @click=""
-                  v-hasPermi="['system:contract:upload']"
+                    v-if="scope.row.eStatus === 1"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-upload"
+                    @click=""
+                    v-hasPermi="['system:contract:upload']"
                 >上传签订合同
                 </el-button>
                 <!--状态2-->
                 <el-button
-                  v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-edit"
-                  @click=""
-                  v-hasPermi="['system:contract:edit']"
+                    v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-edit"
+                    @click=""
+                    v-hasPermi="['system:contract:edit']"
                 >编辑
                 </el-button>
                 <el-button
-                  v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click=""
-                  v-hasPermi="['system:contract:delete']"
+                    v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click=""
+                    v-hasPermi="['system:contract:delete']"
                 >删除
                 </el-button>
                 <!--状态3-->
                 <el-button
-                  v-if="scope.row.eStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.eStatus === 3"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >--
                 </el-button>
               </template>
@@ -175,38 +175,26 @@
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
+                    size="mini"
+                    type="text"
+                    @click=""
                 >变更
                 </el-button>
                 <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
+                    size="mini"
+                    type="text"
+                    @click=""
                 >补充
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
-                >验收
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
-                >付款
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total3>0"
-            :total="total3"
-            :page.sync="queryParams3.pageNum"
-            :limit.sync="queryParams3.pageSize"
-            @pagination="getList3"
+              v-show="total3>0"
+              :total="total3"
+              :page.sync="queryParams3.pageNum"
+              :limit.sync="queryParams3.pageSize"
+              @pagination="getList3"
           />
         </el-tab-pane>
 
@@ -306,17 +294,17 @@ export default {
         this.change = 1
         // 执行标签页first的查询操作
         this.getList1(),
-          console.log('执行标签页1的查询操作')
+            console.log('执行标签页1的查询操作')
       } else if (tab.name === 'second') {
         this.change = 2
         // 执行标签页second的查询操作
         this.getList2(),
-          console.log('执行标签页2的查询操作')
+            console.log('执行标签页2的查询操作')
       } else {
         // 执行标签页third的查询操作
         this.change = 2
         this.getList3(),
-          console.log('执行标签页3的查询操作')
+            console.log('执行标签页3的查询操作')
       }
     },
     query() {

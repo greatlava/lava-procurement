@@ -1,6 +1,8 @@
 package com.hh.pms.cm.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hh.pms.sae.domain.BsSupplier;
@@ -56,8 +58,8 @@ public class BsContract extends BaseEntity {
     /**
      * 交付日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "交付日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date eDeliveryTime;
 
     /**
@@ -106,7 +108,7 @@ public class BsContract extends BaseEntity {
      * 合同金额
      */
     @Excel(name = "合同金额")
-    private Long eAmount;
+    private BigDecimal eAmount;
 
     /**
      * 合同情况说明
@@ -132,6 +134,46 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同文件")
     private String eDocuments;
 
+    private List<BsInventory> bsInventoryList;
+
+    private List<BsPayment> bsPaymentList;
+
+    private BsSign bsSign;
+
+    private List<ComPubAttachments> comPubAttachments;
+
+    public List<ComPubAttachments> getComPubAttachments() {
+        return comPubAttachments;
+    }
+
+    public void setComPubAttachments(List<ComPubAttachments> comPubAttachments) {
+        this.comPubAttachments = comPubAttachments;
+    }
+
+    public List<BsInventory> getBsInventoryList() {
+        return bsInventoryList;
+    }
+
+    public void setBsInventoryList(List<BsInventory> bsInventoryList) {
+        this.bsInventoryList = bsInventoryList;
+    }
+
+    public List<BsPayment> getBsPaymentList() {
+        return bsPaymentList;
+    }
+
+    public void setBsPaymentList(List<BsPayment> bsPaymentList) {
+        this.bsPaymentList = bsPaymentList;
+    }
+
+    public BsSign getBsSign() {
+        return bsSign;
+    }
+
+    public void setBsSign(BsSign bsSign) {
+        this.bsSign = bsSign;
+    }
+
     public void setEid(Long eid) {
         this.eid = eid;
     }
@@ -146,14 +188,6 @@ public class BsContract extends BaseEntity {
 
     public Long getHid() {
         return hid;
-    }
-
-    public void setGnId(Long gnId) {
-        this.gnId = gnId;
-    }
-
-    public Long getGnId() {
-        return gnId;
     }
 
     public void seteHcode(String eHcode) {
@@ -228,11 +262,11 @@ public class BsContract extends BaseEntity {
         return eEnddate;
     }
 
-    public void seteAmount(Long eAmount) {
+    public void seteAmount(BigDecimal eAmount) {
         this.eAmount = eAmount;
     }
 
-    public Long geteAmount() {
+    public BigDecimal geteAmount() {
         return eAmount;
     }
 
@@ -273,7 +307,6 @@ public class BsContract extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("eid", getEid())
                 .append("hid", getHid())
-                .append("gnId", getGnId())
                 .append("eHcode", geteHcode())
                 .append("eHname", geteHname())
                 .append("eStatus", geteStatus())
@@ -292,6 +325,9 @@ public class BsContract extends BaseEntity {
                 .append("eOpinion", geteOpinion())
                 .append("eImage", geteImage())
                 .append("eDocuments", geteDocuments())
+                .append("BsInventoryList", getBsInventoryList())
+                .append("PaymentList", getBsPaymentList())
+                .append("BsSign", getBsSign())
                 .toString();
     }
 }

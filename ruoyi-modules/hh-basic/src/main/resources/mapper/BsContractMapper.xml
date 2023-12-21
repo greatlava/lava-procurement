@@ -7,7 +7,6 @@
     <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult">
         <result property="eid" column="eid"/>
         <result property="hid" column="hid"/>
-        <result property="gnId" column="gn_id"/>
         <result property="eHcode" column="e_hcode"/>
         <result property="eHname" column="e_hname"/>
         <result property="eStatus" column="e_status"/>
@@ -61,7 +60,6 @@
     <sql id="selectBsContractVo">
         select eid,
                hid,
-               gn_id,
                e_hcode,
                e_hname,
                e_status,
@@ -88,7 +86,6 @@
         inner join bs_supplier s on c.hid = s.hid
         <where>
             <if test="hid != null ">and c.hid = #{hid}</if>
-            <if test="gnId != null ">and gn_id = #{gnId}</if>
             <if test="eHcode != null  and eHcode != ''">and e_hcode like concat('%', #{eHcode}, '%')</if>
             <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
             <if test="eStatus != null ">and e_status = #{eStatus}</if>
@@ -112,12 +109,11 @@
         where eid = #{eid}
     </select>
 
-    <insert id="insertBsContract" parameterType="com.hh.pms.cm.domain.BsContract">
+    <insert id="insertBsContract" parameterType="com.hh.pms.cm.domain.BsContract" keyProperty="eid" useGeneratedKeys="true">
         insert into bs_contract
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="eid != null">eid,</if>
             <if test="hid != null">hid,</if>
-            <if test="gnId != null">gn_id,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
             <if test="eStatus != null">e_status,</if>
@@ -140,7 +136,6 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="eid != null">#{eid},</if>
             <if test="hid != null">#{hid},</if>
-            <if test="gnId != null">#{gnId},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
             <if test="eStatus != null">#{eStatus},</if>
@@ -166,7 +161,6 @@
         update bs_contract
         <trim prefix="SET" suffixOverrides=",">
             <if test="hid != null">hid = #{hid},</if>
-            <if test="gnId != null">gn_id = #{gnId},</if>
             <if test="eHcode != null">e_hcode = #{eHcode},</if>
             <if test="eHname != null">e_hname = #{eHname},</if>
             <if test="eStatus != null">e_status = #{eStatus},</if>

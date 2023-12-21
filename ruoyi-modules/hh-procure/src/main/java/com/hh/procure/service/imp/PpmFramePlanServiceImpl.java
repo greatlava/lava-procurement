@@ -6,6 +6,7 @@ import com.hh.procure.service.IPpmFramePlanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Service
 public class PpmFramePlanServiceImpl implements IPpmFramePlanService {
-    @Autowired
+    @Resource
     private PpmFramePlanMapper ppmFramePlanMapper;
 
     /**
@@ -93,5 +94,11 @@ public class PpmFramePlanServiceImpl implements IPpmFramePlanService {
     @Override
     public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan) {
         return ppmFramePlanMapper.updateFarmeworkPlanStatusByJhId(ppmFramePlan);
+    }
+
+    //查询已完成并且未创建框架协议的框架计划
+    @Override
+    public List<PpmFramePlan> selectBsFramePlanList(PpmFramePlan ppmFramePlan) {
+        return ppmFramePlanMapper.selectBsFramePlanList(ppmFramePlan);
     }
 }
