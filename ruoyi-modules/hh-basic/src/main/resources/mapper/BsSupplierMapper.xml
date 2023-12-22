@@ -37,6 +37,54 @@
         <result property="hPassword" column="h_password"/>
     </resultMap>
 
+    <resultMap type="com.hh.pms.sae.domain.NobidNonPro" id="NobidNonProResult">
+        <result property="gid" column="gid"/>
+        <result property="xyId" column="xy_id"/>
+        <result property="gCode" column="g_code"/>
+        <result property="gName" column="g_name"/>
+        <result property="gIsPublic" column="g_is_public"/>
+        <result property="gSpawnTime" column="g_spawn_time"/>
+        <result property="gDeadline" column="g_deadline"/>
+        <result property="gStatus" column="g_status"/>
+        <result property="gCount" column="g_count"/>
+        <result property="gUnit" column="g_unit"/>
+        <result property="gRounds" column="g_rounds"/>
+        <result property="gTendertype" column="g_tenderType"/>
+    </resultMap>
+
+    <resultMap type="com.hh.pms.sae.domain.PpmDevice" id="PpmDeviceResult">
+        <result property="tid" column="tid"/>
+        <result property="tName" column="t_name"/>
+        <result property="category" column="category"/>
+        <result property="tUnit" column="t_unit"/>
+        <result property="shui" column="shui"/>
+        <result property="tIllustrate" column="t_illustrate"/>
+        <result property="duCode" column="du_code"/>
+        <result property="tNotes" column="t_notes"/>
+        <result property="tModel" column="t_model"/>
+        <result property="tPrice" column="t_price"/>
+        <result property="vCount" column="v_count"/>
+        <result property="vPerson" column="v_person"/>
+    </resultMap>
+
+    <resultMap type="com.hh.pms.sae.domain.BidSubmission" id="BidSubmissionResult">
+        <result property="tdId" column="td_id"/>
+        <result property="sid" column="sid"/>
+        <result property="hid" column="hid"/>
+        <result property="tdStatus" column="td_status"/>
+        <result property="tdSuccessTime" column="td_success_time"/>
+        <result property="tdFailTime" column="td_fail_time"/>
+        <result property="fjFiles" column="fj_files"/>
+        <result property="sCode" column="s_code"/>
+        <result property="sName" column="s_name"/>
+        <result property="sWay" column="s_way"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sEndTime" column="s_end_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
     <sql id="selectBsSupplierVo">
         select hid,
                zr_id,
@@ -327,5 +375,41 @@
         <include refid="selectBsSupplierVo"/>
         where h_loginaccount = #{hLoginAccount}
         and h_password = #{hPassword}
+    </select>
+
+    <select id="selectAllNoBid" resultMap="NobidNonProResult">
+        select *
+        from nobid_non_pro
+        <where>
+            g_tenderType = 1 and g_deadline &gt; now()
+            <if test="gName != null  and gName != ''">and g_name like concat('%', #{gName}, '%')</if>
+        </where>
+        order by g_spawn_time desc
+    </select>
+
+    <select id="queryOneByCode" resultMap="NobidNonProResult">
+        select *
+        from nobid_non_pro
+        where g_code = #{code}
+    </select>
+
+    <select id="listDev" resultMap="PpmDeviceResult">
+        SELECT e.*,
+               i.v_count,
+               i.v_person
+        FROM nobid_non_pro p
+                 JOIN ppm_line_items i ON p.gid = i.gid
+                 JOIN ppm_device e ON i.tid = e.tid
+        WHERE p.gid = #{gid}
+    </select>
+
+    <select id="listSubmission" resultMap="BidSubmissionResult">
+        select *
+        from bid_submission s
+        inner join bid_tender t on s.sid = t.sid
+        <where>
+            s.hid = #{hid}
+            <if test="sName != null and sName != ''">and s_name like concat('%',#{sName},'%')</if>
+        </where>
     </select>
 </mapper>

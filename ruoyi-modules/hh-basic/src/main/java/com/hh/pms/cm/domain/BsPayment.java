@@ -6,6 +6,7 @@ import com.ruoyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class BsPayment extends BaseEntity {
@@ -64,7 +65,7 @@ public class BsPayment extends BaseEntity {
      * 付款金额
      */
     @Excel(name = "付款金额")
-    private Long payAmount;
+    private BigDecimal payAmount;
 
     /**
      * 违约责任
@@ -136,11 +137,11 @@ public class BsPayment extends BaseEntity {
         return payTerms;
     }
 
-    public void setPayAmount(Long payAmount) {
+    public void setPayAmount(BigDecimal payAmount) {
         this.payAmount = payAmount;
     }
 
-    public Long getPayAmount() {
+    public BigDecimal                                                                getPayAmount() {
         return payAmount;
     }
 

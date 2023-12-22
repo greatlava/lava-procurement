@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.ComQuotationMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.ComQuotation" id="ComQuotationResult">
+        <result property="bjId" column="bj_id"/>
+        <result property="gfId" column="gf_id"/>
+        <result property="bjSecond" column="bj_second"/>
+        <result property="bjTotal" column="bj_total"/>
+        <result property="bjHid" column="bj_hid"/>
+        <result property="isDelete" column="is_delete"/>
+    </resultMap>
+
+    <sql id="selectComQuotationVo">
+        select bj_id, gf_id, bj_second, bj_total, bj_hid, is_delete
+        from com_quotation
+    </sql>
+
+    <select id="selectComQuotationList" parameterType="com.hh.pms.sae.domain.ComQuotation"
+            resultMap="ComQuotationResult">
+        <include refid="selectComQuotationVo"/>
+        <where>
+            <if test="gfId != null  and gfId != ''">and gf_id = #{gfId}</if>
+            <if test="bjSecond != null ">and bj_second = #{bjSecond}</if>
+            <if test="bjTotal != null ">and bj_total = #{bjTotal}</if>
+            <if test="bjHid != null ">and bj_hid = #{bjHid}</if>
+            <if test="isDelete != null ">and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+
+    <select id="selectComQuotationByBjId" parameterType="Long" resultMap="ComQuotationResult">
+        <include refid="selectComQuotationVo"/>
+        where bj_id = #{bjId}
+    </select>
+
+    <insert id="insertComQuotation" parameterType="com.hh.pms.sae.domain.ComQuotation">
+        insert into com_quotation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bjId != null">bj_id,</if>
+            <if test="gfId != null">gf_id,</if>
+            <if test="bjSecond != null">bj_second,</if>
+            <if test="bjTotal != null">bj_total,</if>
+            <if test="bjHid != null">bj_hid,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bjId != null">#{bjId},</if>
+            <if test="gfId != null">#{gfId},</if>
+            <if test="bjSecond != null">#{bjSecond},</if>
+            <if test="bjTotal != null">#{bjTotal},</if>
+            <if test="bjHid != null">#{bjHid},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+        </trim>
+    </insert>
+
+    <update id="updateComQuotation" parameterType="com.hh.pms.sae.domain.ComQuotation">
+        update com_quotation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bjSecond != null">bj_second = #{bjSecond},</if>
+            <if test="bjTotal != null">bj_total = #{bjTotal},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where gf_id = #{gfId} and bj_hid = #{bjHid}
+    </update>
+
+    <delete id="deleteComQuotationByBjId" parameterType="Long">
+        delete
+        from com_quotation
+        where bj_id = #{bjId}
+    </delete>
+
+    <delete id="deleteComQuotationByBjIds" parameterType="String">
+        delete from com_quotation where bj_id in
+        <foreach item="bjId" collection="array" open="(" separator="," close=")">
+            #{bjId}
+        </foreach>
+    </delete>
+
+    <select id="oneQuotation" resultMap="ComQuotationResult">
+        select *
+        from com_quotation
+        where gf_id = #{gfId}
+          and bj_hid = #{bjHid}
+          and is_delete = 0
+    </select>
+</mapper>

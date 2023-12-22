@@ -14,13 +14,11 @@ import com.hh.pms.cm.domain.CodeRulesResult;
 import com.hh.pms.cm.service.IComCodeRulesService;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
-import com.hh.pms.sae.domain.BsAccess;
-import com.hh.pms.sae.domain.BsOperator;
+import com.hh.pms.sae.domain.*;
 import com.hh.pms.sae.service.IBsAccessService;
 import com.hh.pms.sae.service.IBsOperatorService;
 import com.hh.pms.sae.utils.CodeUtils;
 import com.hh.pms.sae.utils.TokenUtil;
-import com.hh.pms.sae.domain.BsSupplier;
 import com.hh.pms.sae.service.IBsSupplierService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -274,5 +272,35 @@ public class BsSupplierController extends BaseController {
     @DeleteMapping("/{hids}")
     public AjaxResult remove(@PathVariable Long[] hids) {
         return toAjax(bsSupplierService.deleteBsSupplierByHids(hids));
+    }
+
+    /**
+     * 查询非招标项目
+     */
+//    @RequiresPermissions("system:supplier:list")
+    @GetMapping("/noBidList")
+    public TableDataInfo noBidList(NobidNonPro nobidNonPro) {
+        startPage();
+        List<NobidNonPro> list = bsSupplierService.selectAllNoBid(nobidNonPro);
+        return getDataTable(list);
+    }
+
+    @GetMapping("/listDev")
+    public TableDataInfo listDev(NobidNonPro nobidNonPro) {
+        startPage();
+        List<PpmDevice> list = bsSupplierService.listDev(nobidNonPro.getGid());
+        return getDataTable(list);
+    }
+
+    @GetMapping(value = "/fromCode")
+    public AjaxResult getNobid(String code) {
+        return success(bsSupplierService.queryOneByCode(code));
+    }
+
+    @GetMapping("/listSubmission")
+    public TableDataInfo listSubmission(Long hid, String sName) {
+        startPage();
+        List<BidSubmission> list = bsSupplierService.listSubmission(hid, sName);
+        return getDataTable(list);
     }
 }

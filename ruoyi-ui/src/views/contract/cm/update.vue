@@ -258,7 +258,7 @@
             <el-input v-model="qsFormData.gnPbaccount" clearable class="cInput"/>
           </el-form-item>
           <el-form-item label="合同方金额" prop="gnPbamount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="币别" prop="gnPbcurrency" style="width: 45%">
             <el-input v-model="qsFormData.gnPbcurrency" clearable class="cInput"/>
@@ -383,10 +383,10 @@
 
 
 <script>
-import { getTender } from '../../../api/system/tender/tender'
-import { addContract, getContract, listDevice } from '../../../api/system/addContract'
+import { addContract, getContract, listDevice, listInventory, listPayment } from '../../../api/system/addContract'
 import { getSupplier, listSupplier } from '../../../api/system/supplier'
 import { getOperator } from '../../../api/system/operator'
+import { getTender } from '../../../api/system/tender/tender'
 
 export default {
   data() {
@@ -395,8 +395,8 @@ export default {
       fileList2: [],
       fileList3: [],
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      /* 招标项目ID */
-      sid: this.$route.query.sid,
+      /* 合同ID */
+      eid: this.$route.query.eid,
       /* 标的清单 */
       //合同标的表格
       lTableData: [],
@@ -568,8 +568,10 @@ export default {
   },
   created() {
     //查询相关项目信息
-    this.selectTenderBySid()
+    this.selectContractByEid()
     this.selectSupplier()
+    this.selectListInventory()
+    this.selectListPayment()
     this.getDicts('bs_contract_pay').then(res => {
       this.payTypes = res.data
     })
@@ -577,8 +579,6 @@ export default {
   methods: {
     //创建合同
     addXy() {
-      this.form.sid = this.sid
-      alert(this.form.sid)
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         if (e.tid == null) {
@@ -766,10 +766,28 @@ export default {
     closeDialog2() {
       this.GysDialog = false
     },
+    /* 查询合同信息 */
+    selectContractByEid() {
+      getContract(this.eid).then(response => {
+        console.log('打印了合同的信息')
+        console.log(response)
+        let k = response.data
+        this.form.eHname = k.eHname
+        this.form.eDescription = k.eDescription
+        this.form.eStartdate = k.eStartdate
+        this.form.eEnddate = k.eEnddate
+        this.form.eDeliveryTime = k.eDeliveryTime
+        this.form.eAmount = k.eAmount.toFixed(2)
+        this.form.eType = k.eType
+        this.form.eCon = k.eCon
+        this.form.sid = k.sid
+        //查询相关项目信息
+        this.selectTenderBySid()
+      })
+    },
     /* 查询相关项目信息 */
     selectTenderBySid() {
-      getTender(this.sid).then(response => {
-        // console.log(response)
+      getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName
         this.form.tenderNo = k.sCode
@@ -788,6 +806,41 @@ export default {
           this.form.tenderType = '服务类'
         }
         this.form.eType = '一般采购合同'
+      })
+    },
+    //查询合同内的产品信息
+    selectListInventory() {
+      this.loading = true
+      listInventory({ 'eid': this.eid }).then(response => {
+        console.log(response.rows)
+        // this.lTableData = response.rows
+        let list = response.rows
+        list.forEach((e, i) => {
+          this.lTableData.push({
+            id: i + 1,
+            inName: e.inName,
+            inModel: e.inModel,
+            inVat: (e.inVat).toFixed(2),
+            inUnit: e.inUnit,
+            inSubtotal: (e.inCount * e.inVat).toFixed(2),
+            tid: e.tid,
+            inCount: e.inCount,
+            inId: e.inId
+          })
+        })
+        this.loading = false
+        this.lCalculateTotalSubtotal()
+      })
+    },
+    selectListPayment() {
+      listPayment({ 'eid': this.eid }).then(response => {
+        console.log(response.rows)
+        let list = response.rows
+        list.forEach((e, i) => {
+          this.payTableData.push({
+            id: i + 1
+          })
+        })
       })
     },
     //显示产品对话框

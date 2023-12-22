@@ -2,6 +2,7 @@ package com.hh.pms.cm.service;
 
 import java.util.List;
 
+import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 
 /**
@@ -58,4 +59,10 @@ public interface IBsContractService {
      * @return 结果
      */
     public int deleteBsContractByEid(Long eid);
+
+     //修改招标项目eid
+    public int updateBidTenderEid(BidTender bidTender);
+
+    //查询招标项目ID
+    public BsContract selectBidTenderSid(Long eid);
 }

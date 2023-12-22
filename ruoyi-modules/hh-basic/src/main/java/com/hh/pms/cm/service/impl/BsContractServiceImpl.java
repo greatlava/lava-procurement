@@ -2,6 +2,7 @@ package com.hh.pms.cm.service.impl;
 
 import java.util.List;
 
+import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.stereotype.Service;
@@ -87,5 +88,17 @@ public class BsContractServiceImpl implements IBsContractService {
     @Override
     public int deleteBsContractByEid(Long eid) {
         return bsContractMapper.deleteBsContractByEid(eid);
+    }
+
+    //修改招标项目eid
+    @Override
+    public int updateBidTenderEid(BidTender bidTender) {
+        return bsContractMapper.updateBidTenderEid(bidTender);
+    }
+
+    //查询招标项目ID
+    @Override
+    public BsContract selectBidTenderSid(Long eid) {
+        return bsContractMapper.selectBidTenderBySid(eid);
     }
 }

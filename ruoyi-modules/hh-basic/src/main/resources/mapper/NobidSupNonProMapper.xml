@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.pms.sae.mapper.NobidSupNonProMapper">
+
+    <resultMap type="com.hh.pms.sae.domain.NobidSupNonPro" id="NobidSupNonProResult">
+        <result property="gfId" column="gf_id"/>
+        <result property="hid" column="hid"/>
+        <result property="gfName" column="gf_name"/>
+        <result property="gfUnit" column="gf_unit"/>
+        <result property="gfWay" column="gf_way"/>
+        <result property="gfLn" column="gf_ln"/>
+        <result property="gfTp" column="gf_tp"/>
+        <result property="gfEba" column="gf_eba"/>
+        <result property="gfSb" column="gf_sb"/>
+        <result property="gfQtime" column="gf_qtime"/>
+        <result property="gfQstate" column="gf_qstate"/>
+    </resultMap>
+
+    <sql id="selectNobidSupNonProVo">
+        select gf_id,
+               hid,
+               gf_name,
+               gf_unit,
+               gf_way,
+               gf_ln,
+               gf_tp,
+               gf_eba,
+               gf_sb,
+               gf_qtime,
+               gf_qstate
+        from nobid_sup_non_pro
+    </sql>
+
+    <select id="selectNobidSupNonProList" parameterType="com.hh.pms.sae.domain.NobidSupNonPro"
+            resultMap="NobidSupNonProResult">
+        <include refid="selectNobidSupNonProVo"/>
+        <where>
+            <if test="hid != null ">and hid = #{hid}</if>
+            <if test="gfName != null  and gfName != ''">and gf_name like concat('%', #{gfName}, '%')</if>
+            <if test="gfUnit != null  and gfUnit != ''">and gf_unit = #{gfUnit}</if>
+            <if test="gfWay != null ">and gf_way = #{gfWay}</if>
+            <if test="gfLn != null ">and gf_ln = #{gfLn}</if>
+            <if test="gfTp != null ">and gf_tp = #{gfTp}</if>
+            <if test="gfEba != null ">and gf_eba = #{gfEba}</if>
+            <if test="gfSb != null ">and gf_sb = #{gfSb}</if>
+            <if test="gfQtime != null ">and gf_qtime = #{gfQtime}</if>
+            <if test="gfQstate != null ">and gf_qstate = #{gfQstate}</if>
+        </where>
+    </select>
+
+    <select id="selectNobidSupNonProByGfId" parameterType="String" resultMap="NobidSupNonProResult">
+        <include refid="selectNobidSupNonProVo"/>
+        where gf_id = #{gfId}
+    </select>
+
+    <insert id="insertNobidSupNonPro" parameterType="com.hh.pms.sae.domain.NobidSupNonPro">
+        insert into nobid_sup_non_pro
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gfId != null">gf_id,</if>
+            <if test="hid != null">hid,</if>
+            <if test="gfName != null">gf_name,</if>
+            <if test="gfUnit != null">gf_unit,</if>
+            <if test="gfWay != null">gf_way,</if>
+            <if test="gfLn != null">gf_ln,</if>
+            <if test="gfTp != null">gf_tp,</if>
+            <if test="gfEba != null">gf_eba,</if>
+            <if test="gfSb != null">gf_sb,</if>
+            <if test="gfQtime != null">gf_qtime,</if>
+            <if test="gfQstate != null">gf_qstate,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gfId != null">#{gfId},</if>
+            <if test="hid != null">#{hid},</if>
+            <if test="gfName != null">#{gfName},</if>
+            <if test="gfUnit != null">#{gfUnit},</if>
+            <if test="gfWay != null">#{gfWay},</if>
+            <if test="gfLn != null">#{gfLn},</if>
+            <if test="gfTp != null">#{gfTp},</if>
+            <if test="gfEba != null">#{gfEba},</if>
+            <if test="gfSb != null">#{gfSb},</if>
+            <if test="gfQtime != null">#{gfQtime},</if>
+            <if test="gfQstate != null">#{gfQstate},</if>
+        </trim>
+    </insert>
+
+    <update id="updateNobidSupNonPro" parameterType="com.hh.pms.sae.domain.NobidSupNonPro">
+        update nobid_sup_non_pro
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gfName != null">gf_name = #{gfName},</if>
+            <if test="gfUnit != null">gf_unit = #{gfUnit},</if>
+            <if test="gfWay != null">gf_way = #{gfWay},</if>
+            <if test="gfLn != null">gf_ln = #{gfLn},</if>
+            <if test="gfTp != null">gf_tp = #{gfTp},</if>
+            <if test="gfEba != null">gf_eba = #{gfEba},</if>
+            <if test="gfSb != null">gf_sb = #{gfSb},</if>
+            <if test="gfQtime != null">gf_qtime = #{gfQtime},</if>
+            <if test="gfQstate != null">gf_qstate = #{gfQstate},</if>
+        </trim>
+        where gf_id = #{gfId} and hid = #{hid}
+    </update>
+
+    <delete id="deleteNobidSupNonProByGfId" parameterType="String">
+        delete
+        from nobid_sup_non_pro
+        where gf_id = #{gfId}
+    </delete>
+
+    <delete id="deleteNobidSupNonProByGfIds" parameterType="String">
+        delete from nobid_sup_non_pro where gf_id in
+        <foreach item="gfId" collection="array" open="(" separator="," close=")">
+            #{gfId}
+        </foreach>
+    </delete>
+
+    <select id="checkIsJoin" resultMap="NobidSupNonProResult">
+        select *
+        from nobid_sup_non_pro
+        where hid = #{hid}
+          and gf_id = #{gf_id}
+    </select>
+</mapper>
