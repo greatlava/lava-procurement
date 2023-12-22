@@ -14,7 +14,6 @@
        </el-col>
        <right-toolbar @queryTable="getList"></right-toolbar>
      </el-row>
-
      <el-table v-loading="loading" :data="candidateList">
        <el-table-column label="序号" type="index" align="center" />
        <el-table-column label="供应商名称" align="center" prop="hName"/>
@@ -58,7 +57,7 @@
            <el-input v-model="form.sid" placeholder="请输入招标项目ID" :disabled="true"/>
          </el-form-item>
          <el-form-item label="供应商名称" prop="hid" class="form-input">
-           <el-select v-model="form.hid"  placeholder="请选择">
+           <el-select v-model="form.hid" @change="changeSelect3" placeholder="请选择">
              <el-option
                v-for="(item,index) in submissionList"
                :key="index"
@@ -84,7 +83,7 @@
            <el-input v-model="form.zRanking" placeholder="请输入排名" />
          </el-form-item>
          <el-form-item label="是否中标" prop="zBidder" class="form-input">
-           <el-select v-model="form.zBidder+''"  @change="changeSelect2" placeholder="请选择">
+           <el-select v-model="form.zBidder+''"  @change="changeSelect2" disabled placeholder="请选择">
              <el-option value="0" label="是"/>
              <el-option value="1" label="否"/>
            </el-select>
@@ -295,8 +294,21 @@ export default {
   },
   methods: {
     //是否推荐下拉框改变
+    changeSelect3(value){
+      //根据id拿供应商
+      getSupplier(value).then(res=>{
+        //获取供应商名称
+        this.form.hName = res.data.hName;
+      });
+    },
+    //是否推荐下拉框改变
     changeSelect1(value){
       this.form.zRecommend = value;
+      //根据id拿供应商
+      getSupplier(this.form.hid).then(res=>{
+        //获取供应商名称
+        this.form.hName = res.data.hName;
+      });
     },
     //是否中标下拉框改变
     changeSelect2(value){
@@ -320,6 +332,22 @@ export default {
     },
     // 取消按钮
     cancel() {
+      // 收集——上传文件的列表(专家签到表)
+      this.uploadFiles=[];
+      // 收集——上传文件的个数(专家签到表)
+      this.filesLength= 0;
+      // 收集——上传文件的列表(审查表)
+      this.uploadFiles2= [];
+      // 收集——上传文件的个数(审查表)
+      this.filesLength2= 0;
+      // 收集——上传文件的列表(评审表)
+      this.uploadFiles3= [];
+      // 收集——上传文件的个数(评审表)
+      this.filesLength3= 0;
+      // 收集——上传文件的列表(最终汇总表)
+      this.uploadFiles4= [];
+      // 收集——上传文件的个数(最终汇总表)
+      this.filesLength4= 0;
       this.open = false;
       this.reset();
     },
@@ -346,6 +374,7 @@ export default {
       this.reset();
       this.isType = "add";
       this.form.sid =this.$route.query.sid;
+      this.form.zBidder ="1";//默认没有中标
       this.open = true;
       this.title = "添加中标候选人";
     },
@@ -381,27 +410,22 @@ export default {
           if (valid) {
             //1:如果没有文件，直接上传form表单
             if(this.filesLength == 0){
-              //根据id拿供应商
-              getSupplier(this.form.hid).then(res=>{
-                //获取供应商名称
-                this.form.hName = res.data.hName;
-                //判断type值  update：修改  add：新增
-                if (this.isType === 'update') {
-                  updateCandidate(this.form).then(response => {
-                    this.$modal.msgSuccess("修改成功");
-                    this.open = false;
-                    this.getList();
-                  });
-                } else if(this.isType === 'add'){
-                  this.form.sid = this.$route.query.sid;//确定对应招标项目
-                  addCandidate(this.form).then(response => {
-                    this.$modal.msgSuccess("新增成功");
-                    this.open = false;
-                    this.getList();
-                  });
-                }
-                this.cancel();
-              });
+              //判断type值  update：修改  add：新增
+              if (this.isType === 'update') {
+                updateCandidate(this.form).then(response => {
+                  this.$modal.msgSuccess("修改成功");
+                  this.open = false;
+                  this.getList();
+                });
+              } else if(this.isType === 'add'){
+                this.form.sid = this.$route.query.sid;//确定对应招标项目
+                addCandidate(this.form).then(response => {
+                  this.$modal.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                });
+              }
+              this.cancel();
 
             }else{
               //2:如果有文件
@@ -570,11 +594,7 @@ export default {
           return newObj;
         });
         this.form.zSummary = JSON.stringify(updatedArray);
-        //根据id拿供应商
-        getSupplier(this.form.hid).then(res=>{
-          //获取供应商名称
-          this.form.hName = res.data.hName;
-          if(this.isType ==='update'){
+        if(this.isType ==='update'){
             //修改公告
             updateCandidate(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -588,7 +608,6 @@ export default {
               this.getList();
             });
           }
-        });
       }
       this.cancel();
       this.upload.isUploading = false;

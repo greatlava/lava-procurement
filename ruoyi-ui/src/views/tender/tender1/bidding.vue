@@ -56,7 +56,7 @@
         <expert></expert>
       </el-tab-pane>
       <el-tab-pane label="确定中标人" name="determineWin" style="font-size: 16px">
-        <expert></expert>
+        <determine-win></determine-win>
       </el-tab-pane>
       <el-tab-pane label="中标结果公示" name="annWin" style="font-size: 16px">
         <expert></expert>
@@ -79,6 +79,7 @@ import GetTender from "@/components/tender/getTender.vue";
 import Bid_submission from "@/components/tender/bid_submission.vue";
 import Expert from "@/components/tender/expert.vue";
 import BidEval from "@/components/tender/bidEval.vue";
+import DetermineWin from "@/components/tender/determineWin.vue";
 
 export default {
   components: {
@@ -89,7 +90,8 @@ export default {
     'getTender':GetTender,
     'bid_submission':Bid_submission,
     'expert':Expert,
-    'bidEval':BidEval
+    'bidEval':BidEval,
+    'determineWin':DetermineWin
   },
   data() {
     return {
