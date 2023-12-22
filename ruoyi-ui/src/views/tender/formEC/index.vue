@@ -1,42 +1,103 @@
 <template>
-  <el-upload
-    class="upload-demo"
-    action="http://localhost:9300/statics/"
-    :on-preview="handlePreview"
-    :on-remove="handleRemove"
-    :before-remove="beforeRemove"
-    multiple
-    :limit="3"
-    :on-exceed="handleExceed"
-    :file-list="fileList">
-    <el-button size="small" type="primary">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-  </el-upload>
+ <div  class="app-container">
+   <el-table
+     :data="tableData"
+     style="width: 100%">
+     <el-table-column type="expand">
+       <template slot-scope="props">
+         <el-form label-position="left" inline class="demo-table-expand">
+           <el-form-item label="商品名称">
+             <span>{{ props.row.name }}</span>
+           </el-form-item>
+           <el-form-item label="所属店铺">
+             <span>{{ props.row.shop }}</span>
+           </el-form-item>
+           <el-form-item label="商品 ID">
+             <span>{{ props.row.id }}</span>
+           </el-form-item>
+           <el-form-item label="店铺 ID">
+             <span>{{ props.row.shopId }}</span>
+           </el-form-item>
+           <el-form-item label="商品分类">
+             <span>{{ props.row.category }}</span>
+           </el-form-item>
+           <el-form-item label="店铺地址">
+             <span>{{ props.row.address }}</span>
+           </el-form-item>
+           <el-form-item label="商品描述">
+             <span>{{ props.row.desc }}</span>
+           </el-form-item>
+         </el-form>
+       </template>
+     </el-table-column>
+     <el-table-column
+       label="商品 ID"
+       prop="id">
+     </el-table-column>
+     <el-table-column
+       label="商品名称"
+       prop="name">
+     </el-table-column>
+     <el-table-column
+       label="描述"
+       prop="desc">
+     </el-table-column>
+   </el-table>
+ </div>
 </template>
+
+<style>
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+</style>
+
 <script>
-import {uploads} from "@/api/system/notice";
 export default {
   data() {
     return {
-      fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
-    };
-  },
-  methods: {
-    //	文件列表移除文件时
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    //点击文件列表中已上传的文件时
-    handlePreview(file) {
-      console.log(file);
-    },
-    //文件超出个数限制时
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-    },
-    //删除文件之前
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
+      tableData: [{
+        id: '12987122',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987123',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987125',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987126',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }]
     }
   }
 }

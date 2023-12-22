@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.hh.bidding.domain.BidCandidate" id="BidCandidateResult">
         <result property="zid"    column="zid"    />
         <result property="sid"    column="sid"    />
-        <result property="zBname"    column="z_bname"    />
+        <result property="hid"    column="hid"    />
         <result property="zFinal"    column="z_final"    />
         <result property="zFraction"    column="z_fraction"    />
         <result property="zRecommend"    column="z_recommend"    />
@@ -18,17 +18,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="zSummary"    column="z_summary"    />
         <result property="zBidder"    column="z_bidder"    />
         <result property="zSendTime"    column="z_send_time"    />
+        <result property="hName"    column="hName"    />
     </resultMap>
 
     <sql id="selectBidCandidateVo">
-        select zid, sid, z_bname, z_final, z_fraction, z_recommend, z_ranking, z_sign, z_censor, z_review, z_summary, z_bidder, z_send_time from bid_candidate
+        select zid,hName, sid, hid, z_final, z_fraction, z_recommend, z_ranking, z_sign, z_censor, z_review, z_summary, z_bidder, z_send_time from bid_candidate
     </sql>
 
     <select id="selectBidCandidateList" parameterType="com.hh.bidding.domain.BidCandidate" resultMap="BidCandidateResult">
         <include refid="selectBidCandidateVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
-            <if test="zBname != null  and zBname != ''"> and z_bname like concat('%', #{zBname}, '%')</if>
+            <if test="hid != null"> and hid =#{hid}</if>
             <if test="zFinal != null "> and z_final = #{zFinal}</if>
             <if test="zFraction != null "> and z_fraction = #{zFraction}</if>
             <if test="zRecommend != null "> and z_recommend = #{zRecommend}</if>
@@ -39,6 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zSummary != null  and zSummary != ''"> and z_summary = #{zSummary}</if>
             <if test="zBidder != null "> and z_bidder = #{zBidder}</if>
             <if test="zSendTime != null "> and z_send_time = #{zSendTime}</if>
+            <if test="hName != null "> and hName = #{hName}</if>
         </where>
     </select>
     
@@ -52,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="zid != null">zid,</if>
             <if test="sid != null">sid,</if>
-            <if test="zBname != null">z_bname,</if>
+            <if test="hid != null">hid,</if>
             <if test="zFinal != null">z_final,</if>
             <if test="zFraction != null">z_fraction,</if>
             <if test="zRecommend != null">z_recommend,</if>
@@ -63,11 +65,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zSummary != null">z_summary,</if>
             <if test="zBidder != null">z_bidder,</if>
             <if test="zSendTime != null">z_send_time,</if>
+            <if test="hName != null ">hName,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="zid != null">#{zid},</if>
             <if test="sid != null">#{sid},</if>
-            <if test="zBname != null">#{zBname},</if>
+            <if test="hid != null">#{hid},</if>
             <if test="zFinal != null">#{zFinal},</if>
             <if test="zFraction != null">#{zFraction},</if>
             <if test="zRecommend != null">#{zRecommend},</if>
@@ -78,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zSummary != null">#{zSummary},</if>
             <if test="zBidder != null">#{zBidder},</if>
             <if test="zSendTime != null">#{zSendTime},</if>
+            <if test="hName != null "> #{hName},</if>
          </trim>
     </insert>
 
@@ -85,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update bid_candidate
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
-            <if test="zBname != null">z_bname = #{zBname},</if>
+            <if test="hid != null"> hid =#{hid},</if>
             <if test="zFinal != null">z_final = #{zFinal},</if>
             <if test="zFraction != null">z_fraction = #{zFraction},</if>
             <if test="zRecommend != null">z_recommend = #{zRecommend},</if>
@@ -96,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="zSummary != null">z_summary = #{zSummary},</if>
             <if test="zBidder != null">z_bidder = #{zBidder},</if>
             <if test="zSendTime != null">z_send_time = #{zSendTime},</if>
+            <if test="hName != null ">hName = #{hName},</if>
         </trim>
         where zid = #{zid}
     </update>

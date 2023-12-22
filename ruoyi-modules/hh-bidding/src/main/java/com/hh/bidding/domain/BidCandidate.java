@@ -25,8 +25,8 @@ public class BidCandidate extends BaseEntity
     private Long sid;
 
     /** 供应商名称 */
-    @Excel(name = "供应商名称")
-    private String zBname;
+    @Excel(name = "供应商Id")
+    private Long hid;
 
     /** 最终报价 */
     @Excel(name = "最终报价")
@@ -69,6 +69,9 @@ public class BidCandidate extends BaseEntity
     @Excel(name = "发送时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date zSendTime;
 
+    @Excel(name = "供应商名称")
+    private String hName;
+
     public void setZid(Long zid) 
     {
         this.zid = zid;
@@ -87,14 +90,14 @@ public class BidCandidate extends BaseEntity
     {
         return sid;
     }
-    public void setzBname(String zBname) 
+    public void setHid(Long hid)
     {
-        this.zBname = zBname;
+        this.hid = hid;
     }
 
-    public String getzBname() 
+    public Long getHid()
     {
-        return zBname;
+        return hid;
     }
     public void setzFinal(Long zFinal) 
     {
@@ -192,7 +195,7 @@ public class BidCandidate extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("zid", getZid())
             .append("sid", getSid())
-            .append("zBname", getzBname())
+            .append("hid", getHid())
             .append("zFinal", getzFinal())
             .append("zFraction", getzFraction())
             .append("zRecommend", getzRecommend())
@@ -203,6 +206,15 @@ public class BidCandidate extends BaseEntity
             .append("zSummary", getzSummary())
             .append("zBidder", getzBidder())
             .append("zSendTime", getzSendTime())
+            .append("hName", gethName())
             .toString();
+    }
+
+    public String gethName() {
+        return hName;
+    }
+
+    public void sethName(String hName) {
+        this.hName = hName;
     }
 }

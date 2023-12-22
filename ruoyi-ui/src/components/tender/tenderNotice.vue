@@ -468,10 +468,6 @@ export default {
         }
       });
     },
-    // 文件提交处理
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
       this.upload.isUploading = true;
@@ -540,7 +536,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .form-input{
   width: 500px;
   display: inline-block;

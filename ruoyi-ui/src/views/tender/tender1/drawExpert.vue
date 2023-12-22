@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="app-container">
+    <div class="app-container" style="padding: 10px">
       <div class="box">招标项目</div>
       <el-table v-loading="loading" :data="tenderList" border>
         <el-table-column label="项目编号" align="center" prop="sCode" width="200" />
@@ -16,7 +16,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="app-container">
+    <div class="app-container" style="padding: 10px">
       <el-descriptions class="margin-top" title="抽取申请" style="color: #409eff;" :column="2" border>
         <el-descriptions-item>
           <template slot="label">
@@ -47,8 +47,8 @@
             专家确定方式
           </template>
           <template slot="default">
-            <el-radio label="1" v-model="queryParams.xWay">随机抽取</el-radio>
-            <el-radio label="2" v-model="queryParams.xWay">直接指定</el-radio>
+            <el-radio label="1" v-model="queryParams.xWay" :disabled='xWaydialog'>随机抽取</el-radio>
+            <el-radio label="2" v-model="queryParams.xWay" :disabled='xWaydialog'>直接指定</el-radio>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -56,23 +56,17 @@
             评标开始时间
           </template>
           <template>
-             <el-date-picker
-                 v-model="queryParams.xStartTime" id="input-common1"
-                  type="date"
-                  placeholder="请选择评标开始时间">
-                </el-date-picker>
+            <el-date-picker v-model="queryParams.xStartTime" id="input-common1" type="date" placeholder="请选择评标开始时间">
+            </el-date-picker>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             评标结束时间
           </template>
-          <template> 
-             <el-date-picker
-                 v-model="queryParams.xEndTime" id="input-common2"
-                  type="date"
-                  placeholder="选择日期">
-                </el-date-picker>
+          <template>
+            <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">
+            </el-date-picker>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -81,7 +75,8 @@
           </template>
           <template>
             <!-- <el-input v-model="queryParams.xCount" id="input-common3" /> -->
-            <el-input-number v-model="queryParams.xCount" :min="1" :max="10" label="描述文字"></el-input-number>
+            <el-input-number v-model="queryParams.xCount" :min="1" :max="10" :disabled='xWaydialog'
+              label="描述文字"></el-input-number>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -112,10 +107,10 @@
         </el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="app-container" v-show="queryParams.xWay == 2">
+    <div class="app-container" style="padding: 10px" v-show="queryParams.xWay == 2">
       <div class="box">直接指定</div>
       <div class="cl">
-        <el-button @click="lAddRow">新增</el-button>
+        <el-button @click="lAddRow" :disabled="addDialog">新增</el-button>
         <el-button @click="lDeleteRows" :disabled="lSelectedRows.length === 0">删除</el-button>
         <el-button @click="lCopyRows" :disabled="lSelectedRows.length === 0">复制</el-button>
         <el-table :data="lTableData" :row-key="row => row.id" @selection-change="lHandleSelectionChange" border stripe
@@ -127,20 +122,21 @@
               <el-input v-model="scope.row.jName" id="input-common" readonly>
                 <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px" />
               </el-input>
-              <el-dialog title="专家姓名" :visible.sync="cpDialog">
-                <el-table ref="singleTable" :data="expertList" highlight-current-row style="width: 100%"
+              <el-dialog title="专家列表" :visible.sync="cpDialog">
+                <el-table ref="singleTable"  v-loading="expertLoading" :data="expertList" highlight-current-row style="width: 100%"
                   @row-click="handleRowClick">
-                  <el-table-column prop="jName" label="专家名称" width="140" />
-                  <el-table-column prop="jSex" label="性别" width="130">
+                  <el-table-column prop="jid" label="专家ID" width="80" align="center"/>
+                  <el-table-column prop="jName" label="专家名称" width="120" align="center"/>
+                  <el-table-column prop="jSex" label="性别" width="100" align="center">
                     <template slot-scope="scope">
                       <span v-if="scope.row.jSex==1">男</span>
                       <span v-else>女</span>
                     </template>
                   </el-table-column>
-                  <el-table-column prop="jIdentity" label="身份证号" width="150" />
-                  <el-table-column prop="jPhone" label="手机号" width="85" />
-                  <el-table-column prop="email" label="邮箱" width="120" />
-                  <el-table-column prop="jUnit" label="工作单位" width="100" />
+                  <el-table-column prop="jIdentity" label="身份证号" width="150" align="center"/>
+                  <el-table-column prop="jPhone" label="手机号" width="150" align="center"/>
+                  <el-table-column prop="email" label="邮箱" width="200" align="center"/>
+                  <el-table-column prop="jUnit" label="工作单位" align="center"/>
                 </el-table>
                 <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum"
                   :limit.sync="queryParams.pageSize" @pagination="selectBdList" />
@@ -175,12 +171,20 @@
               <el-input readonly v-model="scope.row.jUnit" id="input-common10" />
             </template>
           </el-table-column>
+          <el-table-column label="专家ID" prop="jid">
+            <template slot-scope="scope">
+              <el-input readonly v-model="scope.row.jid" id="input-common10" />
+            </template>
+          </el-table-column>
         </el-table>
       </div>
+      <div style="text-align: right;margin-top: 10px;">
+        <el-button type="primary" @click="zjcq" v-show="lTableData.length > 0">确定</el-button>
+      </div>
     </div>
-    <div class="app-container" v-show="queryParams.xWay == 1">
+    <div class="app-container" style="padding: 10px" v-show="queryParams.xWay == 1">
       <div class="box">随机抽取</div>
-      <el-button style="margin-bottom: 10px;">点击抽取</el-button>
+      <el-button style="margin-bottom: 10px;" :disabled="addDialog">点击抽取</el-button>
       <div class="cl">
         <el-table border stripe>
           <el-table-column label="序号" prop="id" width="100" />
@@ -190,24 +194,24 @@
           <el-table-column label="手机号" prop="jPhone" width="200" />
           <el-table-column label="邮箱" prop="email" width="200" />
           <el-table-column label="工作单位" prop="jUnit" />
+          <el-table-column label="专家ID" prop="jid"/>
         </el-table>
+      </div>
+      <div style="text-align: right;margin-top: 10px;">
+        <el-button type="primary" @click="sjcq" v-show="lTableData.length > 0">确定</el-button>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {
-    findTenderNotice
-  } from "@/api/system/tender/tender";
+
   import {
     operatorList
   } from "@/api/system/tender/getTender";
-  import {
-    listExpert
-  } from "../../../api/system/expert";
-  import {
-    addApplications,getMaxApp
-  } from "@/api/system/tender/bidApplication";
+  import {findTenderNotice} from "@/api/system/tender/tender";
+  import {listExpert} from "@/api/system/expert";
+  import {addApplications, getmaxApp} from "@/api/system/tender/bidApplication";
+  import {addCommittee} from "@/api/system/tender/committee";
 
   export default {
     dicts: ["ppm_procurement_plan"],
@@ -221,6 +225,9 @@
         cpDialog: false,
         selectRow: null,
         expertList: [],
+        xWaydialog: false,
+        expertLoading:false,
+        addDialog:true,
         // 遮罩层
         loading: true,
         // 总条数
@@ -239,14 +246,14 @@
           pbId: null,
           xCode: null,
           xName: null,
-          xWay: "2",
+          xWay: "1",
           xType: "0",
           xStartTime: null,
           xEndTime: null,
           xCount: null,
           xDaiCount: null,
           xArea: null,
-          sid:null
+          sid: null
         },
         // 查询参数(专家)
         queryParams2: {
@@ -270,10 +277,16 @@
           jShState: null,
           jOpinion: null
         },
+        //评标委员会
+        committees:{
+          jid:null,
+          xid:null,
+        },
         // 表单参数
         form: {},
         // 表单校验
-        rules: {}
+        rules: {},
+        xCount: null,
       };
     },
     created() {
@@ -298,7 +311,10 @@
         this.queryParams.xDaiCount = null;
         this.queryParams.xCount = null;
         this.queryParams.xArea = null;
-        this.queryParams.xWay = "0";
+        this.queryParams.xWay = "1";
+        this.lTableData=[];
+        this.lSelectedRows=[];
+        this.lTableColumns=[];
       },
       //查询所有准入专家
       selectBdList() {
@@ -311,14 +327,51 @@
       subApplication() {
         console.log(this.lTableData, "sub");
         addApplications(this.queryParams).then(res => {
-            this.maxId(this.queryParams.sid);
+          this.maxId();
+          this.xWaydialog = true;
+          this.addDialog=false;
+          this.$message({
+            type: 'success',
+            message: '申请成功!'
+          });
         });
       },
       //查询当前项目最大Id
-      maxId(sid) {
-        getMaxApp(sid).then(res=>{
-          console.log(res,"resssss");
+      maxId() {
+        getmaxApp(this.queryParams.sid).then(res => {
+          // console.log(res, "resssssss");
+          this.committees.xid = res.data.xid;
+          this.xCount = res.data.xCount;
         });
+      },
+      //添加评标委员会
+      addCommitee() {
+        // console.log(this.xCount, "1");
+        //添加专家人数一致
+        if (this.lTableData.length == this.queryParams.xCount) {
+          this.lTableData.forEach(row => {
+            this.committees.jid = row.jid;
+            // console.log(this.committees,"comm");
+            //执行添加方法
+            addCommittee(this.committees).then(res=>{
+                this.$modal.msgSuccess("添加成功！");
+            });
+            // console.log(row.jid, "jid");
+
+          });
+        }
+      },
+      //点击确定 （直接抽取）
+      zjcq() {
+        // console.log(this.lTableData, "wwww");
+        this.addCommitee();
+        this.xWaydialog = false;
+        this.cancel();
+        this.$router.go(-1);
+      },
+      //点击确定 （随机抽取）
+      sjcq(){
+
       },
       /* 直接抽取专家 */
       //添加
@@ -331,9 +384,9 @@
             newRow[column.prop] = ''
           })
           newRow.id = this.lTableData.length + 1
-          console.log(this.lTableColumns, "it");
+          // console.log(this.lTableColumns, "it");
           this.lTableData.push(newRow);
-          console.log(this.lTableColumns, "it2");
+          // console.log(this.lTableColumns, "it2");
         }
       },
       //删除
@@ -359,13 +412,30 @@
       },
       //复制
       lCopyRows() {
-        const copiedRows = this.lSelectedRows.map(row => ({
-          ...row
-        }))
-        copiedRows.forEach(row => {
-          row.id = this.lTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
-          this.lTableData.push(row)
-        })
+        // console.log(this.lSelectedRows,"select");
+        if (this.lTableData.length >= this.queryParams.xCount) {
+          this.$alert("添加评标专家不能超过" + this.queryParams.xCount + "人!", "温馨提示");
+        }else{
+          var isJx= false;
+          this.lSelectedRows.forEach(data=>{
+            //判断集合里是否已存在该专家
+            if(data.jid != null || data.jid > 0){
+              isJx = true;
+            }
+          });
+          if(!isJx){
+            const copiedRows = this.lSelectedRows.map(row => ({
+              ...row
+            }))
+            copiedRows.forEach(row => {
+
+              row.id = this.lTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
+              this.lTableData.push(row)
+            })
+          }else{
+            this.$alert("检测到该专家已存在，不可复制！","提示");
+          }
+        }
       },
       //行数变化
       lUpdateRowIds() {
@@ -380,34 +450,50 @@
       //专家名称行点击事件
       handleRowClick(row) {
         // 在这里处理行点击事件
-        this.selectRow.jName = row.jName;
-        if (row.jSex == 1) {
-          this.selectRow.jSex = "男"
-        } else {
-          this.selectRow.jSex = "女"
+        var isYes = false;
+        this.lTableData.forEach(data=>{
+          //判断集合里是否已存在该专家
+          if(data.jid == row.jid){
+             isYes = true;
+          }
+        });
+        if(!isYes){
+          this.selectRow.jName = row.jName;
+          if (row.jSex == 1) {
+            this.selectRow.jSex = "男"
+          } else {
+            this.selectRow.jSex = "女"
+          }
+          this.selectRow.jIdentity = row.jIdentity
+          this.selectRow.jPhone = row.jPhone
+          this.selectRow.email = row.email
+          this.selectRow.jUnit = row.jUnit
+          this.selectRow.jid = row.jid
+          this.cpDialog = false;
+        }else{
+           this.$alert("该专家已参与该项目评标！","提示");
         }
-        this.selectRow.jIdentity = row.jIdentity
-        this.selectRow.jPhone = row.jPhone
-        this.selectRow.email = row.email
-        this.selectRow.jUnit = row.jUnit
-        this.cpDialog = false;
       },
       //显示专家对话框
       openCp(row) {
-        console.log(row, "row");
+        // console.log(row, "row");
         this.selectRow = row;
-        console.log(this.selectRow, "rows");
+        // console.log(this.selectRow, "rows");
         this.cpDialog = true;
         this.selectBdList();
+        this.expertLoading =true;
+        setTimeout(()=>{
+          this.expertLoading =false;
+        },1000);
       },
       //关闭专家对话框
       closeDialog1() {
-        this.cpDialog = false
+        this.cpDialog = false;
       },
     }
   };
 </script>
-<style>
+<style scoped>
   .box {
     margin: 10px 0 15px 0px;
     color: #409eff;
@@ -416,6 +502,20 @@
   }
 
   .input-common {
+    border: none;
+  }
+
+  #input-common,
+  #input-common1,
+  #input-common2,
+  #input-common3,
+  #input-common4,
+  #input-common5,
+  #input-common6,
+  #input-common7,
+  #input-common8,
+  #input-common9,
+  #input-common10 {
     border: none;
   }
 </style>

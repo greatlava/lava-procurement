@@ -39,7 +39,30 @@
        <expert></expert>
       </el-tab-pane>
       <el-tab-pane label="开标" name="kb" style="font-size: 16px">
-        <bid_submission></bid_submission>
+
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+  <div v-if="currentStep === 3" class="div2">
+    <el-tabs v-model="activeName3">
+      <el-tab-pane label="评标" name="bidEval" style="font-size: 16px">
+        <bid-eval></bid-eval>
+      </el-tab-pane>
+    </el-tabs>
+  </div>
+  <div v-if="currentStep === 4" class="div2">
+    <el-tabs v-model="activeName4">
+      <el-tab-pane label="候选人公示" name="annCandidate" style="font-size: 16px">
+        <expert></expert>
+      </el-tab-pane>
+      <el-tab-pane label="确定中标人" name="determineWin" style="font-size: 16px">
+        <expert></expert>
+      </el-tab-pane>
+      <el-tab-pane label="中标结果公示" name="annWin" style="font-size: 16px">
+        <expert></expert>
+      </el-tab-pane>
+      <el-tab-pane label="发送中标通知书" name="noticeWin" style="font-size: 16px">
+        <expert></expert>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -55,6 +78,7 @@ import TenderDocument from "@/components/tender/tenderDocument.vue";
 import GetTender from "@/components/tender/getTender.vue";
 import Bid_submission from "@/components/tender/bid_submission.vue";
 import Expert from "@/components/tender/expert.vue";
+import BidEval from "@/components/tender/bidEval.vue";
 
 export default {
   components: {
@@ -64,7 +88,8 @@ export default {
     'tender-document': TenderDocument,
     'getTender':GetTender,
     'bid_submission':Bid_submission,
-    'expert':Expert
+    'expert':Expert,
+    'bidEval':BidEval
   },
   data() {
     return {
@@ -72,6 +97,8 @@ export default {
       activeName: 'subject',
       activeName1:'getTender',
       activeName2:'expert',
+      activeName3:'bidEval',
+      activeName4:'annCandidate',
     };
   },
   methods: {
