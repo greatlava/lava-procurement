@@ -18,7 +18,7 @@ public class HhBiddingApplication
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(HhBiddingApplication.class, args);
         System.out.println( "Hello World!" );
+        SpringApplication.run(HhBiddingApplication.class, args);
     }
 }
