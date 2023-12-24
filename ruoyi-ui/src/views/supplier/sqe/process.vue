@@ -495,6 +495,12 @@ export default {
         this.hActualCapital = response.data.hActualCapital
         this.fState = response.data.fState
         this.fStatus = response.data.fStatus
+        this.hCopies = JSON.parse(response.data.hCopies)[0].url
+        this.hCopiesList.push(JSON.parse(response.data.hCopies)[0].url)
+        this.idCardCopy = JSON.parse(response.data.hJuridicalCopies)[0].url
+        for (let i = 0; i < JSON.parse(response.data.hJuridicalCopies).length; i++) {
+          this.idCardCopyList.push(JSON.parse(response.data.hJuridicalCopies)[i].url)
+        }
         //业务经办人
         getOperator(this.hid).then(res => {
           this.operator.ywName = res.data.ywName
@@ -502,6 +508,10 @@ export default {
           this.operator.ywIdcrad = res.data.ywIdcrad
           this.operator.ywMailbox = res.data.ywMailbox
           this.operator.ywScanIdcard = res.data.ywScanIdcard
+          this.ywIdCardCopy = JSON.parse(response.data.ywScanIdcard)[0].url
+          for (let i = 0; i < JSON.parse(response.data.ywScanIdcard).length; i++) {
+            this.ywIdCardCopyList.push(JSON.parse(response.data.ywScanIdcard)[i].url)
+          }
         })
         //核心技术人员
         this.personnel.hid = response.data.hid

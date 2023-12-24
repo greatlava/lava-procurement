@@ -336,6 +336,54 @@ export const dynamicRoutes = [
         meta: {title: '修改合同', activeMenu: '/contract'}
       }
     ]
+  },
+  {
+    path: '/contract/updateFa',
+    component: Details,
+    children: [
+      {
+        path: 'updateFa?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/fam/updateFa'),
+        name: 'UpdateFa',
+        meta: { title: '修改合同', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/detailsFa',
+    component: Details,
+    children: [
+      {
+        path: 'detailsFa?oid=:oid(\\d+)',
+        component: () => import('@/views/contract/fam/detailsFa'),
+        name: 'DetailsFa',
+        meta: { title: '框架协议详情', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/details',
+    component: Details,
+    children: [
+      {
+        path: 'details?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/cm/details'),
+        name: 'Details',
+        meta: { title: '合同详情', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/examine',
+    component: Details,
+    children: [
+      {
+        path: 'examine?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/cm/examine'),
+        name: 'Examine',
+        meta: { title: '合同详情', activeMenu: '/contract' }
+      }
+    ]
   }
 ]
 

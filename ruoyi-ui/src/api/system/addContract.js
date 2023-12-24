@@ -79,3 +79,77 @@ export function listPayment(query) {
     params: query
   })
 }
+
+// 查询签署执行状态列表
+export function SelectSign(query) {
+  return request({
+    url: '/basic/sign/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询框架协议管理详细
+export function getManagement(oid) {
+  return request({
+    url: '/basic/management/' + oid,
+    method: 'get'
+  })
+}
+
+// 修改框架协议管理
+export function updateManagement(data) {
+  return request({
+    url: '/basic/management',
+    method: 'put',
+    data: data
+  })
+}
+
+// 修改合同
+export function updateContract(data) {
+  return request({
+    url: '/basic/contract',
+    method: 'put',
+    data: data
+  })
+}
+
+// 查询公共附件详细
+export function getAttachments(eid) {
+  return request({
+    url: '/basic/contract/selectCom',
+    method: 'get',
+    params: {
+      eid: eid
+    }
+  })
+}
+
+// 修改合同
+export function updateEStatus(data) {
+  return request({
+    url: '/basic/contract/upEStatus',
+    method: 'put',
+    data: data
+  })
+}
+
+
+// 修改合同管理状态
+export function updateoHstatus(data) {
+  return request({
+    url: '/basic/contract/updateoHstatus',
+    method: 'put',
+    data: data
+  })
+}
+
+// 删除合同
+export function delContract(eid) {
+  return request({
+    url: '/basic/contract/' + eid,
+    method: 'delete'
+  })
+}
+

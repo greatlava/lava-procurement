@@ -1,5 +1,6 @@
 package com.hh.pms.cm.controller;
 
+import com.hh.pms.cm.domain.BsContract;
 import com.hh.pms.cm.domain.BsSign;
 import com.hh.pms.cm.service.IBsSignService;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
@@ -23,8 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sign")
-public class BsSignController extends BaseController
-{
+public class BsSignController extends BaseController {
     @Autowired
     private IBsSignService bsSignService;
 
@@ -33,11 +33,17 @@ public class BsSignController extends BaseController
      */
     @RequiresPermissions("system:sign:list")
     @GetMapping("/list")
-    public TableDataInfo list(BsSign bsSign)
-    {
+    public TableDataInfo list(BsSign bsSign) {
         startPage();
         List<BsSign> list = bsSignService.selectBsSignList(bsSign);
         return getDataTable(list);
+    }
+
+    //根据合同查看签署执行状态信息
+    @RequiresPermissions("system:sign:list1")
+    @GetMapping(value = "/list1")
+    public AjaxResult getBsSign(Long eid) {
+        return success(bsSignService.selectBsSignByEid(eid));
     }
 
     /**
@@ -46,8 +52,7 @@ public class BsSignController extends BaseController
     @RequiresPermissions("system:sign:export")
     @Log(title = "签署执行状态", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BsSign bsSign)
-    {
+    public void export(HttpServletResponse response, BsSign bsSign) {
         List<BsSign> list = bsSignService.selectBsSignList(bsSign);
         ExcelUtil<BsSign> util = new ExcelUtil<BsSign>(BsSign.class);
         util.exportExcel(response, list, "签署执行状态数据");
@@ -58,8 +63,7 @@ public class BsSignController extends BaseController
      */
     @RequiresPermissions("system:sign:query")
     @GetMapping(value = "/{gnId}")
-    public AjaxResult getInfo(@PathVariable("gnId") Long gnId)
-    {
+    public AjaxResult getInfo(@PathVariable("gnId") Long gnId) {
         return success(bsSignService.selectBsSignByGnId(gnId));
     }
 
@@ -69,8 +73,7 @@ public class BsSignController extends BaseController
     @RequiresPermissions("system:sign:add")
     @Log(title = "签署执行状态", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BsSign bsSign)
-    {
+    public AjaxResult add(@RequestBody BsSign bsSign) {
         return toAjax(bsSignService.insertBsSign(bsSign));
     }
 
@@ -80,8 +83,7 @@ public class BsSignController extends BaseController
     @RequiresPermissions("system:sign:edit")
     @Log(title = "签署执行状态", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BsSign bsSign)
-    {
+    public AjaxResult edit(@RequestBody BsSign bsSign) {
         return toAjax(bsSignService.updateBsSign(bsSign));
     }
 
@@ -91,8 +93,7 @@ public class BsSignController extends BaseController
     @RequiresPermissions("system:sign:remove")
     @Log(title = "签署执行状态", businessType = BusinessType.DELETE)
     @DeleteMapping("/{gnIds}")
-    public AjaxResult remove(@PathVariable Long[] gnIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] gnIds) {
         return toAjax(bsSignService.deleteBsSignByGnIds(gnIds));
     }
 }

@@ -157,13 +157,13 @@ public class BsContract extends BaseEntity {
 
     private BsSign bsSign;
 
-    private List<ComPubAttachments> comPubAttachments;
+    private ComPubAttachments comPubAttachments;
 
-    public List<ComPubAttachments> getComPubAttachments() {
+    public ComPubAttachments getComPubAttachments() {
         return comPubAttachments;
     }
 
-    public void setComPubAttachments(List<ComPubAttachments> comPubAttachments) {
+    public void setComPubAttachments(ComPubAttachments comPubAttachments) {
         this.comPubAttachments = comPubAttachments;
     }
 
@@ -346,7 +346,7 @@ public class BsContract extends BaseEntity {
                 .append("BsInventoryList", getBsInventoryList())
                 .append("PaymentList", getBsPaymentList())
                 .append("BsSign", getBsSign())
-//                .append("BidTender", getBidTender())
+                .append("ComPubAttachments", getComPubAttachments())
                 .toString();
     }
 }
