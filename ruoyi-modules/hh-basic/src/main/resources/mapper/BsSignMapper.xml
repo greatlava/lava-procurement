@@ -102,6 +102,11 @@
         where gn_id = #{gnId}
     </select>
 
+    <select id="selectBsSignByEid" parameterType="Long" resultMap="BsSignResult">
+        <include refid="selectBsSignVo"/>
+        where eid = #{eid}
+    </select>
+
     <insert id="insertBsSign" parameterType="com.hh.pms.cm.domain.BsSign">
         insert into bs_sign
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -208,5 +213,11 @@
         <foreach item="gnId" collection="array" open="(" separator="," close=")">
             #{gnId}
         </foreach>
+    </delete>
+
+    <delete id="deleteBsSignByEid" parameterType="Long">
+        delete
+        from bs_sign
+        where eid = #{eid}
     </delete>
 </mapper>

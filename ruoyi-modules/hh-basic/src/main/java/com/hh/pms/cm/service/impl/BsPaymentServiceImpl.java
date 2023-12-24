@@ -15,8 +15,7 @@ import java.util.List;
  * @date 2023-11-30
  */
 @Service
-public class BsPaymentServiceImpl implements IBsPaymentService
-{
+public class BsPaymentServiceImpl implements IBsPaymentService {
     @Resource
     private BsPaymentMapper bsPaymentMapper;
 
@@ -27,8 +26,7 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 支付约定
      */
     @Override
-    public BsPayment selectBsPaymentByPayId(Long payId)
-    {
+    public BsPayment selectBsPaymentByPayId(Long payId) {
         return bsPaymentMapper.selectBsPaymentByPayId(payId);
     }
 
@@ -39,8 +37,7 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 支付约定
      */
     @Override
-    public List<BsPayment> selectBsPaymentList(BsPayment bsPayment)
-    {
+    public List<BsPayment> selectBsPaymentList(BsPayment bsPayment) {
         return bsPaymentMapper.selectBsPaymentList(bsPayment);
     }
 
@@ -51,8 +48,7 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 结果
      */
     @Override
-    public int insertBsPayment(BsPayment bsPayment)
-    {
+    public int insertBsPayment(BsPayment bsPayment) {
         return bsPaymentMapper.insertBsPayment(bsPayment);
     }
 
@@ -63,8 +59,7 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 结果
      */
     @Override
-    public int updateBsPayment(BsPayment bsPayment)
-    {
+    public int updateBsPayment(BsPayment bsPayment) {
         return bsPaymentMapper.updateBsPayment(bsPayment);
     }
 
@@ -75,8 +70,7 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 结果
      */
     @Override
-    public int deleteBsPaymentByPayIds(Long[] payIds)
-    {
+    public int deleteBsPaymentByPayIds(Long[] payIds) {
         return bsPaymentMapper.deleteBsPaymentByPayIds(payIds);
     }
 
@@ -87,8 +81,12 @@ public class BsPaymentServiceImpl implements IBsPaymentService
      * @return 结果
      */
     @Override
-    public int deleteBsPaymentByPayId(Long payId)
-    {
+    public int deleteBsPaymentByPayId(Long payId) {
         return bsPaymentMapper.deleteBsPaymentByPayId(payId);
+    }
+
+    @Override
+    public int deleteBsPaymentByEid(Long eid) {
+        return bsPaymentMapper.deleteBsPaymentByEid(eid);
     }
 }

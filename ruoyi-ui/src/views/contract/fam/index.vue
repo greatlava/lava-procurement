@@ -117,15 +117,26 @@
                 >作废
                 </el-button>
                 <!--状态2|4-->
-                <el-button
-                    v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-edit"
-                    @click=""
-                    v-hasPermi="['system:contract:edit']"
-                >编辑
-                </el-button>
+                <router-link :to="'updateFa?oid='+scope.row.oid">
+                  <el-button
+                      v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-edit"
+                      v-hasPermi="['system:contract:edit']"
+                  >编辑
+                  </el-button>
+                </router-link>
+                <router-link :to="'detailsFa?oid='+scope.row.oid">
+                  <el-button
+                      v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-view"
+                      v-hasPermi="['system:contract:edit']"
+                  >查看
+                  </el-button>
+                </router-link>
                 <el-button
                     v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
                     size="mini"

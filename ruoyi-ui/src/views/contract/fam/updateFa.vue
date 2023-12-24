@@ -82,6 +82,7 @@
                 ref="up1"
                 class="upload-demo"
                 :action="url"
+                :on-preview="handlePreview"
                 :before-remove="beforeRemove"
                 :auto-upload="false"
                 :limit="1"
@@ -91,6 +92,7 @@
                 :on-change="onchange1"
             >
               <el-button size="small" type="primary">上传框架协议文件</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </template>
         </el-descriptions-item>
@@ -188,12 +190,12 @@
       </div>
     </div>
     <el-button size="medium" @click="back1">返回</el-button>
-    <el-button type="primary" @click="addFa">创建框架协议</el-button>
+    <el-button type="primary" @click="addFa">提交</el-button>
   </div>
 </template>
 
 <script>
-import { addManagement, listDevice, selectItemsDevice } from '../../../api/system/addContract'
+import { addManagement, getManagement, listDevice, listInventory, SelectSign, updateContract, updateManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
@@ -202,7 +204,7 @@ export default {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
       oTotalprice: 0,
       //获取框架计划ID
-      jhId: this.$route.query.jhId,
+      oid: this.$route.query.oid,
       //设置label的样式
       labelStyle: {
         width: '180px',
@@ -224,7 +226,7 @@ export default {
         oEnddate: null,
         oFile: null,
         oType: '采购框架协议',
-        oHstatus: 1,
+        oHstatus: 2,
         oDescribe: null,
         oOpinion: null
       },
@@ -244,13 +246,12 @@ export default {
   },
   created() {
     this.hh()
+    // this.getSign()
   },
   watch: {
-    '$route.query.jhId': function(newJhId, oldJhId) {
-      console.log(newJhId, oldJhId)
-      if (newJhId != oldJhId) {
-        this.jhId = newJhId
-        this.lTableData = []
+    '$route.query.oid': function(newOid, oldOid) {
+      if (oldOid != newOid) {
+        this.jhId = newOid
         this.hh()
       }
     },
@@ -263,16 +264,9 @@ export default {
     }
   },
   methods: {
-    onchange1(files, fileList) {
-      this.fileList = fileList
-      console.log(this.fileList, 'fileList onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList.splice(this.fileList.indexOf(files[0]), 1)
-      }
-    },
-    //创建框架协议
+    //创建合同
     addFa() {
+      //判断是否上传文件
       this.submitNextUpload()
     },
     add() {
@@ -292,36 +286,78 @@ export default {
         }
       })
     },
-    //查询计划信息信息
+    onchange1(files, fileList) {
+      this.fileList = fileList
+      console.log(this.fileList, 'fileList onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList.splice(this.fileList.indexOf(files[0]), 1)
+      }
+    },
+    //查询框架协议信息
     hh() {
-      selectItemsDevice({ 'jhId': this.jhId }).then(response => {
-        this.queryParams.hName = response.rows[0].ppmFramePlan.bsSupplier.hName
-        this.queryParams.hid = response.rows[0].ppmFramePlan.bsSupplier.hid
-        this.queryParams.jhId = this.jhId
-        response.rows.forEach((e, i) => {
-          console.log('e', e)
+      this.loading = true
+      getManagement(this.oid).then(response => {
+        console.log('打印框架协议信息')
+        console.log(response)
+        this.queryParams = response.data
+      })
+      let k = response.data.oFile
+      if (k != null) {
+        //获取第一个文件的名称
+        let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
+        let fileListData = [{
+          name: imgName1,
+          url: k
+        }]
+        this.fileList = fileListData
+        this.form.oFile = k
+      } else {
+        this.fileList = []
+        this.fileList.oFile = null
+      }
+      listInventory({ 'oid': this.oid }).then(response => {
+        console.log(response.rows)
+        // this.lTableData = response.rows
+        let list = response.rows
+        list.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
-            inName: e.ppmDevice.tName,
-            inModel: e.ppmDevice.tModel,
-            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
-            inUnit: e.ppmDevice.tUnit,
-            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inName: e.inName,
+            inModel: e.inModel,
+            inVat: (e.inVat).toFixed(2),
+            inUnit: e.inUnit,
+            inSubtotal: (e.inCount * e.inVat).toFixed(2),
             tid: e.tid,
-            inCount: e.vCount
+            inCount: e.inCount
+            // inId: e.inId
           })
-          this.oTotalprice += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
         })
+        this.loading = false
+        this.lCalculateTotalSubtotal()
       })
     },
     //上传协议文件-------------------------------------------------
     success(response) {
-      console.log(111)
+      console.log(333)
+      console.log(response)
       this.queryParams.oFile = response.data.url
-      console.log('打印up1-------------------------')
+      console.log('打印up3-------------------------')
       console.log(this.queryParams.oFile)
       //调用下一个上传的方法
       this.submitNextUpload()
+    },
+    handlePreview(file) {
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList3 = []
+        this.form.eDocuments
+      })
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
     },
     submitNextUpload() {
       // 根据条件判断调用下一个上传
@@ -332,15 +368,6 @@ export default {
         console.log('打印提交2-------------------------')
         this.add()
       }
-    },
-    back1() {
-      this.$router.back()
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
     },
     //上传协议文件-------------------------------------------------
     /* ------------------------添加产品信息------------------------ */
@@ -459,8 +486,11 @@ export default {
         let kk = total + totalValue // 将每行的小计相加得到总价格
         return kk
       }, 0)
-    }/* ------------------------添加产品信息------------------------ */
-
+    },/* ------------------------添加产品信息------------------------ */
+    //返回上个页面
+    back1() {
+      this.$router.back()
+    }
   }
 }
 </script>

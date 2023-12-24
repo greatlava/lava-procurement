@@ -52,6 +52,12 @@ public interface BsInventoryMapper
      */
     public int deleteBsInventoryByInId(Long inId);
 
+    //根据oid删除设备信息
+    public int deleteBsInventoryByOid(Long oid);
+
+    //根据eid删除设备信息
+    public int deleteBsInventoryByEid(Long eid);
+
     /**
      * 批量删除【请填写功能名称】
      *

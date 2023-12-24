@@ -14,7 +14,7 @@
             协议名称
           </template>
           <template>
-            <el-input v-model="queryParams.oName" placeholder="请输入协议名称"/>
+            <el-input v-model="queryParams.oName" placeholder="请输入协议名称" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -38,7 +38,7 @@
             协议说明
           </template>
           <template slot="default">
-            <el-input v-model="queryParams.oDescribe" type="textarea" :rows="3" clearable class="cInput"/>
+            <el-input v-model="queryParams.oDescribe" type="textarea" :rows="3" clearable class="cInput" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -62,7 +62,7 @@
             签署日期
           </template>
           <template>
-            <el-date-picker v-model="queryParams.oStartdate" type="date" class="cInput"/>
+            <el-date-picker v-model="queryParams.oStartdate" type="date" class="cInput" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -70,37 +70,36 @@
             失效日期
           </template>
           <template>
-            <el-date-picker v-model="queryParams.oEnddate" type="date" class="cInput"/>
+            <el-date-picker v-model="queryParams.oEnddate" type="date" class="cInput" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             协议文件
           </template>
-          <template>
-            <el-upload
-                ref="up1"
-                class="upload-demo"
-                :action="url"
-                :before-remove="beforeRemove"
-                :auto-upload="false"
-                :limit="1"
-                :on-exceed="handleExceed"
-                :on-success="success"
-                :file-list="fileList"
-                :on-change="onchange1"
-            >
-              <el-button size="small" type="primary">上传框架协议文件</el-button>
-            </el-upload>
-          </template>
+<!--          <template>-->
+<!--            <el-upload-->
+<!--                ref="up1"-->
+<!--                class="upload-demo"-->
+<!--                :action="url"-->
+<!--                :on-preview="handlePreview"-->
+<!--                :on-remove="handleRemove"-->
+<!--                :before-remove="beforeRemove"-->
+<!--                :auto-upload="false"-->
+<!--                :limit="1"-->
+<!--                :on-exceed="handleExceed"-->
+<!--                :on-success="success"-->
+<!--                :file-list="fileList"-->
+<!--            >-->
+<!--              <el-button size="small" type="primary">上传框架协议文件</el-button>-->
+<!--              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+<!--            </el-upload>-->
+<!--          </template>-->
         </el-descriptions-item>
       </el-descriptions>
 
       <div class="cl1">
         <h4><strong>| 设备信息</strong></h4>
-        <el-button @click="lAddRow">新增</el-button>
-        <el-button @click="lDeleteRows" :disabled="lSelectedRows.length === 0">删除</el-button>
-        <el-button @click="lCopyRows" :disabled="lSelectedRows.length === 0">复制</el-button>
         <el-table
             :data="lTableData"
             :row-key="row => row.id"
@@ -109,12 +108,13 @@
             stripe
             :style="{marginTop:'10px'}"
         >
-          <el-table-column type="selection" width="55"/>
-          <el-table-column label="序号" prop="id" width="60"/>
+<!--          <el-table-column type="selection" width="55"/>-->
+          <el-table-column label="序号" prop="id"/>
           <el-table-column label="产品名称" prop="inName" width="170">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inName" readonly>
-                <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px"/>
+                <i slot="suffix" class="el-icon-search" style="margin-top: 10px"/>
+<!--                <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px"/>-->
               </el-input>
               <el-dialog title="产品名称" :visible.sync="cpDialog">
                 <el-table
@@ -171,6 +171,7 @@
                   style="width: 120px;"
                   @blur="spCountBlur(scope.row)"
                   @change="spCountChange(scope.row)"
+                  disabled
               />
             </template>
           </el-table-column>
@@ -188,12 +189,11 @@
       </div>
     </div>
     <el-button size="medium" @click="back1">返回</el-button>
-    <el-button type="primary" @click="addFa">创建框架协议</el-button>
   </div>
 </template>
 
 <script>
-import { addManagement, listDevice, selectItemsDevice } from '../../../api/system/addContract'
+import { addManagement, getManagement, listDevice, listInventory, SelectSign, updateManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
@@ -202,7 +202,7 @@ export default {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
       oTotalprice: 0,
       //获取框架计划ID
-      jhId: this.$route.query.jhId,
+      oid: this.$route.query.oid,
       //设置label的样式
       labelStyle: {
         width: '180px',
@@ -224,7 +224,7 @@ export default {
         oEnddate: null,
         oFile: null,
         oType: '采购框架协议',
-        oHstatus: 1,
+        oHstatus: 2,
         oDescribe: null,
         oOpinion: null
       },
@@ -244,13 +244,12 @@ export default {
   },
   created() {
     this.hh()
+    // this.getSign()
   },
   watch: {
-    '$route.query.jhId': function(newJhId, oldJhId) {
-      console.log(newJhId, oldJhId)
-      if (newJhId != oldJhId) {
-        this.jhId = newJhId
-        this.lTableData = []
+    '$route.query.oid': function(newOid, oldOid) {
+      if (oldOid != newOid) {
+        this.jhId = newOid
         this.hh()
       }
     },
@@ -263,19 +262,8 @@ export default {
     }
   },
   methods: {
-    onchange1(files, fileList) {
-      this.fileList = fileList
-      console.log(this.fileList, 'fileList onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList.splice(this.fileList.indexOf(files[0]), 1)
-      }
-    },
     //创建框架协议
     addFa() {
-      this.submitNextUpload()
-    },
-    add() {
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
       this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
@@ -285,56 +273,71 @@ export default {
         }
         return true
       })
-      addManagement(this.queryParams).then(response => {
+      // this.$refs.up1.submit()
+      // console.log(111)
+      // console.log(this.queryParams.oFile)
+      // 修改框架协议管理
+      updateManagement(this.queryParams).then(response => {
         console.log(response)
-        if (response.msg == '添加成功') {
-          this.$router.push('/contract/fam')
-        }
       })
     },
-    //查询计划信息信息
+    //查询框架协议信息
     hh() {
-      selectItemsDevice({ 'jhId': this.jhId }).then(response => {
-        this.queryParams.hName = response.rows[0].ppmFramePlan.bsSupplier.hName
-        this.queryParams.hid = response.rows[0].ppmFramePlan.bsSupplier.hid
-        this.queryParams.jhId = this.jhId
-        response.rows.forEach((e, i) => {
-          console.log('e', e)
+      this.loading = true
+      getManagement(this.oid).then(response => {
+        console.log('打印框架协议信息')
+        console.log(response)
+        this.queryParams = response.data
+      })
+      listInventory({ 'oid': this.oid }).then(response => {
+        console.log(response.rows)
+        // this.lTableData = response.rows
+        let list = response.rows
+        list.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
-            inName: e.ppmDevice.tName,
-            inModel: e.ppmDevice.tModel,
-            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
-            inUnit: e.ppmDevice.tUnit,
-            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inName: e.inName,
+            inModel: e.inModel,
+            inVat: (e.inVat).toFixed(2),
+            inUnit: e.inUnit,
+            inSubtotal: (e.inCount * e.inVat).toFixed(2),
             tid: e.tid,
-            inCount: e.vCount
+            inCount: e.inCount
+            // inId: e.inId
           })
-          this.oTotalprice += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
         })
+        this.loading = false
+        this.lCalculateTotalSubtotal()
       })
     },
     //上传协议文件-------------------------------------------------
-    success(response) {
-      console.log(111)
-      this.queryParams.oFile = response.data.url
-      console.log('打印up1-------------------------')
+    success(response, file, fileList) {
+      console.log(222)
+      this.fileList.push(file)
+      let hhh = fileList.map(obj => {
+        let newObj = obj
+        delete newObj.url
+        newObj.url = obj.response.data.url
+        delete newObj.name
+        newObj.name = obj.response.data.name
+        delete newObj.response
+        delete newObj.raw
+        delete newObj.percentage
+        delete newObj.status
+        delete newObj.uid
+        return newObj
+      })
+      this.queryParams.oFile = JSON.stringify(hhh)
       console.log(this.queryParams.oFile)
-      //调用下一个上传的方法
-      this.submitNextUpload()
+      // addManagement(this.queryParams).then(response => {
+      //   console.log(response)
+      // })
     },
-    submitNextUpload() {
-      // 根据条件判断调用下一个上传
-      if (this.fileList.length > 0 && this.queryParams.oFile == null) {
-        console.log('打印提交1-------------------------')
-        this.$refs.up1.submit()
-      } else {
-        console.log('打印提交2-------------------------')
-        this.add()
-      }
+    handleRemove(file, fileList) {
+      console.log(file, fileList)
     },
-    back1() {
-      this.$router.back()
+    handlePreview(file) {
+      console.log(file)
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -459,8 +462,11 @@ export default {
         let kk = total + totalValue // 将每行的小计相加得到总价格
         return kk
       }, 0)
-    }/* ------------------------添加产品信息------------------------ */
-
+    },/* ------------------------添加产品信息------------------------ */
+    //返回上个页面
+    back1() {
+      this.$router.back()
+    }
   }
 }
 </script>

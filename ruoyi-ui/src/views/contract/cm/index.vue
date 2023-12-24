@@ -102,7 +102,7 @@
                 <el-tag v-if="scope.row.eStatus === 1">已通过</el-tag>
                 <el-tag v-else-if="scope.row.eStatus === 2" type="info">草稿</el-tag>
                 <el-tag v-else-if="scope.row.eStatus === 3" type="warning">待审核</el-tag>
-                <el-tag v-else-if="scope.row.eStatus === 4" type="info">未通过</el-tag>
+                <el-tag v-else-if="scope.row.eStatus === 4" type="danger">未通过</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -113,7 +113,7 @@
                     size="mini"
                     type="text"
                     icon="el-icon-upload"
-                    @click=""
+                    @click="UploadHt(scope.row.eid)"
                     v-hasPermi="['system:contract:upload']"
                 >上传签订合同
                 </el-button>
@@ -135,18 +135,20 @@
                     size="mini"
                     type="text"
                     icon="el-icon-delete"
-                    @click=""
+                    @click="delectHt(scope.row.eid)"
                     v-hasPermi="['system:contract:delete']"
                 >删除
                 </el-button>
                 <!--状态3-->
-                <el-button
-                    v-if="scope.row.eStatus === 3"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >审核
-                </el-button>
+                <router-link :to="'examine?eid='+scope.row.eid">
+                  <el-button
+                      v-if="scope.row.eStatus === 3"
+                      size="mini"
+                      type="text"
+                      @click=""
+                  >审核
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -183,12 +185,14 @@
                     @click=""
                 >变更
                 </el-button>
-                <el-button
-                    size="mini"
-                    type="text"
-                    @click=""
-                >补充
-                </el-button>
+                <router-link to="'update?oid='+scope.row.oid">
+                  <el-button
+                      size="mini"
+                      type="text"
+                      @click=""
+                  >查看
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -208,6 +212,7 @@
 
 <script>
 import { listContract, listTender } from '@/api/system/cm'
+import { delContract, updateoHstatus } from '../../../api/system/addContract'
 
 export default {
   name: 'Contract',
@@ -291,6 +296,39 @@ export default {
     this.getList1()
   },
   methods: {
+    //删除合同
+    delectHt(eid) {
+      delContract({ 'eid': eid }).then(response => {
+        console.log(response)
+        if (response.msg == '删除成功') {
+          this.activeName = 'third'
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.getList3()
+        } else {
+          this.$message.error('删除异常')
+        }
+      })
+    },
+    //上传签订合同
+    UploadHt(eid) {
+      alert(eid)
+      updateoHstatus({ 'oHstatus': 3, 'eid': eid }).then(response => {
+        console.log(response)
+        if (response.data > 0) {
+          this.activeName = 'third'
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          this.getList3()
+        } else {
+          this.$message.error('上传异常')
+        }
+      })
+    },
     handleClick(tab, event) {
       console.log('切换到标签页', tab.name)
       if (tab.name === 'first') {

@@ -117,7 +117,26 @@ public class BSFrameManagementController extends BaseController {
     @Log(title = "框架协议管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BSFrameManagement bSFrameManagement) {
-        return toAjax(bSFrameManagementService.updateBSFrameManagement(bSFrameManagement));
+        System.out.println("打印bSFrameManagement--------------------------------------");
+        System.out.println(bSFrameManagement);
+        int k = bSFrameManagementService.updateBSFrameManagement(bSFrameManagement);
+        if (k > 0) {
+            Long oid = bSFrameManagement.getOid();
+            //删除设备信息
+            inventoryService.deleteBsInventoryByOid(oid);
+            //修改设备信息
+            List<BsInventory> list = bSFrameManagement.getBsInventoryList();
+            for (BsInventory bsInventory : list) {
+                bsInventory.setOid(oid);
+                int i = inventoryService.insertBsInventory(bsInventory);
+                if (i == 0) {
+                    return AjaxResult.error("修改异常");
+                }
+            }
+            return AjaxResult.success("修改成功");
+        }
+        return AjaxResult.error("添加异常");
+//        return toAjax(bSFrameManagementService.updateBSFrameManagement(bSFrameManagement));
     }
 
     /**

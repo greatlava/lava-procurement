@@ -7,16 +7,16 @@
         <h3>合同基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同名称" prop="eHname" style="width: 45%">
-            <el-input v-model="form.eHname" clearable class="cInput"/>
+            <el-input v-model="form.eHname" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="合同编号" prop="eHcode" style="width: 45%">
-            <el-input v-model="form.eHcode" clearable class="cInput" placeholder="系统自动生成" disabled/>
+            <el-input v-model="form.eHcode" clearable class="cInput" placeholder="系统自动生成" readonly/>
           </el-form-item>
           <el-form-item label="类型" prop="eType" style="width: 45%">
             <el-input v-model="form.eType" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="密级" prop="eCon" style="width: 45%">
-            <el-select v-model="form.eCon" placeholder="请选择" class="cInput">
+            <el-select v-model="form.eCon" placeholder="请选择" class="cInput" disabled>
               <el-option
                   v-for="item in mjOptions"
                   :key="item.value"
@@ -26,13 +26,13 @@
             </el-select>
           </el-form-item>
           <el-form-item label="开始时间" prop="eStartdate" style="width: 45%">
-            <el-date-picker v-model="form.eStartdate" type="date" class="cInput"/>
+            <el-date-picker v-model="form.eStartdate" type="date" class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="结束时间" prop="eEnddate" style="width: 45%">
-            <el-date-picker v-model="form.eEnddate" type="date" class="cInput"/>
+            <el-date-picker v-model="form.eEnddate" type="date" class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="交付日期" prop="eDeliveryTime" style="width: 45%">
-            <el-date-picker v-model="form.eDeliveryTime" type="date" class="cInput"/>
+            <el-date-picker v-model="form.eDeliveryTime" type="date" class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="合同金额" prop="eAmount" style="width: 45%">
             <el-input v-model="form.eAmount" clearable class="cInput" readonly/>
@@ -40,7 +40,7 @@
           </el-form-item>
           <el-form-item label="合同情况说明" prop="eDescription" style="width: 100%">
             <el-col>
-              <el-input v-model="form.eDescription" type="textarea" :rows="4" clearable class="cInput"/>
+              <el-input v-model="form.eDescription" type="textarea" :rows="4" clearable class="cInput" readonly/>
             </el-col>
           </el-form-item>
         </el-row>
@@ -68,50 +68,19 @@
       <!--合同标的清单-->
       <h3>合同标的清单</h3>
       <div class="cl">
-        <el-button @click="lAddRow">新增</el-button>
-        <el-button @click="lDeleteRows" :disabled="lSelectedRows.length === 0">删除</el-button>
-        <el-button @click="lCopyRows" :disabled="lSelectedRows.length === 0">复制</el-button>
         <el-table
             :data="lTableData"
             :row-key="row => row.id"
-            @selection-change="lHandleSelectionChange"
             border
             stripe
             :style="{marginTop:'10px'}"
         >
-          <el-table-column type="selection" width="55"/>
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inName" readonly>
                 <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px"/>
               </el-input>
-              <el-dialog title="产品名称" :visible.sync="cpDialog">
-                <el-table
-                    ref="singleTable"
-                    :data="deviceList"
-                    highlight-current-row
-                    style="width: 100%"
-                    @row-click="handleRowClick"
-                >
-                  <el-table-column prop="tName" label="产品名称" width="140"/>
-                  <el-table-column prop="tid" label="产品编号" width="130"/>
-                  <el-table-column prop="tModel" label="规格型号" width="150"/>
-                  <el-table-column prop="tUnit" label="单位" width="85"/>
-                  <el-table-column prop="tPrice" label="单价" width="120"/>
-                  <el-table-column prop="shui" label="税点" width="100"/>
-                </el-table>
-                <pagination
-                    v-show="total>0"
-                    :total="total"
-                    :page.sync="queryParams.pageNum"
-                    :limit.sync="queryParams.pageSize"
-                    @pagination="selectBdList"
-                />
-                <div style="margin-top: 20px">
-                  <el-button @click="closeDialog1">取消</el-button>
-                </div>
-              </el-dialog>
             </template>
           </el-table-column>
           <el-table-column label="产品编码" prop="tid" width="163">
@@ -135,7 +104,7 @@
             </template>
           </el-table-column>
           <el-table-column label="数量" prop="inCount" width="150">
-            <template slot-scope="scope">
+            <template slot-scope="scope" disabled="">
               <el-input-number
                   v-model="scope.row.inCount"
                   :min="1"
@@ -147,7 +116,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="小计" prop="inSubtotal" width="140">
+          <el-table-column label="小计" prop="inSubtotal">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inSubtotal" readonly/>
             </template>
@@ -155,29 +124,24 @@
         </el-table>
         <div :style="{textAlign:'right'}">
           <span :style="{marginRight:'100px'}">总价:</span>
-          <span :style="{fontWeight:'700'}">{{ lTotalSubtotal.toFixed(2) }}</span>
+          <span :style="{fontWeight:'700'}">{{ lTotalSubtotal }}</span>
         </div>
       </div>
 
       <!--合同付款约定-->
       <h3>合同付款约定</h3>
       <div class="cl">
-        <el-button @click="payAddRow">新增</el-button>
-        <el-button @click="payDeleteRows" :disabled="paySelectedRows.length === 0">删除</el-button>
-        <el-button @click="payCopyRows" :disabled="paySelectedRows.length === 0">复制</el-button>
         <el-table
             :data="payTableData"
             :row-key="row => row.id"
-            @selection-change="payHandleSelectionChange"
             border
             stripe
             :style="{marginTop:'10px'}"
         >
-          <el-table-column type="selection" width="55"/>
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="款项内容" prop="payContent">
             <template slot-scope="scope">
-              <el-select v-model="scope.row.payContent" class="cInput">
+              <el-select v-model="scope.row.payContent" class="cInput" disabled>
                 <el-option
                     v-for="item in payTypes"
                     :key="item.dictValue"
@@ -190,7 +154,7 @@
           <el-table-column label="付款日期">
             <template slot-scope="scope">
               <div class="block">
-                <el-date-picker v-model="scope.row.payDate" type="date" placeholder="选择日期"/>
+                <el-date-picker v-model="scope.row.payDate" type="date" placeholder="选择日期" readonly/>
               </div>
             </template>
           </el-table-column>
@@ -206,17 +170,17 @@
           </el-table-column>
           <el-table-column label="付款条件" prop="payTerms">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.payTerms"/>
+              <el-input v-model="scope.row.payTerms" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="付款金额" prop="payAmount">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="payHandleInput(scope.row)"/>
+              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="payHandleInput(scope.row)" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="违约责任" prop="debty">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.debty"/>
+              <el-input v-model="scope.row.debty" readonly/>
             </template>
           </el-table-column>
         </el-table>
@@ -226,7 +190,7 @@
       <el-form ref="qsForm" :model="qsFormData" :rules="rules2" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="签署方数" prop="gnSignatorycount" style="width: 45%">
-            <el-select v-model="qsFormData.gnSignatorycount" class="cInput" @change="qsHandleChange">
+            <el-select v-model="qsFormData.gnSignatorycount" class="cInput" disabled>
               <el-option
                   v-for="item in qsOptions"
                   :key="item.value"
@@ -237,77 +201,77 @@
             </el-select>
           </el-form-item>
           <el-form-item label="我方主体" prop="gnSub" style="width: 45%">
-            <el-input v-model="qsFormData.gnSub" class="cInput"/>
+            <el-input v-model="qsFormData.gnSub" class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方供应商" prop="gnPbname" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbname" class="cInput"/>
+            <el-input v-model="qsFormData.gnPbname" class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方供应商地址" prop="gnPbaddress" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbaddress" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbaddress" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方联系人" prop="gnPbcontact" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbcontact" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbcontact" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方联系方式" prop="gnPbcif" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbcif" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbcif" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方开户行" prop="gnPbbank" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbbank" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbbank" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="乙方开户行账户" prop="gnPbaccount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbaccount" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbaccount" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="合同方金额" prop="gnPbamount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="币别" prop="gnPbcurrency" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbcurrency" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbcurrency" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="已支付金额" prop="gnPbpayment" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbpayment" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbpayment" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="锁定金额" prop="gnPbfixedprice" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbfixedprice" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbfixedprice" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="剩余金额" prop="gnPbbalance" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbbalance" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbbalance" clearable class="cInput" readonly/>
           </el-form-item>
         </el-row>
         <div v-if="qsFormData.gnSignatorycount === 1">
           <el-divider direction="horizontal"/>
           <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
             <el-form-item label="丙方供应商" prop="gnPcname" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcname" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcname" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="丙方供应商地址" prop="gnPcaddress" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcaddress" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcaddress" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="丙方联系人" prop="gnPccontact" style="width: 45%">
-              <el-input v-model="qsFormData.gnPccontact" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPccontact" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="丙方联系方式" prop="gnPccif" style="width: 45%">
-              <el-input v-model="qsFormData.gnPccif" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPccif" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="丙方开户行" prop="gnPcbank" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcbank" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcbank" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="丙方开户行账户" prop="gnPcaccount" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcaccount" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcaccount" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="合同方金额" prop="gnPcamount" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcamount" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcamount" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="币别" prop="gnPccurrency" style="width: 45%">
-              <el-input v-model="qsFormData.gnPccurrency" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPccurrency" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="已支付金额" prop="gnPcpayment" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcpayment" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcpayment" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="锁定金额" prop="gnPcfixedprice" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcfixedprice" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcfixedprice" clearable class="cInput" readonly/>
             </el-form-item>
             <el-form-item label="剩余金额" prop="gnPcbalance" style="width: 45%">
-              <el-input v-model="qsFormData.gnPcbalance" clearable class="cInput"/>
+              <el-input v-model="qsFormData.gnPcbalance" clearable class="cInput" readonly/>
             </el-form-item>
           </el-row>
         </div>
@@ -322,12 +286,10 @@
                 ref="up1"
                 class="upload-demo"
                 :action="url"
-                :before-remove="beforeRemove1"
                 :auto-upload="false"
                 :limit="1"
-                :on-exceed="handleExceed1"
-                :on-success="success1"
-                :on-change="onchange1"
+                :file-list="fileList1"
+                disabled
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
             </el-upload>
@@ -337,12 +299,10 @@
                 ref="up2"
                 class="upload-demo"
                 :action="url"
-                :before-remove="beforeRemove2"
                 :auto-upload="false"
                 :limit="1"
-                :on-exceed="handleExceed2"
-                :on-success="success2"
-                :on-change="onchange2"
+                :file-list="fileList2"
+                disabled
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
@@ -352,44 +312,44 @@
                 ref="up3"
                 class="upload-demo"
                 :action="url"
-                :before-remove="beforeRemove3"
                 :auto-upload="false"
                 :limit="1"
-                :on-exceed="handleExceed3"
-                :on-success="success3"
-                :on-change="onchange3"
+                :file-list="fileList3"
+                disabled
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
             </el-upload>
           </el-form-item>
-          <!--          <el-form-item label="意见" prop="eOpinion" style="width: 100%">-->
-          <!--            <el-col>-->
-          <!--              <el-input v-model="form.eOpinion" type="textarea" :rows="4" clearable class="cInput"/>-->
-          <!--            </el-col>-->
-          <!--          </el-form-item>-->
+          <el-form-item label="审核意见" prop="eOpinion" style="width: 100%">
+            <el-input v-model="form.eOpinion" type="textarea" :rows="4" clearable class="cInput"/>
+          </el-form-item>
         </el-row>
       </el-form>
     </div>
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy">创建合同</el-button>
+      <el-button size="medium" type="primary" @click="updateHt">通过</el-button>
+      <el-button size="medium" type="danger" @click="updateBh">驳回</el-button>
     </div>
   </div>
 </template>
 
 
 <script>
-import { getTender } from '../../../api/system/tender/tender'
-import { addContract, listDevice } from '../../../api/system/addContract'
+import { addContract, getAttachments, getContract, listDevice, listInventory, listPayment, SelectSign, updateContract, updateEStatus } from '../../../api/system/addContract'
 import { getSupplier, listSupplier } from '../../../api/system/supplier'
 import { getOperator } from '../../../api/system/operator'
+import { getTender } from '../../../api/system/tender/tender'
 
 export default {
   data() {
     return {
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      /* 招标项目ID */
-      sid: this.$route.query.sid,
+      /* 合同ID */
+      eid: this.$route.query.eid,
       /* 标的清单 */
       //合同标的表格
       lTableData: [],
@@ -466,13 +426,15 @@ export default {
       form: {
         hid: null,
         sid: null,
+        eid: null,
         eHname: null,
         eHcode: null,
         eType: null,
-        eCon: 1,
+        eCon: null,
+        eStatus: null,
         eStartdate: null,
         eEnddate: null,
-        eAmount: 0,
+        eAmount: null,
         eDescription: null,
         tenderName: null,
         tenderNo: null,
@@ -553,9 +515,6 @@ export default {
       },
       rules3: {},
       selectRow: null,
-      fileList1: [],
-      fileList2: [],
-      fileList3: [],
       //附件
       ComPubAttachments: {
         anSize: null,
@@ -565,225 +524,92 @@ export default {
     }
   },
   mounted() {
-    this.lCalculateTotalSubtotal()
   },
   created() {
     //查询相关项目信息
-    this.selectTenderBySid()
-    this.selectSupplier()
+    this.selectContractByEid()
+    // this.selectSupplier()
+    this.selectListInventory()
+    this.selectListPayment()
+    this.getSign()
+    this.getComPubAttachments()
     this.getDicts('bs_contract_pay').then(res => {
       this.payTypes = res.data
     })
   },
   methods: {
-    onchange1(files, fileList) {
-      this.fileList1 = fileList
-      console.log(this.fileList1, 'fileList1 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList1.splice(this.fileList1.indexOf(files[0]), 1)
-      }
-    },
-    onchange2(files, fileList) {
-      this.fileList2 = fileList
-      console.log(this.fileList2, 'fileList2 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
-      }
-    },
-    onchange3(files, fileList) {
-      this.fileList3 = fileList
-      console.log(this.fileList3, 'fileList3 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList3.splice(this.fileList3.indexOf(files[0]), 1)
-      }
-    },
-    //创建合同
-    addXy() {
-      //判断是否上传文件
-      this.submitNextUpload()
-    },
-    add() {
-      this.form.sid = this.sid
-      // alert(this.form.sid)
-      this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
-        delete e.id
-        if (e.tid == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
-      })
-      this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
-        delete e.id
-        if (e.payContent == null || e.payAmount == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
-      })
-      this.form.bsSign = this.qsFormData
-      this.form.comPubAttachments = this.ComPubAttachments
-      console.log('打印this.form.ComPubAttachments')
-      console.log(this.form.ComPubAttachments)
-      //添加合同
-      addContract(this.form).then(response => {
-        console.log(response)
-        if (response.msg=="添加成功"){
-          this.$router.push("/contract/cm")
-        }
+    updateHt() {
+      //通过
+      this.form.eStatus = 1
+      console.log(this.form)
+      updateContract(this.form).then(response => {
+        console.log(response.msg)
+        this.$message.success("已通过")
+        this.$router.push('/contract/cm')
       })
     },
-    //上传协议文件-------------------------------------------------
-    handleExceed1(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove1(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    },
-    success1(response) {
-      console.log(111)
-      this.form.eImage = response.data.url
-      console.log('打印up1-------------------------')
-      console.log(this.form.eImage)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    handleExceed2(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove2(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    },
-    success2(response, fileList) {
-      console.log(222)
-      this.ComPubAttachments.anName = response.data.name
-      this.ComPubAttachments.anUrl = response.data.url
-      this.ComPubAttachments.anSize = fileList.size
-      console.log('打印up2-------------------------')
-      console.log(this.ComPubAttachments)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    handleExceed3(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove3(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    },
-    success3(response) {
-      console.log(333)
-      console.log(response)
-      this.form.eDocuments = response.data.url
-      console.log('打印up3-------------------------')
-      console.log(this.form.eDocuments)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    submitNextUpload() {
-      // 根据条件判断调用下一个上传
-      if (this.fileList1.length > 0 && this.form.eImage == null) {
-        this.$refs.up1.submit()
-      } else if (this.fileList2.length > 0 && this.ComPubAttachments.anUrl == null && this.ComPubAttachments.anSize == null && this.ComPubAttachments.anName == null) {
-        this.$refs.up2.submit()
-      } else if (this.fileList3.length > 0 && this.form.eDocuments == null) {
-        this.$refs.up3.submit()
-      } else {
-        console.log('打印提交-------------------------')
-        this.add()
-      }
+    updateBh() {
+      //驳回
+      this.form.eStatus = 4
+      updateContract(this.form).then(response => {
+        console.log(response.msg)
+        this.$message.error("已驳回")
+        this.$router.push('/contract/cm')
+      })
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
-    spCountBlur(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
-    //产品数量输入框的值改变时
-    spCountChange(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
-    // 计算产品总价格方法
-    lCalculateTotalSubtotal() {
-      this.lTotalSubtotal = this.lTableData.reduce((total, row) => {
-        let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
-        let kk = total + totalValue // 将每行的小计相加得到总价格
-        this.form.eAmount = kk.toFixed(2)
-        this.qsFormData.gnPbamount = kk.toFixed(2)
-        return kk
-      }, 0)
-    },
-    //查询产品信息
-    selectBdList() {
-      listDevice(this.queryParams).then(response => {
-        this.deviceList = response.rows
-        this.total = response.total
-      })
-    },
-    //查询供应商信息和业务经办人信息
-    selectSupplier() {
-      /* 业务经办人信息 */
-      getOperator(this.hid).then(response => {
-        // console.log(response)
+    //查询合同信息
+    selectContractByEid() {
+      getContract(this.eid).then(response => {
+        // console.log('打印了合同的信息')
         let k = response.data
-        this.qsFormData.gnPbcontact = k.ywName
-        this.qsFormData.gnPbcif = k.ywPhone
+        this.form.eid = k.eid
+        this.form.eHname = k.eHname
+        this.form.eHcode = k.eHcode
+        this.form.eDescription = k.eDescription
+        this.form.eStartdate = k.eStartdate
+        this.form.eEnddate = k.eEnddate
+        this.form.eDeliveryTime = k.eDeliveryTime
+        this.form.eAmount = k.eAmount.toFixed(2)
+        this.form.eType = k.eType
+        this.form.eCon = k.eCon
+        this.form.sid = k.sid
+        this.submitData.eOpinion = k.eOpinion
+        console.log(k.eOpinion)
+        if (k.eImage != null) {
+          //获取第一个文件的名称
+          let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
+          let fileListData1 = [{
+            name: imgName1,
+            url: k.eImage
+          }]
+          this.fileList1 = fileListData1
+          this.form.eImage = k.eImage
+        } else {
+          this.fileList1 = []
+          this.fileList1.eImage = null
+        }
+        if (k.eDocuments != null) {
+          //获取第三个文件的名称
+          let imgName2 = (k.eDocuments).substring((k.eDocuments).lastIndexOf('/') + 1)
+          let fileListData2 = [{
+            name: imgName2,
+            url: k.eDocuments
+          }]
+          this.fileList3 = fileListData2
+          this.form.eDocuments = k.eDocuments
+        } else {
+          this.fileList3 = []
+          this.form.eDocuments = null
+        }
+        //查询相关项目信息
+        this.selectTenderBySid()
       })
-      /* 供应商信息 */
-      getSupplier(this.hid).then(res => {
-        // console.log('打印了供应商的信息')
-        console.log(res)
-        let k = res.data
-        this.qsFormData.gnPbname = k.hName
-        this.qsFormData.gnPbaddress = k.hAddress
-        this.qsFormData.gnPbbank = k.hBankAddress
-        this.qsFormData.gnPbaccount = k.hAccount
-        this.qsFormData.gnPbid = k.hid
-        this.form.hid = k.hid
-      })
     },
-    //产品行点击事件
-    handleRowClick(row) {
-      // 在这里处理行点击事件
-      this.selectRow.inName = row.tName
-      this.selectRow.tid = row.tid
-      this.selectRow.inModel = row.tModel
-      this.selectRow.inUnit = row.tUnit
-      this.selectRow.tid = row.tid
-      this.selectRow.inVat = (row.tPrice * 1.13).toFixed(2)
-      this.selectRow.inCount = 1
-      this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
-      this.cpDialog = false
-      this.lCalculateTotalSubtotal()
-    },
-    //产品行点击事件
-    handleRowClick1(row) {
-      // 在这里处理行点击事件
-      this.selectRow.hName = row.hName
-      this.selectRow.tid = row.tid
-      this.GysDialog = false
-    },
-    //关闭产品名称对话框
-    closeDialog1() {
-      this.cpDialog = false
-    },
-    //关闭产品名称对话框
-    closeDialog2() {
-      this.GysDialog = false
-    },
-    /* 查询相关项目信息 */
+    //查询相关项目信息
     selectTenderBySid() {
-      getTender(this.sid).then(response => {
-        // console.log(response)
+      getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName
         this.form.tenderNo = k.sCode
@@ -804,155 +630,80 @@ export default {
         this.form.eType = '一般采购合同'
       })
     },
-    //显示产品对话框
-    openCp(row) {
-      this.selectRow = row
-      this.cpDialog = true
-      this.selectBdList()
-    },
-    //显示产品对话框
-    openGys(row) {
-      this.selectRow = row
-      this.GysDialog = true
-      this.selectGysList()
-    },
-    //查询供应商信息
-    selectGysList() {
-      listSupplier(this.queryParams1).then(response => {
-        console.log(response)
-        this.supplierList = response.rows
-        this.total1 = response.total
+    //查询合同内的产品信息
+    selectListInventory() {
+      this.loading = true
+      listInventory({ 'eid': this.eid }).then(response => {
+        let list = response.rows
+        list.forEach((e, i) => {
+          this.lTableData.push({
+            id: i + 1,
+            inName: e.inName,
+            inModel: e.inModel,
+            inVat: (e.inVat).toFixed(2),
+            inUnit: e.inUnit,
+            inSubtotal: (e.inCount * e.inVat).toFixed(2),
+            tid: e.tid,
+            inCount: e.inCount
+            // inId: e.inId
+          })
+        })
+        this.loading = false
       })
     },
-    /* 签署执行状态 */
-    qsHandleChange(value) {
-      this.qsFormData.gnSignatorycount = value  // 更新选择项的值
-      if (this.gnSignatorycount == 0) {
-        this.qsFormData.gnPccurrency = null
-      } else {
-        this.qsFormData.gnPccurrency = '人民币'
-      }
+    //查询支付信息
+    selectListPayment() {
+      listPayment({ 'eid': this.eid }).then(response => {
+        // console.log(response.rows)
+        let list = response.rows
+        list.forEach((e, i) => {
+          this.payTableData.push({
+            id: i + 1,
+            hid: e.hid,
+            hName: e.hName,
+            payContent: e.payContent,
+            payAmount: (e.payAmount).toFixed(2),
+            payDate: e.payDate,
+            payTerms: e.payTerms,
+            payer: e.payer,
+            // payId: e.payId,
+            debty: e.debty
+          })
+        })
+      })
+    },
+    //查询签署执行状态信息
+    getSign() {
+      SelectSign({ 'eid': this.eid }).then(response => {
+        this.qsFormData = response.data
+        this.lTotalSubtotal = response.data.gnPbamount
+      })
+    },
+    //查询附件信息
+    getComPubAttachments() {
+      getAttachments(this.eid).then(response => {
+        console.log('查询附件信息')
+        console.log(response)
+        if (response.data != null) {
+          let fileListData = [{
+            name: response.data.anName,
+            url: response.data.anUrl,
+            size: response.data.anSize
+          }]
+          this.fileList2 = fileListData
+          this.ComPubAttachments.anUrl = response.data.anUrl
+          this.ComPubAttachments.anName = response.data.anName
+          this.ComPubAttachments.anSize = response.data.anSize
+        } else {
+          this.fileList2 = []
+          this.ComPubAttachments.anUrl = null
+          this.ComPubAttachments.anName = null
+          this.ComPubAttachments.anSize = null
+        }
+      })
     },
     back1() {
       this.$router.back()
-    },
-    /* 合同标的清单 */
-    lAddRow() {
-      const newRow = {}
-      this.lTableColumns.forEach(column => {
-        newRow[column.prop] = ''
-      })
-      newRow.id = this.lTableData.length + 1
-      newRow.inSubtotal = (0).toFixed(2)
-      newRow.inCount = 1
-      this.lTableData.push(newRow)
-    },
-    lDeleteRows() {
-      this.$confirm('确定删除选中的行吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.lTableData = this.lTableData.filter(row => !this.lSelectedRows.includes(row))
-        this.lSelectedRows = []
-        this.lUpdateRowIds()
-        this.lCalculateTotalSubtotal()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    //复制
-    lCopyRows() {
-      const copiedRows = this.lSelectedRows.map(row => ({ ...row }))
-      copiedRows.forEach(row => {
-        row.id = this.lTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
-        this.lTableData.push(row)
-      })
-      this.lCalculateTotalSubtotal()
-    },
-    //行数变化
-    lUpdateRowIds() {
-      this.lTableData.forEach((row, index) => {
-        row.id = index + 1
-      })
-    },
-    //单选多选
-    lHandleSelectionChange(selection) {
-      this.lSelectedRows = selection
-    },
-    /* 合同付款约定 */
-    payAddRow() {
-      const newRow = {}
-      newRow.id = this.payTableData.length + 1
-      newRow.payer = '鸿鹄科技有限公司'
-      newRow.hName = this.qsFormData.gnPbname
-      newRow.hid = this.form.hid
-      this.payTableData.push(newRow)
-    },
-    //删除
-    payDeleteRows() {
-      this.$confirm('确定删除选中的行吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.payTableData = this.payTableData.filter(row => !this.paySelectedRows.includes(row))
-        this.paySelectedRows = []
-        this.payUpdateRowIds()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    //复制
-    payCopyRows() {
-      const copiedRows = this.paySelectedRows.map(row => ({ ...row }))
-      copiedRows.forEach(row => {
-        row.id = this.payTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
-        this.payTableData.push(row)
-      })
-    },
-    //行数变化
-    payUpdateRowIds() {
-      this.payTableData.forEach((row, index) => {
-        row.id = index + 1
-      })
-    },
-    //单选多选
-    payHandleSelectionChange(selection) {
-      this.paySelectedRows = selection
-    },
-    payHandleBlur(row) {
-      if (row.payAmount) {
-        row.payAmount = parseFloat(row.payAmount).toFixed(2)
-      }
-    },
-    payHandleInput(row) {
-      // 只保留数字和一个小数点
-      row.payAmount = row.payAmount.replace(/[^\d.]/g, '')
-      // 只能输入一个小数点
-      let dotIndex = row.payAmount.indexOf('.')
-      if (dotIndex !== -1) {
-        row.payAmount = row.payAmount.slice(0, dotIndex + 1) + row.payAmount.slice(dotIndex + 1).replace(/\./g, '')
-      }
-      // 只能输入到小数点后两位
-      let parts = row.payAmount.split('.')
-      if (parts[1] && parts[1].length > 2) {
-        row.payAmount = parts[0] + '.' + parts[1].slice(0, 2)
-      }
     }
   }
 }
