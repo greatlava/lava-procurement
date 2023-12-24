@@ -65,4 +65,6 @@ public interface PpmFramePlanMapper
 
 
    public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan);
+
+   public int selectFarmeworkPlanCount();
 }

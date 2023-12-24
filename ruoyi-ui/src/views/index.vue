@@ -16,28 +16,22 @@
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="879757698"
+              :value="count.procurementCount"
               title="采购计划数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="3453234"
+              :value="count.farmeworkPlanCount"
               title="框架计划数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="678"
-              title="新增供应商"
+              :value="count.contractCount"
+              title="合同数量"
             >
               <template slot="prefix">
                 <i class="el-icon-s-flag" style="color: red"></i>
@@ -52,7 +46,7 @@
               group-separator=","
               :precision="2"
               decimal-separator="."
-              :value="987543.8754"
+              :value="count.totalPurchaseAmount"
               title="总采购金额"
             >
               <template slot="suffix">
@@ -66,20 +60,23 @@
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="45679"
+              :value="count.tenderCount"
               title="招标项目数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="98765"
+              :value="count.waitingReviewCount"
               title="待审核计划"
-            ></el-statistic>
+            >
+              <template slot="prefix">
+                <i class="el-icon-s-check"></i>
+              </template>
+              <template slot="suffix">
+                <i class="el-icon-s-check"></i>
+              </template>
+            </el-statistic>
           </el-col>
         </el-row>
       </div>
@@ -99,10 +96,10 @@
               </div>
               <div class="cont">
                 <p>
-                  共计：<span>{{ item.count }}</span>个
+                  共计：<span style="font-weight: bold">{{ item.count }}</span>个
                 </p>
                 <ul>
-                  <a target="_blank" v-for="(e,j) in item.content" :key="j">
+                  <a @click.prevent="jumpPage(i,e.id)" href="#" target="_blank" v-for="(e,j) in item.content" :key="j">
                     <li>
                       <h3>{{ e.title }}</h3>
                       <p>编号：{{ e.code }}</p>
@@ -243,7 +240,7 @@
                 <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
               </h3>
             </div>
-            <div style="display: flex;flex-wrap: wrap;justify-content: space-between">
+            <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
               <el-card v-for="j in 12" shadow="hover" class="supplier_list">
                 <div class="supper_list_content">
                   <div>
@@ -277,10 +274,34 @@
 </template>
 
 <script>
+import {
+  selectPpmpProcurementCount,
+  selectFarmeworkPlanCount,
+  selectContractCount,
+  queryTotalPurchaseAmount,
+  selectTenderCount,
+  listPlan,
+  selectTenderByState
+} from '@/api/system/plan'
+
 export default {
   name: "Index",
   data() {
     return {
+      count: {
+        //采购计划数量
+        procurementCount: 0,
+        //框架计划数量
+        farmeworkPlanCount: 0,
+        //合同数量
+        contractCount: 0,
+        //采购计划总金额
+        totalPurchaseAmount: 0,
+        //招标项目数量
+        tenderCount: 0,
+        //待审核采购计划数量
+        waitingReviewCount: 0,
+      },
       tableData: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -298,76 +319,133 @@ export default {
         name: '王小虎',
         address: '上海市普陀区金沙江路 1516 弄'
       }],
+      //项目看板
       project_Kanban: [{
         title: "寻源阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg01.png",
         count: 2,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "招标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg02.png",
         count: 456,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "投标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg03.png",
         count: 23,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
-      }, {
-        title: "比价阶段",
-        imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg04.png",
-        count: 31, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "评审阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg05.png",
-        count: 73, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        count: 73, content: []
       }, {
         title: "中标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg06.png",
-        count: 35, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        count: 35, content: []
       }],
       // 版本号
       version: "3.6.3",
     };
   },
   created() {
-
+    this.init();
   },
   methods: {
+    jumpPage(index, id) {
+      switch (index) {
+        case 0:
+          this.$router.push({path: '/purchase/procurementSourcing', query: {aid: id}})
+          break;
+        case 1:
+          break;
+      }
+    },
+    init() {
+      //查询采购计划数量
+      selectPpmpProcurementCount(null).then(res => {
+        this.count.procurementCount = res;
+      })
+      //查询框架计划数量
+      selectFarmeworkPlanCount().then(res => {
+        this.count.farmeworkPlanCount = res.data;
+      })
+      //查询合同数量
+      selectContractCount().then(res => {
+        this.count.contractCount = res.data;
+      })
+      //查询采购计划总价格
+      queryTotalPurchaseAmount().then(res => {
+        this.count.totalPurchaseAmount = res.data;
+      })
+      //查询招标项目数量
+      selectTenderCount().then(res => {
+        this.count.tenderCount = res.data;
+      })
+      //查询待审核采购计划数量
+      selectPpmpProcurementCount(2).then(res => {
+        this.count.waitingReviewCount = res;
+      })
+      //查询寻源阶段数量
+      selectPpmpProcurementCount(2).then(res => {
+        this.project_Kanban[0].count = res;
+      })
+      //项目看板
+      this.poject_kanban();
+    },
+    //项目看板
+    poject_kanban() {
+      //查询项目看板寻源阶段
+      listPlan({pageSize: 3, aAstate: 2}).then(res => {
+        res.rows.forEach((e, i) => {
+          let obj = {
+            title: e.aName,
+            code: e.aCode,
+            responsible_person: e.createBy,
+            id: e.aid
+          };
+          this.project_Kanban[0].content.push(obj);
+        })
+      })
+      //查询招标项目阶段项目看板
+      selectTenderByState({sProjectState: 2}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[1].content.push(obj);
+        })
+      })
+
+      //查询投标项目阶段项目看板
+      selectTenderByState({sProjectState: 1}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[2].content.push(obj);
+        })
+      })
+      //查询评审阶段项目看板
+      selectTenderByState({sProjectState: 3}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[3].content.push(obj);
+        })
+      })
+      
+    },
     refresh_project_Kanban() {
 
     }
@@ -510,7 +588,7 @@ li {
 }
 
 .conent_left li {
-  width: 15%;
+  width: 17%;
   display: inline-block;
   vertical-align: top;
 }
@@ -673,7 +751,7 @@ li {
   margin: 0;
   padding: 0;
   font-size: 16px;
-  color: #5e69b6;
+  color: #091044;
   font-weight: bold;
 }
 

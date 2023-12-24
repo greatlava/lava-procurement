@@ -94,4 +94,9 @@ public class PpmFramePlanServiceImpl implements IPpmFramePlanService {
     public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan) {
         return ppmFramePlanMapper.updateFarmeworkPlanStatusByJhId(ppmFramePlan);
     }
+
+    @Override
+    public int selectFarmeworkPlanCount() {
+        return ppmFramePlanMapper.selectFarmeworkPlanCount();
+    }
 }

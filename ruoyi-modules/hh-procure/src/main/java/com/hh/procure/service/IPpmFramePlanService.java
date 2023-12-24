@@ -63,4 +63,6 @@ public interface IPpmFramePlanService
     public PpmFramePlan queryFrameworkPlanAndRelatedInformation(Integer jhId);
 
     public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan);
+
+    public int selectFarmeworkPlanCount();
 }

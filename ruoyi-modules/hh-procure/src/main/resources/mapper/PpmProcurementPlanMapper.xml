@@ -61,6 +61,7 @@
             <if test="aBtype != null  and aBtype != ''">and a_btype = #{aBtype}</if>
             <if test="aAstate != null ">and a_astate = #{aAstate}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectPpmProcurementPlanByAid" parameterType="Integer" resultMap="PpmProcurementPlanResult">
@@ -100,6 +101,30 @@
             <if test="aBtype != null  and aBtype != ''">and a_btype = #{aBtype}</if>
             <if test="aAstate != null ">and a_astate = #{aAstate}</if>
         </where>
+    </select>
+
+    <select id="selectPpmpProcurementCount" resultType="java.lang.Integer">
+        SELECT count(0) FROM ppm_procurement_plan
+        <where>
+            <if test="aAstate != null ">and a_astate = #{aAstate}</if>
+        </where>
+    </select>
+
+    <select id="selectContractCount" resultType="java.lang.Integer">
+        SELECT count(0)
+        FROM bs_contract
+    </select>
+
+    <select id="queryTotalPurchaseAmount" resultType="java.lang.Double">
+        SELECT sum(du_total) from ppm_budget
+    </select>
+
+    <select id="selectTenderCount" resultType="java.lang.Integer">
+        SELECT count(0) FROM bid_tender
+    </select>
+
+    <select id="selectTenderByState" resultType="com.ruoyi.system.api.domain.BidTender">
+        SELECT * FROM bid_tender WHERE s_project_state = #{sProjectState} ORDER BY create_time desc LIMIT 3
     </select>
 
     <insert id="insertPpmProcurementPlan" parameterType="com.hh.procure.domain.PpmProcurementPlan" useGeneratedKeys="true" keyProperty="aid">

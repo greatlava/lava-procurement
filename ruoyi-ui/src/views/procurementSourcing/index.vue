@@ -77,7 +77,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <el-dialog  @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
       <el-tabs @tab-click="handleClick" v-model="paneName">
         <el-descriptions direction="vertical" class="margin-top" :column="4" size="medium" border>
           <el-descriptions-item label="采购计划编号">{{ form.aCode }}</el-descriptions-item>
@@ -236,6 +236,11 @@ export default {
     }
   },
   created() {
+    let obj = this.$route.query;
+    console.log(obj)
+    if (obj && obj.aid) {
+      this.handleClick(obj);
+    }
     this.getList()
   },
   methods: {
@@ -321,7 +326,7 @@ export default {
         this.form = res.data;
         if (res.data.items) {
           res.data.items.forEach((e, i) => {
-            if (e.ppmBudget.duId){
+            if (e.ppmBudget.duId) {
               this.budgetData.push(e.ppmBudget);
             }
           })
