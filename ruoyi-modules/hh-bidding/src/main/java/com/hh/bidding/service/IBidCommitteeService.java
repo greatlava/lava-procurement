@@ -58,4 +58,8 @@ public interface IBidCommitteeService
      * @return 结果
      */
     public int deleteBidCommitteeByPbId(Long pbId);
+
+    public int delComBySid(Long sid);
+
+    public List<BidCommittee> findCommitteeAndExpert(Long sid);
 }

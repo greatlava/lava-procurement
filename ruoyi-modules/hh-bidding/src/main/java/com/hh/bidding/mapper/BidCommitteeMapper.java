@@ -58,4 +58,8 @@ public interface BidCommitteeMapper
      * @return 结果
      */
     public int deleteBidCommitteeByPbIds(Long[] pbIds);
+
+    public int delComBySid(Long sid);
+
+    public List<BidCommittee> findCommitteeAndExpert(Long sid);
 }

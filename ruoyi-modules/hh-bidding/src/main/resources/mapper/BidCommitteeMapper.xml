@@ -14,10 +14,11 @@
         <result property="pbGenre"    column="pb_genre"    />
         <result property="pbTypes"    column="pb_types"    />
         <result property="jid"    column="jid"    />
+        <result property="sid"    column="sid"    />
     </resultMap>
 
     <sql id="selectBidCommitteeVo">
-        select pb_id, xid, pb_name, pb_sex, pb_idcard, pb_phone, pb_genre, pb_types, jid from bid_committee
+        select pb_id, xid, pb_name, pb_sex, pb_idcard, pb_phone, pb_genre, pb_types, jid,sid from bid_committee
     </sql>
 
     <select id="selectBidCommitteeList" parameterType="com.hh.bidding.domain.BidCommittee" resultMap="BidCommitteeResult">
@@ -31,6 +32,7 @@
             <if test="pbGenre != null  and pbGenre != ''"> and pb_genre = #{pbGenre}</if>
             <if test="pbTypes != null  and pbTypes != ''"> and pb_types = #{pbTypes}</if>
             <if test="jid != null "> and jid = #{jid}</if>
+            <if test="sid != null "> and sid = #{sid}</if>
         </where>
     </select>
 
@@ -51,6 +53,7 @@
             <if test="pbGenre != null">pb_genre,</if>
             <if test="pbTypes != null">pb_types,</if>
             <if test="jid != null">jid,</if>
+            <if test="sid != null">sid,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pbId != null">#{pbId},</if>
@@ -62,6 +65,7 @@
             <if test="pbGenre != null">#{pbGenre},</if>
             <if test="pbTypes != null">#{pbTypes},</if>
             <if test="jid != null">#{jid},</if>
+            <if test="sid != null">#{sid},</if>
         </trim>
     </insert>
 
@@ -76,6 +80,7 @@
             <if test="pbGenre != null">pb_genre = #{pbGenre},</if>
             <if test="pbTypes != null">pb_types = #{pbTypes},</if>
             <if test="jid != null">jid = #{jid},</if>
+            <if test="sid != null">sid = #{sid},</if>
         </trim>
         where pb_id = #{pbId}
     </update>
@@ -90,4 +95,17 @@
             #{pbId}
         </foreach>
     </delete>
+
+    <delete id="delComBySid" parameterType="Long">
+        delete from bid_committee where sid = #{sid}
+    </delete>
+
+    <select id="findCommitteeAndExpert" parameterType="Long" resultMap="twoComAndExp">
+        select c.pb_id,c.xid,c.sid,e.* from bid_committee c
+                                                inner join bs_expert e on e.jid = c.jid where c.sid=#{sid}
+    </select>
+    <resultMap id="twoComAndExp" type="com.hh.bidding.domain.BidCommittee">
+        <id column="pb_id" property="pbId"/>
+        <association property="bsExpert"/>
+    </resultMap>
 </mapper>

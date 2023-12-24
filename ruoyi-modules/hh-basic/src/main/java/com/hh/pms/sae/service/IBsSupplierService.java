@@ -2,6 +2,7 @@ package com.hh.pms.sae.service;
 
 import java.util.List;
 
+import com.hh.pms.sae.domain.BidSubmission;
 import com.hh.pms.sae.domain.BsSupplier;
 import com.hh.pms.sae.domain.NobidNonPro;
 import com.hh.pms.sae.domain.PpmDevice;
@@ -102,4 +103,6 @@ public interface IBsSupplierService {
     public NobidNonPro queryOneByCode(String code);
 
     public List<PpmDevice> listDev(Long gid);
+
+    public List<BidSubmission> listSubmission(Long hid, String sName);
 }
