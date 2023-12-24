@@ -312,7 +312,6 @@
               <el-table-column label="发证单位" align="center" prop="zzUnit"/>
               <el-table-column label="发证日期" align="center" prop="zzDate"/>
               <el-table-column label="有效期至" align="center" prop="zzExpirationDate"/>
-              <el-table-column label="扫描件" align="center" prop="zzScan"/>
             </el-table>
             <pagination
               v-show="total1>0"
@@ -338,7 +337,6 @@
               <el-table-column label="合同金额（万元）" align="center" prop="yjRmb"/>
               <el-table-column label="买方业务代表" align="center" prop="yjBbr"/>
               <el-table-column label="买方业务代表联系电话" align="center" prop="yjPhone"/>
-              <el-table-column label="合同扫描件" align="center" prop="yjScanContract"/>
             </el-table>
             <pagination
               v-show="total2>0"
@@ -361,11 +359,6 @@
               <el-table-column label="年度" align="center" prop="cAnnual"/>
               <el-table-column label="净利润（万元）" align="center" prop="cNetProfit"/>
               <el-table-column label="资产负债率（%）" align="center" prop="cLev"/>
-              <el-table-column label="财务审计报告扫描件" align="center" prop="cScanFar"/>
-              <el-table-column label="附件审计报告" align="center" prop="cScanAar"/>
-              <el-table-column label="资产负债表扫描件" align="center" prop="cScanAl"/>
-              <el-table-column label="利润表扫描件" align="center" prop="cScanIs"/>
-              <el-table-column label="现金流量表扫描件" align="center" prop="cScanCfs"/>
             </el-table>
             <pagination
               v-show="total3>0"
@@ -676,13 +669,17 @@ export default {
       if (this.zr_id == 0) {
         getSupplier(this.hid).then(response => {
           this.yang(response)
+          this.infos()
         });
       } else {
         getSupplierByZrId(this.zr_id).then(response => {
           this.$router.replace({query: {...this.$route.query, hid: response.data.hid}});
           this.yang(response)
+          this.infos()
         });
       }
+    },
+    infos() {
       //业务经办人
       getOperator(this.hid).then(response => {
         this.operator.ywName = response.data.ywName
@@ -721,8 +718,6 @@ export default {
       })
       this.loading = false
     },
-
-
     // 文件提交处理
     submitUpload() {
       this.$refs.upload.submit();

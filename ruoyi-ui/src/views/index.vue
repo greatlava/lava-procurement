@@ -119,32 +119,40 @@
           <div class="content_rigth_top">
             <el-row>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou001.png" alt="">
-                  <div>采购计划</div>
-                </div>
+                <router-link :to="'purchase/purchase'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou001.png" alt="">
+                    <div>采购计划</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou003.png" alt="">
-                  <div>采购寻源</div>
-                </div>
+                <router-link :to="'purchase/procurementSourcing'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou003.png" alt="">
+                    <div>采购寻源</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou004.png" alt="">
-                  <div>合同管理</div>
-                </div>
+                <router-link :to="'contract/cm'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou004.png" alt="">
+                    <div>合同管理</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou005.png" alt="">
-                  <div>供应商管理</div>
-                </div>
+                <router-link :to="'supplier/sqe'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou005.png" alt="">
+                    <div>供应商管理</div>
+                  </div>
+                </router-link>
               </el-col>
 
             </el-row>
@@ -152,8 +160,10 @@
           <div class="content_right_bottom">
             <div class="project_Kanban_title">
               <h3>采购订单
-                <i style="vertical-align: middle;" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                <router-link :to="'purchase/purchase'">
+                  <i style="vertical-align: middle;" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
             <el-timeline class="content_right_purchase">
@@ -208,8 +218,10 @@
           <div class="content_foot_left">
             <div class="project_Kanban_title">
               <h3>招标项目
-                <i style="vertical-align: middle;margin-right: 25px" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                <router-link :to="'tender/tender1'">
+                  <i style="vertical-align: middle;margin-right: 25px" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
             <el-table max-height="250px"
@@ -239,12 +251,14 @@
           <div style="height: 100%" class="content_foot_left">
             <div class="project_Kanban_title">
               <h3 style="margin-left: 0px">供应商列表
-                <i style="vertical-align: middle" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                <router-link :to="'supplier/sqe'">
+                  <i style="vertical-align: middle" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
             <div style="display: flex;flex-wrap: wrap;justify-content: space-between">
-              <el-card v-for="j in 12" shadow="hover" class="supplier_list">
+              <el-card v-for="item in suppliers" :key="item.index" shadow="hover" class="supplier_list">
                 <div class="supper_list_content">
                   <div>
                     <img
@@ -252,10 +266,10 @@
                       alt="">
                   </div>
                   <div class="supplier_describe div">
-                    <p>法人：马化腾</p>
-                    <h3>腾讯科技（深圳）有限公司</h3>
+                    <p>法人：{{ item.hJuridical }}</p>
+                    <h3>{{ item.hName }}</h3>
                     <span
-                      class="brief_introduction">公司简介：腾讯是一家世界领先的互联网科技公司，用创新的产品和服务提升全球各地人们的生活品质</span>
+                      class="brief_introduction">公司简介：{{ item.hDesc }}</span>
                   </div>
                   <div class="review_status">
                     <el-tag type="primary">已审核</el-tag>
@@ -264,7 +278,7 @@
                 <div class="supplier_list_foot">
                   <p>
                     <i class="el-icon-location-information"></i>
-                    联系地址：广东省深圳市南山区海天二路33号腾讯滨海大厦
+                    联系地址：{{ item.hAddress }}
                   </p>
                 </div>
               </el-card>
@@ -277,6 +291,8 @@
 </template>
 
 <script>
+import {listSupplier} from "@/api/system/supplier";
+
 export default {
   name: "Index",
   data() {
@@ -304,7 +320,7 @@ export default {
         count: 2,
         content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }, {
@@ -313,9 +329,9 @@ export default {
         count: 456,
         content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }, {
@@ -324,9 +340,9 @@ export default {
         count: 23,
         content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }, {
@@ -334,9 +350,9 @@ export default {
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg04.png",
         count: 31, content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }, {
@@ -344,9 +360,9 @@ export default {
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg05.png",
         count: 73, content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }, {
@@ -354,22 +370,29 @@ export default {
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg06.png",
         count: 35, content: [{
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
+        }, {
           title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
         }]
       }],
       // 版本号
       version: "3.6.3",
+      suppliers: []
     };
   },
   created() {
-
+    this.listSupplier()
   },
   methods: {
     refresh_project_Kanban() {
 
+    },
+    //显示供应商列表
+    listSupplier() {
+      listSupplier({"pageNum": 1, "pageSize": 12}).then(res => {
+        this.suppliers = res.rows
+      })
     }
   },
 };

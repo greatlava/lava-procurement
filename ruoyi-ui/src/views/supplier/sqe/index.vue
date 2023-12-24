@@ -4,7 +4,7 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="合格供应商" name="first">
           <el-form ref="elForm1" :model="formData" :rules="rules" size="medium" label-width="100px">
-            <el-row type="flex" justify="start" align="middle" gutter="15">
+            <el-row type="flex" justify="start" align="middle" :gutter="15">
               <el-form-item label="供应商名称" prop="field101">
                 <el-input v-model="formData.field101" placeholder="请输入供应商名称" clearable
                           :style="{width: '100%'}">
@@ -56,7 +56,7 @@
 
         <el-tab-pane label="不合格供应商" name="second">
           <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
-            <el-row type="flex" justify="start" align="middle" gutter="15">
+            <el-row type="flex" justify="start" align="middle" :gutter="15">
               <el-form-item label="供应商名称" prop="field103">
                 <el-input v-model="formData.field103" placeholder="请输入供应商名称" clearable
                           :style="{width: '100%'}">
@@ -108,7 +108,7 @@
 
         <el-tab-pane label="供应商不良记录" name="third">
           <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
-            <el-row type="flex" justify="start" align="middle" gutter="15">
+            <el-row type="flex" justify="start" align="middle" :gutter="15">
               <el-form-item label="供应商名称" prop="field105">
                 <el-input v-model="formData.field105" placeholder="请输入供应商名称" clearable
                           :style="{width: '100%'}">

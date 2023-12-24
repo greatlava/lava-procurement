@@ -24,8 +24,33 @@
       <el-descriptions-item label="通讯地址" :span="2">{{ basic.jAddress }}</el-descriptions-item>
       <el-descriptions-item label="开户行">{{ basic.jBank }}</el-descriptions-item>
       <el-descriptions-item label="银行卡号">{{ basic.jCard }}</el-descriptions-item>
-      <el-descriptions-item label="身份证照">{{ basic.jIdentityPhoto }}</el-descriptions-item>
-      <el-descriptions-item label="证件照">{{ basic.jDocumentsPhoto }}</el-descriptions-item>
+
+      <el-descriptions-item>
+        <template slot="label">
+          身份证照
+        </template>
+        <div class="demo-image__preview">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="jIdentityCopy"
+            fit="contain"
+            :preview-src-list="jIdentityCopyList">
+          </el-image>
+        </div>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          证件照
+        </template>
+        <div class="demo-image__preview">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="jDocumentsCopy"
+            fit="contain"
+            :preview-src-list="jDocumentsCopyList">
+          </el-image>
+        </div>
+      </el-descriptions-item>
     </el-descriptions>
 
     <span style="font-size: 18px;font-weight: bold;">任职经历</span>
@@ -138,7 +163,11 @@ export default {
         jBank: null,
         jShState: null,
         jOpinion: null
-      }
+      },
+      jIdentityCopy: null,
+      jIdentityCopyList: [],
+      jDocumentsCopy: null,
+      jDocumentsCopyList: []
     }
   }, created() {
     if (this.param == 0) {
@@ -155,6 +184,12 @@ export default {
       this.loading = true;
       getExpert(this.jid).then(response => {
         this.basic = response.data;
+        this.jIdentityCopy = JSON.parse(response.data.jIdentityPhoto)[0].url
+        for (let i = 0; i < JSON.parse(response.data.jIdentityPhoto).length; i++) {
+          this.jIdentityCopyList.push(JSON.parse(response.data.jIdentityPhoto)[i].url)
+        }
+        this.jDocumentsCopy = JSON.parse(response.data.jDocumentsPhoto)[0].url
+        this.jDocumentsCopyList.push(JSON.parse(response.data.jDocumentsPhoto)[0].url)
       });
       listExperience({"jid": this.jid}).then(res => {
         this.experienceList = res.rows;

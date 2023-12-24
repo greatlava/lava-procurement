@@ -123,7 +123,7 @@ public class BsSupplierController extends BaseController {
     /**
      * 查询合格供应商列表
      */
-    @RequiresPermissions("system:supplier:list")
+//    @RequiresPermissions("system:supplier:list")
     @GetMapping("/list")
     public TableDataInfo list(BsSupplier bsSupplier) {
         startPage();
