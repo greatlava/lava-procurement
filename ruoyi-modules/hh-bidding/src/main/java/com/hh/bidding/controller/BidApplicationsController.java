@@ -90,7 +90,7 @@ public class BidApplicationsController extends BaseController
     public AjaxResult add(@RequestBody BidApplications bidApplications)
     {
         //创建编码
-        CodeRulesResult result = CodeRuleHelp.createCode(comCodeRulesService, CodeRuleUtil.FRAMEWORK_MANAHEMENT);
+        CodeRulesResult result = CodeRuleHelp.createCode(comCodeRulesService, CodeRuleUtil.BID_APPLICATIONS);
         String code = result.getCode();
         bidApplications.setxCode(code);
         return toAjax(bidApplicationsService.insertBidApplications(bidApplications));
