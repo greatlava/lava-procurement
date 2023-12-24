@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hh.pms.cm.domain.CodeRulesResult;
 import com.hh.pms.cm.service.IComCodeRulesService;
@@ -18,6 +19,7 @@ import com.hh.pms.sae.domain.*;
 import com.hh.pms.sae.service.IBsAccessService;
 import com.hh.pms.sae.service.IBsOperatorService;
 import com.hh.pms.sae.utils.CodeUtils;
+import com.hh.pms.sae.utils.FileUtil;
 import com.hh.pms.sae.utils.TokenUtil;
 import com.hh.pms.sae.service.IBsSupplierService;
 import com.ruoyi.common.core.domain.R;
@@ -302,5 +304,11 @@ public class BsSupplierController extends BaseController {
         startPage();
         List<BidSubmission> list = bsSupplierService.listSubmission(hid, sName);
         return getDataTable(list);
+    }
+
+    @GetMapping("/downloadZip")
+    public void downloadZip(@RequestParam String url, HttpServletResponse response) {
+        //下载压缩包
+        FileUtil.downloadFiles(url, response);
     }
 }
