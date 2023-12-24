@@ -165,4 +165,13 @@ public class PpmFramePlanController extends BaseController {
     }
 
 
+
+    //查询已完成并且未创建框架协议的框架计划
+    @RequiresPermissions("system:plan:list1")
+    @GetMapping("/list1")
+    public TableDataInfo list1(PpmFramePlan ppmFramePlan) {
+        startPage();
+        List<PpmFramePlan> list = ppmFramePlanService.selectBsFramePlanList(ppmFramePlan);
+        return getDataTable(list);
+    }
 }

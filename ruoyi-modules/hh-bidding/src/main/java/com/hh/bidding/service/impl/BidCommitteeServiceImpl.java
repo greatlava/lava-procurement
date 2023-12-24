@@ -90,4 +90,14 @@ public class BidCommitteeServiceImpl implements IBidCommitteeService
     {
         return bidCommitteeMapper.deleteBidCommitteeByPbId(pbId);
     }
+
+    @Override
+    public int delComBySid(Long sid) {
+        return bidCommitteeMapper.delComBySid(sid);
+    }
+
+    @Override
+    public List<BidCommittee> findCommitteeAndExpert(Long sid) {
+        return bidCommitteeMapper.findCommitteeAndExpert(sid);
+    }
 }

@@ -44,3 +44,38 @@ export function listManagement(query) {
     params: query
   })
 }
+
+// 新增合同
+export function addContract(data) {
+  return request({
+    url: '/basic/contract',
+    method: 'post',
+    data: data
+  })
+}
+
+// 查询合同详细
+export function getContract(eid) {
+  return request({
+    url: '/basic/contract/' + eid,
+    method: 'get'
+  })
+}
+
+// 查询合同内的产品信息
+export function listInventory(query) {
+  return request({
+    url: '/basic/inventory/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询支付约定列表
+export function listPayment(query) {
+  return request({
+    url: '/basic/payment/list',
+    method: 'get',
+    params: query
+  })
+}

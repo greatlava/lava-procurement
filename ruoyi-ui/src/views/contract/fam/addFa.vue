@@ -324,9 +324,9 @@ export default {
       })
       this.queryParams.oFile = JSON.stringify(hhh)
       console.log(this.queryParams.oFile)
-      addManagement(this.queryParams).then(response => {
-        console.log(response)
-      })
+      // addManagement(this.queryParams).then(response => {
+      //   console.log(response)
+      // })
     },
     handleRemove(file, fileList) {
       console.log(file, fileList)
@@ -457,8 +457,8 @@ export default {
         let kk = total + totalValue // 将每行的小计相加得到总价格
         return kk
       }, 0)
-    }
-    /* ------------------------添加产品信息------------------------ */
+    },/* ------------------------添加产品信息------------------------ */
+
   }
 }
 </script>

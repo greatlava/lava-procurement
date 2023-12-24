@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import { getFrameworkPlan } from '@/api/system/frameworkPlan'
+import { getFrameworkPlan1 } from '@/api/system/frameworkPlan'
 import { listManagement } from '../../../api/system/addContract'
 
 export default {
@@ -280,7 +280,7 @@ export default {
     /** 查询完成的框架计划 */
     getList1() {
       this.loading = true
-      getFrameworkPlan(this.queryParams1).then(response => {
+      getFrameworkPlan1(this.queryParams1).then(response => {
         console.log(response)
         this.contractList1 = response.rows
         this.total1 = response.total

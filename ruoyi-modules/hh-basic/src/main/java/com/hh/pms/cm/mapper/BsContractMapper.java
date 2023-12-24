@@ -2,6 +2,7 @@ package com.hh.pms.cm.mapper;
 
 import java.util.List;
 
+import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 
 /**
@@ -58,4 +59,10 @@ public interface BsContractMapper {
      * @return 结果
      */
     public int deleteBsContractByEids(Long[] eids);
+
+    //修改招标项目eid
+    public int updateBidTenderEid(BidTender bidTender);
+
+    //查询招标项目ID
+    public BsContract selectBidTenderBySid(Long eid);
 }

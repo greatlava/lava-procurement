@@ -102,4 +102,18 @@ public class BidCommitteeController extends BaseController
     {
         return toAjax(bidCommitteeService.deleteBidCommitteeByPbIds(pbIds));
     }
+
+    @DeleteMapping("/delComBySid/{sid}")
+    public AjaxResult remove(@PathVariable Long sid)
+    {
+        return toAjax(bidCommitteeService.delComBySid(sid));
+    }
+
+    @GetMapping("/findCommitAndExpert/{sid}")
+    public TableDataInfo findCommitAndExpert(@PathVariable("sid") Long sid)
+    {
+        startPage();
+        List<BidCommittee> list = bidCommitteeService.findCommitteeAndExpert(sid);
+        return getDataTable(list);
+    }
 }

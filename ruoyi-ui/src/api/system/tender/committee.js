@@ -42,3 +42,19 @@ export function delCommittee(pbId) {
     method: 'delete'
   })
 }
+
+// 删除评标委员会（sid）
+export function delComBySid(sid) {
+  return request({
+    url: '/bidding/committee/delComBySid/' + sid,
+    method: 'delete'
+  })
+}
+
+
+export function findCommitAndExpert(sid) {
+  return request({
+    url: '/bidding/committee/findCommitAndExpert/'+sid,
+    method: 'get'
+  })
+}

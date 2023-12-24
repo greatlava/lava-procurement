@@ -50,6 +50,11 @@ public class BidCommittee extends BaseEntity
     @Excel(name = "专家ID")
     private Long jid;
 
+    @Excel(name = "招标项目Id")
+    private Long sid;
+
+    private BsExpert bsExpert;
+
     public void setPbId(Long pbId)
     {
         this.pbId = pbId;
@@ -144,6 +149,23 @@ public class BidCommittee extends BaseEntity
                 .append("pbGenre", getPbGenre())
                 .append("pbTypes", getPbTypes())
                 .append("jid", getJid())
+                .append("sid", getSid())
                 .toString();
+    }
+
+    public Long getSid() {
+        return sid;
+    }
+
+    public void setSid(Long sid) {
+        this.sid = sid;
+    }
+
+    public BsExpert getBsExpert() {
+        return bsExpert;
+    }
+
+    public void setBsExpert(BsExpert bsExpert) {
+        this.bsExpert = bsExpert;
     }
 }
