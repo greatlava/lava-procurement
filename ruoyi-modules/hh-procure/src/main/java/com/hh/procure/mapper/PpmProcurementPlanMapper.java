@@ -3,6 +3,7 @@ package com.hh.procure.mapper;
 import com.hh.procure.domain.NobidNonPro;
 import com.hh.procure.domain.PpmProcurementPlan;
 import com.ruoyi.system.api.domain.BidTender;
+import com.ruoyi.system.api.domain.BidWinningResults;
 
 import java.util.List;
 
@@ -129,4 +130,5 @@ public interface PpmProcurementPlanMapper
      * @return
      */
     public List<BidTender> selectTenderByState(BidTender bidTender);
+
 }

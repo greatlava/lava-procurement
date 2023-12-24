@@ -148,51 +148,26 @@
           </div>
           <div class="content_right_bottom">
             <div class="project_Kanban_title">
-              <h3>采购订单
+              <h3>采购计划
                 <i style="vertical-align: middle;" class="el-icon-more"></i>
                 <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
               </h3>
             </div>
             <el-timeline class="content_right_purchase">
-              <el-timeline-item timestamp="2018/4/12" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
+              <el-timeline-item style="cursor: pointer" v-for="item in listPlan" :timestamp="item.createTime"
+                                placement="top">
+                <el-card :body-style="{ padding: '12px 20px' }" shadow="never">
+                  <h4>{{ item.createBy }}新增了采购计划</h4>
+                  <el-descriptions :column="2">
+                    <el-descriptions-item label="编号">{{ item.aCode }}</el-descriptions-item>
+                    <el-descriptions-item label="创建部门">{{ item.aCreateDept }}</el-descriptions-item>
+                    <el-descriptions-item label="计划名称">{{ item.aName }}</el-descriptions-item>
+                    <el-descriptions-item label="创建人"> {{ item.createBy }}</el-descriptions-item>
+                    <el-descriptions-item label="审核状态">
+                      <el-tag size="mini" v-if="item.aAstate == 0" type="small">待提交</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 1" type="danger">待审核</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 2" type="success">已审核</el-tag>
                     </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/3" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/2" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
                   </el-descriptions>
                 </el-card>
               </el-timeline-item>
@@ -209,23 +184,30 @@
                 <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
               </h3>
             </div>
-            <el-table max-height="250px"
-                      :data="tableData"
-                      style="width: 100%">
+            <el-table max-height="250px" :data="listTender" style="width: 100%">
               <el-table-column
                 align="center"
-                prop="date"
+                prop="sCode"
+                label="项目编号">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="sName"
+                show-overflow-tooltip
                 label="招标项目名称">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="name"
-                label="创建时间">
+                prop="sLeader"
+                label="负责人">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="address"
+                prop="sAddress"
                 label="地址">
+                <template slot-scope="scope">
+                  {{ scope.row.sAddress || '——' }}
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -288,6 +270,8 @@ export default {
   name: "Index",
   data() {
     return {
+      listPlan: [],
+      listTender: [],
       count: {
         //采购计划数量
         procurementCount: 0,
@@ -302,23 +286,6 @@ export default {
         //待审核采购计划数量
         waitingReviewCount: 0,
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
       //项目看板
       project_Kanban: [{
         title: "寻源阶段",
@@ -391,10 +358,14 @@ export default {
         this.project_Kanban[0].count = res;
       })
       //项目看板
-      this.poject_kanban();
+      this.selectPoject_kanban();
+      //采购订单
+      this.selectNewPlan();
+      //招标项目
+      this.selectListTender();
     },
     //项目看板
-    poject_kanban() {
+    selectPoject_kanban() {
       //查询项目看板寻源阶段
       listPlan({pageSize: 3, aAstate: 2}).then(res => {
         res.rows.forEach((e, i) => {
@@ -444,11 +415,41 @@ export default {
           this.project_Kanban[3].content.push(obj);
         })
       })
-      
+      //查询定标阶段项目看板
+      selectTenderByState({sProjectState: 4}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[4].content.push(obj);
+        })
+      })
     },
+    //查询最新的采购计划
+    selectNewPlan() {
+      listPlan({pageSize: 3}).then(res => {
+        this.listPlan = res.rows;
+      })
+    },
+    //刷新项目看板
     refresh_project_Kanban() {
-
-    }
+      this.project_Kanban[0].content = [];
+      this.project_Kanban[1].content = [];
+      this.project_Kanban[2].content = [];
+      this.project_Kanban[3].content = [];
+      this.project_Kanban[4].content = [];
+      this.selectPoject_kanban();
+    },
+    //招标项目
+    selectListTender() {
+      selectTenderByState({}).then(res => {
+        this.listTender = res;
+        console.log("listTender", res)
+      })
+    },
   },
 };
 </script>

@@ -124,8 +124,15 @@
     </select>
 
     <select id="selectTenderByState" resultType="com.ruoyi.system.api.domain.BidTender">
-        SELECT * FROM bid_tender WHERE s_project_state = #{sProjectState} ORDER BY create_time desc LIMIT 3
+        SELECT * FROM bid_tender
+        <where>
+            <if test="sProjectState != null">
+                and s_project_state = #{sProjectState}
+            </if>
+        </where>
+        ORDER BY create_time desc LIMIT 3
     </select>
+
 
     <insert id="insertPpmProcurementPlan" parameterType="com.hh.procure.domain.PpmProcurementPlan" useGeneratedKeys="true" keyProperty="aid">
         insert into ppm_procurement_plan

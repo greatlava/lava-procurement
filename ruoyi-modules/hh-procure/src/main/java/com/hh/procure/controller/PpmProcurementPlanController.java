@@ -216,7 +216,6 @@ public class PpmProcurementPlanController extends BaseController {
                     bidTender.setsProjectState(2);
                     bidTender.setsType(item.getaBtype());
                     bidTender.setCreateBy(item.getCreateBy());
-                    bidTender.setsLeader(item.getCreateBy());
                     ppmProcurementPlanService.insertTenders(bidTender);
                     break;
                 case 3:
@@ -296,6 +295,8 @@ public class PpmProcurementPlanController extends BaseController {
      */
     @PostMapping("/selectTenderByState")
     public List<BidTender> selectTenderByState(@RequestBody BidTender bidTender) {
-        return ppmProcurementPlanService.selectTenderByState(bidTender);
+        List<BidTender> bidTenders = ppmProcurementPlanService.selectTenderByState(bidTender);
+        System.out.println("create_time:" + bidTenders+"\n)");
+        return bidTenders;
     }
 }
