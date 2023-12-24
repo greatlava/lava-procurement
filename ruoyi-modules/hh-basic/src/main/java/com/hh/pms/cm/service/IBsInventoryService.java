@@ -57,4 +57,10 @@ public interface IBsInventoryService {
      * @return 结果
      */
     public int deleteBsInventoryByInId(Long inId);
+
+    //根据oid删除设备信息
+    public int deleteBsInventoryByOid(Long oid);
+
+    //根据eid删除设备信息
+    public int deleteBsInventoryByEid(Long eid);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
+import com.hh.pms.cm.domain.ComPubAttachments;
 
 /**
  * 合同Service接口
@@ -65,4 +66,19 @@ public interface IBsContractService {
 
     //查询招标项目ID
     public BsContract selectBidTenderSid(Long eid);
+
+    //新增公共附件
+    public int insertComPubAttachments(ComPubAttachments comPubAttachments);
+
+    //修改公共附件
+    public int updateComPubAttachments(ComPubAttachments comPubAttachments);
+
+    //删除公共附件
+    public int deleteComPubAttamentsByEid(Integer eid);
+
+    //查询公共附件
+    public ComPubAttachments selectComPubAttachmentsByEid(Integer eid);
+
+    //修改合同管理状态
+    public int updateoHstatus(BsContract bsContract);
 }

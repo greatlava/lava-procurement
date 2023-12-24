@@ -32,6 +32,12 @@ public class BsSignServiceImpl implements IBsSignService
         return bsSignMapper.selectBsSignByGnId(gnId);
     }
 
+    //根据合同查看签署执行状态信息
+    @Override
+    public BsSign selectBsSignByEid(Long eid) {
+        return bsSignMapper.selectBsSignByEid(eid);
+    }
+
     /**
      * 查询签署执行状态列表
      *
@@ -90,5 +96,10 @@ public class BsSignServiceImpl implements IBsSignService
     public int deleteBsSignByGnId(Long gnId)
     {
         return bsSignMapper.deleteBsSignByGnId(gnId);
+    }
+
+    @Override
+    public int deleteBsSignByEid(Long eid) {
+        return bsSignMapper.deleteBsSignByEid(eid);
     }
 }

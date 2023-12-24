@@ -52,4 +52,7 @@ public interface BsPaymentMapper {
      * @return 结果
      */
     public int deleteBsPaymentByPayIds(Long[] payIds);
+
+    //根据id删除支付约定
+    public int deleteBsPaymentByEid(Long eid);
 }

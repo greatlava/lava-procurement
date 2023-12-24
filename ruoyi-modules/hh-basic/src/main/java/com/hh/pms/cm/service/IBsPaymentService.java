@@ -58,4 +58,7 @@ public interface IBsPaymentService
      * @return 结果
      */
     public int deleteBsPaymentByPayId(Long payId);
+
+    //根据id删除支付约定
+    public int deleteBsPaymentByEid(Long eid);
 }

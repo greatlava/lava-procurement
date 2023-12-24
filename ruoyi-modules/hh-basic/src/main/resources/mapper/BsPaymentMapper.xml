@@ -93,4 +93,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{payId}
         </foreach>
     </delete>
+
+    <!--根据合同id删除支付约定-->
+    <delete id="deleteBsPaymentByEid" parameterType="Long">
+        delete from bs_payment where eid = #{eid}
+    </delete>
 </mapper>

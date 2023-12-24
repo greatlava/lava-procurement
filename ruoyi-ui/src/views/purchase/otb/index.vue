@@ -41,7 +41,7 @@
             </el-table-column>
             <el-table-column label="采购计划名称" align="center" prop="aName">
               <template slot-scope="scope">
-                <span style="color: #008bcb;cursor: pointer" @click="handleClick(scope.row)">{{
+                <span v-hasPermi="['system:attachments:list']" style="color: #008bcb;cursor: pointer" @click="handleClick(scope.row)">{{
                     scope.row.aName
                   }}</span>
               </template>
@@ -56,7 +56,7 @@
                   type="text"
                   icon="el-icon-edit"
                   @click="handleUpdate(scope.row)"
-                  v-hasPermi="['system:plan:edit']"
+                  v-hasPermi="['system:procurement:edit']"
                 >修改
                 </el-button>
                 <el-button
@@ -64,9 +64,10 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['system:plan:view']"
+                  v-hasPermi="['system:procurement:remove']"
                 >删除
                 </el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -101,7 +102,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -118,7 +119,7 @@
             <el-table-column label="创建日期" align="center" prop="createTime"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -229,7 +230,7 @@
                     type="text"
                     icon="el-icon-delete"
                     @click="handleDelete(scope.row)"
-                    v-hasPermi="['system:record:remove']"
+                    v-hasPermi="['system:procurement:remove']"
                   >删除
                   </el-button>
                 </template>
@@ -238,13 +239,16 @@
           </el-tab-pane>
         </el-tabs>
         <div slot="footer" class="dialog-footer">
-          <el-button v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
+          <el-button v-hasPermi="['system:procurement:submit']"
+            v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
                      @click="sumbitPlan">提 交
           </el-button>
-          <el-button type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading"
+          <el-button v-hasPermi="['system:procurement:allow']"
+                     type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading"
                      v-if="form.aAstate == 1">审核
           </el-button>
-          <el-button type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading"
+          <el-button v-hasPermi="['system:procurement:reject']"
+            type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading"
                      v-if="form.aAstate == 1">驳回
           </el-button>
           <el-button @click="cancel">取 消</el-button>
@@ -417,7 +421,7 @@ export default {
             this.form = res.data;
             if (res.data.items) {
               res.data.items.forEach((e, i) => {
-                if (e.ppmBudget.duId){
+                if (e.ppmBudget.duId) {
                   this.budgetData.push(e.ppmBudget);
                 }
               })

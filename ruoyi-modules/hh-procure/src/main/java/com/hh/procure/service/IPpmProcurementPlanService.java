@@ -69,11 +69,49 @@ public interface IPpmProcurementPlanService
      */
     public PpmProcurementPlan selectProcurementPlanByIdForThreeTables(Integer aid);
 
+    /**
+     * 添加招标项目
+     * @param bidTender
+     * @return
+     */
     public int insertTenders(BidTender bidTender);
 
+    /**
+     *
+     * @param ppmProcurementPlan
+     * @return
+     */
     public List<PpmProcurementPlan> FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan);
 
+    /**
+     *
+     * @param ppmProcurementPlan
+     * @return
+     */
     public List<PpmProcurementPlan> selectePpmProcurementPlanAndComPubAttamentByAid(PpmProcurementPlan ppmProcurementPlan);
 
     public int insertNoBidPro(NobidNonPro nobidNonPro);
+
+    public int selectPpmpProcurementCount(PpmProcurementPlan state);
+
+    public int selectContractCount();
+
+    /**
+     * 查询采购计划总金额
+     * @return
+     */
+    public Double queryTotalPurchaseAmount();
+
+    /**
+     * 查询招标项目数量
+     * @return
+     */
+    public int selectTenderCount();
+
+    /**
+     * 查询招标阶段的项目
+     * @param bidTender
+     * @return
+     */
+    public List<BidTender> selectTenderByState(BidTender bidTender);
 }
