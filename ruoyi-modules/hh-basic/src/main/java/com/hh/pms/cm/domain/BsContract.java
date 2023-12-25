@@ -133,7 +133,17 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同文件")
     private String eDocuments;
 
-//    private BidTender bidTender;
+    private Long eCancel;
+
+    public Long geteCancel() {
+        return eCancel;
+    }
+
+    public void seteCancel(Long eCancel) {
+        this.eCancel = eCancel;
+    }
+
+    //    private BidTender bidTender;
 //
 //    public BidTender getBidTender() {
 //        return bidTender;

@@ -208,6 +208,8 @@ export default {
   data() {
     return {
       contract: {
+        eCancel: 0,
+        oHstatus: 3,
         pageNum: 1,
         pageSize: 10
       },

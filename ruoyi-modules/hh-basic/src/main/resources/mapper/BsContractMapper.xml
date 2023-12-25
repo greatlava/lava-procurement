@@ -25,6 +25,7 @@
         <result property="eOpinion" column="e_opinion"/>
         <result property="eImage" column="e_image"/>
         <result property="eDocuments" column="e_documents"/>
+        <result property="eCancel" column="e_cancel"/>
         <association property="bsSupplier">
             <id property="hid" column="hid"/>
             <result property="zrId" column="zr_id"/>
@@ -77,7 +78,8 @@
                e_description,
                e_opinion,
                e_image,
-               e_documents
+               e_documents,
+               e_cancel
         from bs_contract
     </sql>
 
@@ -100,6 +102,7 @@
             <if test="eOpinion != null  and eOpinion != ''">and e_opinion = #{eOpinion}</if>
             <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
             <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
+            <if test="eCancel != null">and e_cancel = #{eCancel}</if>
         </where>
         order by c.create_time desc
     </select>
@@ -216,7 +219,7 @@
 
     <update id="updateoHstatus" parameterType="com.hh.pms.cm.domain.BsContract">
         update bs_contract
-           set o_hstatus = #{oHstatus}
+        set o_hstatus = #{oHstatus}
         where eid = #{eid}
     </update>
 

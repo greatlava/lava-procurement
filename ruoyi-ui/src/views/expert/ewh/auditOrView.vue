@@ -164,9 +164,9 @@ export default {
         jShState: null,
         jOpinion: null
       },
-      jIdentityCopy: null,
+      jIdentityCopy: '',
       jIdentityCopyList: [],
-      jDocumentsCopy: null,
+      jDocumentsCopy: '',
       jDocumentsCopyList: []
     }
   }, created() {
@@ -184,6 +184,8 @@ export default {
       this.loading = true;
       getExpert(this.jid).then(response => {
         this.basic = response.data;
+        console.log(JSON.parse(response.data.jIdentityPhoto)[0].url)
+        console.log(JSON.parse(response.data.jDocumentsPhoto)[0].url)
         this.jIdentityCopy = JSON.parse(response.data.jIdentityPhoto)[0].url
         for (let i = 0; i < JSON.parse(response.data.jIdentityPhoto).length; i++) {
           this.jIdentityCopyList.push(JSON.parse(response.data.jIdentityPhoto)[i].url)
