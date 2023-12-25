@@ -41,7 +41,7 @@
               <el-tag>待提交</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="审批人" align="center" prop="jhPerson"/>
+          <!--          <el-table-column label="审批人" align="center" prop="jhPerson"/>-->
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
@@ -49,7 +49,6 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:plan:edit']"
               >修改
               </el-button>
               <el-button
@@ -57,14 +56,12 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
-                v-hasPermi="['system:plan:remove']"
               >删除
               </el-button>
               <el-button
                 size="mini"
                 type="text"
                 @click="showFrameworkDetails(scope.row)"
-                v-hasPermi="['system:plan:remove']"
               >查看
               </el-button>
             </template>
@@ -82,21 +79,13 @@
               <el-tag type="danger">待审批</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="审批人" align="center" prop="jhPerson"/>
+          <!--          <el-table-column label="审批人" align="center" prop="jhPerson"/>-->
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
                 size="mini"
                 type="text"
-                @click="allowFarmeworkPlan(scope.row)"
-                v-hasPermi="['system:plan:edit']"
-              >审批
-              </el-button>
-              <el-button
-                size="mini"
-                type="text"
                 @click="showFrameworkDetails(scope.row)"
-                v-hasPermi="['system:plan:remove']"
               >查看
               </el-button>
             </template>
@@ -121,7 +110,6 @@
                 size="mini"
                 type="text"
                 @click="showFrameworkDetails(scope.row)"
-                v-hasPermi="['system:plan:remove']"
               >查看
               </el-button>
             </template>
@@ -137,7 +125,7 @@
       @pagination="getList"
     />
     <!-- 添加或修改框架计划对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog @close="OpenClose" :title="title" :visible.sync="open" width="1000px" append-to-body>
       <el-form :model="form" ref="form" :rules="rules" label-position="left" label-width="120px"
                size="medium" @submit.native.prevent>
         <div class="static-content-item" v-show="false">
@@ -181,8 +169,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
-              <el-form-item label="供应商" prop="supplier" class="required label-center-align">
-                <el-select v-model="form.hid" class="input full-width-input">
+              <el-form-item label="供应商" prop="hid" class="required label-center-align">
+                <el-select filterable v-model="form.hid" class="input full-width-input">
                   <el-option v-for="(item, index) in supplierOptions" :key="index" :label="item.hName"
                              :value="item.hid"></el-option>
                 </el-select>
@@ -223,11 +211,11 @@
                 </el-upload>
               </el-form-item>
             </el-col>
-<!--            <el-col :span="24" class="grid-cell">-->
-<!--              <el-form-item label="备注" prop="notes" class="label-center-align">-->
-<!--                <el-input type="textarea" v-model="form.notes" rows="3"></el-input>-->
-<!--              </el-form-item>-->
-<!--            </el-col>-->
+            <!--            <el-col :span="24" class="grid-cell">-->
+            <!--              <el-form-item label="备注" prop="notes" class="label-center-align">-->
+            <!--                <el-input type="textarea" v-model="form.notes" rows="3"></el-input>-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
           </el-row>
         </div>
         <div class="static-content-item" v-show="false">
@@ -289,7 +277,6 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="deleteItems(scope.row,scope.$index)"
-                  v-hasPermi="['system:record:remove']"
                 >删除
                 </el-button>
               </template>
@@ -428,11 +415,17 @@
         </el-table-column>
         <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="150"/>
         <el-table-column label="需求说明" align="center" prop="vIllustrate" width="120"/>
-<!--        <el-table-column label="采购方式" align="center" prop="procurementMethod"/>-->
+        <!--        <el-table-column label="采购方式" align="center" prop="procurementMethod"/>-->
       </el-table>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="allowFarmeworkPlan" v-if="form.jhStatus == 1" type="success">同 意</el-button>
-        <el-button @click="rejectFarmeworkPlan" v-if="form.jhStatus == 1" type="danger">驳 回</el-button>
+        <!--        <div style="display: inline-block;margin-right: 10px" v-has-permi="['system:procurement:allow']">-->
+        <!--          <el-button  @click="allowFarmeworkPlan" v-if="form.jhStatus == 1" type="success">审 核</el-button>-->
+        <!--          <el-button @click="rejectFarmeworkPlan" v-if="form.jhStatus == 1" type="danger">驳 回</el-button>-->
+        <!--        </div>-->
+        <div style="display: inline-block;margin-right: 10px" v-has-permi="['system:procurement:allow']">
+          <el-button @click="allowFarmeworkPlan" v-if="form.jhStatus == 1" type="success">审 核</el-button>
+          <el-button @click="rejectFarmeworkPlan" v-if="form.jhStatus == 1" type="danger">驳 回</el-button>
+        </div>
         <el-button @click="sumbitFarmeworkPlan" v-if="form.jhStatus == 0" type="primary">提 交</el-button>
         <el-button @click="cancelFramework">关 闭</el-button>
       </div>
@@ -522,7 +515,9 @@ export default {
         jhPmethod: null
       },
       // 表单参数
-      form: {},
+      form: {
+        hid: ''
+      },
       supplierOptions: [],
       annexFileList: [],
       annexUploadHeaders: {},
@@ -572,9 +567,19 @@ export default {
     this.getList();
   },
   methods: {
+    //弹窗关闭事件
+    OpenClose() {
+      this.file.fileUrls = [];
+      this.file.fileName = [];
+      this.form = {};
+      this.upload.fileList = [];
+      this.upload.fileSecuss = [];
+      this.device = [];
+      this.items = [];
+    },
     //文件移除钩子
     removeFile(file, fileList) {
-     this.$modal.loading("文件删除中");
+      this.$modal.loading("文件删除中");
       if (this.form.jhId) {
         if (file.status == "success") {
           let obj = file;
@@ -625,7 +630,6 @@ export default {
           obj["anName"] = obj["name"];
           obj["anUrl"] = obj["url"];
           updateComPubAttamentsByAid(obj, "insert").then(res => {
-            console.log("Promise", res)
             if (res.code == 200) {
               this.$modal.msgSuccess(res.msg);
               return 1;
@@ -844,6 +848,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      console.log("hid", this.form.hid)
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.jhId != null) {
@@ -868,16 +873,20 @@ export default {
               this.$modal.msgError("所有项目设备不能为空");
               return;
             }
+            this.$modal.loading("添加中.......")
             this.form['items'] = this.items;
             AddPlanAndOther(this.form).then(res => {
               this.$modal.msgSuccess("操作成功");
               this.open = false;
+              this.$modal.closeLoading();
+
+              setTimeout(() => {
+                this.getList();
+              }, 1000)
+            }).catch(err => {
+              this.$modal.msgError("服务器发生错误请联系管理员!!");
+              this.$modal.closeLoading();
             })
-            // addPlan(this.form).then(response => {
-            //   this.$modal.msgSuccess("新增成功");
-            //   this.open = false;
-            //   this.getList();
-            // });
           }
         }
       });
@@ -886,8 +895,10 @@ export default {
     handleDelete(row) {
       const jhIds = row.jhId || this.ids;
       this.$modal.confirm('是否确认删除框架计划编号为"' + jhIds + '"的数据项？').then(() => {
+        this.$modal.loading("删除中.......");
         return deleteByJhId(jhIds).then(() => {
           this.getList();
+          this.$modal.closeLoading();
           this.$modal.msgSuccess("删除成功");
         })
       })
@@ -903,7 +914,7 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-input-number.full-width-input,
 .el-cascader.full-width-input {
   width: 100% !important;

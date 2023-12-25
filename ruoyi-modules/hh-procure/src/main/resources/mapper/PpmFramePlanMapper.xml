@@ -51,7 +51,7 @@
                business_type,
                b.h_name
         from ppm_frame_plan p
-                 INNER JOIN bs_supplier b on p.hid = b.hid
+                 left JOIN bs_supplier b on p.hid = b.hid
     </sql>
 
     <select id="selectPpmFramePlanList" parameterType="com.hh.procure.domain.PpmFramePlan"
@@ -115,6 +115,7 @@
             <if test="jhPmethod != null">jh_pmethod,</if>
             <if test="hid != null ">hid,</if>
             <if test="businessType != null">business_type,</if>
+            <if test="jhFounder != null">jh_founder,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="jhId != null">#{jhId},</if>
@@ -128,6 +129,7 @@
             <if test="jhPmethod != null">#{jhPmethod},</if>
             <if test="hid != null ">#{hid},</if>
             <if test="businessType != null">#{businessType},</if>
+            <if test="jhFounder != null">#{jhFounder},</if>
         </trim>
     </insert>
 
@@ -151,7 +153,10 @@
 
     <update id="updateFarmeworkPlanStatusByJhId">
         update ppm_frame_plan
-        set jh_status = #{jhStatus}
+        <set>
+            <if test="jhPerson != null">jh_person = #{jhPerson},</if>
+            <if test="jhStatus != null">jh_status = #{jhStatus},</if>
+        </set>
         where jh_id = #{jhId}
     </update>
 

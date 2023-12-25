@@ -131,4 +131,6 @@ public interface PpmProcurementPlanMapper
      */
     public List<BidTender> selectTenderByState(BidTender bidTender);
 
+    public int selectTenderByStateCount(BidTender bidTender);
+
 }

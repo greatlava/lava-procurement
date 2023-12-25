@@ -175,7 +175,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .el-input-number.full-width-input,
 .el-cascader.full-width-input {
   width: 100% !important;

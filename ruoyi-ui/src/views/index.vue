@@ -164,7 +164,8 @@
               </h3>
             </div>
             <el-timeline class="content_right_purchase">
-              <el-timeline-item style="cursor: pointer" v-for="item in listPlan" :timestamp="item.createTime"
+              <el-timeline-item style="cursor: pointer" @click="clickPlan(item)" v-for="item in listPlan"
+                                :timestamp="item.createTime"
                                 placement="top">
                 <el-card :body-style="{ padding: '12px 20px' }" shadow="never">
                   <h4>{{ item.createBy }}新增了采购计划</h4>
@@ -174,9 +175,11 @@
                     <el-descriptions-item label="计划名称">{{ item.aName }}</el-descriptions-item>
                     <el-descriptions-item label="创建人"> {{ item.createBy }}</el-descriptions-item>
                     <el-descriptions-item label="审核状态">
-                      <el-tag size="mini" v-if="item.aAstate == 0" type="small">待提交</el-tag>
-                      <el-tag size="mini" v-if="item.aAstate == 1" type="danger">待审核</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 0" type="info">待提交</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 1" type="small">待审核</el-tag>
                       <el-tag size="mini" v-if="item.aAstate == 2" type="success">已审核</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 3" type="danger">待寻源</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 4" type="warning">待寻源</el-tag>
                     </el-descriptions-item>
                   </el-descriptions>
                 </el-card>
@@ -212,13 +215,22 @@
                 align="center"
                 prop="sLeader"
                 label="负责人">
+                <template slot-scope="scope">
+                  <el-tooltip v-if="!scope.row.sLeader" content="文本是空的奥，可以前去编辑" placement="top">
+                    <span>——</span>
+                  </el-tooltip>
+                  <span v-else>{{ scope.row.sLeader }}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 align="center"
                 prop="sAddress"
                 label="地址">
                 <template slot-scope="scope">
-                  {{ scope.row.sAddress || '——' }}
+                  <el-tooltip v-if="!scope.row.sAddress" content="文本是空的奥，可以前去编辑" placement="top">
+                    <span>——</span>
+                  </el-tooltip>
+                  <span v-else>{{ scope.row.sAddress }}</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -229,41 +241,39 @@
         <el-col class="supplier_box" :span="24">
           <div style="height: 100%" class="content_foot_left">
             <div class="project_Kanban_title">
-              <h3 style="margin-left: 0">供应商列表
+              <h3 style="margin-left: 0px">供应商列表
                 <router-link :to="'supplier/sqe'">
                   <i style="vertical-align: middle" class="el-icon-more"></i>
                   <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
                 </router-link>
               </h3>
             </div>
-            <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
-              <router-link :to="'/supplier/detail?hid='+item.hid+'&zr_id=0'" v-for="item in suppliers"
-                           :key="item.index">
-                <el-card shadow="hover" class="supplier_list">
-                  <div class="supper_list_content">
-                    <div>
-                      <img
-                        src="https://gd-hbimg.huaban.com/aae0dae4e98dbd565b5855f37243cfea50bf56461a143-68yMUX_fw658webp"
-                        alt="">
-                    </div>
-                    <div class="supplier_describe div">
-                      <p>法人：{{ item.hJuridical }}</p>
-                      <h3>{{ item.hName }}</h3>
-                      <span
-                        class="brief_introduction">公司简介：{{ item.hDesc.length > 42 ? item.hDesc.substr(0, 42) + '...' : item.hDesc}}</span>
-                    </div>
-                    <div class="review_status">
-                      <el-tag type="primary">已审核</el-tag>
-                    </div>
+            <el-empty description="供应商列表是空的奥！！" v-if="suppliers.length==0" :image-size="200"></el-empty>
+            <div style="display: flex;flex-wrap: wrap;justify-content: flex-start;">
+              <el-card style="margin-right: 10px" v-for="item in suppliers" shadow="hover" class="supplier_list">
+                <div class="supper_list_content">
+                  <div>
+                    <img
+                      src="https://gd-hbimg.huaban.com/aae0dae4e98dbd565b5855f37243cfea50bf56461a143-68yMUX_fw658webp"
+                      alt="">
                   </div>
-                  <div class="supplier_list_foot">
-                    <p>
-                      <i class="el-icon-location-information"></i>
-                      联系地址：{{ item.hAddress }}
-                    </p>
+                  <div class="supplier_describe div">
+                    <p>法人：{{ item.hJuridical }}</p>
+                    <h3>{{ item.hName }}</h3>
+                    <textOverflowHiding :text="'公司简介：'+item.hDesc" :width="300"></textOverflowHiding>
                   </div>
-                </el-card>
-              </router-link>
+                  <div class="review_status">
+                    <el-tag type="primary">已审核</el-tag>
+                  </div>
+                </div>
+                <div class="supplier_list_foot">
+                  <p>
+                    <i class="el-icon-location-information"></i>
+                    <text-overflow-hiding style="display: inline-block;" :text="'联系地址：'+ item.hAddress"
+                                          :width="410"></text-overflow-hiding>
+                  </p>
+                </div>
+              </el-card>
             </div>
           </div>
         </el-col>
@@ -273,6 +283,7 @@
 </template>
 
 <script>
+import textOverflowHiding from "@/components/Text/textOverflowHiding.vue";
 import {listSupplier} from "@/api/system/supplier";
 
 import {
@@ -282,11 +293,15 @@ import {
   queryTotalPurchaseAmount,
   selectTenderCount,
   listPlan,
-  selectTenderByState
+  selectTenderByState,
+  selectTenderByStateCount
 } from '@/api/system/plan'
 
 export default {
   name: "Index",
+  components: {
+    textOverflowHiding,
+  },
   data() {
     return {
       listPlan: [],
@@ -309,26 +324,26 @@ export default {
       project_Kanban: [{
         title: "寻源阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg01.png",
-        count: 2,
+        count: 0,
         content: []
       }, {
         title: "招标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg02.png",
-        count: 456,
+        count: 0,
         content: []
       }, {
         title: "投标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg03.png",
-        count: 23,
+        count: 0,
         content: []
       }, {
         title: "评审阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg05.png",
-        count: 73, content: []
+        count: 0, content: []
       }, {
         title: "中标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg06.png",
-        count: 35, content: []
+        count: 0, content: []
       }],
       // 版本号
       version: "3.6.3",
@@ -373,10 +388,7 @@ export default {
       selectPpmpProcurementCount(2).then(res => {
         this.count.waitingReviewCount = res;
       })
-      //查询寻源阶段数量
-      selectPpmpProcurementCount(2).then(res => {
-        this.project_Kanban[0].count = res;
-      })
+
       //项目看板
       this.selectPoject_kanban();
       //采购订单
@@ -388,6 +400,10 @@ export default {
     },
     //项目看板
     selectPoject_kanban() {
+      //查询寻源阶段数量
+      selectPpmpProcurementCount(2).then(res => {
+        this.project_Kanban[0].count = res;
+      })
       //查询项目看板寻源阶段
       listPlan({pageSize: 3, aAstate: 2}).then(res => {
         res.rows.forEach((e, i) => {
@@ -399,6 +415,12 @@ export default {
           };
           this.project_Kanban[0].content.push(obj);
         })
+      })
+
+
+      //查询招标项目数量
+      selectTenderByStateCount({sProjectState: 2}).then(res => {
+        this.project_Kanban[1].count = res.data;
       })
       //查询招标项目阶段项目看板
       selectTenderByState({sProjectState: 2}).then(res => {
@@ -413,8 +435,13 @@ export default {
         })
       })
 
+
+      //查询投标项目数量
+      selectTenderByStateCount({sProjectState: 3}).then(res => {
+        this.project_Kanban[2].count = res.data;
+      })
       //查询投标项目阶段项目看板
-      selectTenderByState({sProjectState: 1}).then(res => {
+      selectTenderByState({sProjectState: 3}).then(res => {
         res.forEach((e, i) => {
           let obj = {
             title: e.sName,
@@ -425,8 +452,14 @@ export default {
           this.project_Kanban[2].content.push(obj);
         })
       })
+
+
+      //查询评审项目数量
+      selectTenderByStateCount({sProjectState: 5}).then(res => {
+        this.project_Kanban[3].count = res.data;
+      })
       //查询评审阶段项目看板
-      selectTenderByState({sProjectState: 3}).then(res => {
+      selectTenderByState({sProjectState: 5}).then(res => {
         res.forEach((e, i) => {
           let obj = {
             title: e.sName,
@@ -437,8 +470,12 @@ export default {
           this.project_Kanban[3].content.push(obj);
         })
       })
+
+      selectTenderByStateCount({sProjectState: 6}).then(res => {
+        this.project_Kanban[4].count = res.data;
+      })
       //查询定标阶段项目看板
-      selectTenderByState({sProjectState: 4}).then(res => {
+      selectTenderByState({sProjectState: 6}).then(res => {
         res.forEach((e, i) => {
           let obj = {
             title: e.sName,
@@ -463,6 +500,12 @@ export default {
       this.project_Kanban[2].content = [];
       this.project_Kanban[3].content = [];
       this.project_Kanban[4].content = [];
+
+      this.project_Kanban[0].count = 0;
+      this.project_Kanban[1].count = 0;
+      this.project_Kanban[2].count = 0;
+      this.project_Kanban[3].count = 0;
+      this.project_Kanban[4].count = 0;
       this.selectPoject_kanban();
     },
     //招标项目
@@ -477,6 +520,9 @@ export default {
       listSupplier({"pageNum": 1, "pageSize": 12}).then(res => {
         this.suppliers = res.rows
       })
+    },
+    clickPlan(item) {
+      console.log("item", item)
     }
   },
 };
@@ -719,7 +765,7 @@ li {
 
 .supplier_list {
   width: 500px;
-  height: 180px;
+  height: 150px;
   cursor: pointer;
   position: relative;
   margin-top: 15px;

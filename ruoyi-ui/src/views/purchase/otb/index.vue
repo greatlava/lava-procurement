@@ -41,7 +41,8 @@
             </el-table-column>
             <el-table-column label="采购计划名称" align="center" prop="aName">
               <template slot-scope="scope">
-                <span v-hasPermi="['system:attachments:list']" style="color: #008bcb;cursor: pointer" @click="handleClick(scope.row)">{{
+                <span v-hasPermi="['system:attachments:list']" style="color: #008bcb;cursor: pointer"
+                      @click="handleClick(scope.row)">{{
                     scope.row.aName
                   }}</span>
               </template>
@@ -67,7 +68,9 @@
                   v-hasPermi="['system:procurement:remove']"
                 >删除
                 </el-button>
-                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -102,7 +105,9 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -119,7 +124,9 @@
             <el-table-column label="创建日期" align="center" prop="createTime"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -240,17 +247,19 @@
         </el-tabs>
         <div slot="footer" class="dialog-footer">
           <el-button v-hasPermi="['system:procurement:submit']"
-            v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
+                     v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
                      @click="sumbitPlan">提 交
           </el-button>
-          <el-button v-hasPermi="['system:procurement:allow']"
-                     type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading"
-                     v-if="form.aAstate == 1">审核
-          </el-button>
-          <el-button v-hasPermi="['system:procurement:reject']"
-            type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading"
-                     v-if="form.aAstate == 1">驳回
-          </el-button>
+
+          <div style="display: inline-block;margin-right: 10px" v-if="form.aAstate == 1">
+            <el-button v-hasPermi="['system:procurement:allow']"
+                       type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading">审核
+            </el-button>
+            <el-button v-hasPermi="['system:procurement:reject']"
+                       type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading">驳回
+            </el-button>
+          </div>
+
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
@@ -469,10 +478,12 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
-      this.budgetData = [];
-      this.itemList = [];
-      this.paneName = "basic";
-      this.reset()
+      setTimeout(() => {
+        this.budgetData = [];
+        this.itemList = [];
+        this.paneName = "basic";
+        this.reset()
+      }, 500)
     },
     // 表单重置
     reset() {
