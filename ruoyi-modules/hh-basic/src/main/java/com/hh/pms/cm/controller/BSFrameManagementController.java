@@ -3,15 +3,14 @@ package com.hh.pms.cm.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hh.pms.cm.domain.BsInventory;
-import com.hh.pms.cm.domain.CodeRulesResult;
-import com.hh.pms.cm.domain.ComCodeRules;
+import com.hh.pms.cm.domain.*;
 import com.hh.pms.cm.service.IBsInventoryService;
 import com.hh.pms.cm.service.IComCodeRulesService;
 import com.hh.pms.cm.service.impl.ComCodeRulesServiceImpl;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.hh.pms.cm.domain.BSFrameManagement;
 import com.hh.pms.cm.service.IBSFrameManagementService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -38,6 +36,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/management")
+@Transactional
 public class BSFrameManagementController extends BaseController {
     @Autowired
     private IBSFrameManagementService bSFrameManagementService;
@@ -121,6 +120,9 @@ public class BSFrameManagementController extends BaseController {
         System.out.println(bSFrameManagement);
         int k = bSFrameManagementService.updateBSFrameManagement(bSFrameManagement);
         if (k > 0) {
+            if (bSFrameManagement.getoOpinion() != null) {
+                return AjaxResult.success("修改成功");
+            }
             Long oid = bSFrameManagement.getOid();
             //删除设备信息
             inventoryService.deleteBsInventoryByOid(oid);
@@ -147,5 +149,21 @@ public class BSFrameManagementController extends BaseController {
     @DeleteMapping("/{oids}")
     public AjaxResult remove(@PathVariable Long[] oids) {
         return toAjax(bSFrameManagementService.deleteBSFrameManagementByOids(oids));
+    }
+
+    //协议作废
+    @GetMapping("/xYCancel")
+    public AjaxResult xYCancel(Long eid) {
+//        int i = bsContractService.updateHtCancel(eid);
+//        if (i > 0) {
+//            BidTender bidTender = new BidTender();
+//            bidTender.setEid(eid);
+//            int i1 = bsContractService.updateBidTender(bidTender);
+//            if (i1 > 0) {
+//                return AjaxResult.success("修改成功");
+//            }
+//            return AjaxResult.error("修改失败");
+//        }
+        return AjaxResult.error("修改失败");
     }
 }

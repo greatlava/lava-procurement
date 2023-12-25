@@ -10,6 +10,7 @@ import com.hh.pms.cm.service.*;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +35,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/contract")
+@Transactional
 public class BsContractController extends BaseController {
     @Autowired
     private IBsContractService bsContractService;
@@ -79,8 +81,10 @@ public class BsContractController extends BaseController {
     @RequiresPermissions("system:contract:query")
     @GetMapping(value = "/{eid}")
     public AjaxResult getInfo(@PathVariable("eid") Long eid) {
-        BsContract bsContract = bsContractService.selectBidTenderSid(eid);
-//        System.out.println(bsContract);
+        BsContract bsContract = bsContractService.selectBidTenderBySid(eid);
+        System.out.println("---------------------------------------------------");
+        System.out.println(bsContract);
+        System.out.println("---------------------------------------------------");
         return success(bsContract);
     }
 
@@ -209,26 +213,20 @@ public class BsContractController extends BaseController {
     /**
      * 删除合同
      */
-    @RequiresPermissions("system:contract:remove")
     @Log(title = "合同", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{eid}")
-    public AjaxResult remove(@PathVariable Long eid) {
-        int i = inventoryService.deleteBsInventoryByEid(eid);
+    @GetMapping("/del")
+    public AjaxResult remove(Long eid) {
+        System.out.println(eid);
+        inventoryService.deleteBsInventoryByEid(eid);
+        paymentService.deleteBsPaymentByEid(eid);
+        signService.deleteBsSignByEid(eid);
+        int i = bsContractService.deleteBsContractByEid(eid);
         if (i == 0) {
             return AjaxResult.error("删除异常");
         }
-        int i1 = paymentService.deleteBsPaymentByEid(eid);
-        if (i1 == 0) {
-            return AjaxResult.error("删除异常");
-        }
-        int i2 = signService.deleteBsSignByEid(eid);
-        if (i2 == 0) {
-            return AjaxResult.error("删除异常");
-        }
-        int i3 = bsContractService.deleteBsContractByEid(eid);
-        if (i3 == 0) {
-            return AjaxResult.error("删除异常");
-        }
+        BidTender bidTender = new BidTender();
+        bidTender.setEid(eid);
+        bsContractService.updateBidTender(bidTender);
         return AjaxResult.success("删除成功");
     }
 
@@ -242,6 +240,22 @@ public class BsContractController extends BaseController {
     @PutMapping("/updateoHstatus")
     public AjaxResult updateoHstatus(@RequestBody BsContract bsContract) {
         return success(bsContractService.updateoHstatus(bsContract));
+    }
+
+    //合同作废
+    @GetMapping("/HtCancel")
+    public AjaxResult HtCancel(Long eid) {
+        int i = bsContractService.updateHtCancel(eid);
+        if (i > 0) {
+            BidTender bidTender = new BidTender();
+            bidTender.setEid(eid);
+            int i1 = bsContractService.updateBidTender(bidTender);
+            if (i1 > 0) {
+                return AjaxResult.success("修改成功");
+            }
+            return AjaxResult.error("修改失败");
+        }
+        return AjaxResult.error("修改失败");
     }
 
 }

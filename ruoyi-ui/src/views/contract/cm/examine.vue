@@ -575,9 +575,9 @@ export default {
         this.form.eType = k.eType
         this.form.eCon = k.eCon
         this.form.sid = k.sid
-        this.submitData.eOpinion = k.eOpinion
+        this.form.eOpinion = k.eOpinion
         console.log(k.eOpinion)
-        if (k.eImage != null) {
+        if (k.eImage != null&& k.eImage != '') {
           //获取第一个文件的名称
           let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
           let fileListData1 = [{
@@ -590,7 +590,7 @@ export default {
           this.fileList1 = []
           this.fileList1.eImage = null
         }
-        if (k.eDocuments != null) {
+        if (k.eDocuments != null&& k.eDocuments != '') {
           //获取第三个文件的名称
           let imgName2 = (k.eDocuments).substring((k.eDocuments).lastIndexOf('/') + 1)
           let fileListData2 = [{
@@ -609,6 +609,7 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
+      alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName

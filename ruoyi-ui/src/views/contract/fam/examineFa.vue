@@ -46,7 +46,7 @@
             签署主体
           </template>
           <template slot="default">
-            <el-input v-model="queryParams.oSubject" readonly class="cll"/>
+            <el-input v-model="queryParams.oSubject" readonly class="cll" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -54,7 +54,7 @@
             相对方
           </template>
           <template slot="default">
-            <el-input v-model="queryParams.hName" readonly class="cll"/>
+            <el-input v-model="queryParams.hName" readonly class="cll" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -77,24 +77,24 @@
           <template slot="label">
             协议文件
           </template>
-<!--          <template>-->
-<!--            <el-upload-->
-<!--                ref="up1"-->
-<!--                class="upload-demo"-->
-<!--                :action="url"-->
-<!--                :on-preview="handlePreview"-->
-<!--                :on-remove="handleRemove"-->
-<!--                :before-remove="beforeRemove"-->
-<!--                :auto-upload="false"-->
-<!--                :limit="1"-->
-<!--                :on-exceed="handleExceed"-->
-<!--                :on-success="success"-->
-<!--                :file-list="fileList"-->
-<!--            >-->
-<!--              <el-button size="small" type="primary">上传框架协议文件</el-button>-->
-<!--              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
-<!--            </el-upload>-->
-<!--          </template>-->
+          <template>
+            <el-upload
+                ref="up1"
+                class="upload-demo"
+                :action="url"
+                :on-preview="handlePreview"
+                :before-remove="beforeRemove"
+                :auto-upload="false"
+                :limit="1"
+                :on-exceed="handleExceed"
+                :on-success="success"
+                :file-list="fileList"
+                :on-change="onchange1"
+                disabled
+            >
+              <el-button size="small" type="primary">上传框架协议文件</el-button>
+            </el-upload>
+          </template>
         </el-descriptions-item>
       </el-descriptions>
 
@@ -108,13 +108,11 @@
             stripe
             :style="{marginTop:'10px'}"
         >
-<!--          <el-table-column type="selection" width="55"/>-->
-          <el-table-column label="序号" prop="id"/>
+          <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inName" readonly>
-                <i slot="suffix" class="el-icon-search" style="margin-top: 10px"/>
-<!--                <i slot="suffix" class="el-icon-search" @click="openCp(scope.row)" style="margin-top: 10px"/>-->
+                <i slot="suffix" class="el-icon-search" @click="" style="margin-top: 10px"/>
               </el-input>
               <el-dialog title="产品名称" :visible.sync="cpDialog">
                 <el-table
@@ -171,7 +169,6 @@
                   style="width: 120px;"
                   @blur="spCountBlur(scope.row)"
                   @change="spCountChange(scope.row)"
-                  disabled
               />
             </template>
           </el-table-column>
@@ -188,12 +185,24 @@
         </div>
       </div>
     </div>
+
+    <h4><strong>| 审核协议</strong></h4>
+    <el-form ref="elForm" :model="sub" :rules="rules" size="medium" label-width="180px" label-position="left">
+      <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
+        <el-form-item label="" prop="oOpinion" style="width: 100%">
+          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput"/>
+        </el-form-item>
+      </el-row>
+    </el-form>
+
     <el-button size="medium" @click="back1">返回</el-button>
+    <el-button size="medium" type="primary" @click="updateHt">通过</el-button>
+    <el-button size="medium" type="danger" @click="updateBh">驳回</el-button>
   </div>
 </template>
 
 <script>
-import { addManagement, getManagement, listDevice, listInventory, SelectSign, updateManagement } from '../../../api/system/addContract'
+import { addManagement, getManagement, listDevice, listInventory, SelectSign, updateContract, updateManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
@@ -214,6 +223,7 @@ export default {
       size: '0',
       //数据列表
       queryParams: {
+        oid: null,
         tid: null,
         oCode: null,
         oName: null,
@@ -224,9 +234,19 @@ export default {
         oEnddate: null,
         oFile: null,
         oType: '采购框架协议',
-        oHstatus: 2,
+        oHstatus: null,
         oDescribe: null,
         oOpinion: null
+      },
+      sub: {
+        oHstatus: null,
+        oid: null,
+        oOpinion: null
+      },
+      rules: {
+        oOpinion: [
+          { required: true, message: '审核意见不能为空', trigger: 'blur' }
+        ]
       },
       //协议文件
       fileList: [],
@@ -244,15 +264,9 @@ export default {
   },
   created() {
     this.hh()
-    // this.getSign()
+    this.xx()
   },
   watch: {
-    '$route.query.oid': function(newOid, oldOid) {
-      if (oldOid != newOid) {
-        this.jhId = newOid
-        this.hh()
-      }
-    },
     'queryParams.oStartdate': function(newDate) {
       if (newDate) {
         const startDate = new Date(newDate)
@@ -262,8 +276,12 @@ export default {
     }
   },
   methods: {
-    //创建框架协议
+    //创建合同
     addFa() {
+      //判断是否上传文件
+      this.submitNextUpload()
+    },
+    add() {
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
       this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
@@ -273,12 +291,56 @@ export default {
         }
         return true
       })
-      // this.$refs.up1.submit()
-      // console.log(111)
-      // console.log(this.queryParams.oFile)
-      // 修改框架协议管理
       updateManagement(this.queryParams).then(response => {
         console.log(response)
+        if (response.msg == '修改成功') {
+          this.$router.push('/contract/fam')
+        }
+      })
+    },
+    onchange1(files, fileList) {
+      this.fileList = fileList
+      console.log(this.fileList, 'fileList onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList.splice(this.fileList.indexOf(files[0]), 1)
+      }
+    },
+    updateHt() {
+      //通过
+      this.$refs.elForm.validate().then(() => {
+        this.sub.oHstatus = 3
+        this.sub.oid = this.oid
+        updateManagement(this.sub).then(response => {
+          console.log(response.msg)
+          if (response.msg = '修改成功') {
+            this.$message.success('已通过')
+            this.$router.push('/contract/fam')
+          } else {
+            this.$message.success('修改失败')
+          }
+        })
+      }).catch(() => {
+        this.$message.warning('请填写审核意见')
+      })
+
+    },
+    updateBh() {
+      //驳回
+      this.$refs.elForm.validate().then(() => {
+        this.sub.oHstatus = 4
+        this.sub.oid = this.oid
+        updateManagement(this.sub).then(response => {
+          console.log(response.msg)
+          if (response.msg = '修改成功') {
+            this.$message.error('已驳回')
+            this.$router.push('/contract/fam')
+          } else {
+            this.$message.success('修改失败')
+          }
+        })
+      }).catch(() => {
+        this.$message.warning('请填写审核意见')
       })
     },
     //查询框架协议信息
@@ -288,7 +350,24 @@ export default {
         console.log('打印框架协议信息')
         console.log(response)
         this.queryParams = response.data
+        let k = response.data.oFile
+        console.log(k)
+        if (k != null || k != '') {
+          //获取第一个文件的名称
+          let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
+          let fileListData = [{
+            name: imgName1,
+            url: k
+          }]
+          this.fileList = fileListData
+          this.form.oFile = k
+        } else {
+          this.fileList = []
+          this.fileList.oFile = null
+        }
       })
+    },
+    xx() {
       listInventory({ 'oid': this.oid }).then(response => {
         console.log(response.rows)
         // this.lTableData = response.rows
@@ -311,39 +390,36 @@ export default {
       })
     },
     //上传协议文件-------------------------------------------------
-    success(response, file, fileList) {
-      console.log(222)
-      this.fileList.push(file)
-      let hhh = fileList.map(obj => {
-        let newObj = obj
-        delete newObj.url
-        newObj.url = obj.response.data.url
-        delete newObj.name
-        newObj.name = obj.response.data.name
-        delete newObj.response
-        delete newObj.raw
-        delete newObj.percentage
-        delete newObj.status
-        delete newObj.uid
-        return newObj
-      })
-      this.queryParams.oFile = JSON.stringify(hhh)
+    success(response) {
+      console.log(333)
+      console.log(response)
+      this.queryParams.oFile = response.data.url
+      console.log('打印up3-------------------------')
       console.log(this.queryParams.oFile)
-      // addManagement(this.queryParams).then(response => {
-      //   console.log(response)
-      // })
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
+      //调用下一个上传的方法
+      this.submitNextUpload()
     },
     handlePreview(file) {
-      console.log(file)
+      window.open(this.fileList[0].url, '_blank', 'charset=utf-8')
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList = []
+        this.queryParams.oFile = null
+      })
+    },
+    submitNextUpload() {
+      // 根据条件判断调用下一个上传
+      if (this.fileList.length > 0 && this.queryParams.oFile == null) {
+        console.log('打印提交1-------------------------')
+        this.$refs.up1.submit()
+      } else {
+        console.log('打印提交2-------------------------')
+        this.add()
+      }
     },
     //上传协议文件-------------------------------------------------
     /* ------------------------添加产品信息------------------------ */

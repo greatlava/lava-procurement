@@ -351,14 +351,14 @@ export const dynamicRoutes = [
     ]
   },
   {
-    path: '/contract/detailsFa',
+    path: '/contract/examineFa',
     component: Details,
     children: [
       {
-        path: 'detailsFa?oid=:oid(\\d+)',
-        component: () => import('@/views/contract/fam/detailsFa'),
-        name: 'DetailsFa',
-        meta: { title: '框架协议详情', activeMenu: '/contract' }
+        path: 'examineFa?oid=:oid(\\d+)',
+        component: () => import('@/views/contract/fam/examineFa'),
+        name: 'examineFa',
+        meta: { title: '框架协议审核', activeMenu: '/contract' }
       }
     ]
   },

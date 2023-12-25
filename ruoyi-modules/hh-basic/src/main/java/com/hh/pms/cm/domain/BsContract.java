@@ -133,6 +133,10 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同文件")
     private String eDocuments;
 
+    /** 是否作废 */
+    @Excel(name = "是否作废")
+    private Long eCancel;
+
 //    private BidTender bidTender;
 //
 //    public BidTender getBidTender() {
@@ -247,6 +251,14 @@ public class BsContract extends BaseEntity {
         return oHstatus;
     }
 
+    public Long geteCancel() {
+        return eCancel;
+    }
+
+    public void seteCancel(Long eCancel) {
+        this.eCancel = eCancel;
+    }
+
     public void seteType(String eType) {
         this.eType = eType;
     }
@@ -343,6 +355,7 @@ public class BsContract extends BaseEntity {
                 .append("eOpinion", geteOpinion())
                 .append("eImage", geteImage())
                 .append("eDocuments", geteDocuments())
+                .append("Cancel", geteCancel())
                 .append("BsInventoryList", getBsInventoryList())
                 .append("PaymentList", getBsPaymentList())
                 .append("BsSign", getBsSign())

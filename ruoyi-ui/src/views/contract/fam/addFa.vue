@@ -250,7 +250,6 @@ export default {
       console.log(newJhId, oldJhId)
       if (newJhId != oldJhId) {
         this.jhId = newJhId
-        this.lTableData = []
         this.hh()
       }
     },
@@ -299,7 +298,6 @@ export default {
         this.queryParams.hid = response.rows[0].ppmFramePlan.bsSupplier.hid
         this.queryParams.jhId = this.jhId
         response.rows.forEach((e, i) => {
-          console.log('e', e)
           this.lTableData.push({
             id: i + 1,
             inName: e.ppmDevice.tName,
