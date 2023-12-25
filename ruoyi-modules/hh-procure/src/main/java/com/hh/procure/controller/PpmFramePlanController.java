@@ -9,6 +9,7 @@ import com.hh.procure.domain.PpmLineItems;
 import com.hh.procure.service.IComCodeRulesService;
 import com.hh.procure.service.IPpmFramePlanService;
 import com.hh.procure.service.IPpmLineItemsService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -157,6 +158,13 @@ public class PpmFramePlanController extends BaseController {
         ppmFramePlanService.updateFarmeworkPlanStatusByJhId(ppmFramePlan);
         return AjaxResult.success();
     }
+
+    @PostMapping("/selectFarmeworkPlanCount")
+    public R selectFarmeworkPlanCount() {
+        return R.ok(ppmFramePlanService.selectFarmeworkPlanCount());
+    }
+
+
 
     //查询已完成并且未创建框架协议的框架计划
     @RequiresPermissions("system:plan:list1")

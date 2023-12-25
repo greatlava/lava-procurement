@@ -97,6 +97,9 @@
                 JOIN ppm_device d ON d.tid = i.tid
         WHERE p.jh_id = #{jhId}
     </select>
+    <select id="selectFarmeworkPlanCount" resultType="java.lang.Integer">
+        SELECT count(0) FROM ppm_frame_plan
+    </select>
 
     <insert id="insertPpmFramePlan" parameterType="com.hh.procure.domain.PpmFramePlan" useGeneratedKeys="true"
             keyProperty="jhId">

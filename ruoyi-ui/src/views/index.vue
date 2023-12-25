@@ -16,28 +16,22 @@
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="879757698"
+              :value="count.procurementCount"
               title="采购计划数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="3453234"
+              :value="count.farmeworkPlanCount"
               title="框架计划数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="678"
-              title="新增供应商"
+              :value="count.contractCount"
+              title="合同数量"
             >
               <template slot="prefix">
                 <i class="el-icon-s-flag" style="color: red"></i>
@@ -52,7 +46,7 @@
               group-separator=","
               :precision="2"
               decimal-separator="."
-              :value="987543.8754"
+              :value="count.totalPurchaseAmount"
               title="总采购金额"
             >
               <template slot="suffix">
@@ -66,20 +60,23 @@
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="45679"
+              :value="count.tenderCount"
               title="招标项目数量"
             ></el-statistic>
           </el-col>
           <el-col class="header_right" :span="3">
             <el-statistic
               group-separator=","
-              :precision="2"
-              decimal-separator="."
-              :value="98765"
+              :value="count.waitingReviewCount"
               title="待审核计划"
-            ></el-statistic>
+            >
+              <template slot="prefix">
+                <i class="el-icon-s-check"></i>
+              </template>
+              <template slot="suffix">
+                <i class="el-icon-s-check"></i>
+              </template>
+            </el-statistic>
           </el-col>
         </el-row>
       </div>
@@ -99,10 +96,10 @@
               </div>
               <div class="cont">
                 <p>
-                  共计：<span>{{ item.count }}</span>个
+                  共计：<span style="font-weight: bold">{{ item.count }}</span>个
                 </p>
                 <ul>
-                  <a target="_blank" v-for="(e,j) in item.content" :key="j">
+                  <a @click.prevent="jumpPage(i,e.id)" href="#" target="_blank" v-for="(e,j) in item.content" :key="j">
                     <li>
                       <h3>{{ e.title }}</h3>
                       <p>编号：{{ e.code }}</p>
@@ -119,83 +116,68 @@
           <div class="content_rigth_top">
             <el-row>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou001.png" alt="">
-                  <div>采购计划</div>
-                </div>
+                <router-link :to="'purchase/purchase'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou001.png" alt="">
+                    <div>采购计划</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou003.png" alt="">
-                  <div>采购寻源</div>
-                </div>
+                <router-link :to="'purchase/procurementSourcing'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou003.png" alt="">
+                    <div>采购寻源</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou004.png" alt="">
-                  <div>合同管理</div>
-                </div>
+                <router-link :to="'contract/cm'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou004.png" alt="">
+                    <div>合同管理</div>
+                  </div>
+                </router-link>
               </el-col>
               <el-col :span="6">
-                <div class="content_rigth_top_center">
-                  <img class="content_rigth_top_img"
-                       src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou005.png" alt="">
-                  <div>供应商管理</div>
-                </div>
+                <router-link :to="'supplier/sqe'">
+                  <div class="content_rigth_top_center">
+                    <img class="content_rigth_top_img"
+                         src="https://enterprise.e-cology.com.cn/page/resource/userfile/image/1caigou005.png" alt="">
+                    <div>供应商管理</div>
+                  </div>
+                </router-link>
               </el-col>
 
             </el-row>
           </div>
           <div class="content_right_bottom">
             <div class="project_Kanban_title">
-              <h3>采购订单
-                <i style="vertical-align: middle;" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+              <h3>采购计划
+                <router-link :to="'purchase/purchase'">
+                  <i style="vertical-align: middle;" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
             <el-timeline class="content_right_purchase">
-              <el-timeline-item timestamp="2018/4/12" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
+              <el-timeline-item style="cursor: pointer" v-for="item in listPlan" :timestamp="item.createTime"
+                                placement="top">
+                <el-card :body-style="{ padding: '12px 20px' }" shadow="never">
+                  <h4>{{ item.createBy }}新增了采购计划</h4>
+                  <el-descriptions :column="2">
+                    <el-descriptions-item label="编号">{{ item.aCode }}</el-descriptions-item>
+                    <el-descriptions-item label="创建部门">{{ item.aCreateDept }}</el-descriptions-item>
+                    <el-descriptions-item label="计划名称">{{ item.aName }}</el-descriptions-item>
+                    <el-descriptions-item label="创建人"> {{ item.createBy }}</el-descriptions-item>
+                    <el-descriptions-item label="审核状态">
+                      <el-tag size="mini" v-if="item.aAstate == 0" type="small">待提交</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 1" type="danger">待审核</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 2" type="success">已审核</el-tag>
                     </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/3" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
-                  </el-descriptions>
-                </el-card>
-              </el-timeline-item>
-              <el-timeline-item timestamp="2018/4/2" placement="top">
-                <el-card shadow="never">
-                  <h4>张三新增了采购计划</h4>
-                  <el-descriptions>
-                    <el-descriptions-item label="用户名">kooriookami</el-descriptions-item>
-                    <el-descriptions-item label="手机号">18100000000</el-descriptions-item>
-                    <el-descriptions-item label="居住地">苏州市</el-descriptions-item>
-                    <el-descriptions-item label="备注">
-                      <el-tag size="small">学校</el-tag>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="联系地址">江苏省苏州市吴中区吴中大道 1188 号</el-descriptions-item>
                   </el-descriptions>
                 </el-card>
               </el-timeline-item>
@@ -208,27 +190,36 @@
           <div class="content_foot_left">
             <div class="project_Kanban_title">
               <h3>招标项目
-                <i style="vertical-align: middle;margin-right: 25px" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                <router-link :to="'tender/tender1'">
+                  <i style="vertical-align: middle;margin-right: 25px" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
-            <el-table max-height="250px"
-                      :data="tableData"
-                      style="width: 100%">
+            <el-table max-height="250px" :data="listTender" style="width: 100%">
               <el-table-column
                 align="center"
-                prop="date"
+                prop="sCode"
+                label="项目编号">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="sName"
+                show-overflow-tooltip
                 label="招标项目名称">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="name"
-                label="创建时间">
+                prop="sLeader"
+                label="负责人">
               </el-table-column>
               <el-table-column
                 align="center"
-                prop="address"
+                prop="sAddress"
                 label="地址">
+                <template slot-scope="scope">
+                  {{ scope.row.sAddress || '——' }}
+                </template>
               </el-table-column>
             </el-table>
           </div>
@@ -239,12 +230,14 @@
           <div style="height: 100%" class="content_foot_left">
             <div class="project_Kanban_title">
               <h3 style="margin-left: 0px">供应商列表
-                <i style="vertical-align: middle" class="el-icon-more"></i>
-                <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                <router-link :to="'supplier/sqe'">
+                  <i style="vertical-align: middle" class="el-icon-more"></i>
+                  <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
+                </router-link>
               </h3>
             </div>
-            <div style="display: flex;flex-wrap: wrap;justify-content: space-between">
-              <el-card v-for="j in 12" shadow="hover" class="supplier_list">
+            <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
+              <el-card v-for="item in suppliers" shadow="hover" class="supplier_list">
                 <div class="supper_list_content">
                   <div>
                     <img
@@ -252,10 +245,10 @@
                       alt="">
                   </div>
                   <div class="supplier_describe div">
-                    <p>法人：马化腾</p>
-                    <h3>腾讯科技（深圳）有限公司</h3>
+                    <p>法人：{{ item.hJuridical }}</p>
+                    <h3>{{ item.hName }}</h3>
                     <span
-                      class="brief_introduction">公司简介：腾讯是一家世界领先的互联网科技公司，用创新的产品和服务提升全球各地人们的生活品质</span>
+                      class="brief_introduction">公司简介：{{ item.hDesc }}</span>
                   </div>
                   <div class="review_status">
                     <el-tag type="primary">已审核</el-tag>
@@ -264,7 +257,7 @@
                 <div class="supplier_list_foot">
                   <p>
                     <i class="el-icon-location-information"></i>
-                    联系地址：广东省深圳市南山区海天二路33号腾讯滨海大厦
+                    联系地址：{{ item.hAddress }}
                   </p>
                 </div>
               </el-card>
@@ -277,99 +270,210 @@
 </template>
 
 <script>
+import {listSupplier} from "@/api/system/supplier";
+
+import {
+  selectPpmpProcurementCount,
+  selectFarmeworkPlanCount,
+  selectContractCount,
+  queryTotalPurchaseAmount,
+  selectTenderCount,
+  listPlan,
+  selectTenderByState
+} from '@/api/system/plan'
+
 export default {
   name: "Index",
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      listPlan: [],
+      listTender: [],
+      count: {
+        //采购计划数量
+        procurementCount: 0,
+        //框架计划数量
+        farmeworkPlanCount: 0,
+        //合同数量
+        contractCount: 0,
+        //采购计划总金额
+        totalPurchaseAmount: 0,
+        //招标项目数量
+        tenderCount: 0,
+        //待审核采购计划数量
+        waitingReviewCount: 0,
+      },
+      //项目看板
       project_Kanban: [{
         title: "寻源阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg01.png",
         count: 2,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "招标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg02.png",
         count: 456,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "投标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg03.png",
         count: 23,
-        content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
-      }, {
-        title: "比价阶段",
-        imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg04.png",
-        count: 31, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        content: []
       }, {
         title: "评审阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg05.png",
-        count: 73, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        count: 73, content: []
       }, {
         title: "中标阶段",
         imgUrl: "https://enterprise.e-cology.com.cn/cloudstore/release/3d14457595ef4785a1ee406c5650c01d/resources/iconsCg06.png",
-        count: 35, content: [{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        },{
-          title: "2021年维森集团重点电脑采购项目", code: "CGXY2021120027", responsible_person: "张三"
-        }]
+        count: 35, content: []
       }],
       // 版本号
       version: "3.6.3",
+      suppliers: []
     };
   },
   created() {
-
+    this.init();
   },
   methods: {
-    refresh_project_Kanban() {
+    jumpPage(index, id) {
+      switch (index) {
+        case 0:
+          this.$router.push({path: '/purchase/procurementSourcing', query: {aid: id}})
+          break;
+        case 1:
+          break;
+      }
+    },
+    init() {
+      //查询采购计划数量
+      selectPpmpProcurementCount(null).then(res => {
+        this.count.procurementCount = res;
+      })
+      //查询框架计划数量
+      selectFarmeworkPlanCount().then(res => {
+        this.count.farmeworkPlanCount = res.data;
+      })
+      //查询合同数量
+      selectContractCount().then(res => {
+        this.count.contractCount = res.data;
+      })
+      //查询采购计划总价格
+      queryTotalPurchaseAmount().then(res => {
+        this.count.totalPurchaseAmount = res.data;
+      })
+      //查询招标项目数量
+      selectTenderCount().then(res => {
+        this.count.tenderCount = res.data;
+      })
+      //查询待审核采购计划数量
+      selectPpmpProcurementCount(2).then(res => {
+        this.count.waitingReviewCount = res;
+      })
+      //查询寻源阶段数量
+      selectPpmpProcurementCount(2).then(res => {
+        this.project_Kanban[0].count = res;
+      })
+      //项目看板
+      this.selectPoject_kanban();
+      //采购订单
+      this.selectNewPlan();
+      //招标项目
+      this.selectListTender();
+      //供应商列表
+      this.listSupplier()
+    },
+    //项目看板
+    selectPoject_kanban() {
+      //查询项目看板寻源阶段
+      listPlan({pageSize: 3, aAstate: 2}).then(res => {
+        res.rows.forEach((e, i) => {
+          let obj = {
+            title: e.aName,
+            code: e.aCode,
+            responsible_person: e.createBy,
+            id: e.aid
+          };
+          this.project_Kanban[0].content.push(obj);
+        })
+      })
+      //查询招标项目阶段项目看板
+      selectTenderByState({sProjectState: 2}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[1].content.push(obj);
+        })
+      })
 
+      //查询投标项目阶段项目看板
+      selectTenderByState({sProjectState: 1}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[2].content.push(obj);
+        })
+      })
+      //查询评审阶段项目看板
+      selectTenderByState({sProjectState: 3}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[3].content.push(obj);
+        })
+      })
+      //查询定标阶段项目看板
+      selectTenderByState({sProjectState: 4}).then(res => {
+        res.forEach((e, i) => {
+          let obj = {
+            title: e.sName,
+            code: e.sCode,
+            responsible_person: e.sLeader,
+            id: e.eid
+          };
+          this.project_Kanban[4].content.push(obj);
+        })
+      })
+    },
+    //查询最新的采购计划
+    selectNewPlan() {
+      listPlan({pageSize: 3}).then(res => {
+        this.listPlan = res.rows;
+      })
+    },
+    //刷新项目看板
+    refresh_project_Kanban() {
+      this.project_Kanban[0].content = [];
+      this.project_Kanban[1].content = [];
+      this.project_Kanban[2].content = [];
+      this.project_Kanban[3].content = [];
+      this.project_Kanban[4].content = [];
+      this.selectPoject_kanban();
+    },
+    //招标项目
+    selectListTender() {
+      selectTenderByState({}).then(res => {
+        this.listTender = res;
+        console.log("listTender", res)
+      })
+    },
+    //显示供应商列表
+    listSupplier() {
+      listSupplier({"pageNum": 1, "pageSize": 12}).then(res => {
+        this.suppliers = res.rows
+      })
     }
   },
 };
@@ -510,7 +614,7 @@ li {
 }
 
 .conent_left li {
-  width: 15%;
+  width: 17%;
   display: inline-block;
   vertical-align: top;
 }
@@ -673,7 +777,7 @@ li {
   margin: 0;
   padding: 0;
   font-size: 16px;
-  color: #5e69b6;
+  color: #091044;
   font-weight: bold;
 }
 

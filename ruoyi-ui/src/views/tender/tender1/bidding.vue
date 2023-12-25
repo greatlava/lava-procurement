@@ -111,7 +111,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .div1{
   width: 95%;
   height: 100%;

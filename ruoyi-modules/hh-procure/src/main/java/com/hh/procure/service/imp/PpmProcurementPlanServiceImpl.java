@@ -141,4 +141,34 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
     public int insertNoBidPro(NobidNonPro nobidNonPro) {
         return ppmProcurementPlanMapper.insertNoBidPro(nobidNonPro);
     }
+
+    /**
+     *
+     * @param state
+     * @return
+     */
+    @Override
+    public int selectPpmpProcurementCount(PpmProcurementPlan state) {
+        return ppmProcurementPlanMapper.selectPpmpProcurementCount(state);
+    }
+
+    @Override
+    public int selectContractCount() {
+        return ppmProcurementPlanMapper.selectContractCount();
+    }
+
+    @Override
+    public Double queryTotalPurchaseAmount() {
+        return ppmProcurementPlanMapper.queryTotalPurchaseAmount();
+    }
+
+    @Override
+    public int selectTenderCount() {
+        return ppmProcurementPlanMapper.selectTenderCount();
+    }
+
+    @Override
+    public List<BidTender> selectTenderByState(BidTender bidTender) {
+        return ppmProcurementPlanMapper.selectTenderByState(bidTender);
+    }
 }

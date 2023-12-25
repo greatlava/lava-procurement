@@ -66,6 +66,8 @@ public interface PpmFramePlanMapper
 
    public int updateFarmeworkPlanStatusByJhId(PpmFramePlan ppmFramePlan);
 
+   public int selectFarmeworkPlanCount();
+
     /**
      * 查询已完成并且未创建框架协议的框架计划
      *

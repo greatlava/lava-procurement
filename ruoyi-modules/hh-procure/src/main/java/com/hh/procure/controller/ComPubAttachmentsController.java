@@ -94,7 +94,7 @@ public class ComPubAttachmentsController extends BaseController {
         return toAjax(comPubAttachmentsService.deleteComPubAttachmentsByAnIds(anIds));
     }
 
-    @RequiresPermissions("system:attachments:query")
+    @RequiresPermissions("system:attachments:list")
     @PostMapping("/selectedComPubAttamentsByAid")
     public AjaxResult selectedComPubAttamentsByAid(@RequestBody ComPubAttachments comPubAttachments) {
         return success(comPubAttachmentsService.selectedComPubAttamentsByAid(comPubAttachments));
