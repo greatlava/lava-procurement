@@ -88,6 +88,7 @@
         inner join bs_contract c on r.eid = c.eid
         inner join bs_supplier s on s.hid = c.hid
         <where>
+            c.e_cancel = 0
             <if test="eHname != null and eHname != ''">and c.e_hname like
                 concat('%',#{eHname},'%')
             </if>

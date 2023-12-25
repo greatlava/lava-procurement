@@ -380,7 +380,7 @@
               <el-table-column type="index" label="序号" align="center" width="80"/>
               <el-table-column label="名称" align="center" prop="fjName"/>
               <el-table-column
-                label="附件">
+                label="附件" align="center">
                 <template slot-scope="scope">
                   <p v-for="i in JSON.parse(scope.row.fjAnnex)" v-if="scope.row.fjAnnex != null">
                     <a :href="i.url" target="_blank">{{ i.name }}</a>
@@ -389,7 +389,7 @@
                 </template>
               </el-table-column>
               <el-table-column
-                label="操作">
+                label="操作" align="center">
                 <template slot-scope="scope">
                   <el-button type="primary" v-if="scope.row.fjAnnex != null"
                              @click="download(JSON.parse(scope.row.fjAnnex))">

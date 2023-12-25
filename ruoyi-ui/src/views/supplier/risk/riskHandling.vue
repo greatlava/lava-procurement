@@ -89,7 +89,8 @@
                         :rows="8"
                         style="width: 200%"
                         placeholder="请输入处理结果"
-                        v-model="formData.rmHandingResult">
+                        v-model="formData.rmHandingResult"
+                        :readonly="formData.rmStatus == 2 || formData.rmStatus == 3">
                       </el-input>
                     </el-form-item>
                   </el-col>

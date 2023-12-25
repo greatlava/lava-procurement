@@ -229,7 +229,7 @@
         <el-col class="supplier_box" :span="24">
           <div style="height: 100%" class="content_foot_left">
             <div class="project_Kanban_title">
-              <h3 style="margin-left: 0px">供应商列表
+              <h3 style="margin-left: 0">供应商列表
                 <router-link :to="'supplier/sqe'">
                   <i style="vertical-align: middle" class="el-icon-more"></i>
                   <span style="float: right;margin-right: 5px;cursor: pointer">more</span>
@@ -237,30 +237,33 @@
               </h3>
             </div>
             <div style="display: flex;flex-wrap: wrap;justify-content: space-around;">
-              <el-card v-for="item in suppliers" shadow="hover" class="supplier_list">
-                <div class="supper_list_content">
-                  <div>
-                    <img
-                      src="https://gd-hbimg.huaban.com/aae0dae4e98dbd565b5855f37243cfea50bf56461a143-68yMUX_fw658webp"
-                      alt="">
+              <router-link :to="'/supplier/detail?hid='+item.hid+'&zr_id=0'" v-for="item in suppliers"
+                           :key="item.index">
+                <el-card shadow="hover" class="supplier_list">
+                  <div class="supper_list_content">
+                    <div>
+                      <img
+                        src="https://gd-hbimg.huaban.com/aae0dae4e98dbd565b5855f37243cfea50bf56461a143-68yMUX_fw658webp"
+                        alt="">
+                    </div>
+                    <div class="supplier_describe div">
+                      <p>法人：{{ item.hJuridical }}</p>
+                      <h3>{{ item.hName }}</h3>
+                      <span
+                        class="brief_introduction">公司简介：{{ item.hDesc.length > 42 ? item.hDesc.substr(0, 42) + '...' : item.hDesc}}</span>
+                    </div>
+                    <div class="review_status">
+                      <el-tag type="primary">已审核</el-tag>
+                    </div>
                   </div>
-                  <div class="supplier_describe div">
-                    <p>法人：{{ item.hJuridical }}</p>
-                    <h3>{{ item.hName }}</h3>
-                    <span
-                      class="brief_introduction">公司简介：{{ item.hDesc }}</span>
+                  <div class="supplier_list_foot">
+                    <p>
+                      <i class="el-icon-location-information"></i>
+                      联系地址：{{ item.hAddress }}
+                    </p>
                   </div>
-                  <div class="review_status">
-                    <el-tag type="primary">已审核</el-tag>
-                  </div>
-                </div>
-                <div class="supplier_list_foot">
-                  <p>
-                    <i class="el-icon-location-information"></i>
-                    联系地址：{{ item.hAddress }}
-                  </p>
-                </div>
-              </el-card>
+                </el-card>
+              </router-link>
             </div>
           </div>
         </el-col>
