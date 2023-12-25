@@ -65,7 +65,7 @@ public interface IBsContractService {
     public int updateBidTenderEid(BidTender bidTender);
 
     //查询招标项目ID
-    public BsContract selectBidTenderSid(Long eid);
+    public BsContract selectBidTenderBySid(Long eid);
 
     //新增公共附件
     public int insertComPubAttachments(ComPubAttachments comPubAttachments);
@@ -81,4 +81,13 @@ public interface IBsContractService {
 
     //修改合同管理状态
     public int updateoHstatus(BsContract bsContract);
+
+    //修改合同管理状态
+    public int updateBidTender(BidTender bidTender);
+
+    //合同作废
+    public int updateHtCancel(Long eid);
+
+    //查询生成合同的项目
+    public Long selectSid(Long eid);
 }

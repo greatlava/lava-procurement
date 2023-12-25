@@ -100,8 +100,8 @@
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.oHstatus === 1" type="info">草稿</el-tag>
                 <el-tag v-else-if="scope.row.oHstatus === 2" type="warning">待审核</el-tag>
-                <el-tag v-else-if="scope.row.oHstatus === 3" type="warning">已通过</el-tag>
-                <el-tag v-else-if="scope.row.oHstatus === 4" type="info">未通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 3">已通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 4" type="danger">未通过</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -112,7 +112,7 @@
                     size="mini"
                     type="text"
                     icon="el-icon-upload"
-                    @click=""
+                    @click="cancel1(scope.row.eid)"
                     v-hasPermi="['system:contract:upload']"
                 >作废
                 </el-button>
@@ -127,16 +127,6 @@
                   >编辑
                   </el-button>
                 </router-link>
-                <router-link :to="'detailsFa?oid='+scope.row.oid">
-                  <el-button
-                      v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
-                      size="mini"
-                      type="text"
-                      icon="el-icon-view"
-                      v-hasPermi="['system:contract:edit']"
-                  >查看
-                  </el-button>
-                </router-link>
                 <el-button
                     v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
                     size="mini"
@@ -147,13 +137,15 @@
                 >删除
                 </el-button>
                 <!--状态2-->
-                <el-button
-                    v-if="scope.row.oHstatus === 2"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >--
-                </el-button>
+                <router-link :to="'examineFa?oid='+scope.row.oid">
+                  <el-button
+                      v-if="scope.row.oHstatus === 2"
+                      size="mini"
+                      type="text"
+                      @click=""
+                  >审核
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -172,7 +164,7 @@
 
 <script>
 import { getFrameworkPlan1 } from '@/api/system/frameworkPlan'
-import { listManagement } from '../../../api/system/addContract'
+import { HtCancel, listManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'Contract',
@@ -253,6 +245,31 @@ export default {
     // })
   },
   methods: {
+    //协议作废
+    cancel1(oid) {
+      this.$confirm('确定使该合同作废?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        HtCancel(eid).then(response => {
+          console.log(response)
+          if (response.msg="修改成功"){
+            this.activeName = 'third'
+            this.getList3()
+            this.$message({type: 'info',message: '已作废'})
+          }else {
+            this.$message({type: 'info',message: '修改失败'})
+          }
+
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
     handleClick(tab) {
       console.log('切换到标签页', tab.name)
       if (tab.name === 'first') {

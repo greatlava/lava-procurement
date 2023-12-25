@@ -633,6 +633,7 @@ export default {
         console.log(response)
         if (response.msg=="添加成功"){
           this.$router.push("/contract/cm")
+          this.$message.success("添加成功")
         }
       })
     },
@@ -641,7 +642,12 @@ export default {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove1(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList2 = []
+        this.ComPubAttachments.anUrl = null
+        this.ComPubAttachments.anName = null
+        this.ComPubAttachments.anSize = null
+      })
     },
     success1(response) {
       console.log(111)

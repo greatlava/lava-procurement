@@ -177,22 +177,32 @@
                 <span>{{ parseTime(scope.row.eDeliveryTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="状态" align="center" prop="eCancel">
+              <template slot-scope="scope">
+                <el-tag v-if="scope.row.eCancel === 0">正常</el-tag>
+                <el-tag v-else-if="scope.row.eCancel === 1" type="danger">作废</el-tag>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    type="text"
-                    @click=""
-                >变更
-                </el-button>
-                <router-link to="'update?oid='+scope.row.oid">
+                <router-link :to="'details?eid='+scope.row.eid">
                   <el-button
                       size="mini"
                       type="text"
-                      @click=""
+                      icon="el-icon-edit"
+                      v-hasPermi="['system:contract:edit']"
                   >查看
                   </el-button>
                 </router-link>
+                <el-button
+                    size="mini"
+                    v-if="scope.row.eCancel===0"
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="cancel(scope.row.eid)"
+                    v-hasPermi="['system:contract:delete']"
+                >作废
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -212,7 +222,7 @@
 
 <script>
 import { listContract, listTender } from '@/api/system/cm'
-import { delContract, updateoHstatus } from '../../../api/system/addContract'
+import { delContract, updateoHstatus, HtCancel } from '../../../api/system/addContract'
 
 export default {
   name: 'Contract',
@@ -273,7 +283,8 @@ export default {
         eDeliveryTime: null,
         oHstatus: 3,
         createBy: null,
-        createTime: null
+        createTime: null,
+        eCancel: null
       },
       // 表单参数
       formData: {
@@ -296,9 +307,34 @@ export default {
     this.getList1()
   },
   methods: {
+    //合同作废
+    cancel(eid) {
+      this.$confirm('确定使该合同作废?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        HtCancel(eid).then(response => {
+          console.log(response)
+          if (response.msg="修改成功"){
+            this.activeName = 'third'
+            this.getList3()
+            this.$message({type: 'info',message: '已作废'})
+          }else {
+            this.$message({type: 'info',message: '修改失败'})
+          }
+
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
     //删除合同
     delectHt(eid) {
-      delContract({ 'eid': eid }).then(response => {
+      delContract(eid).then(response => {
         console.log(response)
         if (response.msg == '删除成功') {
           this.activeName = 'third'
@@ -388,11 +424,11 @@ export default {
         this.loading = false
       })
     },
-    /** 查询签订中3合同列表 */
+    /** 查询签订中合同列表 */
     getList2() {
       this.loading = true
       listContract(this.queryParams2).then(response => {
-        console.log(response.row)
+        console.log(response.rows)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false
@@ -402,7 +438,7 @@ export default {
     getList3() {
       this.loading = true
       listContract(this.queryParams3).then(response => {
-        console.log(response.row)
+        console.log(response.rows)
         this.contractList3 = response.rows
         this.total3 = response.total
         this.loading = false

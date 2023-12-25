@@ -81,4 +81,13 @@ public interface BsContractMapper {
 
     //修改合同管理状态
     public int updateoHstatus(BsContract bsContract);
+
+    //修改合同管理状态
+    public int updateBidTender(BidTender bidTender);
+
+    //合同作废
+    public int updateHtCancel(Long eid);
+
+    //查询生成合同的项目
+    public Long selectSid(Long eid);
 }

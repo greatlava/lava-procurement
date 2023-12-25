@@ -7,6 +7,7 @@
     <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult">
         <result property="eid" column="eid"/>
         <result property="hid" column="hid"/>
+        <result property="sid" column="sid"/>
         <result property="eHcode" column="e_hcode"/>
         <result property="eHname" column="e_hname"/>
         <result property="eStatus" column="e_status"/>
@@ -61,6 +62,7 @@
     <sql id="selectBsContractVo">
         select eid,
                hid,
+               sid,
                e_hcode,
                e_hname,
                e_status,
@@ -102,7 +104,7 @@
             <if test="eOpinion != null  and eOpinion != ''">and e_opinion = #{eOpinion}</if>
             <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
             <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
-            <if test="eCancel != null">and e_cancel = #{eCancel}</if>
+            <if test="eCancel != null ">and e_cancel = #{eCancel}</if>
         </where>
         order by c.create_time desc
     </select>
@@ -118,6 +120,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="eid != null">eid,</if>
             <if test="hid != null">hid,</if>
+            <if test="sid != null">sid,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
             <if test="eStatus != null">e_status,</if>
@@ -140,6 +143,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="eid != null">#{eid},</if>
             <if test="hid != null">#{hid},</if>
+            <if test="sid != null">#{sid},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
             <if test="eStatus != null">#{eStatus},</if>
@@ -242,38 +246,10 @@
         where sid = #{sid}
     </update>
 
-    <resultMap type="com.hh.pms.cm.domain.BsContract" id="BsContractResult1">
-        <result property="eid" column="eid"/>
-        <result property="hid" column="hid"/>
-        <result property="sid" column="sid"/>
-        <result property="eHcode" column="e_hcode"/>
-        <result property="eHname" column="e_hname"/>
-        <result property="eStatus" column="e_status"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
-        <result property="eDeliveryTime" column="e_delivery_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="oHstatus" column="o_hstatus"/>
-        <result property="eType" column="e_type"/>
-        <result property="eCon" column="e_con"/>
-        <result property="eStartdate" column="e_startDate"/>
-        <result property="eEnddate" column="e_endDate"/>
-        <result property="eAmount" column="e_amount"/>
-        <result property="eDescription" column="e_description"/>
-        <result property="eOpinion" column="e_opinion"/>
-        <result property="eImage" column="e_image"/>
-        <result property="eDocuments" column="e_documents"/>
-        <!--        <association property="bidTender">-->
-        <!--            <id property="sid" column="sid"/>-->
-        <!--        </association>-->
-    </resultMap>
-
     <select id="selectBidTenderBySid" resultType="com.hh.pms.cm.domain.BsContract">
-        SELECT c.*, t.sid as sid
-        FROM bs_contract c
-                 INNER JOIN bid_tender t on t.eid = c.eid
-        WHERE c.eid = #{eid}
+        SELECT *
+        FROM bs_contract
+        WHERE eid = #{eid}
     </select>
 
     <update id="updateComPubAttachments" parameterType="com.hh.pms.cm.domain.ComPubAttachments">
@@ -303,4 +279,23 @@
         from com_pub_attachments
         where eid = #{eid}
     </select>
+
+    <select id="selectSid" resultType="java.lang.Long">
+        select sid
+        from bid_tender
+        where eid = #{eid}
+    </select>
+
+    <update id="updateBidTender" parameterType="com.hh.pms.cm.domain.BidTender">
+        update bid_tender
+        set eid = null
+        where eid = #{eid}
+    </update>
+
+    <update id="updateHtCancel" parameterType="com.hh.pms.cm.domain.BsContract">
+        update bs_contract
+        set e_cancel = 1
+        where eid = #{eid}
+    </update>
+
 </mapper>

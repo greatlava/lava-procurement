@@ -92,7 +92,6 @@
                 :on-change="onchange1"
             >
               <el-button size="small" type="primary">上传框架协议文件</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </template>
         </el-descriptions-item>
@@ -227,8 +226,7 @@ export default {
         oFile: null,
         oType: '采购框架协议',
         oHstatus: 2,
-        oDescribe: null,
-        oOpinion: null
+        oDescribe: null
       },
       //协议文件
       fileList: [],
@@ -246,15 +244,16 @@ export default {
   },
   created() {
     this.hh()
+    this.xx()
     // this.getSign()
   },
   watch: {
-    '$route.query.oid': function(newOid, oldOid) {
-      if (oldOid != newOid) {
-        this.jhId = newOid
-        this.hh()
-      }
-    },
+    // '$route.query.oid': function(newOid, oldOid) {
+    //   if (oldOid != newOid) {
+    //     this.jhId = newOid
+    //     this.hh()
+    //   }
+    // },
     'queryParams.oStartdate': function(newDate) {
       if (newDate) {
         const startDate = new Date(newDate)
@@ -279,9 +278,10 @@ export default {
         }
         return true
       })
-      addManagement(this.queryParams).then(response => {
+      this.queryParams.oHstatus = 2
+      updateManagement(this.queryParams).then(response => {
         console.log(response)
-        if (response.msg == '添加成功') {
+        if (response.msg == '修改成功') {
           this.$router.push('/contract/fam')
         }
       })
@@ -301,21 +301,24 @@ export default {
         console.log('打印框架协议信息')
         console.log(response)
         this.queryParams = response.data
+        let k = response.data.oFile
+        console.log(k)
+        if (k != null || k != '') {
+          //获取第一个文件的名称
+          let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
+          let fileListData = [{
+            name: imgName1,
+            url: k
+          }]
+          this.fileList = fileListData
+          this.form.oFile = k
+        } else {
+          this.fileList = []
+          this.fileList.oFile = null
+        }
       })
-      let k = response.data.oFile
-      if (k != null) {
-        //获取第一个文件的名称
-        let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
-        let fileListData = [{
-          name: imgName1,
-          url: k
-        }]
-        this.fileList = fileListData
-        this.form.oFile = k
-      } else {
-        this.fileList = []
-        this.fileList.oFile = null
-      }
+    },
+    xx() {
       listInventory({ 'oid': this.oid }).then(response => {
         console.log(response.rows)
         // this.lTableData = response.rows
@@ -348,16 +351,16 @@ export default {
       this.submitNextUpload()
     },
     handlePreview(file) {
-      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList3 = []
-        this.form.eDocuments
-      })
+      window.open(this.fileList[0].url, '_blank', 'charset=utf-8')
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList = []
+        this.queryParams.oFile = null
+      })
     },
     submitNextUpload() {
       // 根据条件判断调用下一个上传

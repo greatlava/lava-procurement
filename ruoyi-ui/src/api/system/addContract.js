@@ -135,7 +135,6 @@ export function updateEStatus(data) {
   })
 }
 
-
 // 修改合同管理状态
 export function updateoHstatus(data) {
   return request({
@@ -148,8 +147,32 @@ export function updateoHstatus(data) {
 // 删除合同
 export function delContract(eid) {
   return request({
-    url: '/basic/contract/' + eid,
-    method: 'delete'
+    url: '/basic/contract/del',
+    method: 'get',
+    params: {
+      eid: eid
+    }
   })
 }
 
+// 合同作废
+export function HtCancel(eid) {
+  return request({
+    url: '/basic/contract/HtCancel',
+    method: 'get',
+    params: {
+      eid: eid
+    }
+  })
+}
+
+// 合同作废
+export function xYCancel(oid) {
+  return request({
+    url: '/basic/contract/xYCancel',
+    method: 'get',
+    params: {
+      oid: oid
+    }
+  })
+}

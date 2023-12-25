@@ -99,7 +99,7 @@ public class BsContractServiceImpl implements IBsContractService {
 
     //查询招标项目ID
     @Override
-    public BsContract selectBidTenderSid(Long eid) {
+    public BsContract selectBidTenderBySid(Long eid) {
         return bsContractMapper.selectBidTenderBySid(eid);
     }
 
@@ -131,5 +131,23 @@ public class BsContractServiceImpl implements IBsContractService {
     @Override
     public int updateoHstatus(BsContract bsContract) {
         return bsContractMapper.updateoHstatus(bsContract);
+    }
+
+    //修改合同管理状态
+    @Override
+    public int updateBidTender(BidTender bidTender) {
+        return bsContractMapper.updateBidTender(bidTender);
+    }
+
+    //合同作废
+    @Override
+    public int updateHtCancel(Long eid) {
+        return bsContractMapper.updateHtCancel(eid);
+    }
+
+    //查询生成合同的项目
+    @Override
+    public Long selectSid(Long eid) {
+        return bsContractMapper.selectSid(eid);
     }
 }
