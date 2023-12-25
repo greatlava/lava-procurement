@@ -21,6 +21,7 @@
         <result property="oType" column="o_type"/>
         <result property="oDescribe" column="o_describe"/>
         <result property="oOpinion" column="o_opinion"/>
+        <result property="oCancel" column="o_cancel"/>
         <result property="oTotalprice" column="o_totalPrice"/>
     </resultMap>
 
@@ -41,6 +42,7 @@
                o_type,
                o_describe,
                o_opinion,
+               o_cancel,
                o_totalPrice
         from bs_frame_management
     </sql>
@@ -62,6 +64,7 @@
             <if test="oType != null  and oType != ''">and o_type = #{oType}</if>
             <if test="oDescribe != null  and oDescribe != ''">and o_describe = #{oDescribe}</if>
             <if test="oOpinion != null  and oOpinion != ''">and o_opinion = #{oOpinion}</if>
+            <if test="oCancel != null  and oCancel != ''">and o_cancel = #{oCancel}</if>
             <if test="oTotalprice != null ">and o_totalPrice = #{oTotalprice}</if>
         </where>
     </select>
@@ -91,6 +94,7 @@
             <if test="oType != null">o_type,</if>
             <if test="oDescribe != null">o_describe,</if>
             <if test="oOpinion != null">o_opinion,</if>
+            <if test="oCancel != null">o_ancel,</if>
             <if test="oTotalprice != null">o_totalPrice,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -110,6 +114,7 @@
             <if test="oType != null">#{oType},</if>
             <if test="oDescribe != null">#{oDescribe},</if>
             <if test="oOpinion != null">#{oOpinion},</if>
+            <if test="oCancel != null">#{oCancel},</if>
             <if test="oTotalprice != null">#{oTotalprice},</if>
         </trim>
     </insert>
@@ -132,6 +137,7 @@
             <if test="oType != null">o_type = #{oType},</if>
             <if test="oDescribe != null">o_describe = #{oDescribe},</if>
             <if test="oOpinion != null">o_opinion = #{oOpinion},</if>
+            <if test="oCancel != null">o_cancel = #{oCancel},</if>
             <if test="oTotalprice != null">o_totalPrice = #{oTotalprice},</if>
         </trim>
         where oid = #{oid}
@@ -149,4 +155,11 @@
             #{oid}
         </foreach>
     </delete>
+
+    <!--协议作废-->
+    <update id="updateXyCancel" parameterType="com.hh.pms.cm.domain.BSFrameManagement">
+        update bs_frame_management
+        set o_cancel = 1
+        where oid = #{oid}
+    </update>
 </mapper>

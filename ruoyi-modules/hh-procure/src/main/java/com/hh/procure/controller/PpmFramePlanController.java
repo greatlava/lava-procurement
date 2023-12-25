@@ -17,6 +17,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
+import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -164,8 +165,6 @@ public class PpmFramePlanController extends BaseController {
         return R.ok(ppmFramePlanService.selectFarmeworkPlanCount());
     }
 
-
-
     //查询已完成并且未创建框架协议的框架计划
     @RequiresPermissions("system:plan:list1")
     @GetMapping("/list1")
@@ -173,5 +172,26 @@ public class PpmFramePlanController extends BaseController {
         startPage();
         List<PpmFramePlan> list = ppmFramePlanService.selectBsFramePlanList(ppmFramePlan);
         return getDataTable(list);
+    }
+
+    //(协议作废)修改oid为空
+    @GetMapping("/XyCancel")
+    public AjaxResult XyCancel(Long oid) {
+        int i = ppmFramePlanService.updatePpmFramePlanByOid(oid);
+        if (i > 0) {
+            return AjaxResult.success("修改成功");
+        }
+        return AjaxResult.error("修改失败");
+    }
+
+    //框架协议新增后修改框架计划oid
+    @PutMapping("/upOidbyOid")
+    public AjaxResult upOidbyOid(@RequestBody PpmFramePlan ppmFramePlan) {
+        System.out.println(ppmFramePlan);
+        int i = ppmFramePlanService.updateOidbyOid(ppmFramePlan);
+        if (i > 0) {
+            return AjaxResult.success("修改成功");
+        }
+        return AjaxResult.error("修改失败");
     }
 }

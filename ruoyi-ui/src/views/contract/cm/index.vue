@@ -121,6 +121,7 @@
                 <!--进入合同-->
                 <router-link :to="'update?eid='+scope.row.eid">
                   <el-button
+                      style="margin-right: 20px"
                       v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
                       size="mini"
                       type="text"
@@ -187,6 +188,7 @@
               <template slot-scope="scope">
                 <router-link :to="'details?eid='+scope.row.eid">
                   <el-button
+                      style="margin-right: 20px"
                       size="mini"
                       type="text"
                       icon="el-icon-edit"
@@ -323,7 +325,6 @@ export default {
           }else {
             this.$message({type: 'info',message: '修改失败'})
           }
-
         })
       }).catch(() => {
         this.$message({

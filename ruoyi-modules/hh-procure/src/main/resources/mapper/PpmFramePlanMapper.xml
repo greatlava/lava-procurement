@@ -78,27 +78,26 @@
     </select>
 
     <select id="queryFrameworkPlanAndRelatedInformation" resultMap="threeTables">
-        SELECT
-            p.*,
-            f.*,
-            i.vid,
-            i.v_code,
-            i.v_person,
-            i.v_delivery_time,
-            i.v_delivery_area,
-            i.v_illustrate,
-            i.v_count,
-            i.procurement_method,
-            d.*
-        FROM
-            ppm_line_items i
-                JOIN ppm_frame_plan p ON p.jh_id = i.jh_id
-                LEFT JOIN com_pub_attachments f ON f.jhid = p.jh_id
-                JOIN ppm_device d ON d.tid = i.tid
+        SELECT p.*,
+               f.*,
+               i.vid,
+               i.v_code,
+               i.v_person,
+               i.v_delivery_time,
+               i.v_delivery_area,
+               i.v_illustrate,
+               i.v_count,
+               i.procurement_method,
+               d.*
+        FROM ppm_line_items i
+                 JOIN ppm_frame_plan p ON p.jh_id = i.jh_id
+                 LEFT JOIN com_pub_attachments f ON f.jhid = p.jh_id
+                 JOIN ppm_device d ON d.tid = i.tid
         WHERE p.jh_id = #{jhId}
     </select>
     <select id="selectFarmeworkPlanCount" resultType="java.lang.Integer">
-        SELECT count(0) FROM ppm_frame_plan
+        SELECT count(0)
+        FROM ppm_frame_plan
     </select>
 
     <insert id="insertPpmFramePlan" parameterType="com.hh.procure.domain.PpmFramePlan" useGeneratedKeys="true"
@@ -234,4 +233,15 @@
         </where>
     </select>
 
+    <update id="updatePpmFramePlanbyOid" parameterType="com.hh.procure.domain.PpmFramePlan">
+        update ppm_frame_plan
+        set oid = null
+        where oid = #{oid}
+    </update>
+
+    <update id="updateOidbyOid" parameterType="com.hh.procure.domain.PpmFramePlan">
+        update ppm_frame_plan
+        set oid = #{oid}
+        where jh_id = #{jhId}
+    </update>
 </mapper>
