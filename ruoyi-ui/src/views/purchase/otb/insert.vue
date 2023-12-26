@@ -23,7 +23,8 @@ import {addBudget} from "@/api/system/budget";
           </el-col>
           <el-col :span="6">
             <el-form-item label="创建人" prop="createBy">
-              <el-input v-model="form.createBy" :disabled="form.aid!=null"/>
+              <el-input v-if="form.aid!=null" v-model="form.createBy" disabled/>
+              <el-input v-else value="系统自动生成" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -375,7 +376,6 @@ export default {
       //表单验证
       rules: {
         aName: [{required: true, message: '计划名称不能为空', trigger: 'blur'}],
-        createBy: [{required: true, message: '创建人不能为空', trigger: 'blur'}],
         aCreateDept: [{required: true, message: '创建部门不能为空', trigger: 'blur'}],
         aBtype: [{required: true, message: '业务类型不能为空', trigger: 'blur'}]
       },
