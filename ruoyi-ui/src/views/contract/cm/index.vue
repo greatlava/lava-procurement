@@ -171,7 +171,7 @@
             <el-table-column label="创建日期" align="center" prop="createTime">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-              </template>
+              </template>4
             </el-table-column>
             <el-table-column label="交付日期" align="center" prop="eDeliveryTime" width="180">
               <template slot-scope="scope">

@@ -35,6 +35,7 @@
     <!--非招标项目采购方式-->
     <div class="tcl">
       <el-tabs v-model="activeName" @tab-click="handleClick">
+
         <el-tab-pane label="询价" name="first">
           <el-table stripe v-loading="loading" :data="contractList1">
             <el-table-column type="index" label="序号" align="center"/>
@@ -47,45 +48,39 @@
               </template>
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="报价截止时间" align="center" prop="gDeadline"/>
-            <el-table-column label="单据状态" align="center" prop="gStatus">
+            <el-table-column label="报价截止时间" align="center" prop="gDeadline">
               <template slot-scope="scope">
-                <span v-if="scope.row.gStatus===1">生成采购单</span>
-                <span v-else-if="scope.row.gStatus===2">公告审核</span>
-                <span v-else-if="scope.row.gStatus===3">结果公告发布</span>
+                <span v-if="scope.row.gDeadline!=null">{{ scope.row.gDeadline }}</span>
+                <span v-else>- -</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                  v-if="scope.row.gStatus === 1"
-                  size="mini"
-                  type="text"
-                  @click=""
-                >编辑
-                </el-button>
-                <el-button
-                  v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
-                >进入项目
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
-                >查看
-                </el-button>
+                <router-link :to="'details?gid='+scope.row.gid">
+                  <el-button
+                      v-if="scope.row.gDeadline!=null"
+                      size="mini"
+                      type="text"
+                  >进入项目
+                  </el-button>
+                </router-link>
+                <router-link :to="'addRFQ?gid='+scope.row.gid">
+                  <el-button
+                      v-if="scope.row.gDeadline==null"
+                      size="mini"
+                      type="text"
+                  >发布项目
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total1>0"
-            :total="total1"
-            :page.sync="queryParams1.pageNum"
-            :limit.sync="queryParams1.pageSize"
-            @pagination="getList1"
+              v-show="total1>0"
+              :total="total1"
+              :page.sync="queryParams1.pageNum"
+              :limit.sync="queryParams1.pageSize"
+              @pagination="getList1"
           />
         </el-tab-pane>
 
@@ -102,34 +97,27 @@
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
             <el-table-column label="报价截止时间" align="center" prop="gDeadline"/>
-            <el-table-column label="单据状态" align="center" prop="gStatus">
-              <template slot-scope="scope">
-                <span v-if="scope.row.gStatus===1">生成采购单</span>
-                <span v-else-if="scope.row.gStatus===2">公告审核</span>
-                <span v-else-if="scope.row.gStatus===3">结果公告发布</span>
-              </template>
-            </el-table-column>
             <el-table-column label="报价数量" align="center" prop="gCount"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  v-if="scope.row.gStatus === 1"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 1"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >编辑
                 </el-button>
                 <el-button
-                  v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >进入项目
                 </el-button>
                 <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
+                    size="mini"
+                    type="text"
+                    @click=""
                 >查看
                 </el-button>
               </template>
@@ -156,45 +144,38 @@
               </template>
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="单据状态" align="center" prop="gStatus">
-              <template slot-scope="scope">
-                <span v-if="scope.row.gStatus===1">生成采购单</span>
-                <span v-else-if="scope.row.gStatus===2">公告审核</span>
-                <span v-else-if="scope.row.gStatus===3">结果公告发布</span>
-              </template>
-            </el-table-column>
             <el-table-column label="委托单位" align="center" prop="gUnit"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  v-if="scope.row.gStatus === 1"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 1"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >编辑
                 </el-button>
                 <el-button
-                  v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >进入项目
                 </el-button>
                 <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
+                    size="mini"
+                    type="text"
+                    @click=""
                 >查看
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total3>0"
-            :total="total3"
-            :page.sync="queryParams3.pageNum"
-            :limit.sync="queryParams3.pageSize"
-            @pagination="getList3"
+              v-show="total3>0"
+              :total="total3"
+              :page.sync="queryParams3.pageNum"
+              :limit.sync="queryParams3.pageSize"
+              @pagination="getList3"
           />
         </el-tab-pane>
 
@@ -210,45 +191,38 @@
               </template>
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="单据状态" align="center" prop="gStatus">
-              <template slot-scope="scope">
-                <span v-if="scope.row.gStatus===1">生成采购单</span>
-                <span v-else-if="scope.row.gStatus===2">公告审核</span>
-                <span v-else-if="scope.row.gStatus===3">结果公告发布</span>
-              </template>
-            </el-table-column>
             <el-table-column label="报价轮次" align="center" prop="gRounds"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <el-button
-                  v-if="scope.row.gStatus === 1"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 1"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >编辑
                 </el-button>
                 <el-button
-                  v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                  size="mini"
-                  type="text"
-                  @click=""
+                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
+                    size="mini"
+                    type="text"
+                    @click=""
                 >进入项目
                 </el-button>
                 <el-button
-                  size="mini"
-                  type="text"
-                  @click=""
+                    size="mini"
+                    type="text"
+                    @click=""
                 >查看
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-            v-show="total4>0"
-            :total="total4"
-            :page.sync="queryParams4.pageNum"
-            :limit.sync="queryParams4.pageSize"
-            @pagination="getList4"
+              v-show="total4>0"
+              :total="total4"
+              :page.sync="queryParams4.pageNum"
+              :limit.sync="queryParams4.pageSize"
+              @pagination="getList4"
           />
         </el-tab-pane>
 
@@ -259,11 +233,12 @@
 </template>
 
 <script>
-import { listPro } from '../../api/system/noTender'
+import { listPlan, listPro } from '../../api/system/noTender'
 
 export default {
   data() {
     return {
+      dicts: ['ppm_procurement_plan'],
       // 遮罩层
       loading: true,
       contractList1: [],
@@ -276,6 +251,7 @@ export default {
       total3: 0,
       total4: 0,
       form: {},
+      form1: {},
       //表单参数
       queryParams1: {
         pageNum: 1,//页数
@@ -330,6 +306,7 @@ export default {
       },
       // 表单校验
       rules: {},
+      rules1: {},
       //采购方式
       activeName: 'first'
     }
@@ -388,7 +365,7 @@ export default {
         this.getList2()// 执行标签页second的查询操作
       } else if (tab.name === 'third') {
         this.getList3()// 执行标签页third的查询操作
-      } else {
+      } else if (tab.name === 'fourth') {
         this.getList4()// 执行标签页fourth的查询操作
       }
     },

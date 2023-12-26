@@ -200,7 +200,7 @@ export default {
   data() {
     return {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      oTotalprice: 0,
+      // oTotalprice: 0,
       //获取框架计划ID
       jhId: this.$route.query.jhId,
       //设置label的样式

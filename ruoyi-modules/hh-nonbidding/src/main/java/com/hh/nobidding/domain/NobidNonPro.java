@@ -61,12 +61,6 @@ public class NobidNonPro extends BaseEntity {
     private Date gDeadline;
 
     /**
-     * 单据状态
-     */
-    @Excel(name = "单据状态")
-    private Long gStatus;
-
-    /**
      * 报价数量
      */
     @Excel(name = "报价数量")
@@ -146,14 +140,6 @@ public class NobidNonPro extends BaseEntity {
         return gDeadline;
     }
 
-    public void setgStatus(Long gStatus) {
-        this.gStatus = gStatus;
-    }
-
-    public Long getgStatus() {
-        return gStatus;
-    }
-
     public void setgCount(Long gCount) {
         this.gCount = gCount;
     }
@@ -197,7 +183,6 @@ public class NobidNonPro extends BaseEntity {
                 .append("gIsPublic", getgIsPublic())
                 .append("gSpawnTime", getgSpawnTime())
                 .append("gDeadline", getgDeadline())
-                .append("gStatus", getgStatus())
                 .append("gCount", getgCount())
                 .append("gUnit", getgUnit())
                 .append("gRounds", getgRounds())

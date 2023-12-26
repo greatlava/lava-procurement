@@ -12,7 +12,6 @@
         <result property="gIsPublic" column="g_is_public"/>
         <result property="gSpawnTime" column="g_spawn_time"/>
         <result property="gDeadline" column="g_deadline"/>
-        <result property="gStatus" column="g_status"/>
         <result property="gCount" column="g_count"/>
         <result property="gUnit" column="g_unit"/>
         <result property="gRounds" column="g_rounds"/>
@@ -27,7 +26,6 @@
                g_is_public,
                g_spawn_time,
                g_deadline,
-               g_status,
                g_count,
                g_unit,
                g_rounds,
@@ -45,7 +43,6 @@
             <if test="gSpawnTime != null and  gDeadline != null">
                 and Date(g_spawn_time) &gt;= #{gSpawnTime} and Date(g_deadline) &lt;= #{gDeadline}
             </if>
-            <if test="gStatus != null ">and g_status = #{gStatus}</if>
             <if test="gCount != null ">and g_count = #{gCount}</if>
             <if test="gUnit != null  and gUnit != ''">and g_unit = #{gUnit}</if>
             <if test="gRounds != null ">and g_rounds = #{gRounds}</if>
@@ -68,7 +65,6 @@
             <if test="gIsPublic != null">g_is_public,</if>
             <if test="gSpawnTime != null">g_spawn_time,</if>
             <if test="gDeadline != null">g_deadline,</if>
-            <if test="gStatus != null">g_status,</if>
             <if test="gCount != null">g_count,</if>
             <if test="gUnit != null">g_unit,</if>
             <if test="gRounds != null">g_rounds,</if>
@@ -82,7 +78,6 @@
             <if test="gIsPublic != null">#{gIsPublic},</if>
             <if test="gSpawnTime != null">#{gSpawnTime},</if>
             <if test="gDeadline != null">#{gDeadline},</if>
-            <if test="gStatus != null">#{gStatus},</if>
             <if test="gCount != null">#{gCount},</if>
             <if test="gUnit != null">#{gUnit},</if>
             <if test="gRounds != null">#{gRounds},</if>
@@ -99,7 +94,6 @@
             <if test="gIsPublic != null">g_is_public = #{gIsPublic},</if>
             <if test="gSpawnTime != null">g_spawn_time = #{gSpawnTime},</if>
             <if test="gDeadline != null">g_deadline = #{gDeadline},</if>
-            <if test="gStatus != null">g_status = #{gStatus},</if>
             <if test="gCount != null">g_count = #{gCount},</if>
             <if test="gUnit != null">g_unit = #{gUnit},</if>
             <if test="gRounds != null">g_rounds = #{gRounds},</if>
