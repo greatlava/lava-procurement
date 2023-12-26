@@ -99,7 +99,10 @@
                   共计：<span style="font-weight: bold">{{ item.count }}</span>个
                 </p>
                 <ul>
-                  <a @click.prevent="jumpPage(i,e.id)" href="#" target="_blank" v-for="(e,j) in item.content" :key="j">
+                  <el-empty v-if="item.content.length==0" :image-size="100"
+                            :description="item.title+'数据是空的'"></el-empty>
+                  <a v-else @click.prevent="jumpPage(i,e.id)" href="#" target="_blank" v-for="(e,j) in item.content"
+                     :key="j">
                     <li>
                       <h3>{{ e.title }}</h3>
                       <p>编号：{{ e.code }}</p>
@@ -225,6 +228,7 @@
               <el-table-column
                 align="center"
                 prop="sAddress"
+                show-overflow-tooltip
                 label="地址">
                 <template slot-scope="scope">
                   <el-tooltip v-if="!scope.row.sAddress" content="文本是空的奥，可以前去编辑" placement="top">
@@ -250,7 +254,7 @@
             </div>
             <el-empty description="供应商列表是空的奥！！" v-if="suppliers.length==0" :image-size="200"></el-empty>
             <div style="display: flex;flex-wrap: wrap;justify-content: flex-start;">
-              <el-card style="margin-right: 10px" v-for="item in suppliers" shadow="hover" class="supplier_list">
+              <el-card style="margin-right: 25px" v-for="item in suppliers" shadow="hover" class="supplier_list">
                 <div class="supper_list_content">
                   <div>
                     <img
@@ -260,7 +264,8 @@
                   <div class="supplier_describe div">
                     <p>法人：{{ item.hJuridical }}</p>
                     <h3>{{ item.hName }}</h3>
-                    <textOverflowHiding :text="'公司简介：'+item.hDesc" :width="300"></textOverflowHiding>
+                    <textOverflowHiding style="margin-top: 10px" :text="'公司简介：'+item.hDesc"
+                                        :width="300"></textOverflowHiding>
                   </div>
                   <div class="review_status">
                     <el-tag type="primary">已审核</el-tag>
@@ -269,7 +274,7 @@
                 <div class="supplier_list_foot">
                   <p>
                     <i class="el-icon-location-information"></i>
-                    <text-overflow-hiding style="display: inline-block;" :text="'联系地址：'+ item.hAddress"
+                    <text-overflow-hiding style="display: inline-block;height: 100%" :text="'联系地址：'+ item.hAddress"
                                           :width="410"></text-overflow-hiding>
                   </p>
                 </div>
@@ -517,7 +522,7 @@ export default {
     },
     //显示供应商列表
     listSupplier() {
-      listSupplier({"pageNum": 1, "pageSize": 12}).then(res => {
+      listSupplier({"pageNum": 1, "pageSize": 9}).then(res => {
         this.suppliers = res.rows
       })
     },
@@ -808,7 +813,8 @@ li {
 .supplier_list_foot p {
   font-size: 14px;
   color: #9d9d9d;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
 
 .supplier_describe {

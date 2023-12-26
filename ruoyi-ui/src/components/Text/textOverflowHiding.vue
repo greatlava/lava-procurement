@@ -49,7 +49,6 @@ export default {
 .content {
   font-size: 14px;
   color: #a1a1a1;
-  margin-top: 10px;
   text-align: left;
   background-color: transparent;
   white-space: nowrap;

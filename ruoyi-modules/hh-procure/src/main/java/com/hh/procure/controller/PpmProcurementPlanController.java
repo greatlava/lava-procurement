@@ -10,6 +10,7 @@ import com.hh.procure.service.IPpmLineItemsService;
 import com.hh.procure.service.IPpmProcurementPlanService;
 import com.hh.procure.service.imp.ComCodeRulesServiceImpl;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -121,7 +122,9 @@ public class PpmProcurementPlanController extends BaseController {
             PpmApprovalRecord obj = new PpmApprovalRecord();
             obj.setProcessedBy(tokenService.getLoginUser().getSysUser().getNickName());
             obj.setAid(ppmProcurementPlan.getAid());
-            obj.setDepnt("采购部");
+            obj.setDepnt(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
+            obj.setUpdateTime(DateUtils.getNowDate());
+            ppmProcurementPlan.setUpdateTime(DateUtils.getNowDate());
             switch (ppmProcurementPlan.getaAstate()) {
                 case 0:
                     obj.setNode("部门主管审批");
@@ -203,6 +206,7 @@ public class PpmProcurementPlanController extends BaseController {
         NobidNonPro nobidNonPro = new NobidNonPro();
         for (PpmProcurementPlan item : ppmProcurementPlan) {
             item.setaAstate(3);
+            item.setUpdateTime(DateUtils.getNowDate());
             ppmProcurementPlanService.updatePpmProcurementPlan(item);
             switch (type) {
                 case 1:
@@ -243,6 +247,7 @@ public class PpmProcurementPlanController extends BaseController {
 
     @RequestMapping("/FindProcurementPlanBy")
     public TableDataInfo FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
+        startPage();
         return getDataTable(ppmProcurementPlanService.FindProcurementPlanBy(ppmProcurementPlan));
     }
 

@@ -91,7 +91,7 @@ export default {
       // 验证码开关
       captchaEnabled: true,
       // 注册开关
-      register: false,
+      register: true,
       redirect: undefined
     };
   },
@@ -162,8 +162,8 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("../assets/images/wallhaven-2ydyq6.jpg");
   background-size: cover;
+  background-color: #8497f3;
 }
 
 .title {
@@ -226,4 +226,5 @@ export default {
 .login-code-img {
   height: 38px;
 }
+
 </style>

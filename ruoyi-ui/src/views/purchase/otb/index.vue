@@ -225,7 +225,7 @@
               <el-table-column label="所属部门" align="center" prop="depnt"/>
               <el-table-column label="处理时间" align="center" prop="updateTime" width="180">
                 <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+                  <span>{{ scope.row.updateTime }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="处理意见" align="center" prop="opinion"/>

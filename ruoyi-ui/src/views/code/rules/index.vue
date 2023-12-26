@@ -59,7 +59,11 @@
     </el-row>
 
     <el-table v-loading="loading" :data="rulesList" @selection-change="handleSelectionChange">
-      <el-table-column label="id" align="center" prop="id" width="80"/>
+      <el-table-column label="序号" align="center"  width="80">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column label="目标表单" align="center" prop="targetForm"/>
       <el-table-column label="编号前缀" align="center" prop="prefix"/>
       <el-table-column label="流水号" align="center" prop="serialNumber"/>
@@ -109,7 +113,7 @@
           <el-input disabled :value="str"/>
         </el-form-item>
         <el-form-item label="操作人" prop="operator">
-          <el-input v-model="form.operator" placeholder="请输入操作人"/>
+          <el-input disabled value="系统自动生成"/>
         </el-form-item>
         <el-form-item label="时间规则">
           <el-checkbox-group @change="dateClick" v-model="checkTimeVule">
@@ -124,7 +128,7 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm('updateForm')">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -139,7 +143,8 @@
       ref="drawer"
     >
       <div class="demo-drawer__content">
-        <el-form ref="form" style="display: flex; flex-wrap: wrap; justify-content: space-between" size="small" :rules="rules"
+        <el-form ref="form" style="display: flex; flex-wrap: wrap; justify-content: space-between" size="small"
+                 :rules="rules"
                  :inline="true" label-position="top" :model="form">
           <el-form-item label="目标表单" prop="targetForm">
             <el-input style="width: 200px" v-model="form.targetForm" disabled/>
@@ -172,7 +177,7 @@
         </el-form>
         <div slot="footer" class="demo-drawer__footer">
           <el-button @click="cancel">取 消</el-button>
-          <el-button type="primary" @click="submitForm" :loading="loading">确定</el-button>
+          <el-button type="primary" @click="submitForm('form')" :loading="loading">确定</el-button>
         </div>
       </div>
     </el-drawer>
@@ -245,8 +250,7 @@ export default {
         step: [
           {
             required: true, message: '请输入步长', trigger: 'blur'
-          }],
-        operator: [{required: true, message: '请输入操作人', trigger: 'blur'}]
+          }]
       }
     };
   },
@@ -261,6 +265,8 @@ export default {
         this.rulesList = response.rows;
         this.total = response.total;
         this.loading = false;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理后重试！！")
       });
     },
     dateClick() {
@@ -324,18 +330,20 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
+      this.$modal.loading("加载中.....");
       getRules(id).then(response => {
+        this.$modal.closeLoading();
         this.form = response.data;
         this.show.edit = true;
         this.splitDateString();
-      }).catch(err=>{
-        this.$modal.msgError("错误"+err)
+      }).catch(err => {
+        this.$modal.closeLoading();
+        this.$modal.msgError("服务器出错，请联系管理后重试！！")
       });
     },
     /** 提交按钮 */
-    submitForm() {
-      debugger;
-      this.$refs["form"].validate(valid => {
+    submitForm(name) {
+      this.$refs[name].validate(valid => {
         if (valid) {
           if (this.checkTimeVule.length == 0) {
             this.$message.error('请至少选择一项时间规则');
@@ -343,26 +351,33 @@ export default {
           }
           this.splitDate();
           if (this.form.id != null) {
-            console.log("maxMantissa",this.form)
+            this.$modal.loading("修改中.....");
             updateRules(this.form).then(response => {
+              this.$modal.closeLoading();
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.show.edit = false;
               this.getList();
+            }).catch(err => {
+              this.$modal.closeLoading();
+              this.$modal.msgError("服务器出错，请联系管理后重试！！")
             });
           } else {
             listRules({targetForm: this.form.targetForm}).then((res => {
               if (res.rows[0]) {
                 this.$modal.confirm("检测你的目标表单已存在是否需要覆盖？").then(() => {
                   this.form.id = res.rows[0].id;
+                  this.$modal.loading("修改中");
                   updateRules(this.form).then(response => {
+                    this.$modal.closeLoading();
                     this.$modal.msgSuccess("修改成功");
                     this.open = false;
                     this.show.edit = false;
                     this.reset();
                     this.getList();
                   }).catch(() => {
-                    this.$modal.msgError("操作失败！！")
+                    this.$modal.closeLoading();
+                    this.$modal.msgError("服务器出错，请联系管理后重试！！")
                   });
                 }).catch(() => {
                   this.open = false;
@@ -372,18 +387,23 @@ export default {
               } else {
                 let number = "";
                 for (let i = 1; i <= this.form.serialNumber; i++) {
-                  if (this.form.serialNumber==i){
+                  if (this.form.serialNumber == i) {
                     number += "1";
                     break;
                   }
                   number += "0";
                 }
                 this.form.maxMantissa = number;
-                  addRules(this.form).then(response => {
-                    this.$modal.msgSuccess("新增成功");
-                    this.open = false;
-                    this.getList();
-                  });
+                this.$modal.loading("新增中......");
+                addRules(this.form).then(response => {
+                  this.$modal.closeLoading();
+                  this.$modal.msgSuccess("新增成功");
+                  this.open = false;
+                  this.getList();
+                }).catch(err => {
+                  this.$modal.closeLoading();
+                  this.$modal.msgError("服务器出错，请联系管理后重试！！")
+                });
               }
             }))
           }
