@@ -21,25 +21,17 @@
           <el-form-item label="创建人" prop="createBy" style="width: 45%">
             <el-input v-model="form.createBy" clearable class="cInput" readonly/>
           </el-form-item>
-          <el-form-item label="创建部门" prop="createBy" style="width: 45%">
+          <el-form-item label="创建部门" prop="createDept" style="width: 45%">
             <el-input v-model="form.createDept" clearable class="cInput" readonly/>
           </el-form-item>
-          <el-form-item label="公开/邀请" prop="createBy" style="width: 45%">
+          <el-form-item label="公开/邀请" prop="gIsPublic" style="width: 45%">
             <el-input v-model="form.gIsPublic" clearable class="cInput" readonly/>
           </el-form-item>
-          <el-form-item label="预算金额" prop="budget" style="width: 45%">
-            <el-input v-model="form.gBudGet" clearable class="cInput" readonly/>
+          <el-form-item label="报价开始时间" prop="gSpawnTime" style="width: 45%">
+            <el-input v-model="form.gSpawnTime" type="text" class="cInput"/>
           </el-form-item>
-          <el-form-item label="报价开始时间" prop="eEnddate" style="width: 45%">
-            <el-date-picker v-model="form.gTimeon" type="date" class="cInput"/>
-          </el-form-item>
-          <el-form-item label="报价截止时间" prop="eDeliveryTime" style="width: 45%">
-            <el-date-picker v-model="form.gDeadline" type="date" class="cInput"/>
-          </el-form-item>
-          <el-form-item label="备注" prop="eDescription" style="width: 100%">
-            <el-col>
-              <el-input v-model="form.gNotes" type="textarea" :rows="4" clearable class="cInput"/>
-            </el-col>
+          <el-form-item label="报价截止时间" prop="gDeadline" style="width: 45%">
+            <el-input v-model="form.gDeadline" type="text" class="cInput"/>
           </el-form-item>
         </el-row>
       </el-form>
@@ -83,15 +75,7 @@
           </el-table-column>
           <el-table-column label="数量" prop="inCount" width="150">
             <template slot-scope="scope">
-              <el-input-number
-                  v-model="scope.row.inCount"
-                  :min="1"
-                  :precision="0"
-                  controls-position="right"
-                  style="width: 120px;"
-                  @blur="spCountBlur(scope.row)"
-                  @change="spCountChange(scope.row)"
-              />
+              <el-input v-model="scope.row.inCount" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="小计" prop="inSubtotal" width="140">
@@ -104,6 +88,41 @@
           <span :style="{marginRight:'100px'}">总价:</span>
           <span :style="{fontWeight:'700'}">{{ lTotalSubtotal.toFixed(2) }}</span>
         </div>
+      </div>
+
+      <!--供应商报价信息-->
+      <h3>供应商报价信息</h3>
+      <div class="cl">
+        <el-table
+            :data="ComQuotation"
+            :row-key="row => row.id"
+            @selection-change="lHandleSelectionChange"
+            border
+            stripe
+            :style="{marginTop:'10px'}"
+        >
+          <el-table-column label="序号" type="index" width="80"/>
+          <el-table-column label="供应商名称" prop="hName" width="300">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.bsSupplier.hName" readonly/>
+            </template>
+          </el-table-column>
+          <el-table-column label="报价次数" prop="bjSecond" width="200">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.bjSecond" readonly/>
+            </template>
+          </el-table-column>
+          <el-table-column label="报价金额" prop="bjTotal">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.bjTotal" readonly/>
+            </template>
+          </el-table-column>
+          <el-table-column label="报价时间" prop="createTime">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.createTime" readonly/>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
 
       <!--合同签署文件-->
@@ -131,16 +150,14 @@
 
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy">发布</el-button>
+      <!--      <el-button size="medium" type="primary" @click="addXy">发布</el-button>-->
     </div>
   </div>
 </template>
 
-
 <script>
-
-import { getPlan, listPlan, getPro,getItemsDevice } from '../../../api/system/noTender'
-import { addManagement, listDevice, upOidbyOid } from '../../../api/system/addContract'
+import { getPlan, getPro, getItemsDevice, getQuotation } from '../../../api/system/noTender'
+import { listDevice } from '../../../api/system/addContract'
 
 export default {
   data() {
@@ -198,8 +215,7 @@ export default {
         xyId: null,
         gid: null,
         gCompany: null,
-        gTenderType: null,
-        gBudGet: null,
+        gTendertype: null,
         gTimeon: null,
         gDeadline: null,
         createBy: null,
@@ -207,25 +223,8 @@ export default {
         gNotes: null,
         comPubAttachments: {}
       },
-      form1: {
-        aName: null,
-        aCode: null,
-        aBtype: null,
-        aAstate: null,
-        gIsPublic: null
-      },
       // 表单校验
-      rules1: {
-        // eHname: [
-        //   { required: true, message: '合同名称不能为空', trigger: 'blur' }
-        // ],
-        // eStartdate: [
-        //   { required: true, message: '开始时间不能为空', trigger: 'blur' }
-        // ],
-        // eEnddate: [
-        //   { required: true, message: '结束时间不能为空', trigger: 'blur' }
-        // ]
-      },
+      rules1: {},
       selectRow: null,
       fileList2: [],
       //附件
@@ -234,7 +233,10 @@ export default {
         anUrl: null,
         anName: null
       },
-      aid:null
+      aid: null,
+      gfId: null,
+      //报价集合
+      ComQuotation: []
     }
   },
   mounted() {
@@ -314,26 +316,51 @@ export default {
     //产品数量输入框失去焦点时
     //查询采购计划信息
     getList() {
-      // alert(this.gid)
-      // this.loading = true
       getPro(this.gid).then(response => {
+        // console.log(response)
         this.aid = response.data.xyId
         this.form = response.data
-        this.form.gCompany = '鸿鹄科技有限公司'
-        // console.log(response)
-        if (response.msg === '操作成功') {
-          return getPlan(this.aid)
-        } else {
-          this.$message.error('查询失败')
+        if (response.data.gTendertype == 1) {
+          this.form.gTendertype = '询价'
+        } else if (response.data.gTendertype == 2) {
+          this.form.gTendertype = '竞争性谈判'
+        } else if (response.data.gTendertype == 3) {
+          this.form.gTendertype = '委托'
+        } else if (response.data.gTendertype == 4) {
+          this.form.gTendertype = '单一来源'
         }
+        if (response.data.gIsPublic == 1) {
+          this.form.gIsPublic = '邀请'
+        } else {
+          this.form.gIsPublic = '公开'
+        }
+        this.form.gCompany = '鸿鹄科技有限公司'
+        this.gfId = this.form.gCode
+        return Promise.all([getPlan(this.aid), getQuotation({ 'gfId': this.gfId })])
       }).then(res => {
-        console.log('------------------')
-        console.log(res)
+        this.form.createBy = res[0].data.createBy
+        this.form.createDept = res[0].data.aCreateDept
+        console.log('打印了---------------------------')
+        console.log(res[0].data)
+        this.ComQuotation = res[1].rows
+        console.log(this.ComQuotation)
+        console.log('打印了---------------------------')
         //查询产品信息
         return getItemsDevice({ 'aid': this.aid })
       }).then(res => {
-        console.log("打印产品信息")
-        console.log(res)
+        res.rows.forEach((e, i) => {
+          this.lTableData.push({
+            id: i + 1,
+            inName: e.ppmDevice.tName,
+            inModel: e.ppmDevice.tModel,
+            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inUnit: e.ppmDevice.tUnit,
+            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
+            tid: e.tid,
+            inCount: e.vCount
+          })
+          this.lTotalSubtotal += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
+        })
       })
     },
     spCountBlur(row) {
@@ -423,7 +450,7 @@ export default {
     },
     //返回
     back1() {
-      this.$router.back()
+      this.$router.push('/noTender/project')
     },
     //单选多选
     lHandleSelectionChange(selection) {

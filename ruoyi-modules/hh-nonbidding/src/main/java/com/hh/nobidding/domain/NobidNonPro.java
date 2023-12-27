@@ -49,14 +49,14 @@ public class NobidNonPro extends BaseEntity {
     /**
      * 生成时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
     @Excel(name = "生成时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gSpawnTime;
 
     /**
      * 报价截至时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
     @Excel(name = "报价截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gDeadline;
 

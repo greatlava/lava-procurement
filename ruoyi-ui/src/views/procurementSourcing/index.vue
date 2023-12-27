@@ -258,6 +258,7 @@ export default {
       }
     },
     getList() {
+      alert(12321)
       this.loading = true;
       this.planList = [];
       FindProcurementPlanBy(this.queryParams).then(response => {

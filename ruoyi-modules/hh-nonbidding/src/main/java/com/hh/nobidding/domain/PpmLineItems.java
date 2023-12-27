@@ -1,6 +1,9 @@
 package com.hh.nobidding.domain;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -33,7 +36,7 @@ public class PpmLineItems extends BaseEntity
     private Integer aid;
 
     /** 设备编号 */
-    private Integer tid;
+    private String tid;
 
     /** 非招标项目ID */
     private Integer gid;
@@ -47,8 +50,8 @@ public class PpmLineItems extends BaseEntity
     private String vPerson;
 
     /** 交付时间 */
-    @Excel(name = "交付时间")
-    private BigDecimal vDeliveryTime;
+    @Excel(name = "交付时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date vDeliveryTime;
 
     /** 交付地点 */
     @Excel(name = "交付地点")
@@ -138,12 +141,12 @@ public class PpmLineItems extends BaseEntity
     {
         return aid;
     }
-    public void setTid(Integer tid)
+    public void setTid(String tid)
     {
         this.tid = tid;
     }
 
-    public Integer getTid()
+    public String getTid()
     {
         return tid;
     }
@@ -174,12 +177,12 @@ public class PpmLineItems extends BaseEntity
     {
         return vPerson;
     }
-    public void setvDeliveryTime(BigDecimal vDeliveryTime)
+    public void setvDeliveryTime(Date vDeliveryTime)
     {
         this.vDeliveryTime = vDeliveryTime;
     }
 
-    public BigDecimal getvDeliveryTime()
+    public Date getvDeliveryTime()
     {
         return vDeliveryTime;
     }

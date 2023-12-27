@@ -50,26 +50,16 @@
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
             <el-table-column label="报价截止时间" align="center" prop="gDeadline">
               <template slot-scope="scope">
-                <span v-if="scope.row.gDeadline!=null">{{ scope.row.gDeadline }}</span>
-                <span v-else>- -</span>
+                <span>{{ scope.row.gDeadline }}</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details?gid='+scope.row.gid">
+                <router-link :to="'details1?gid='+scope.row.gid">
                   <el-button
-                      v-if="scope.row.gDeadline!=null"
                       size="mini"
                       type="text"
                   >进入项目
-                  </el-button>
-                </router-link>
-                <router-link :to="'addRFQ?gid='+scope.row.gid">
-                  <el-button
-                      v-if="scope.row.gDeadline==null"
-                      size="mini"
-                      type="text"
-                  >发布项目
                   </el-button>
                 </router-link>
               </template>
@@ -100,26 +90,13 @@
             <el-table-column label="报价数量" align="center" prop="gCount"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                    v-if="scope.row.gStatus === 1"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >编辑
-                </el-button>
-                <el-button
-                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >进入项目
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="text"
-                    @click=""
-                >查看
-                </el-button>
+                <router-link :to="'details2?gid='+scope.row.gid">
+                  <el-button
+                      size="mini"
+                      type="text"
+                  >进入项目
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -147,26 +124,13 @@
             <el-table-column label="委托单位" align="center" prop="gUnit"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                    v-if="scope.row.gStatus === 1"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >编辑
-                </el-button>
-                <el-button
-                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >进入项目
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="text"
-                    @click=""
-                >查看
-                </el-button>
+                <router-link :to="'details3?gid='+scope.row.gid">
+                  <el-button
+                      size="mini"
+                      type="text"
+                  >进入项目
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -194,26 +158,13 @@
             <el-table-column label="报价轮次" align="center" prop="gRounds"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button
-                    v-if="scope.row.gStatus === 1"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >编辑
-                </el-button>
-                <el-button
-                    v-if="scope.row.gStatus === 2||scope.row.gStatus === 3"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >进入项目
-                </el-button>
-                <el-button
-                    size="mini"
-                    type="text"
-                    @click=""
-                >查看
-                </el-button>
+                <router-link :to="'details4?gid='+scope.row.gid">
+                  <el-button
+                      size="mini"
+                      type="text"
+                  >进入项目
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>

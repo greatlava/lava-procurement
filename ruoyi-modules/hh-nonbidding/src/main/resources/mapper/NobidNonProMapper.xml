@@ -114,4 +114,21 @@
             #{gid}
         </foreach>
     </delete>
+
+    <resultMap id="GetQuotation" type="com.hh.nobidding.domain.ComQuotation">
+        <id property="bjId" column="bjId"/>
+        <association property="bsSupplier">
+            <id property="hid" column="hid"/>
+        </association>
+    </resultMap>
+
+    <select id="selectQuotation" resultType="com.hh.nobidding.domain.ComQuotation" resultMap="GetQuotation">
+        select q.*,s.h_name
+        from com_quotation q
+        inner join bs_supplier s on q.bj_hid=s.hid
+        where q.gf_id=#{gfId}
+        and q.is_delete != 1
+        ORDER BY q.bj_total DESC
+    </select>
+
 </mapper>

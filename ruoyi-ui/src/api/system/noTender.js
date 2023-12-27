@@ -52,7 +52,6 @@ export function delInventory(inId) {
   })
 }
 
-
 // 查询采购计划列表
 export function listPlan(query) {
   return request({
@@ -93,5 +92,14 @@ export function getItemsDevice(aid) {
     url: '/nonbidding/items/getItemsDevice',
     method: 'get',
     params: aid
+  })
+}
+
+// 查询项目报价
+export function getQuotation(gfId) {
+  return request({
+    url: '/nonbidding/pro/selectQuotation',
+    method: 'get',
+    params: gfId
   })
 }

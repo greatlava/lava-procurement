@@ -386,26 +386,50 @@ export const dynamicRoutes = [
     ]
   },
   {
-    path: '/noTender/addRFQ',
+    path: '/noTender/details1',
     component: Details,
     children: [
       {
-        path: 'addRFQ?gid=:gid(\\d+)',
-        component: () => import('@/views/noTender/RFQ/addRFQ'),
-        name: 'AddRFQ',
-        meta: { title: '新增询价', activeMenu: '/noTender/RFQ' }
+        path: 'details1?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details1'),
+        name: 'Details1',
+        meta: { title: '查看询价', activeMenu: '/noTender/RFQ' }
       }
     ]
   },
   {
-    path: '/noTender/details',
+    path: '/noTender/details2',
     component: Details,
     children: [
       {
-        path: 'details?gid=:gid(\\d+)',
-        component: () => import('@/views/noTender/RFQ/details'),
-        name: 'Details',
-        meta: { title: '查看询价', activeMenu: '/noTender/RFQ' }
+        path: 'details2?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details2'),
+        name: 'Details2',
+        meta: { title: '查看竞争性谈判', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details3',
+    component: Details,
+    children: [
+      {
+        path: 'details3?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details3'),
+        name: 'Details3',
+        meta: { title: '查看委托', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details4',
+    component: Details,
+    children: [
+      {
+        path: 'details4?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details4'),
+        name: 'Details4',
+        meta: { title: '查看单一来源', activeMenu: '/noTender/RFQ' }
       }
     ]
   }
