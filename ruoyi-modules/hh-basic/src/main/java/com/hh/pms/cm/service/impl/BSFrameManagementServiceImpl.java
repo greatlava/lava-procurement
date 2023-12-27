@@ -94,4 +94,11 @@ public class BSFrameManagementServiceImpl implements IBSFrameManagementService
     {
         return bSFrameManagementMapper.deleteBSFrameManagementByOid(oid);
     }
+
+    //协议作废
+    @Override
+    public int updateXyCancel(Long oid) {
+        return bSFrameManagementMapper.updateXyCancel(oid);
+    }
+
 }

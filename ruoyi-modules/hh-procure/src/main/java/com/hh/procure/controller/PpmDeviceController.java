@@ -34,7 +34,6 @@ public class PpmDeviceController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(PpmDevice ppmDevice) {
         startPage();
-        System.out.println("ppmDevice:" + ppmDevice);
         List<PpmDevice> list = ppmDeviceService.selectPpmDeviceList(ppmDevice);
         return getDataTable(list);
     }

@@ -142,3 +142,11 @@ export function selectTenderByState(data) {
     data: data
   })
 }
+
+export function selectTenderByStateCount(data) {
+  return request({
+    url: "/ppm/plan/selectTenderByStateCount",
+    method: "post",
+    data: data
+  })
+}

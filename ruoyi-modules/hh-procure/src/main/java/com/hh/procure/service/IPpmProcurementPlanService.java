@@ -114,4 +114,7 @@ public interface IPpmProcurementPlanService
      * @return
      */
     public List<BidTender> selectTenderByState(BidTender bidTender);
+
+
+    public int selectTenderByStateCount(BidTender bidTender);
 }

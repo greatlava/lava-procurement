@@ -186,18 +186,21 @@
       </div>
     </div>
 
-    <h4><strong>| 审核协议</strong></h4>
+    <!--    <div v-if="sub.oOpinion!=null">-->
+    <h4><strong>| 审核意见</strong></h4>
     <el-form ref="elForm" :model="sub" :rules="rules" size="medium" label-width="180px" label-position="left">
       <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
         <el-form-item label="" prop="oOpinion" style="width: 100%">
-          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput"/>
+          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-if="this.view === null"/>
+          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-else readonly/>
         </el-form-item>
       </el-row>
     </el-form>
+    <!--    </div>-->
 
     <el-button size="medium" @click="back1">返回</el-button>
-    <el-button size="medium" type="primary" @click="updateHt">通过</el-button>
-    <el-button size="medium" type="danger" @click="updateBh">驳回</el-button>
+    <el-button size="medium" type="primary" @click="updateHt" v-if="this.view==null">通过</el-button>
+    <el-button size="medium" type="danger" @click="updateBh" v-if="this.view==null">驳回</el-button>
   </div>
 </template>
 
@@ -243,6 +246,7 @@ export default {
         oid: null,
         oOpinion: null
       },
+      view: null,
       rules: {
         oOpinion: [
           { required: true, message: '审核意见不能为空', trigger: 'blur' }
@@ -350,6 +354,8 @@ export default {
         console.log('打印框架协议信息')
         console.log(response)
         this.queryParams = response.data
+        this.view = response.data.oOpinion
+        this.sub.oOpinion = response.data.oOpinion
         let k = response.data.oFile
         console.log(k)
         if (k != null || k != '') {

@@ -171,4 +171,9 @@ public class PpmProcurementPlanServiceImpl implements IPpmProcurementPlanService
     public List<BidTender> selectTenderByState(BidTender bidTender) {
         return ppmProcurementPlanMapper.selectTenderByState(bidTender);
     }
+
+    @Override
+    public int selectTenderByStateCount(BidTender bidTender) {
+        return ppmProcurementPlanMapper.selectTenderByStateCount(bidTender);
+    }
 }

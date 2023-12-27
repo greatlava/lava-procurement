@@ -247,13 +247,7 @@ public class BsContractController extends BaseController {
     public AjaxResult HtCancel(Long eid) {
         int i = bsContractService.updateHtCancel(eid);
         if (i > 0) {
-            BidTender bidTender = new BidTender();
-            bidTender.setEid(eid);
-            int i1 = bsContractService.updateBidTender(bidTender);
-            if (i1 > 0) {
-                return AjaxResult.success("修改成功");
-            }
-            return AjaxResult.error("修改失败");
+            return AjaxResult.success("修改成功");
         }
         return AjaxResult.error("修改失败");
     }

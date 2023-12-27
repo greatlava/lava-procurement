@@ -9,6 +9,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
+import com.ruoyi.common.security.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +18,13 @@ import java.util.List;
 
 /**
  * 【请填写功能名称】Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-11-22
  */
 @RestController
 @RequestMapping("/rules")
-public class ComCodeRulesController extends BaseController
-{
+public class ComCodeRulesController extends BaseController {
     @Autowired
     private IComCodeRulesService comCodeRulesService;
 
@@ -33,8 +33,7 @@ public class ComCodeRulesController extends BaseController
      */
     @RequiresPermissions("system:rules:list")
     @GetMapping("/list")
-    public TableDataInfo list(ComCodeRules comCodeRules)
-    {
+    public TableDataInfo list(ComCodeRules comCodeRules) {
         startPage();
         List<ComCodeRules> list = comCodeRulesService.selectComCodeRulesList(comCodeRules);
         return getDataTable(list);
@@ -46,8 +45,7 @@ public class ComCodeRulesController extends BaseController
     @RequiresPermissions("system:rules:export")
     @Log(title = "编号规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ComCodeRules comCodeRules)
-    {
+    public void export(HttpServletResponse response, ComCodeRules comCodeRules) {
         List<ComCodeRules> list = comCodeRulesService.selectComCodeRulesList(comCodeRules);
         ExcelUtil<ComCodeRules> util = new ExcelUtil<ComCodeRules>(ComCodeRules.class);
         util.exportExcel(response, list, "编号规则数据");
@@ -58,8 +56,7 @@ public class ComCodeRulesController extends BaseController
      */
     @RequiresPermissions("system:rules:query")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(comCodeRulesService.selectComCodeRulesById(id));
     }
 
@@ -67,10 +64,10 @@ public class ComCodeRulesController extends BaseController
      * 新增【请填写功能名称】
      */
     @RequiresPermissions("system:rules:add")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
+    @Log(title = "编号规则", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ComCodeRules comCodeRules)
-    {
+    public AjaxResult add(@RequestBody ComCodeRules comCodeRules) {
+        comCodeRules.setOperator(SecurityUtils.getLoginUser().getSysUser().getNickName());
         return toAjax(comCodeRulesService.insertComCodeRules(comCodeRules));
     }
 
@@ -78,10 +75,9 @@ public class ComCodeRulesController extends BaseController
      * 修改【请填写功能名称】
      */
     @RequiresPermissions("system:rules:edit")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
+    @Log(title = "编号规则", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ComCodeRules comCodeRules)
-    {
+    public AjaxResult edit(@RequestBody ComCodeRules comCodeRules) {
         return toAjax(comCodeRulesService.updateComCodeRules(comCodeRules));
     }
 
@@ -89,10 +85,9 @@ public class ComCodeRulesController extends BaseController
      * 删除【请填写功能名称】
      */
     @RequiresPermissions("system:rules:remove")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
+    @Log(title = "编号规则", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(comCodeRulesService.deleteComCodeRulesByIds(ids));
     }
 }

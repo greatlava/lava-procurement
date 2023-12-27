@@ -193,14 +193,14 @@
 </template>
 
 <script>
-import { addManagement, listDevice, selectItemsDevice } from '../../../api/system/addContract'
+import { addManagement, listDevice, selectItemsDevice, upOidbyOid } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
   data() {
     return {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      oTotalprice: 0,
+      // oTotalprice: 0,
       //获取框架计划ID
       jhId: this.$route.query.jhId,
       //设置label的样式
@@ -286,8 +286,20 @@ export default {
       })
       addManagement(this.queryParams).then(response => {
         console.log(response)
-        if (response.msg == '添加成功') {
+          if (response.msg === '操作成功') {
+          return upOidbyOid({"oid":response.data.frameManagement.oid,"jhId":response.data.frameManagement.jhId})
+        } else {
+          this.$message.error('添加失败')
+        }
+      }).then(res => {
+        console.log('打印二------------------')
+        console.log(res)
+        console.log('打印二------------------')
+        if (res.msg === '修改成功') {
+          this.$message.success('添加成功')
           this.$router.push('/contract/fam')
+        } else {
+          this.$message.error('修改失败')
         }
       })
     },

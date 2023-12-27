@@ -121,6 +121,7 @@
                 <!--进入合同-->
                 <router-link :to="'update?eid='+scope.row.eid">
                   <el-button
+                      style="margin-right: 20px"
                       v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
                       size="mini"
                       type="text"
@@ -170,7 +171,7 @@
             <el-table-column label="创建日期" align="center" prop="createTime">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
-              </template>
+              </template>4
             </el-table-column>
             <el-table-column label="交付日期" align="center" prop="eDeliveryTime" width="180">
               <template slot-scope="scope">
@@ -187,6 +188,7 @@
               <template slot-scope="scope">
                 <router-link :to="'details?eid='+scope.row.eid">
                   <el-button
+                      style="margin-right: 20px"
                       size="mini"
                       type="text"
                       icon="el-icon-edit"
@@ -323,7 +325,6 @@ export default {
           }else {
             this.$message({type: 'info',message: '修改失败'})
           }
-
         })
       }).catch(() => {
         this.$message({

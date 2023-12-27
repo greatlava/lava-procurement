@@ -106,4 +106,16 @@ public class PpmFramePlanServiceImpl implements IPpmFramePlanService {
     public List<PpmFramePlan> selectBsFramePlanList(PpmFramePlan ppmFramePlan) {
         return ppmFramePlanMapper.selectBsFramePlanList(ppmFramePlan);
     }
+
+    //(协议作废)修改oid为空
+    @Override
+    public int updatePpmFramePlanByOid(Long oid) {
+        return ppmFramePlanMapper.updatePpmFramePlanbyOid(oid);
+    }
+
+    //框架协议新增后修改框架计划oid
+    @Override
+    public int updateOidbyOid(PpmFramePlan ppmFramePlan) {
+        return ppmFramePlanMapper.updateOidbyOid(ppmFramePlan);
+    }
 }

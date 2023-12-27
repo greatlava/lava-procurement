@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.nobidding.mapper.ProcurementPlanMapper">
+
+    <resultMap type="com.hh.nobidding.domain.PpmProcurementPlan" id="PpmProcurementPlanResult">
+        <result property="aid" column="aid"/>
+        <result property="aCode" column="a_code"/>
+        <result property="aName" column="a_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="aCreateDept" column="a_create_dept"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="fjAnnex" column="fj_annex"/>
+        <result property="aOpinion" column="a_opinion"/>
+        <result property="aProjectCount" column="a_project_count"/>
+        <result property="aBtype" column="a_btype"/>
+        <result property="aAstate" column="a_astate"/>
+        <result property="fjFileName" column="fj_file_name"/>
+    </resultMap>
+
+    <sql id="selectPpmProcurementPlanVo">
+        select aid,
+               a_code,
+               a_name,
+               create_by,
+               a_create_dept,
+               create_time,
+               update_by,
+               update_time,
+               fj_annex,
+               a_opinion,
+               a_project_count,
+               a_btype,
+               a_astate,
+               fj_file_name
+        from ppm_procurement_plan
+    </sql>
+
+    <select id="selectPpmProcurementPlanList" parameterType="com.hh.nobidding.domain.PpmProcurementPlan"
+            resultMap="PpmProcurementPlanResult">
+        <include refid="selectPpmProcurementPlanVo"/>
+        <where>
+            <if test="aCode != null  and aCode != ''">and a_code = #{aCode}</if>
+            <if test="aName != null  and aName != ''">and a_name like concat('%', #{aName}, '%')</if>
+            <if test="aCreateDept != null  and aCreateDept != ''">and a_create_dept = #{aCreateDept}</if>
+            <if test="fjAnnex != null  and fjAnnex != ''">and fj_annex = #{fjAnnex}</if>
+            <if test="aOpinion != null  and aOpinion != ''">and a_opinion = #{aOpinion}</if>
+            <if test="aProjectCount != null ">and a_project_count = #{aProjectCount}</if>
+            <if test="aBtype != null ">and a_btype = #{aBtype}</if>
+            <if test="aAstate != null ">and a_astate = #{aAstate}</if>
+            <if test="fjFileName != null  and fjFileName != ''">and fj_file_name like concat('%', #{fjFileName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPpmProcurementPlanByAid" parameterType="Long" resultMap="PpmProcurementPlanResult">
+        <include refid="selectPpmProcurementPlanVo"/>
+        where aid = #{aid}
+    </select>
+
+    <insert id="insertPpmProcurementPlan" parameterType="com.hh.nobidding.domain.PpmProcurementPlan"
+            useGeneratedKeys="true" keyProperty="aid">
+        insert into ppm_procurement_plan
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aCode != null">a_code,</if>
+            <if test="aName != null">a_name,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="aCreateDept != null">a_create_dept,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="fjAnnex != null">fj_annex,</if>
+            <if test="aOpinion != null">a_opinion,</if>
+            <if test="aProjectCount != null">a_project_count,</if>
+            <if test="aBtype != null">a_btype,</if>
+            <if test="aAstate != null">a_astate,</if>
+            <if test="fjFileName != null">fj_file_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aCode != null">#{aCode},</if>
+            <if test="aName != null">#{aName},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="aCreateDept != null">#{aCreateDept},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="fjAnnex != null">#{fjAnnex},</if>
+            <if test="aOpinion != null">#{aOpinion},</if>
+            <if test="aProjectCount != null">#{aProjectCount},</if>
+            <if test="aBtype != null">#{aBtype},</if>
+            <if test="aAstate != null">#{aAstate},</if>
+            <if test="fjFileName != null">#{fjFileName},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePpmProcurementPlan" parameterType="com.hh.nobidding.domain.PpmProcurementPlan">
+        update ppm_procurement_plan
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aCode != null">a_code = #{aCode},</if>
+            <if test="aName != null">a_name = #{aName},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="aCreateDept != null">a_create_dept = #{aCreateDept},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="fjAnnex != null">fj_annex = #{fjAnnex},</if>
+            <if test="aOpinion != null">a_opinion = #{aOpinion},</if>
+            <if test="aProjectCount != null">a_project_count = #{aProjectCount},</if>
+            <if test="aBtype != null">a_btype = #{aBtype},</if>
+            <if test="aAstate != null">a_astate = #{aAstate},</if>
+            <if test="fjFileName != null">fj_file_name = #{fjFileName},</if>
+        </trim>
+        where aid = #{aid}
+    </update>
+
+    <delete id="deletePpmProcurementPlanByAid" parameterType="Long">
+        delete
+        from ppm_procurement_plan
+        where aid = #{aid}
+    </delete>
+
+    <delete id="deletePpmProcurementPlanByAids" parameterType="String">
+        delete from ppm_procurement_plan where aid in
+        <foreach item="aid" collection="array" open="(" separator="," close=")">
+            #{aid}
+        </foreach>
+    </delete>
+</mapper>

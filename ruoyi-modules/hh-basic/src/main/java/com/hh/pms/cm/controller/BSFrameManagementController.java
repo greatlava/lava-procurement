@@ -3,6 +3,8 @@ package com.hh.pms.cm.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.nacos.shaded.com.google.gson.JsonObject;
 import com.hh.pms.cm.domain.*;
 import com.hh.pms.cm.service.IBsInventoryService;
 import com.hh.pms.cm.service.IComCodeRulesService;
@@ -102,9 +104,12 @@ public class BSFrameManagementController extends BaseController {
             for (BsInventory bsInventory : list) {
                 bsInventory.setOid(oid);
                 inventoryService.insertBsInventory(bsInventory);
-                System.out.println(bsInventory);
             }
-            return AjaxResult.success("添加成功");
+            BSFrameManagement frameManagement = bSFrameManagementService.selectBSFrameManagementByOid(oid);
+
+            JSONObject object=new JSONObject();
+            object.put("frameManagement",frameManagement);
+            return AjaxResult.success(object);
         }
         return AjaxResult.error("添加异常");
     }
@@ -144,26 +149,35 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 删除框架协议管理
      */
-    @RequiresPermissions("system:management:remove")
-    @Log(title = "框架协议管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{oids}")
-    public AjaxResult remove(@PathVariable Long[] oids) {
-        return toAjax(bSFrameManagementService.deleteBSFrameManagementByOids(oids));
+    @GetMapping("/delXy")
+    @Transactional
+    public AjaxResult remove(Long oid) {
+        System.out.println(oid);
+        int i = inventoryService.deleteBsInventoryByOid(oid);
+        if (i > 0) {
+            int i1 = bSFrameManagementService.deleteBSFrameManagementByOid(oid);
+            if (i1 > 0) {
+                return AjaxResult.success("删除成功");
+            }
+        }
+        return AjaxResult.error("删除失败");
     }
 
+
     //协议作废
-    @GetMapping("/xYCancel")
-    public AjaxResult xYCancel(Long eid) {
-//        int i = bsContractService.updateHtCancel(eid);
-//        if (i > 0) {
-//            BidTender bidTender = new BidTender();
-//            bidTender.setEid(eid);
-//            int i1 = bsContractService.updateBidTender(bidTender);
-//            if (i1 > 0) {
-//                return AjaxResult.success("修改成功");
-//            }
-//            return AjaxResult.error("修改失败");
-//        }
+    @GetMapping("/XyCancel")
+    public AjaxResult XyCancel(Long oid) {
+        int i = bSFrameManagementService.updateXyCancel(oid);
+        if (i > 0) {
+            BSFrameManagement frameManagement = new BSFrameManagement();
+            frameManagement.setOid(oid);
+            frameManagement.setoHstatus(5L);
+            int i1 = bSFrameManagementService.updateBSFrameManagement(frameManagement);
+            if (i1 > 0) {
+                return AjaxResult.success("修改成功");
+            }
+            return AjaxResult.error("修改失败");
+        }
         return AjaxResult.error("修改失败");
     }
 }

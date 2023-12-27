@@ -166,13 +166,44 @@ export function HtCancel(eid) {
   })
 }
 
-// 合同作废
-export function xYCancel(oid) {
+// 协议作废
+export function XyCancel(oid) {
   return request({
-    url: '/basic/contract/xYCancel',
+    url: '/basic/management/XyCancel',
     method: 'get',
     params: {
       oid: oid
     }
+  })
+}
+
+// 协议作废(修改ppm里的oid)
+export function XyCancelByOid(oid) {
+  return request({
+    url: '/ppm/framework/XyCancel',
+    method: 'get',
+    params: {
+      oid: oid
+    }
+  })
+}
+
+// 删除协议
+export function delXy(oid) {
+  return request({
+    url: '/basic/management/delXy',
+    method: 'get',
+    params: {
+      oid: oid
+    }
+  })
+}
+
+// 修改框架计划oid
+export function upOidbyOid(data) {
+  return request({
+    url: '/ppm/framework/upOidbyOid',
+    method: 'put',
+    data: data
   })
 }

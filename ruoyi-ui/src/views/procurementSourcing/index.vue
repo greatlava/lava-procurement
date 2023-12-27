@@ -51,7 +51,8 @@
       <!--      <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
       <el-table-column label="创建人" align="center" prop="createBy"/>
       <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
-      <el-table-column label="创建日期" align="center" prop="createTime"/>
+      <el-table-column label="创建时间" align="center" prop="createTime"/>
+      <el-table-column label="修改时间" align="center" prop="updateTime"/>
       <el-table-column label="采购计划状态" align="center" prop="aAstate">
         <template slot-scope="scope">
           <el-tag type="danger" v-if="scope.row.aAstate == 3">已寻源</el-tag>
@@ -257,6 +258,7 @@ export default {
       }
     },
     getList() {
+      alert(12321)
       this.loading = true;
       this.planList = [];
       FindProcurementPlanBy(this.queryParams).then(response => {
@@ -283,7 +285,6 @@ export default {
     sumbitType() {
       this.fullscreenLoading = true;
       updateStateAndAddBidWinning(this.yilist, this.typeRadio, this.noBidType).then(res => {
-        console.log("res-----", res);
         this.fullscreenLoading = false
         this.openByType = false;
         this.$modal.msgSuccess("操作成功！！");

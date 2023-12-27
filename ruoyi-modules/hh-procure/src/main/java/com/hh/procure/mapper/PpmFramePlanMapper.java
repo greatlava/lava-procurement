@@ -75,4 +75,10 @@ public interface PpmFramePlanMapper
      * @return 框架计划集合
      */
     public List<PpmFramePlan> selectBsFramePlanList(PpmFramePlan ppmFramePlan);
+
+    //(协议作废)修改oid为空
+    public int updatePpmFramePlanbyOid(Long oid);
+
+    //框架协议新增后修改框架计划oid
+    public int updateOidbyOid(PpmFramePlan ppmFramePlan);
 }
