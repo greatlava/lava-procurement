@@ -21,7 +21,6 @@ public class BidWinningResults extends BaseEntity
 
     /** 公示ID */
     private Long gsId;
-
     /** 招标项目ID */
     @Excel(name = "招标项目ID")
     private Long sid;
