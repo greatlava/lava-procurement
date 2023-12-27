@@ -58,4 +58,6 @@ public interface IBidWinningResultsService
      * @return 结果
      */
     public int deleteBidWinningResultsByGsId(Long gsId);
+
+    public List<BidWinningResults> selectResultSupp(Long sid);
 }

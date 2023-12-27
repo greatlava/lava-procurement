@@ -48,16 +48,16 @@
                 <span>{{ scope.row.yDownloadTime }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-zoom-in"
-                  @click="handleDetail"
-                >详情</el-button>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--              <template slot-scope="scope">-->
+<!--                <el-button-->
+<!--                  size="mini"-->
+<!--                  type="text"-->
+<!--                  icon="el-icon-zoom-in"-->
+<!--                  @click="handleDetail"-->
+<!--                >详情</el-button>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
           </el-table>
         </el-tab-pane>
       </el-tabs>

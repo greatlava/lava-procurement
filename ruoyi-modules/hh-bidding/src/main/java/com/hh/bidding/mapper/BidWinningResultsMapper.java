@@ -58,4 +58,6 @@ public interface BidWinningResultsMapper
      * @return 结果
      */
     public int deleteBidWinningResultsByGsIds(Long[] gsIds);
+
+    public List<BidWinningResults> selectResultSupp(Long sid);
 }
