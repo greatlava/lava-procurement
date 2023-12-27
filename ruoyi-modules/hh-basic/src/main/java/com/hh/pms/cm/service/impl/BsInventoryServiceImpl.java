@@ -16,8 +16,7 @@ import javax.annotation.Resource;
  * @date 2023-12-15
  */
 @Service
-public class BsInventoryServiceImpl implements IBsInventoryService
-{
+public class BsInventoryServiceImpl implements IBsInventoryService {
     @Resource
     private BsInventoryMapper bsInventoryMapper;
 
@@ -28,8 +27,7 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 【请填写功能名称】
      */
     @Override
-    public BsInventory selectBsInventoryByInId(Long inId)
-    {
+    public BsInventory selectBsInventoryByInId(Long inId) {
         return bsInventoryMapper.selectBsInventoryByInId(inId);
     }
 
@@ -40,8 +38,7 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 【请填写功能名称】
      */
     @Override
-    public List<BsInventory> selectBsInventoryList(BsInventory bsInventory)
-    {
+    public List<BsInventory> selectBsInventoryList(BsInventory bsInventory) {
         return bsInventoryMapper.selectBsInventoryList(bsInventory);
     }
 
@@ -52,8 +49,7 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 结果
      */
     @Override
-    public int insertBsInventory(BsInventory bsInventory)
-    {
+    public int insertBsInventory(BsInventory bsInventory) {
         return bsInventoryMapper.insertBsInventory(bsInventory);
     }
 
@@ -64,8 +60,7 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 结果
      */
     @Override
-    public int updateBsInventory(BsInventory bsInventory)
-    {
+    public int updateBsInventory(BsInventory bsInventory) {
         return bsInventoryMapper.updateBsInventory(bsInventory);
     }
 
@@ -76,8 +71,7 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 结果
      */
     @Override
-    public int deleteBsInventoryByInIds(Long[] inIds)
-    {
+    public int deleteBsInventoryByInIds(Long[] inIds) {
         return bsInventoryMapper.deleteBsInventoryByInIds(inIds);
     }
 
@@ -88,8 +82,19 @@ public class BsInventoryServiceImpl implements IBsInventoryService
      * @return 结果
      */
     @Override
-    public int deleteBsInventoryByInId(Long inId)
-    {
+    public int deleteBsInventoryByInId(Long inId) {
         return bsInventoryMapper.deleteBsInventoryByInId(inId);
+    }
+
+    //根据oid删除设备信息
+    @Override
+    public int deleteBsInventoryByOid(Long oid) {
+        return bsInventoryMapper.deleteBsInventoryByOid(oid);
+    }
+
+    //根据eid删除设备信息
+    @Override
+    public int deleteBsInventoryByEid(Long eid) {
+        return bsInventoryMapper.deleteBsInventoryByEid(eid);
     }
 }

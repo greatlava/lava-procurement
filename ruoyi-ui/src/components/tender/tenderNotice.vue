@@ -388,7 +388,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const uids = row.uid || this.ids;
-      this.$modal.confirm('是否确认删除招标公告编号为"' + uids + '"的数据项？').then(function() {
+        this.$modal.confirm('是否确认删除招标公告编号为"' + uids + '"的数据项？').then(function() {
         return delNotice(uids);
       }).then(() => {
         this.getList();

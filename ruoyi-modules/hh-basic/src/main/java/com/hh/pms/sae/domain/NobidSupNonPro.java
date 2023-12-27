@@ -53,7 +53,7 @@ public class NobidSupNonPro extends BaseEntity
     private Long gfSb;
 
     /** 报价截至时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "报价截至时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date gfQtime;
 

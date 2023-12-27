@@ -77,6 +77,18 @@ public class BSFrameManagement extends BaseEntity
     @Excel(name = "审核意见")
     private String oOpinion;
 
+    /** 是否作废 */
+    @Excel(name = "是否作废")
+    private Long oCancel;
+
+    public Long getoCancel() {
+        return oCancel;
+    }
+
+    public void setoCancel(Long oCancel) {
+        this.oCancel = oCancel;
+    }
+
     private List<BsInventory> bsInventoryList;
 
     public List<BsInventory> getBsInventoryList() {
@@ -246,6 +258,7 @@ public class BSFrameManagement extends BaseEntity
                 .append("oType", getoType())
                 .append("oDescribe", getoDescribe())
                 .append("oOpinion", getoOpinion())
+                .append("oCancel", getoCancel())
                 .append("oTotalprice", getoTotalprice())
                 .append("bsInventoryList", getBsInventoryList())
                 .toString();

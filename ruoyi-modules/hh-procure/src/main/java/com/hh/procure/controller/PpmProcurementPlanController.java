@@ -9,6 +9,8 @@ import com.hh.procure.service.IPpmApprovalRecordService;
 import com.hh.procure.service.IPpmLineItemsService;
 import com.hh.procure.service.IPpmProcurementPlanService;
 import com.hh.procure.service.imp.ComCodeRulesServiceImpl;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -17,6 +19,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.security.service.TokenService;
+import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 采购计划Controller
@@ -94,6 +98,7 @@ public class PpmProcurementPlanController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         ComPubAttachments comPubAttachments = ppmProcurementPlan.getFile();
+        ppmProcurementPlan.setCreateBy(SecurityUtils.getLoginUser().getSysUser().getNickName());
         int i = ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
         if (comPubAttachments != null) {
             comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));
@@ -107,7 +112,7 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 修改采购计划
      */
-    @RequiresPermissions("system:plan:edit")
+//    @RequiresPermissions("system:plan:edit")
     @Log(title = "采购计划", businessType = BusinessType.UPDATE)
     @PutMapping
     @Transactional
@@ -115,9 +120,11 @@ public class PpmProcurementPlanController extends BaseController {
         PpmProcurementPlan result = ppmProcurementPlanService.selectPpmProcurementPlanByAid(ppmProcurementPlan.getAid());
         if (!result.getaAstate().equals(ppmProcurementPlan.getaAstate())) {
             PpmApprovalRecord obj = new PpmApprovalRecord();
-            obj.setProcessedBy(tokenService.getLoginUser().getUsername());
+            obj.setProcessedBy(tokenService.getLoginUser().getSysUser().getNickName());
             obj.setAid(ppmProcurementPlan.getAid());
-            obj.setDepnt("采购部");
+            obj.setDepnt(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
+            obj.setUpdateTime(DateUtils.getNowDate());
+            ppmProcurementPlan.setUpdateTime(DateUtils.getNowDate());
             switch (ppmProcurementPlan.getaAstate()) {
                 case 0:
                     obj.setNode("部门主管审批");
@@ -153,7 +160,7 @@ public class PpmProcurementPlanController extends BaseController {
         return toAjax(ppmProcurementPlanService.deletePpmProcurementPlanByAids(aids));
     }
 
-    @RequiresPermissions("system:plan:query")
+    @RequiresPermissions("system:attachments:list")
     @GetMapping("/many")
     public AjaxResult selectProcurementPlanByIdForThreeTables(Integer aid) {
         return success(ppmProcurementPlanService.selectProcurementPlanByIdForThreeTables(aid));
@@ -199,6 +206,7 @@ public class PpmProcurementPlanController extends BaseController {
         NobidNonPro nobidNonPro = new NobidNonPro();
         for (PpmProcurementPlan item : ppmProcurementPlan) {
             item.setaAstate(3);
+            item.setUpdateTime(DateUtils.getNowDate());
             ppmProcurementPlanService.updatePpmProcurementPlan(item);
             switch (type) {
                 case 1:
@@ -211,7 +219,7 @@ public class PpmProcurementPlanController extends BaseController {
                     bidTender.setsCode(result.getCode());
                     bidTender.setsName(item.getaName());
                     bidTender.setsWay(type);
-                    bidTender.setsProjectState(2);
+                    bidTender.setsProjectState(1);
                     bidTender.setsType(item.getaBtype());
                     bidTender.setCreateBy(item.getCreateBy());
                     ppmProcurementPlanService.insertTenders(bidTender);
@@ -239,6 +247,7 @@ public class PpmProcurementPlanController extends BaseController {
 
     @RequestMapping("/FindProcurementPlanBy")
     public TableDataInfo FindProcurementPlanBy(PpmProcurementPlan ppmProcurementPlan) {
+        startPage();
         return getDataTable(ppmProcurementPlanService.FindProcurementPlanBy(ppmProcurementPlan));
     }
 
@@ -249,5 +258,57 @@ public class PpmProcurementPlanController extends BaseController {
         startPage();
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectePpmProcurementPlanAndComPubAttamentByAid(ppmProcurementPlan);
         return getDataTable(list);
+    }
+
+
+    @PostMapping("/selectPpmpProcurementCount")
+    public int selectPpmpProcurementCount(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+        System.out.printf("state:" + ppmProcurementPlan + "\n");
+        return ppmProcurementPlanService.selectPpmpProcurementCount(ppmProcurementPlan);
+    }
+
+    @RequiresPermissions
+    @PostMapping("/selectContractCount")
+    public R selectContractCount() {
+        return R.ok(ppmProcurementPlanService.selectContractCount());
+    }
+
+    /**
+     * 查询采购计划总金额
+     *
+     * @return
+     */
+    @PostMapping("/queryTotalPurchaseAmount")
+    public R queryTotalPurchaseAmount() {
+        return R.ok(ppmProcurementPlanService.queryTotalPurchaseAmount());
+    }
+
+    /**
+     * 查询招标项目数量
+     *
+     * @return
+     */
+    @PostMapping("/selectTenderCount")
+    public R selectTenderCount() {
+        return R.ok(ppmProcurementPlanService.selectTenderCount());
+    }
+
+
+    /**
+     * 查询招标阶段的项目
+     *
+     * @param bidTender
+     * @return
+     */
+    @PostMapping("/selectTenderByState")
+    public List<BidTender> selectTenderByState(@RequestBody BidTender bidTender) {
+        List<BidTender> bidTenders = ppmProcurementPlanService.selectTenderByState(bidTender);
+        System.out.println("create_time:" + bidTenders + "\n)");
+        return bidTenders;
+    }
+
+    @PostMapping(value = "/selectTenderByStateCount")
+    public R selectTenderByStateCount(@RequestBody BidTender bidTender) {
+        return R.ok(ppmProcurementPlanService.selectTenderByStateCount(bidTender));
     }
 }

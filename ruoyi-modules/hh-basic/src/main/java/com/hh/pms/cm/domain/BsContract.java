@@ -133,6 +133,10 @@ public class BsContract extends BaseEntity {
     @Excel(name = "合同文件")
     private String eDocuments;
 
+    /** 是否作废 */
+    @Excel(name = "是否作废")
+    private Long eCancel;
+
 //    private BidTender bidTender;
 //
 //    public BidTender getBidTender() {
@@ -157,13 +161,13 @@ public class BsContract extends BaseEntity {
 
     private BsSign bsSign;
 
-    private List<ComPubAttachments> comPubAttachments;
+    private ComPubAttachments comPubAttachments;
 
-    public List<ComPubAttachments> getComPubAttachments() {
+    public ComPubAttachments getComPubAttachments() {
         return comPubAttachments;
     }
 
-    public void setComPubAttachments(List<ComPubAttachments> comPubAttachments) {
+    public void setComPubAttachments(ComPubAttachments comPubAttachments) {
         this.comPubAttachments = comPubAttachments;
     }
 
@@ -245,6 +249,14 @@ public class BsContract extends BaseEntity {
 
     public Long getoHstatus() {
         return oHstatus;
+    }
+
+    public Long geteCancel() {
+        return eCancel;
+    }
+
+    public void seteCancel(Long eCancel) {
+        this.eCancel = eCancel;
     }
 
     public void seteType(String eType) {
@@ -343,10 +355,11 @@ public class BsContract extends BaseEntity {
                 .append("eOpinion", geteOpinion())
                 .append("eImage", geteImage())
                 .append("eDocuments", geteDocuments())
+                .append("Cancel", geteCancel())
                 .append("BsInventoryList", getBsInventoryList())
                 .append("PaymentList", getBsPaymentList())
                 .append("BsSign", getBsSign())
-//                .append("BidTender", getBidTender())
+                .append("ComPubAttachments", getComPubAttachments())
                 .toString();
     }
 }

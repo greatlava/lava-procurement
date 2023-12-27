@@ -37,7 +37,6 @@ public class BsPersonnelController extends BaseController {
     /**
      * 查询核心技术人员列表
      */
-    @RequiresPermissions("system:personnel:list")
     @GetMapping("/list")
     public TableDataInfo list(BsPersonnel bsPersonnel) {
         startPage();

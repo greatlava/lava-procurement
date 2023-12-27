@@ -10,6 +10,7 @@ import com.hh.pms.cm.service.*;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,6 +35,7 @@ import com.ruoyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/contract")
+@Transactional
 public class BsContractController extends BaseController {
     @Autowired
     private IBsContractService bsContractService;
@@ -79,8 +81,10 @@ public class BsContractController extends BaseController {
     @RequiresPermissions("system:contract:query")
     @GetMapping(value = "/{eid}")
     public AjaxResult getInfo(@PathVariable("eid") Long eid) {
-        BsContract bsContract = bsContractService.selectBidTenderSid(eid);
+        BsContract bsContract = bsContractService.selectBidTenderBySid(eid);
+        System.out.println("---------------------------------------------------");
         System.out.println(bsContract);
+        System.out.println("---------------------------------------------------");
         return success(bsContract);
     }
 
@@ -137,6 +141,14 @@ public class BsContractController extends BaseController {
             if (i == 0) {
                 return AjaxResult.error("添加异常");
             }
+            ComPubAttachments comPubAttachments = bsContract.getComPubAttachments();
+            if (comPubAttachments.getAnUrl() != null) {
+                comPubAttachments.setEid(Math.toIntExact(eid));
+                int k1 = bsContractService.insertComPubAttachments(comPubAttachments);
+                if (k1 == 0) {
+                    return AjaxResult.error("添加异常");
+                }
+            }
             return AjaxResult.success("添加成功");
         }
         return AjaxResult.error("添加异常");
@@ -149,16 +161,95 @@ public class BsContractController extends BaseController {
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsContract bsContract) {
-        return toAjax(bsContractService.updateBsContract(bsContract));
+        System.out.println("打印bsContract--------------------------------------");
+        System.out.println(bsContract);
+        int k = bsContractService.updateBsContract(bsContract);
+        if (k > 0) {
+            if (bsContract.geteOpinion() != null) {
+                return AjaxResult.success("修改成功");
+            }
+            Long eid = bsContract.getEid();
+            //删除设备信息
+            inventoryService.deleteBsInventoryByEid(eid);
+            //修改设备信息
+            List<BsInventory> list = bsContract.getBsInventoryList();
+            for (BsInventory bsInventory : list) {
+                bsInventory.setEid(eid);
+                int i = inventoryService.insertBsInventory(bsInventory);
+                if (i == 0) {
+                    return AjaxResult.error("修改异常");
+                }
+            }
+            //删除支付信息
+            paymentService.deleteBsPaymentByEid(eid);
+            //修改设备信息
+            List<BsPayment> list1 = bsContract.getBsPaymentList();
+            for (BsPayment bsPayment : list1) {
+                bsPayment.setEid(eid);
+                int i = paymentService.insertBsPayment(bsPayment);
+                if (i == 0) {
+                    return AjaxResult.error("修改异常");
+                }
+            }
+            int i = signService.updateBsSign(bsContract.getBsSign());
+            if (i == 0) {
+                return AjaxResult.error("修改异常");
+            }
+            if (bsContract.getComPubAttachments().getAnUrl() == null) {
+                bsContractService.deleteComPubAttamentsByEid(Math.toIntExact(eid));
+            } else {
+                bsContract.getComPubAttachments().setEid(Math.toIntExact(eid));
+                int i1 = bsContractService.updateComPubAttachments(bsContract.getComPubAttachments());
+                if (i1 == 0) {
+                    return AjaxResult.error("修改异常");
+                }
+            }
+            return AjaxResult.success("修改成功");
+        }
+        return AjaxResult.error("修改异常");
+//        return toAjax(bsContractService.updateBsContract(bsContract));
     }
 
     /**
      * 删除合同
      */
-    @RequiresPermissions("system:contract:remove")
     @Log(title = "合同", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{eids}")
-    public AjaxResult remove(@PathVariable Long[] eids) {
-        return toAjax(bsContractService.deleteBsContractByEids(eids));
+    @GetMapping("/del")
+    public AjaxResult remove(Long eid) {
+        System.out.println(eid);
+        inventoryService.deleteBsInventoryByEid(eid);
+        paymentService.deleteBsPaymentByEid(eid);
+        signService.deleteBsSignByEid(eid);
+        int i = bsContractService.deleteBsContractByEid(eid);
+        if (i == 0) {
+            return AjaxResult.error("删除异常");
+        }
+        BidTender bidTender = new BidTender();
+        bidTender.setEid(eid);
+        bsContractService.updateBidTender(bidTender);
+        return AjaxResult.success("删除成功");
     }
+
+    //获取附件详细信息
+    @GetMapping("/selectCom")
+    public AjaxResult selectCom(Integer eid) {
+        return success(bsContractService.selectComPubAttachmentsByEid(eid));
+    }
+
+    //修改合同管理状态
+    @PutMapping("/updateoHstatus")
+    public AjaxResult updateoHstatus(@RequestBody BsContract bsContract) {
+        return success(bsContractService.updateoHstatus(bsContract));
+    }
+
+    //合同作废
+    @GetMapping("/HtCancel")
+    public AjaxResult HtCancel(Long eid) {
+        int i = bsContractService.updateHtCancel(eid);
+        if (i > 0) {
+            return AjaxResult.success("修改成功");
+        }
+        return AjaxResult.error("修改失败");
+    }
+
 }

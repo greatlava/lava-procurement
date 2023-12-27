@@ -20,6 +20,9 @@ public interface IBsSignService
      */
     public BsSign selectBsSignByGnId(Long gnId);
 
+    //根据合同查看签署执行状态信息
+    public BsSign selectBsSignByEid(Long eid);
+
     /**
      * 查询签署执行状态列表
      *
@@ -54,9 +57,9 @@ public interface IBsSignService
 
     /**
      * 删除签署执行状态信息
-     *
-     * @param gnId 签署执行状态主键
-     * @return 结果
      */
     public int deleteBsSignByGnId(Long gnId);
+
+    public int deleteBsSignByEid(Long eid);
+
 }

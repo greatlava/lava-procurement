@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
+import com.hh.pms.cm.domain.ComPubAttachments;
 import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.stereotype.Service;
 import com.hh.pms.cm.mapper.BsContractMapper;
@@ -98,7 +99,55 @@ public class BsContractServiceImpl implements IBsContractService {
 
     //查询招标项目ID
     @Override
-    public BsContract selectBidTenderSid(Long eid) {
+    public BsContract selectBidTenderBySid(Long eid) {
         return bsContractMapper.selectBidTenderBySid(eid);
+    }
+
+    //新增公共附件
+    @Override
+    public int insertComPubAttachments(ComPubAttachments comPubAttachments) {
+        return bsContractMapper.insertComPubAttachments(comPubAttachments);
+    }
+
+    //修改公共附件
+    @Override
+    public int updateComPubAttachments(ComPubAttachments comPubAttachments) {
+        return bsContractMapper.updateComPubAttachments(comPubAttachments);
+    }
+
+    //删除公共附件
+    @Override
+    public int deleteComPubAttamentsByEid(Integer eid) {
+        return bsContractMapper.deleteComPubAttamentsByEid(eid);
+    }
+
+    //查询公共附件
+    @Override
+    public ComPubAttachments selectComPubAttachmentsByEid(Integer eid) {
+        return bsContractMapper.selectComPubAttachmentsByEid(eid);
+    }
+
+    //修改合同管理状态
+    @Override
+    public int updateoHstatus(BsContract bsContract) {
+        return bsContractMapper.updateoHstatus(bsContract);
+    }
+
+    //修改合同管理状态
+    @Override
+    public int updateBidTender(BidTender bidTender) {
+        return bsContractMapper.updateBidTender(bidTender);
+    }
+
+    //合同作废
+    @Override
+    public int updateHtCancel(Long eid) {
+        return bsContractMapper.updateHtCancel(eid);
+    }
+
+    //查询生成合同的项目
+    @Override
+    public Long selectSid(Long eid) {
+        return bsContractMapper.selectSid(eid);
     }
 }

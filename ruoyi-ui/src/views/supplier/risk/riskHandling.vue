@@ -89,7 +89,8 @@
                         :rows="8"
                         style="width: 200%"
                         placeholder="请输入处理结果"
-                        v-model="formData.rmHandingResult">
+                        v-model="formData.rmHandingResult"
+                        :readonly="formData.rmStatus == 2 || formData.rmStatus == 3">
                       </el-input>
                     </el-form-item>
                   </el-col>
@@ -184,7 +185,7 @@ export default {
         "rmHandingDate": this.formattedDate
       }).then(res => {
         console.log(res)
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("忽略成功");
       })
     },
     submit() {
@@ -198,7 +199,7 @@ export default {
         "rmHandingResult": this.formData.rmHandingResult
       }).then(res => {
         console.log(res)
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("提交成功");
       })
     }
   }

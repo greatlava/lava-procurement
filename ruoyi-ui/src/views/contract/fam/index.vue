@@ -100,49 +100,65 @@
               <template slot-scope="scope">
                 <el-tag v-if="scope.row.oHstatus === 1" type="info">草稿</el-tag>
                 <el-tag v-else-if="scope.row.oHstatus === 2" type="warning">待审核</el-tag>
-                <el-tag v-else-if="scope.row.oHstatus === 3" type="warning">已通过</el-tag>
-                <el-tag v-else-if="scope.row.oHstatus === 4" type="info">未通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 3" type="success">已通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 4" type="danger">未通过</el-tag>
+                <el-tag v-else-if="scope.row.oHstatus === 5">已作废</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
+                <router-link :to="'examineFa?oid='+scope.row.oid">
+                  <el-button
+                      style="margin-right: 20px"
+                      v-if="scope.row.oHstatus === 5"
+                      size="mini"
+                      type="text"
+                      @click=""
+                      icon="el-icon-view"
+                  >查看
+                  </el-button>
+                </router-link>
                 <!--状态3-->
                 <el-button
                     v-if="scope.row.oHstatus === 3"
                     size="mini"
                     type="text"
                     icon="el-icon-upload"
-                    @click=""
+                    @click="cancel1(scope.row.oid)"
                     v-hasPermi="['system:contract:upload']"
                 >作废
                 </el-button>
                 <!--状态2|4-->
-                <el-button
-                    v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
-                    size="mini"
-                    type="text"
-                    icon="el-icon-edit"
-                    @click=""
-                    v-hasPermi="['system:contract:edit']"
-                >编辑
-                </el-button>
+                <router-link :to="'updateFa?oid='+scope.row.oid">
+                  <el-button
+                      style="margin-right: 20px"
+                      v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
+                      size="mini"
+                      type="text"
+                      icon="el-icon-edit"
+                      v-hasPermi="['system:contract:edit']"
+                  >编辑
+                  </el-button>
+                </router-link>
                 <el-button
                     v-if="scope.row.oHstatus === 1|| scope.row.oHstatus === 4"
                     size="mini"
                     type="text"
                     icon="el-icon-delete"
-                    @click=""
+                    @click="deleteXy(scope.row.oid)"
                     v-hasPermi="['system:contract:delete']"
                 >删除
                 </el-button>
                 <!--状态2-->
-                <el-button
-                    v-if="scope.row.oHstatus === 2"
-                    size="mini"
-                    type="text"
-                    @click=""
-                >--
-                </el-button>
+                <router-link :to="'examineFa?oid='+scope.row.oid">
+                  <el-button
+                      v-if="scope.row.oHstatus === 2"
+                      size="mini"
+                      type="text"
+                      @click=""
+                  >审核
+                  </el-button>
+                </router-link>
               </template>
             </el-table-column>
           </el-table>
@@ -161,7 +177,7 @@
 
 <script>
 import { getFrameworkPlan1 } from '@/api/system/frameworkPlan'
-import { listManagement } from '../../../api/system/addContract'
+import { delXy, HtCancel, listManagement, XyCancel, xYCancel, XyCancelByOid } from '../../../api/system/addContract'
 
 export default {
   name: 'Contract',
@@ -242,6 +258,70 @@ export default {
     // })
   },
   methods: {
+    //协议作废
+    cancel1(oid) {
+      this.$confirm('确定使该协议作废?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let k1 = null
+        let k2 = null
+        Promise.all([XyCancel(oid), XyCancelByOid(oid)]).then(responses => {
+          console.log(responses[0])
+          k1 = responses[0].msg
+          console.log(responses[1])
+          k2 = responses[1].msg
+          console.log(k1, k2)
+          if (k1 == '修改成功' && k2 == '修改成功') {
+            this.$nextTick(() => {
+              this.activeName = 'second'
+              this.getList2()
+              this.$message({ type: 'success', message: '已作废' })
+            })
+          } else {
+            this.$message({ type: 'error', message: '修改失败' })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
+    //删除协议
+    deleteXy(oid) {
+      this.$confirm('确定删除该协议?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let k1 = null
+        let k2 = null
+        Promise.all([delXy(oid), XyCancelByOid(oid)]).then(responses => {
+          console.log(responses[0])
+          k1 = responses[0].msg
+          console.log(responses[1])
+          k2 = responses[1].msg
+          console.log(k1, k2)
+          if (k1 == '删除成功' && k2 == '修改成功') {
+            this.$nextTick(() => {
+              this.activeName = 'second'
+              this.getList2()
+              this.$message({ type: 'success', message: '已删除' })
+            })
+          } else {
+            this.$message({ type: 'error', message: '删除失败' })
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
     handleClick(tab) {
       console.log('切换到标签页', tab.name)
       if (tab.name === 'first') {
@@ -281,7 +361,7 @@ export default {
     getList1() {
       this.loading = true
       getFrameworkPlan1(this.queryParams1).then(response => {
-        console.log(response)
+        // console.log(response)
         this.contractList1 = response.rows
         this.total1 = response.total
         this.loading = false
@@ -291,7 +371,7 @@ export default {
     getList2() {
       this.loading = true
       listManagement(this.queryParams2).then(response => {
-        console.log(response)
+        // console.log(response)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false

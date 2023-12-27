@@ -106,4 +106,18 @@
             #{inId}
         </foreach>
     </delete>
+
+    <!--根据oid删除设备信息-->
+    <delete id="deleteBsInventoryByOid" parameterType="Long">
+        delete
+        from bs_inventory
+        where oid = #{oid}
+    </delete>
+
+    <!--根据eid删除设备信息-->
+    <delete id="deleteBsInventoryByEid" parameterType="Long">
+        delete
+        from bs_inventory
+        where eid = #{eid}
+    </delete>
 </mapper>

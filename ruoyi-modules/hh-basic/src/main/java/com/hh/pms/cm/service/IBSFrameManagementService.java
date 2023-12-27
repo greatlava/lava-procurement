@@ -58,4 +58,7 @@ public interface IBSFrameManagementService
      * @return 结果
      */
     public int deleteBSFrameManagementByOid(Long oid);
+
+    //协议作废
+    public int updateXyCancel(Long oid);
 }

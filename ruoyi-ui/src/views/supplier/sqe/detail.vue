@@ -312,7 +312,6 @@
               <el-table-column label="发证单位" align="center" prop="zzUnit"/>
               <el-table-column label="发证日期" align="center" prop="zzDate"/>
               <el-table-column label="有效期至" align="center" prop="zzExpirationDate"/>
-              <el-table-column label="扫描件" align="center" prop="zzScan"/>
             </el-table>
             <pagination
               v-show="total1>0"
@@ -338,7 +337,6 @@
               <el-table-column label="合同金额（万元）" align="center" prop="yjRmb"/>
               <el-table-column label="买方业务代表" align="center" prop="yjBbr"/>
               <el-table-column label="买方业务代表联系电话" align="center" prop="yjPhone"/>
-              <el-table-column label="合同扫描件" align="center" prop="yjScanContract"/>
             </el-table>
             <pagination
               v-show="total2>0"
@@ -361,11 +359,6 @@
               <el-table-column label="年度" align="center" prop="cAnnual"/>
               <el-table-column label="净利润（万元）" align="center" prop="cNetProfit"/>
               <el-table-column label="资产负债率（%）" align="center" prop="cLev"/>
-              <el-table-column label="财务审计报告扫描件" align="center" prop="cScanFar"/>
-              <el-table-column label="附件审计报告" align="center" prop="cScanAar"/>
-              <el-table-column label="资产负债表扫描件" align="center" prop="cScanAl"/>
-              <el-table-column label="利润表扫描件" align="center" prop="cScanIs"/>
-              <el-table-column label="现金流量表扫描件" align="center" prop="cScanCfs"/>
             </el-table>
             <pagination
               v-show="total3>0"
@@ -386,7 +379,25 @@
             <el-table stripe v-loading="loading" :data="accessoriesList">
               <el-table-column type="index" label="序号" align="center" width="80"/>
               <el-table-column label="名称" align="center" prop="fjName"/>
-              <el-table-column label="附件" align="center" prop="fjAnnex"/>
+              <el-table-column
+                label="附件" align="center">
+                <template slot-scope="scope">
+                  <p v-for="i in JSON.parse(scope.row.fjAnnex)" v-if="scope.row.fjAnnex != null">
+                    <a :href="i.url" target="_blank">{{ i.name }}</a>
+                  </p>
+                  <p v-if="scope.row.fjAnnex == null" style="color: #409EFF">---</p>
+                </template>
+              </el-table-column>
+              <el-table-column
+                label="操作" align="center">
+                <template slot-scope="scope">
+                  <el-button type="primary" v-if="scope.row.fjAnnex != null"
+                             @click="download(JSON.parse(scope.row.fjAnnex))">
+                    下载附件<i class="el-icon-download"></i>
+                  </el-button>
+                  <p v-if="scope.row.fjAnnex == null" style="color: #409EFF">---</p>
+                </template>
+              </el-table-column>
             </el-table>
             <pagination
               v-show="total4>0"
@@ -460,13 +471,13 @@ export default {
       fState: null,
       fStatus: null,
       //营业执照
-      hCopies: null,
+      hCopies: '',
       hCopiesList: [],
       //法人身份证
-      idCardCopy: null,
+      idCardCopy: '',
       idCardCopyList: [],
       //业务经办人身份证
-      ywIdCardCopy: null,
+      ywIdCardCopy: '',
       ywIdCardCopyList: [],
       //业务经办人
       operator: {
@@ -559,6 +570,22 @@ export default {
     }
   },
   methods: {
+    download(fileUrls) {
+      if (fileUrls.length == 0) {
+        this.$message.error("没有附件可下载，请上传附件！！")
+        return;
+      }
+      let files = fileUrls.map(function (obj) {
+        return obj.url
+      })
+      let urls = files.join(',')
+      let name = encodeURIComponent(urls);
+      var url = `http://localhost:8080/basic/supplier/downloadZip?url=${name}`;
+      const a = document.createElement('a')
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
+    },
     handleClick(tab, event) {
       console.log(tab, event);
     },
@@ -631,31 +658,38 @@ export default {
       this.fState = response.data.fState
       this.hAccount = response.data.hAccount
       this.fStatus = response.data.fStatus
-      this.hCopies = `http://192.168.162.1:9610/` + response.data.hCopies
-      this.hCopiesList.push(`http://192.168.162.1:9610/` + response.data.hCopies)
-      this.idCardCopy = `http://192.168.162.1:9610/` + response.data.idCardCopies[0]
-      for (let i = 0; i < response.data.idCardCopies.length; i++) {
-        this.idCardCopyList.push(`http://192.168.162.1:9610/` + response.data.idCardCopies[i])
+      this.hCopies = JSON.parse(response.data.hCopies)[0].url
+      this.hCopiesList.push(JSON.parse(response.data.hCopies)[0].url)
+      this.idCardCopy = JSON.parse(response.data.hJuridicalCopies)[0].url
+      for (let i = 0; i < JSON.parse(response.data.hJuridicalCopies).length; i++) {
+        this.idCardCopyList.push(JSON.parse(response.data.hJuridicalCopies)[i].url)
       }
     },
     query() {
       if (this.zr_id == 0) {
         getSupplier(this.hid).then(response => {
           this.yang(response)
+          this.infos()
         });
       } else {
         getSupplierByZrId(this.zr_id).then(response => {
           this.$router.replace({query: {...this.$route.query, hid: response.data.hid}});
           this.yang(response)
+          this.infos()
         });
       }
+    },
+    infos() {
       //业务经办人
       getOperator(this.hid).then(response => {
         this.operator.ywName = response.data.ywName
         this.operator.ywPhone = response.data.ywPhone
         this.operator.ywIdcrad = response.data.ywIdcrad
         this.operator.ywMailbox = response.data.ywMailbox
-        this.operator.ywScanIdcard = response.data.ywScanIdcard
+        this.ywIdCardCopy = JSON.parse(response.data.ywScanIdcard)[0].url
+        for (let i = 0; i < JSON.parse(response.data.ywScanIdcard).length; i++) {
+          this.ywIdCardCopyList.push(JSON.parse(response.data.ywScanIdcard)[i].url)
+        }
       })
       //核心技术人员
       listPersonnel(this.personnel).then(response => {
@@ -684,8 +718,6 @@ export default {
       })
       this.loading = false
     },
-
-
     // 文件提交处理
     submitUpload() {
       this.$refs.upload.submit();

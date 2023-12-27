@@ -82,17 +82,15 @@
                 ref="up1"
                 class="upload-demo"
                 :action="url"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
                 :before-remove="beforeRemove"
                 :auto-upload="false"
                 :limit="1"
                 :on-exceed="handleExceed"
                 :on-success="success"
                 :file-list="fileList"
+                :on-change="onchange1"
             >
               <el-button size="small" type="primary">上传框架协议文件</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
           </template>
         </el-descriptions-item>
@@ -189,19 +187,20 @@
         </div>
       </div>
     </div>
+    <el-button size="medium" @click="back1">返回</el-button>
     <el-button type="primary" @click="addFa">创建框架协议</el-button>
   </div>
 </template>
 
 <script>
-import { addManagement, listDevice, selectItemsDevice } from '../../../api/system/addContract'
+import { addManagement, listDevice, selectItemsDevice, upOidbyOid } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
   data() {
     return {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      oTotalprice: 0,
+      // oTotalprice: 0,
       //获取框架计划ID
       jhId: this.$route.query.jhId,
       //设置label的样式
@@ -248,6 +247,7 @@ export default {
   },
   watch: {
     '$route.query.jhId': function(newJhId, oldJhId) {
+      console.log(newJhId, oldJhId)
       if (newJhId != oldJhId) {
         this.jhId = newJhId
         this.hh()
@@ -262,9 +262,19 @@ export default {
     }
   },
   methods: {
+    onchange1(files, fileList) {
+      this.fileList = fileList
+      console.log(this.fileList, 'fileList onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList.splice(this.fileList.indexOf(files[0]), 1)
+      }
+    },
     //创建框架协议
     addFa() {
-      // this.queryParams['lTableData'] = this.lTableData
+      this.submitNextUpload()
+    },
+    add() {
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
       this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
@@ -274,23 +284,32 @@ export default {
         }
         return true
       })
-      this.$refs.up1.submit()
-      console.log(111)
-      console.log(this.queryParams.oFile)
       addManagement(this.queryParams).then(response => {
         console.log(response)
+          if (response.msg === '操作成功') {
+          return upOidbyOid({"oid":response.data.frameManagement.oid,"jhId":response.data.frameManagement.jhId})
+        } else {
+          this.$message.error('添加失败')
+        }
+      }).then(res => {
+        console.log('打印二------------------')
+        console.log(res)
+        console.log('打印二------------------')
+        if (res.msg === '修改成功') {
+          this.$message.success('添加成功')
+          this.$router.push('/contract/fam')
+        } else {
+          this.$message.error('修改失败')
+        }
       })
     },
     //查询计划信息信息
     hh() {
       selectItemsDevice({ 'jhId': this.jhId }).then(response => {
-        console.log(response)
         this.queryParams.hName = response.rows[0].ppmFramePlan.bsSupplier.hName
         this.queryParams.hid = response.rows[0].ppmFramePlan.bsSupplier.hid
         this.queryParams.jhId = this.jhId
-        let list = response.rows
-        list.forEach((e, i) => {
-          console.log('e', e)
+        response.rows.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
             inName: e.ppmDevice.tName,
@@ -306,33 +325,26 @@ export default {
       })
     },
     //上传协议文件-------------------------------------------------
-    success(response, file, fileList) {
-      console.log(222)
-      this.fileList.push(file)
-      let hhh = fileList.map(obj => {
-        let newObj = obj
-        delete newObj.url
-        newObj.url = obj.response.data.url
-        delete newObj.name
-        newObj.name = obj.response.data.name
-        delete newObj.response
-        delete newObj.raw
-        delete newObj.percentage
-        delete newObj.status
-        delete newObj.uid
-        return newObj
-      })
-      this.queryParams.oFile = JSON.stringify(hhh)
+    success(response) {
+      console.log(111)
+      this.queryParams.oFile = response.data.url
+      console.log('打印up1-------------------------')
       console.log(this.queryParams.oFile)
-      // addManagement(this.queryParams).then(response => {
-      //   console.log(response)
-      // })
+      //调用下一个上传的方法
+      this.submitNextUpload()
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
+    submitNextUpload() {
+      // 根据条件判断调用下一个上传
+      if (this.fileList.length > 0 && this.queryParams.oFile == null) {
+        console.log('打印提交1-------------------------')
+        this.$refs.up1.submit()
+      } else {
+        console.log('打印提交2-------------------------')
+        this.add()
+      }
     },
-    handlePreview(file) {
-      console.log(file)
+    back1() {
+      this.$router.back()
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -457,7 +469,7 @@ export default {
         let kk = total + totalValue // 将每行的小计相加得到总价格
         return kk
       }, 0)
-    },/* ------------------------添加产品信息------------------------ */
+    }/* ------------------------添加产品信息------------------------ */
 
   }
 }

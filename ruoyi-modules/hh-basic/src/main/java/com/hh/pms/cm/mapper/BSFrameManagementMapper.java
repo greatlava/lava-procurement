@@ -58,5 +58,8 @@ public interface BSFrameManagementMapper
      * @return 结果
      */
     public int deleteBSFrameManagementByOids(Long[] oids);
+
+    //协议作废
+    public int updateXyCancel(Long oid);
 }
 

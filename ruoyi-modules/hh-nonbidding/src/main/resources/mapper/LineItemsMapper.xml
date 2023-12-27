@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.nobidding.mapper.LineItemsMapper">
+
+    <resultMap type="com.hh.nobidding.domain.PpmLineItems" id="PpmLineItemsResult">
+        <result property="vid"    column="vid"    />
+        <result property="vCode"    column="v_code"    />
+        <result property="sid"    column="sid"    />
+        <result property="jhId"    column="jh_id"    />
+        <result property="aid"    column="aid"    />
+        <result property="tid"    column="tid"    />
+        <result property="gid"    column="gid"    />
+        <result property="vCount"    column="v_count"    />
+        <result property="vPerson"    column="v_person"    />
+        <result property="vDeliveryTime"    column="v_delivery_time"    />
+        <result property="vDeliveryArea"    column="v_delivery_area"    />
+        <result property="vIllustrate"    column="v_illustrate"    />
+        <result property="procurementMethod"    column="procurement_method"    />
+    </resultMap>
+
+    <sql id="selectPpmLineItemsVo">
+        select vid, v_code, sid, jh_id, aid, tid, gid, v_count, v_person, v_delivery_time, v_delivery_area, v_illustrate, procurement_method from ppm_line_items
+    </sql>
+
+    <select id="selectPpmLineItemsList" parameterType="com.hh.nobidding.domain.PpmLineItems" resultMap="PpmLineItemsResult">
+        <include refid="selectPpmLineItemsVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectPpmLineItemsByVid" parameterType="Integer" resultMap="PpmLineItemsResult">
+        <include refid="selectPpmLineItemsVo"/>
+        where vid = #{vid}
+    </select>
+
+    <insert id="insertPpmLineItems" parameterType="com.hh.nobidding.domain.PpmLineItems" useGeneratedKeys="true" keyProperty="vid">
+        insert into ppm_line_items
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vCode != null">v_code,</if>
+            <if test="sid != null">sid,</if>
+            <if test="jhId != null">jh_id,</if>
+            <if test="aid != null">aid,</if>
+            <if test="tid != null">tid,</if>
+            <if test="gid != null">gid,</if>
+            <if test="vCount != null">v_count,</if>
+            <if test="vPerson != null">v_person,</if>
+            <if test="vDeliveryTime != null">v_delivery_time,</if>
+            <if test="vDeliveryArea != null">v_delivery_area,</if>
+            <if test="vIllustrate != null">v_illustrate,</if>
+            <if test="procurementMethod != null">procurement_method,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vCode != null">#{vCode},</if>
+            <if test="sid != null">#{sid},</if>
+            <if test="jhId != null">#{jhId},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="tid != null">#{tid},</if>
+            <if test="gid != null">#{gid},</if>
+            <if test="vCount != null">#{vCount},</if>
+            <if test="vPerson != null">#{vPerson},</if>
+            <if test="vDeliveryTime != null">#{vDeliveryTime},</if>
+            <if test="vDeliveryArea != null">#{vDeliveryArea},</if>
+            <if test="vIllustrate != null">#{vIllustrate},</if>
+            <if test="procurementMethod != null">#{procurementMethod},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePpmLineItems" parameterType="com.hh.nobidding.domain.PpmLineItems">
+        update ppm_line_items
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vCode != null">v_code = #{vCode},</if>
+            <if test="sid != null">sid = #{sid},</if>
+            <if test="jhId != null">jh_id = #{jhId},</if>
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="tid != null">tid = #{tid},</if>
+            <if test="gid != null">gid = #{gid},</if>
+            <if test="vCount != null">v_count = #{vCount},</if>
+            <if test="vPerson != null">v_person = #{vPerson},</if>
+            <if test="vDeliveryTime != null">v_delivery_time = #{vDeliveryTime},</if>
+            <if test="vDeliveryArea != null">v_delivery_area = #{vDeliveryArea},</if>
+            <if test="vIllustrate != null">v_illustrate = #{vIllustrate},</if>
+            <if test="procurementMethod != null">procurement_method = #{procurementMethod},</if>
+        </trim>
+        where vid = #{vid}
+    </update>
+
+    <delete id="deletePpmLineItemsByVid" parameterType="Integer">
+        delete from ppm_line_items where vid = #{vid}
+    </delete>
+
+    <delete id="deletePpmLineItemsByVids" parameterType="String">
+        delete from ppm_line_items where vid in
+        <foreach item="vid" collection="array" open="(" separator="," close=")">
+            #{vid}
+        </foreach>
+    </delete>
+
+        <resultMap id="ItemsDevice" type="com.hh.nobidding.domain.PpmLineItems">
+        <id column="vid" property="vid"/>
+        <association property="ppmFramePlan">
+            <id property="jhId" column="jh_id"/>
+            <association property="bsSupplier">
+                <id property="hid" column="hid"/>
+            </association>
+        </association>
+        <association property="ppmDevice">
+            <id property="tid" column="tid"/>
+        </association>
+    </resultMap>
+
+    <select id="selectItemsDevice" resultMap="ItemsDevice">
+        SELECT l.*,d.*
+		from ppm_line_items l
+		INNER join ppm_procurement_plan p on l.aid =p.aid
+		LEFT join ppm_device d on d.tid=l.tid
+		WHERE l.aid=#{aid}
+    </select>
+
+</mapper>

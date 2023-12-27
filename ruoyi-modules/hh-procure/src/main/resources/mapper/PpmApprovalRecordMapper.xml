@@ -1,36 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hh.procure.mapper.PpmApprovalRecordMapper">
 
 
     <resultMap type="com.hh.procure.domain.PpmApprovalRecord" id="PpmApprovalRecordResult">
-        <result property="rid"    column="rid"    />
-        <result property="aid"    column="aid"    />
-        <result property="node"    column="node"    />
-        <result property="processedBy"    column="processed_by"    />
-        <result property="depnt"    column="depnt"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="opinion"    column="opinion"    />
-        <result property="opinionDetails"    column="opinion_details"    />
+        <result property="rid" column="rid"/>
+        <result property="aid" column="aid"/>
+        <result property="node" column="node"/>
+        <result property="processedBy" column="processed_by"/>
+        <result property="depnt" column="depnt"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="opinion" column="opinion"/>
+        <result property="opinionDetails" column="opinion_details"/>
     </resultMap>
 
     <sql id="selectPpmApprovalRecordVo">
-        select rid, aid, node, processed_by, depnt, update_time, opinion, opinion_details from ppm_approval_record
+        select rid,
+               aid,
+               node,
+               processed_by,
+               depnt,
+               update_time,
+               opinion,
+               opinion_details
+        from ppm_approval_record
     </sql>
 
-    <select id="selectPpmApprovalRecordList" parameterType="com.hh.procure.domain.PpmApprovalRecord" resultMap="PpmApprovalRecordResult">
+    <select id="selectPpmApprovalRecordList" parameterType="com.hh.procure.domain.PpmApprovalRecord"
+            resultMap="PpmApprovalRecordResult">
         <include refid="selectPpmApprovalRecordVo"/>
         <where>
-            <if test="rid != null "> and rid = #{rid}</if>
-            <if test="aid != null "> and aid = #{aid}</if>
-            <if test="node != null  and node != ''"> and node = #{node}</if>
-            <if test="processedBy != null  and processedBy != ''"> and processed_by = #{processedBy}</if>
-            <if test="depnt != null  and depnt != ''"> and depnt = #{depnt}</if>
-            <if test="updateTime != null "> and update_time = #{updateTime}</if>
-            <if test="opinion != null  and opinion != ''"> and opinion = #{opinion}</if>
-            <if test="opinionDetails != null  and opinionDetails != ''"> and opinion_details = #{opinionDetails}</if>
+            <if test="rid != null ">and rid = #{rid}</if>
+            <if test="aid != null ">and aid = #{aid}</if>
+            <if test="node != null  and node != ''">and node = #{node}</if>
+            <if test="processedBy != null  and processedBy != ''">and processed_by = #{processedBy}</if>
+            <if test="depnt != null  and depnt != ''">and depnt = #{depnt}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="opinion != null  and opinion != ''">and opinion = #{opinion}</if>
+            <if test="opinionDetails != null  and opinionDetails != ''">and opinion_details = #{opinionDetails}</if>
         </where>
     </select>
 
@@ -39,7 +48,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where rid = #{rid}
     </select>
 
-    <insert id="insertPpmApprovalRecord" parameterType="com.hh.procure.domain.PpmApprovalRecord" useGeneratedKeys="true" keyProperty="rid">
+    <insert id="insertPpmApprovalRecord" parameterType="com.hh.procure.domain.PpmApprovalRecord" useGeneratedKeys="true"
+            keyProperty="rid">
         insert into ppm_approval_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="aid != null">aid,</if>
@@ -76,7 +86,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deletePpmApprovalRecordByRid" parameterType="Integer">
-        delete from ppm_approval_record where rid = #{rid}
+        delete
+        from ppm_approval_record
+        where rid = #{rid}
     </delete>
 
     <delete id="deletePpmApprovalRecordByRids" parameterType="String">

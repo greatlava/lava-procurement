@@ -37,7 +37,6 @@ public class BsOperatorController extends BaseController {
     /**
      * 查询业务经办人信息列表
      */
-    @RequiresPermissions("system:operator:list")
     @GetMapping("/list")
     public TableDataInfo list(BsOperator bsOperator) {
         startPage();
@@ -60,13 +59,11 @@ public class BsOperatorController extends BaseController {
     /**
      * 获取业务经办人信息详细信息
      */
-    @RequiresPermissions("system:operator:query")
     @GetMapping(value = "/{ywId}")
     public AjaxResult getInfo(@PathVariable("ywId") Long ywId) {
         return success(bsOperatorService.selectBsOperatorByYwId(ywId));
     }
 
-    @RequiresPermissions("system:operator:query")
     @GetMapping(value = "/getInfoByHid/{hid}")
     public AjaxResult getInfoByHid(@PathVariable("hid") Long hid) {
         return success(bsOperatorService.selectBsOperatorByHid(hid));

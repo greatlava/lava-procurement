@@ -321,31 +321,28 @@
             <el-upload
                 ref="up1"
                 class="upload-demo"
-                multiple
                 :action="url"
                 :before-remove="beforeRemove1"
-                :auto-upload="true"
-                :limit="5"
+                :auto-upload="false"
+                :limit="1"
                 :on-exceed="handleExceed1"
                 :on-success="success1"
-                :file-list="fileList1"
+                :on-change="onchange1"
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件</div>
             </el-upload>
           </el-form-item>
           <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
                 ref="up2"
                 class="upload-demo"
-                multiple
                 :action="url"
                 :before-remove="beforeRemove2"
-                :auto-upload="true"
-                :limit="5"
+                :auto-upload="false"
+                :limit="1"
                 :on-exceed="handleExceed2"
                 :on-success="success2"
-                :file-list="fileList2"
+                :on-change="onchange2"
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
@@ -354,14 +351,13 @@
             <el-upload
                 ref="up3"
                 class="upload-demo"
-                multiple
                 :action="url"
                 :before-remove="beforeRemove3"
-                :auto-upload="true"
+                :auto-upload="false"
                 :limit="1"
                 :on-exceed="handleExceed3"
                 :on-success="success3"
-                :file-list="fileList3"
+                :on-change="onchange3"
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
             </el-upload>
@@ -376,7 +372,7 @@
     </div>
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy">创建框架协议</el-button>
+      <el-button size="medium" type="primary" @click="addXy">创建合同</el-button>
     </div>
   </div>
 </template>
@@ -384,16 +380,13 @@
 
 <script>
 import { getTender } from '../../../api/system/tender/tender'
-import { addContract, getContract, listDevice } from '../../../api/system/addContract'
+import { addContract, listDevice } from '../../../api/system/addContract'
 import { getSupplier, listSupplier } from '../../../api/system/supplier'
 import { getOperator } from '../../../api/system/operator'
 
 export default {
   data() {
     return {
-      fileList1: [],
-      fileList2: [],
-      fileList3: [],
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
       /* 招标项目ID */
       sid: this.$route.query.sid,
@@ -489,7 +482,8 @@ export default {
         eDocuments: null,
         eOpinion: null,
         eDeliveryTime: null,
-        bsSign: {}
+        bsSign: {},
+        comPubAttachments: {}
       },
       //付款yued
       payForm: {
@@ -559,8 +553,15 @@ export default {
       },
       rules3: {},
       selectRow: null,
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
       //附件
-      ComPubAttachments: null
+      ComPubAttachments: {
+        anSize: null,
+        anUrl: null,
+        anName: null
+      }
     }
   },
   mounted() {
@@ -575,10 +576,38 @@ export default {
     })
   },
   methods: {
+    onchange1(files, fileList) {
+      this.fileList1 = fileList
+      console.log(this.fileList1, 'fileList1 onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList1.splice(this.fileList1.indexOf(files[0]), 1)
+      }
+    },
+    onchange2(files, fileList) {
+      this.fileList2 = fileList
+      console.log(this.fileList2, 'fileList2 onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
+      }
+    },
+    onchange3(files, fileList) {
+      this.fileList3 = fileList
+      console.log(this.fileList3, 'fileList3 onchange')
+      if (files.size == 0) {
+        this.$message.error('选择的文件不能为空，请重新选择！')
+        this.fileList3.splice(this.fileList3.indexOf(files[0]), 1)
+      }
+    },
     //创建合同
     addXy() {
+      //判断是否上传文件
+      this.submitNextUpload()
+    },
+    add() {
       this.form.sid = this.sid
-      alert(this.form.sid)
+      // alert(this.form.sid)
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         if (e.tid == null) {
@@ -595,11 +624,17 @@ export default {
         }
         return true
       })
-
       this.form.bsSign = this.qsFormData
-      this.form['ComPubAttachments'] = this.ComPubAttachments
+      this.form.comPubAttachments = this.ComPubAttachments
+      console.log('打印this.form.ComPubAttachments')
+      console.log(this.form.ComPubAttachments)
+      //添加合同
       addContract(this.form).then(response => {
         console.log(response)
+        if (response.msg=="添加成功"){
+          this.$router.push("/contract/cm")
+          this.$message.success("添加成功")
+        }
       })
     },
     //上传协议文件-------------------------------------------------
@@ -607,29 +642,20 @@ export default {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove1(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
-    },
-    success1(response, file, fileList) {
-      console.log(111)
-      this.fileList1.push(file)
-      console.log(fileList)
-      console.log(response)
-      console.log(file)
-      let hhh = fileList.map(obj => {
-        let newObj = obj
-        delete newObj.url
-        newObj.url = obj.response.data.url
-        delete newObj.name
-        newObj.name = obj.response.data.name
-        delete newObj.response
-        delete newObj.raw
-        delete newObj.percentage
-        delete newObj.status
-        delete newObj.uid
-        return newObj
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList2 = []
+        this.ComPubAttachments.anUrl = null
+        this.ComPubAttachments.anName = null
+        this.ComPubAttachments.anSize = null
       })
-      this.form.eImage = JSON.stringify(hhh)
+    },
+    success1(response) {
+      console.log(111)
+      this.form.eImage = response.data.url
+      console.log('打印up1-------------------------')
       console.log(this.form.eImage)
+      //调用下一个上传的方法
+      this.submitNextUpload()
     },
     handleExceed2(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -637,24 +663,15 @@ export default {
     beforeRemove2(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
-    success2(response, file, fileList) {
+    success2(response, fileList) {
       console.log(222)
-      this.fileList2.push(file)
-      let hhh = fileList.map(obj => {
-        let newObj = obj
-        delete newObj.url
-        newObj.url = obj.response.data.url
-        delete newObj.name
-        newObj.name = obj.response.data.name
-        delete newObj.response
-        delete newObj.raw
-        delete newObj.percentage
-        delete newObj.status
-        delete newObj.uid
-        return newObj
-      })
-      this.form.eDocuments = JSON.stringify(hhh)
-      console.log(this.form.eDocuments)
+      this.ComPubAttachments.anName = response.data.name
+      this.ComPubAttachments.anUrl = response.data.url
+      this.ComPubAttachments.anSize = fileList.size
+      console.log('打印up2-------------------------')
+      console.log(this.ComPubAttachments)
+      //调用下一个上传的方法
+      this.submitNextUpload()
     },
     handleExceed3(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -662,24 +679,27 @@ export default {
     beforeRemove3(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
     },
-    success3(response, file, fileList) {
+    success3(response) {
       console.log(333)
-      this.fileList3.push(file)
-      let hhh = fileList.map(obj => {
-        let newObj = obj
-        delete newObj.url
-        newObj.url = obj.response.data.url
-        delete newObj.name
-        newObj.name = obj.response.data.name
-        delete newObj.response
-        delete newObj.raw
-        delete newObj.percentage
-        delete newObj.status
-        delete newObj.uid
-        return newObj
-      })
-      this.ComPubAttachments = JSON.stringify(hhh)
-      console.log(this.ComPubAttachments)
+      console.log(response)
+      this.form.eDocuments = response.data.url
+      console.log('打印up3-------------------------')
+      console.log(this.form.eDocuments)
+      //调用下一个上传的方法
+      this.submitNextUpload()
+    },
+    submitNextUpload() {
+      // 根据条件判断调用下一个上传
+      if (this.fileList1.length > 0 && this.form.eImage == null) {
+        this.$refs.up1.submit()
+      } else if (this.fileList2.length > 0 && this.ComPubAttachments.anUrl == null && this.ComPubAttachments.anSize == null && this.ComPubAttachments.anName == null) {
+        this.$refs.up2.submit()
+      } else if (this.fileList3.length > 0 && this.form.eDocuments == null) {
+        this.$refs.up3.submit()
+      } else {
+        console.log('打印提交-------------------------')
+        this.add()
+      }
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
@@ -719,14 +739,14 @@ export default {
     selectSupplier() {
       /* 业务经办人信息 */
       getOperator(this.hid).then(response => {
-        console.log(response)
+        // console.log(response)
         let k = response.data
         this.qsFormData.gnPbcontact = k.ywName
         this.qsFormData.gnPbcif = k.ywPhone
       })
       /* 供应商信息 */
       getSupplier(this.hid).then(res => {
-        console.log('打印了供应商的信息')
+        // console.log('打印了供应商的信息')
         console.log(res)
         let k = res.data
         this.qsFormData.gnPbname = k.hName

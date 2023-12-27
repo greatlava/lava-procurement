@@ -41,7 +41,8 @@
             </el-table-column>
             <el-table-column label="采购计划名称" align="center" prop="aName">
               <template slot-scope="scope">
-                <span style="color: #008bcb;cursor: pointer" @click="handleClick(scope.row)">{{
+                <span v-hasPermi="['system:attachments:list']" style="color: #008bcb;cursor: pointer"
+                      @click="handleClick(scope.row)">{{
                     scope.row.aName
                   }}</span>
               </template>
@@ -56,7 +57,7 @@
                   type="text"
                   icon="el-icon-edit"
                   @click="handleUpdate(scope.row)"
-                  v-hasPermi="['system:plan:edit']"
+                  v-hasPermi="['system:procurement:edit']"
                 >修改
                 </el-button>
                 <el-button
@@ -64,8 +65,11 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
-                  v-hasPermi="['system:plan:view']"
+                  v-hasPermi="['system:procurement:remove']"
                 >删除
+                </el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
                 </el-button>
               </template>
             </el-table-column>
@@ -101,7 +105,9 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -118,7 +124,9 @@
             <el-table-column label="创建日期" align="center" prop="createTime"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                <el-button v-hasPermi="['system:attachments:list']" @click="handleClick(scope.row)" type="text"
+                           size="small">查看
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -217,7 +225,7 @@
               <el-table-column label="所属部门" align="center" prop="depnt"/>
               <el-table-column label="处理时间" align="center" prop="updateTime" width="180">
                 <template slot-scope="scope">
-                  <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+                  <span>{{ scope.row.updateTime }}</span>
                 </template>
               </el-table-column>
               <el-table-column label="处理意见" align="center" prop="opinion"/>
@@ -229,7 +237,7 @@
                     type="text"
                     icon="el-icon-delete"
                     @click="handleDelete(scope.row)"
-                    v-hasPermi="['system:record:remove']"
+                    v-hasPermi="['system:procurement:remove']"
                   >删除
                   </el-button>
                 </template>
@@ -238,15 +246,20 @@
           </el-tab-pane>
         </el-tabs>
         <div slot="footer" class="dialog-footer">
-          <el-button v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
+          <el-button v-hasPermi="['system:procurement:submit']"
+                     v-if="form.aAstate == 0" type="primary" v-loading.fullscreen.lock="fullscreenLoading"
                      @click="sumbitPlan">提 交
           </el-button>
-          <el-button type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading"
-                     v-if="form.aAstate == 1">审核
-          </el-button>
-          <el-button type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading"
-                     v-if="form.aAstate == 1">驳回
-          </el-button>
+
+          <div style="display: inline-block;margin-right: 10px" v-if="form.aAstate == 1">
+            <el-button v-hasPermi="['system:procurement:allow']"
+                       type="primary" @click="approved" v-loading.fullscreen.lock="fullscreenLoading">审核
+            </el-button>
+            <el-button v-hasPermi="['system:procurement:reject']"
+                       type="danger" @click="rejectPlan" v-loading.fullscreen.lock="fullscreenLoading">驳回
+            </el-button>
+          </div>
+
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
@@ -417,7 +430,7 @@ export default {
             this.form = res.data;
             if (res.data.items) {
               res.data.items.forEach((e, i) => {
-                if (e.ppmBudget.duId){
+                if (e.ppmBudget.duId) {
                   this.budgetData.push(e.ppmBudget);
                 }
               })
@@ -465,10 +478,12 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false
-      this.budgetData = [];
-      this.itemList = [];
-      this.paneName = "basic";
-      this.reset()
+      setTimeout(() => {
+        this.budgetData = [];
+        this.itemList = [];
+        this.paneName = "basic";
+        this.reset()
+      }, 500)
     },
     // 表单重置
     reset() {

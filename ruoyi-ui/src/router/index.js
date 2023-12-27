@@ -301,8 +301,7 @@ export const dynamicRoutes = [
         meta: { title: '新增采购计划', activeMenu: '/purchase' }
       }
     ]
-  },
-  {
+  }, {
     path: '/frameworkPlan/FrameworkPlanInsert',
     component: Details,
     children: [
@@ -335,6 +334,102 @@ export const dynamicRoutes = [
         component: () => import('@/views/contract/cm/update'),
         name: 'Update',
         meta: { title: '修改合同', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/updateFa',
+    component: Details,
+    children: [
+      {
+        path: 'updateFa?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/fam/updateFa'),
+        name: 'UpdateFa',
+        meta: { title: '修改合同', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/examineFa',
+    component: Details,
+    children: [
+      {
+        path: 'examineFa?oid=:oid(\\d+)',
+        component: () => import('@/views/contract/fam/examineFa'),
+        name: 'examineFa',
+        meta: { title: '框架协议审核', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/details',
+    component: Details,
+    children: [
+      {
+        path: 'details?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/cm/details'),
+        name: 'Details',
+        meta: { title: '合同详情', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/contract/examine',
+    component: Details,
+    children: [
+      {
+        path: 'examine?eid=:eid(\\d+)',
+        component: () => import('@/views/contract/cm/examine'),
+        name: 'Examine',
+        meta: { title: '合同详情', activeMenu: '/contract' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details1',
+    component: Details,
+    children: [
+      {
+        path: 'details1?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details1'),
+        name: 'Details1',
+        meta: { title: '查看询价', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details2',
+    component: Details,
+    children: [
+      {
+        path: 'details2?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details2'),
+        name: 'Details2',
+        meta: { title: '查看竞争性谈判', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details3',
+    component: Details,
+    children: [
+      {
+        path: 'details3?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details3'),
+        name: 'Details3',
+        meta: { title: '查看委托', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details4',
+    component: Details,
+    children: [
+      {
+        path: 'details4?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details4'),
+        name: 'Details4',
+        meta: { title: '查看单一来源', activeMenu: '/noTender/RFQ' }
       }
     ]
   }

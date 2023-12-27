@@ -51,7 +51,8 @@
       <!--      <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
       <el-table-column label="创建人" align="center" prop="createBy"/>
       <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
-      <el-table-column label="创建日期" align="center" prop="createTime"/>
+      <el-table-column label="创建时间" align="center" prop="createTime"/>
+      <el-table-column label="修改时间" align="center" prop="updateTime"/>
       <el-table-column label="采购计划状态" align="center" prop="aAstate">
         <template slot-scope="scope">
           <el-tag type="danger" v-if="scope.row.aAstate == 3">已寻源</el-tag>
@@ -77,7 +78,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-    <el-dialog  @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
+    <el-dialog @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
       <el-tabs @tab-click="handleClick" v-model="paneName">
         <el-descriptions direction="vertical" class="margin-top" :column="4" size="medium" border>
           <el-descriptions-item label="采购计划编号">{{ form.aCode }}</el-descriptions-item>
@@ -236,6 +237,11 @@ export default {
     }
   },
   created() {
+    let obj = this.$route.query;
+    console.log(obj)
+    if (obj && obj.aid) {
+      this.handleClick(obj);
+    }
     this.getList()
   },
   methods: {
@@ -252,6 +258,7 @@ export default {
       }
     },
     getList() {
+      alert(12321)
       this.loading = true;
       this.planList = [];
       FindProcurementPlanBy(this.queryParams).then(response => {
@@ -278,7 +285,6 @@ export default {
     sumbitType() {
       this.fullscreenLoading = true;
       updateStateAndAddBidWinning(this.yilist, this.typeRadio, this.noBidType).then(res => {
-        console.log("res-----", res);
         this.fullscreenLoading = false
         this.openByType = false;
         this.$modal.msgSuccess("操作成功！！");
@@ -321,7 +327,7 @@ export default {
         this.form = res.data;
         if (res.data.items) {
           res.data.items.forEach((e, i) => {
-            if (e.ppmBudget.duId){
+            if (e.ppmBudget.duId) {
               this.budgetData.push(e.ppmBudget);
             }
           })

@@ -239,7 +239,6 @@
               <el-table-column label="发证单位" align="center" prop="zzUnit"/>
               <el-table-column label="发证日期" align="center" prop="zzDate"/>
               <el-table-column label="有效期至" align="center" prop="zzExpirationDate"/>
-              <el-table-column label="扫描件" align="center" prop="zzScan"/>
             </el-table>
             <pagination
               v-show="total1>0"
@@ -260,7 +259,6 @@
               <el-table-column label="合同金额（万元）" align="center" prop="yjRmb"/>
               <el-table-column label="买方业务代表" align="center" prop="yjBbr"/>
               <el-table-column label="买方业务代表联系电话" align="center" prop="yjPhone"/>
-              <el-table-column label="合同扫描件" align="center" prop="yjScanContract"/>
             </el-table>
             <pagination
               v-show="total2>0"
@@ -278,11 +276,6 @@
               <el-table-column label="年度" align="center" prop="cAnnual"/>
               <el-table-column label="净利润（万元）" align="center" prop="cNetProfit"/>
               <el-table-column label="资产负债率（%）" align="center" prop="cLev"/>
-              <el-table-column label="财务审计报告扫描件" align="center" prop="cScanFar"/>
-              <el-table-column label="附件审计报告" align="center" prop="cScanAar"/>
-              <el-table-column label="资产负债表扫描件" align="center" prop="cScanAl"/>
-              <el-table-column label="利润表扫描件" align="center" prop="cScanIs"/>
-              <el-table-column label="现金流量表扫描件" align="center" prop="cScanCfs"/>
             </el-table>
             <pagination
               v-show="total3>0"
@@ -373,13 +366,13 @@ export default {
       //相关附件
       accessoriesList: [],
       //营业执照
-      hCopies: null,
+      hCopies: '',
       hCopiesList: [],
       //法人身份证
-      idCardCopy: null,
+      idCardCopy: '',
       idCardCopyList: [],
       //业务经办人身份证
-      ywIdCardCopy: null,
+      ywIdCardCopy: '',
       ywIdCardCopyList: [],
       //业务经办人
       operator: {
@@ -450,10 +443,10 @@ export default {
           delAccess(this.zr_id).then(res => {
             if (res.code == 200) {
               this.$message({
-                message: '操作成功！',
+                message: '通过成功！',
                 type: 'success'
               });
-              this.cancel()
+              window.close()
             }
           })
         }
@@ -466,7 +459,7 @@ export default {
         this.loading = true
         if (response.code == 200) {
           this.$message({
-            message: '操作成功！',
+            message: '驳回成功！',
             type: 'success'
           });
         }
@@ -495,6 +488,12 @@ export default {
         this.hActualCapital = response.data.hActualCapital
         this.fState = response.data.fState
         this.fStatus = response.data.fStatus
+        this.hCopies = JSON.parse(response.data.hCopies)[0].url
+        this.hCopiesList.push(JSON.parse(response.data.hCopies)[0].url)
+        this.idCardCopy = JSON.parse(response.data.hJuridicalCopies)[0].url
+        for (let i = 0; i < JSON.parse(response.data.hJuridicalCopies).length; i++) {
+          this.idCardCopyList.push(JSON.parse(response.data.hJuridicalCopies)[i].url)
+        }
         //业务经办人
         getOperator(this.hid).then(res => {
           this.operator.ywName = res.data.ywName
@@ -502,6 +501,10 @@ export default {
           this.operator.ywIdcrad = res.data.ywIdcrad
           this.operator.ywMailbox = res.data.ywMailbox
           this.operator.ywScanIdcard = res.data.ywScanIdcard
+          this.ywIdCardCopy = JSON.parse(res.data.ywScanIdcard)[0].url
+          for (let i = 0; i < JSON.parse(res.data.ywScanIdcard).length; i++) {
+            this.ywIdCardCopyList.push(JSON.parse(res.data.ywScanIdcard)[i].url)
+          }
         })
         //核心技术人员
         this.personnel.hid = response.data.hid

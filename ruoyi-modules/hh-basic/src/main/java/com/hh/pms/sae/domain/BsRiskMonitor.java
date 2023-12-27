@@ -38,7 +38,7 @@ public class BsRiskMonitor extends BaseEntity {
     /**
      * 发生日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @Excel(name = "发生日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rmHappenDate;
 
@@ -57,7 +57,7 @@ public class BsRiskMonitor extends BaseEntity {
     /**
      * 处理日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @Excel(name = "处理日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rmHandingDate;
 

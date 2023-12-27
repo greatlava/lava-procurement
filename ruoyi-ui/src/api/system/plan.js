@@ -94,3 +94,59 @@ export function selectePpmProcurementPlanAndComPubAttamentByAid(data) {
     data: data
   })
 }
+
+export function selectPpmpProcurementCount(state) {
+  return request({
+    url: "/ppm/plan/selectPpmpProcurementCount",
+    method: "post",
+    data: {aAstate: state},
+    headers: {
+      "repeatSubmit": false
+    }
+  })
+}
+
+
+export function selectFarmeworkPlanCount() {
+  return request({
+    url: "/ppm/framework/selectFarmeworkPlanCount",
+    method: "post"
+  })
+}
+
+export function selectContractCount() {
+  return request({
+    url: "/ppm/plan/selectContractCount",
+    method: "post"
+  })
+}
+
+export function queryTotalPurchaseAmount() {
+  return request({
+    url: "/ppm/plan/queryTotalPurchaseAmount",
+    method: "post"
+  })
+}
+
+export function selectTenderCount() {
+  return request({
+    url: "/ppm/plan/selectTenderCount",
+    method: "post"
+  })
+}
+
+export function selectTenderByState(data) {
+  return request({
+    url: "/ppm/plan/selectTenderByState",
+    method: "post",
+    data: data
+  })
+}
+
+export function selectTenderByStateCount(data) {
+  return request({
+    url: "/ppm/plan/selectTenderByStateCount",
+    method: "post",
+    data: data
+  })
+}

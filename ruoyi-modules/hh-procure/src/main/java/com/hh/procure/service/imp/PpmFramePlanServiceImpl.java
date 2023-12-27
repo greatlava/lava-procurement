@@ -96,9 +96,26 @@ public class PpmFramePlanServiceImpl implements IPpmFramePlanService {
         return ppmFramePlanMapper.updateFarmeworkPlanStatusByJhId(ppmFramePlan);
     }
 
+    @Override
+    public int selectFarmeworkPlanCount() {
+        return ppmFramePlanMapper.selectFarmeworkPlanCount();
+    }
+
     //查询已完成并且未创建框架协议的框架计划
     @Override
     public List<PpmFramePlan> selectBsFramePlanList(PpmFramePlan ppmFramePlan) {
         return ppmFramePlanMapper.selectBsFramePlanList(ppmFramePlan);
+    }
+
+    //(协议作废)修改oid为空
+    @Override
+    public int updatePpmFramePlanByOid(Long oid) {
+        return ppmFramePlanMapper.updatePpmFramePlanbyOid(oid);
+    }
+
+    //框架协议新增后修改框架计划oid
+    @Override
+    public int updateOidbyOid(PpmFramePlan ppmFramePlan) {
+        return ppmFramePlanMapper.updateOidbyOid(ppmFramePlan);
     }
 }

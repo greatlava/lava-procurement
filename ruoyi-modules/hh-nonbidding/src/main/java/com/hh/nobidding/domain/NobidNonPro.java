@@ -49,22 +49,16 @@ public class NobidNonPro extends BaseEntity {
     /**
      * 生成时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
     @Excel(name = "生成时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gSpawnTime;
 
     /**
      * 报价截至时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
     @Excel(name = "报价截至时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gDeadline;
-
-    /**
-     * 单据状态
-     */
-    @Excel(name = "单据状态")
-    private Long gStatus;
 
     /**
      * 报价数量
@@ -146,14 +140,6 @@ public class NobidNonPro extends BaseEntity {
         return gDeadline;
     }
 
-    public void setgStatus(Long gStatus) {
-        this.gStatus = gStatus;
-    }
-
-    public Long getgStatus() {
-        return gStatus;
-    }
-
     public void setgCount(Long gCount) {
         this.gCount = gCount;
     }
@@ -197,7 +183,6 @@ public class NobidNonPro extends BaseEntity {
                 .append("gIsPublic", getgIsPublic())
                 .append("gSpawnTime", getgSpawnTime())
                 .append("gDeadline", getgDeadline())
-                .append("gStatus", getgStatus())
                 .append("gCount", getgCount())
                 .append("gUnit", getgUnit())
                 .append("gRounds", getgRounds())
