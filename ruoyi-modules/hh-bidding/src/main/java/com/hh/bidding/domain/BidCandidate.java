@@ -65,8 +65,8 @@ public class BidCandidate extends BaseEntity
     private Long zBidder;
 
     /** 发送时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发送时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "发送时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date zSendTime;
 
     @Excel(name = "供应商名称")

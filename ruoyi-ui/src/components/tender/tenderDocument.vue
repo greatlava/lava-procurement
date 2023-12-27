@@ -8,19 +8,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:documents:add']"
         >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:documents:edit']"
-        >修改</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -30,7 +18,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:documents:remove']"
         >删除</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -38,7 +25,7 @@
 
     <el-table v-loading="loading" :data="documentsList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="wid" />
+      <el-table-column label="序号" align="center" type="index"/>
       <el-table-column label="文件标题" align="center" prop="wTitle"/>
       <el-table-column label="文件大小(kb)" align="center" prop="wSize" />
       <el-table-column label="上传时间" align="center" prop="wUploadTime" width="180">
@@ -48,16 +35,15 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-<!--          <router-link :to="scope.row.url == null?'aaa':scope.row.url">-->
           <a :href="scope.row.url">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-view"
-          >预览</el-button>
-<!--          </router-link>-->
+            icon="el-icon-download"
+          >下载</el-button>
           </a>
-          <el-button
+
+          <el-button  style="margin-left: 10px"
             size="mini"
             type="text"
             icon="el-icon-edit"
@@ -101,7 +87,7 @@
                      :on-change="changeFileLength"
                      :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"
                      :on-progress="handleFileUploadProgress"
-                     :on-success="handleFileSuccess" :auto-upload="false" :disabled="this.queryParams.type === 'update'">
+                     :on-success="handleFileSuccess" :auto-upload="false">
             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
             <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>
           </el-upload>
@@ -189,7 +175,7 @@ export default {
           Authorization: "Bearer " + getToken()
         },
         // 上传的地址
-        url: process.env.VUE_APP_BASE_API + "/bidding/documents/upload2",
+        url: process.env.VUE_APP_BASE_API + "/bidding/documents/upload1",
       }
     };
   },
@@ -197,11 +183,6 @@ export default {
     this.getList();
   },
   methods: {
-    isTextOrImageFile(file) {
-      // 检查文件类型是否是可以直接在浏览器中预览的类型，这里只检查了文本文件和图像文件，你可以根据需要添加更多的类型检查
-      const validTypes = ['text/plain', 'image/jpeg', 'image/png', 'image/gif', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.document.12'];
-      return validTypes.includes(file.type);
-    },
     /** 查询招标文件列表 */
     getList() {
       this.loading = true;
@@ -240,6 +221,7 @@ export default {
       this.title = "添加招标文件";
       this.loading =true;
       this.queryParams.type='add';
+      this.upload.fileList=[];
       this.form.sid = this.$route.query.sid;
       setTimeout(()=>{
         this.loading = false;
@@ -325,11 +307,11 @@ export default {
       console.log(file,"file");
       console.log(fileList,"filelist");
 
-      this.form.fileName = response.data.name;//文件名
-      this.form.url = response.data.url;//查询路径
+      this.form.fileName = file.name;//文件名
+      this.form.url = response.data.data.url;//查询路径
       this.uploadFiles.push(file);
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
-      if (this.uploadFiles.length == this.filesLength){
+      if (this.uploadFiles.length > 0){
         //将上传文件信息从fileList中拼接
         this.form.fileList=fileList;
         if(this.queryParams.type ==='update'){
@@ -354,6 +336,7 @@ export default {
       this.upload.isUploading = false;
     },
     beforeRemove(file, fileList) {
+      this.upload.fileList = [];
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     beforeUpload(file) {

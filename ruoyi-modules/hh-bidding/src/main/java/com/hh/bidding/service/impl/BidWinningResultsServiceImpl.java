@@ -92,4 +92,9 @@ public class BidWinningResultsServiceImpl implements IBidWinningResultsService
     {
         return bidWinningResultsMapper.deleteBidWinningResultsByGsId(gsId);
     }
+
+    @Override
+    public List<BidWinningResults> selectResultSupp(Long sid) {
+        return bidWinningResultsMapper.selectResultSupp(sid);
+    }
 }

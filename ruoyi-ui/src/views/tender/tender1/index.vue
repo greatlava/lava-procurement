@@ -32,17 +32,24 @@
         </el-form>
       </el-row>
     </div>
+    <el-row :gutter="10" class="mb8">
+      <right-toolbar @queryTable="getList"></right-toolbar>
+    </el-row>
     <el-table v-loading="loading" :data="tenderList" @selection-change="handleSelectionChange">
       <el-table-column label="序号" align="center" prop="orderNum" width="80"/>
-      <el-table-column label="项目编号" align="center" prop="sCode"/>
-      <el-table-column label="项目名称" align="center" prop="sName"/>
-      <el-table-column prop="sWay" label="招标方式" align="center">
+      <el-table-column label="项目编号" align="center" prop="sCode" width="250"/>
+      <el-table-column label="项目名称" align="center" prop="sName" width="400"/>
+      <el-table-column prop="sWay" label="招标方式" align="center" width="200">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.bid_tender_biddingmethod" :value="scope.row.sWay"/>
         </template>
       </el-table-column>
-      <el-table-column label="项目负责人" align="center" prop="sLeader"/>
-      <el-table-column label="项目状态" align="center" prop="sProjectState">
+      <el-table-column label="项目负责人" align="center" prop="sLeader" width="200">
+        <template slot-scope="scope">
+          {{ scope.row.sLeader || '——' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="项目状态" align="center" prop="sProjectState" width="250">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.bid_tender_state" :value="scope.row.sProjectState"/>
         </template>
@@ -50,25 +57,23 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <router-link :to="'/tender/update?type=update&sid='+scope.row.sid">
-          <el-button v-if="scope.row.sProjectState === 2"
+          <el-button v-if="scope.row.sProjectState === 1"
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
           >修改</el-button>
           </router-link>
-          <el-button v-if="scope.row.sProjectState === 2"
+          <el-button v-if="scope.row.sProjectState === 1"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
           >删除</el-button>
           <router-link :to="'/tender/bidding?type=bidding&sid='+scope.row.sid">
-          <el-button v-if="scope.row.sProjectState === 1"
+          <el-button v-if="scope.row.sProjectState != 1"
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click=""
           >进入项目</el-button>
           </router-link>
           <router-link :to="'/tender/details?type=details&sid='+scope.row.sid">
@@ -155,10 +160,13 @@ export default {
     query() {
       this.queryParams.sName = this.formData.field108;//项目名称
       let range = this.formData.field101;//查询时间范围
-     if(range != null || range != ''){
+      console.log(range,"range");
+     if(range){
        this.queryParams.rangeStartTime= range[0];//时间范围开始
        this.queryParams.rangeEndTime = range[1];//时间范围截至
      }
+      this.queryParams.rangeStartTime= null;//时间范围开始
+      this.queryParams.rangeEndTime = null;//时间范围截至
       this.handleQuery();//搜索按钮点击方法
       this.reset();//清空查询条件
     },

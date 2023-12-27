@@ -154,7 +154,7 @@
               <template>
                 <el-button type="primary" @click="subApplication" v-show="isType=='add'">确定</el-button>
                 <el-button type="primary" @click="updateApplication" v-show="isType=='update'">修改</el-button>
-                <el-button @click="cancel">取消</el-button>
+                <el-button @click="cancel2">取消</el-button>
               </template>
             </el-descriptions-item>
           </el-descriptions>
@@ -405,9 +405,12 @@
       },
       //打开抽取专家对话框
       openDrawExerpt(){
+        console.log(this.queryParams,"this.queryParams");
         listApplications(this.queryParams).then(res=>{
+          // console.log(res,"resssssss");
           if(res.rows.length > 0){
             this.isType = "update";
+            // alert(this.isType);
             this.queryParams.xStartTime = res.rows[0].xStartTime;
             this.queryParams.xEndTime = res.rows[0].xEndTime;
             this.queryParams.xDaiCount = res.rows[0].xDaiCount;
@@ -417,6 +420,7 @@
             this.queryParams.xid = res.rows[0].xid;
           }else{
             this.isType = "add";
+            // alert(this.isType);
             this.queryParams.xWay = "1";
           }
           this.queryParams.xType = this.tenderList[0].sSway;
@@ -441,14 +445,26 @@
           this.loading = false;
         });
       },
-      // 取消按钮
+      // 取消按钮（关闭抽取专家对话框）
       cancel() {
         this.queryParams.xStartTime = null;
         this.queryParams.xEndTime = null;
         this.queryParams.xDaiCount = null;
         this.queryParams.xCount = null;
         this.queryParams.xArea = null;
-        this.queryParams.xWay ="1";
+        this.queryParams.xWay =null;
+        this.lTableData=[];
+        this.lSelectedRows=[];
+        this.lTableColumns=[];
+        this.getExerpt(this.queryParams.sid);
+      },
+      // 取消申请按钮
+      cancel2() {
+        this.queryParams.xStartTime = null;
+        this.queryParams.xEndTime = null;
+        this.queryParams.xDaiCount = null;
+        this.queryParams.xCount = null;
+        this.queryParams.xArea = null;
         this.lTableData=[];
         this.lSelectedRows=[];
         this.lTableColumns=[];
