@@ -37,7 +37,6 @@ public class BsTrainingController extends BaseController {
     /**
      * 查询培训列表
      */
-    @RequiresPermissions("system:training:list")
     @GetMapping("/list")
     public TableDataInfo list(BsTraining bsTraining) {
         startPage();

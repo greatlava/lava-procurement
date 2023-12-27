@@ -60,7 +60,6 @@ public class BsExpertController extends BaseController {
     /**
      * 获取专家详细信息
      */
-    @RequiresPermissions("system:expert:query")
     @GetMapping(value = "/{jid}")
     public AjaxResult getInfo(@PathVariable("jid") Long jid) {
         return success(bsExpertService.selectBsExpertByJid(jid));

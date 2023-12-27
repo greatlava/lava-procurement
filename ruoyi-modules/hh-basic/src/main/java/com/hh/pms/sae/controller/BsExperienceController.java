@@ -37,7 +37,6 @@ public class BsExperienceController extends BaseController {
     /**
      * 查询任职经历列表
      */
-    @RequiresPermissions("system:experience:list")
     @GetMapping("/list")
     public TableDataInfo list(BsExperience bsExperience) {
         startPage();

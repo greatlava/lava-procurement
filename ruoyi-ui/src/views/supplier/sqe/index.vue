@@ -189,6 +189,11 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="业务编号" align="center" prop="zrBnumber">
               <template slot-scope="scope">
+                {{ scope.row.zrBnumber }}
+              </template>
+            </el-table-column>
+            <el-table-column label="供应商名称" align="center" prop="hName">
+              <template slot-scope="scope">
                 {{ scope.row.bsSupplier.hName }}
                 <el-tag size="small" style="margin-left: 20px" v-if="scope.row.bsSupplier.fStatus == 2"
                         type="danger">

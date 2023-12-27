@@ -51,15 +51,15 @@
         <template slot-scope="scope">
           <router-link :to="'auditOrView?jid='+scope.row.jid+'&param=0'">
             <el-button
-              v-hasPermi="['system:expert:remove']"
+              v-hasRole="['controller']"
               v-if="scope.row.jShState == 0"
             >审核
             </el-button>
           </router-link>
           <router-link :to="'auditOrView?jid='+scope.row.jid+'&param=1'">
             <el-button
+              v-hasRole="['common','controller']"
               type="primary"
-              v-hasPermi="['system:expert:remove']"
               v-if="scope.row.jShState == 2 || scope.row.jShState == 1"
             >查看
             </el-button>
