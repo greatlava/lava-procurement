@@ -1,5 +1,6 @@
 package com.hh.nobidding.service;
 
+import com.hh.nobidding.domain.ComQuotation;
 import com.hh.nobidding.domain.NobidNonPro;
 
 import java.util.List;
@@ -59,4 +60,7 @@ public interface INobidNonProService
      * @return 结果
      */
     public int deleteNobidNonProByGid(Long gid);
+
+    //查询项目报价
+    public List<ComQuotation> selectQuotation(String gfId);
 }

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hh.nobidding.mapper.BsInventoryMapper">
+
+    <resultMap type="com.hh.nobidding.domain.BsInventory" id="BsInventoryResult">
+        <result property="inId" column="in_id"/>
+        <result property="tid" column="tid"/>
+        <result property="eid" column="eid"/>
+        <result property="gid" column="gid"/>
+        <result property="oid" column="oid"/>
+        <result property="inName" column="in_name"/>
+        <result property="inModel" column="in_model"/>
+        <result property="inUnit" column="in_unit"/>
+        <result property="inVat" column="in_vat"/>
+        <result property="inCount" column="in_count"/>
+        <result property="inSubtotal" column="in_subtotal"/>
+    </resultMap>
+
+    <sql id="selectBsInventoryVo">
+        select in_id,
+               tid,
+               eid,
+               gid,
+               oid,
+               in_name,
+               in_model,
+               in_unit,
+               in_vat,
+               in_count,
+               in_subtotal
+        from bs_inventory
+    </sql>
+
+    <select id="selectBsInventoryList" parameterType="com.hh.nobidding.domain.BsInventory" resultMap="BsInventoryResult">
+        <include refid="selectBsInventoryVo"/>
+        <where>
+            <if test="tid != null  and tid != ''">and tid = #{tid}</if>
+            <if test="eid != null ">and eid = #{eid}</if>
+            <if test="gid != null ">and gid = #{gid}</if>
+            <if test="oid != null ">and oid = #{oid}</if>
+            <if test="inName != null  and inName != ''">and in_name like concat('%', #{inName}, '%')</if>
+            <if test="inModel != null  and inModel != ''">and in_model = #{inModel}</if>
+            <if test="inUnit != null  and inUnit != ''">and in_unit = #{inUnit}</if>
+            <if test="inVat != null ">and in_vat = #{inVat}</if>
+            <if test="inCount != null ">and in_count = #{inCount}</if>
+            <if test="inSubtotal != null ">and in_subtotal = #{inSubtotal}</if>
+        </where>
+    </select>
+
+    <select id="selectBsInventoryByInId" parameterType="Long" resultMap="BsInventoryResult">
+        <include refid="selectBsInventoryVo"/>
+        where in_id = #{inId}
+    </select>
+
+    <insert id="insertBsInventory" parameterType="com.hh.nobidding.domain.BsInventory" useGeneratedKeys="true" keyProperty="inId">
+        insert into bs_inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tid != null">tid,</if>
+            <if test="eid != null">eid,</if>
+            <if test="gid != null">gid,</if>
+            <if test="oid != null">oid,</if>
+            <if test="inName != null">in_name,</if>
+            <if test="inModel != null">in_model,</if>
+            <if test="inUnit != null">in_unit,</if>
+            <if test="inVat != null">in_vat,</if>
+            <if test="inCount != null">in_count,</if>
+            <if test="inSubtotal != null">in_subtotal,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tid != null">#{tid},</if>
+            <if test="eid != null">#{eid},</if>
+            <if test="gid != null">#{gid},</if>
+            <if test="oid != null">#{oid},</if>
+            <if test="inName != null">#{inName},</if>
+            <if test="inModel != null">#{inModel},</if>
+            <if test="inUnit != null">#{inUnit},</if>
+            <if test="inVat != null">#{inVat},</if>
+            <if test="inCount != null">#{inCount},</if>
+            <if test="inSubtotal != null">#{inSubtotal},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBsInventory" parameterType="com.hh.nobidding.domain.BsInventory">
+        update bs_inventory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tid != null">tid = #{tid},</if>
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="gid != null">gid = #{gid},</if>
+            <if test="oid != null">oid = #{oid},</if>
+            <if test="inName != null">in_name = #{inName},</if>
+            <if test="inModel != null">in_model = #{inModel},</if>
+            <if test="inUnit != null">in_unit = #{inUnit},</if>
+            <if test="inVat != null">in_vat = #{inVat},</if>
+            <if test="inCount != null">in_count = #{inCount},</if>
+            <if test="inSubtotal != null">in_subtotal = #{inSubtotal},</if>
+        </trim>
+        where in_id = #{inId}
+    </update>
+
+    <delete id="deleteBsInventoryByInId" parameterType="Long">
+        delete
+        from bs_inventory
+        where in_id = #{inId}
+    </delete>
+
+    <delete id="deleteBsInventoryByInIds" parameterType="String">
+        delete from bs_inventory where in_id in
+        <foreach item="inId" collection="array" open="(" separator="," close=")">
+            #{inId}
+        </foreach>
+    </delete>
+</mapper>

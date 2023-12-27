@@ -37,7 +37,7 @@ public class BsAccessController extends BaseController {
     /**
      * 查询供应商准入列表
      */
-    @RequiresPermissions("system:access:list")
+    @RequiresPermissions("system:supplier:list")
     @GetMapping("/list")
     public TableDataInfo list(BsAccess bsAccess) {
         startPage();

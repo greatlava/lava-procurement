@@ -75,7 +75,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: {title: '首页', icon: 'dashboard', affix: true}
+        meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -89,7 +89,7 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
-        meta: {title: '个人中心', icon: 'user'}
+        meta: { title: '个人中心', icon: 'user' }
       }
     ]
   }
@@ -107,7 +107,7 @@ export const dynamicRoutes = [
         path: 'role/:userId(\\d+)',
         component: () => import('@/views/system/user/authRole'),
         name: 'AuthRole',
-        meta: {title: '分配角色', activeMenu: '/system/user'}
+        meta: { title: '分配角色', activeMenu: '/system/user' }
       }
     ]
   },
@@ -121,7 +121,7 @@ export const dynamicRoutes = [
         path: 'user/:roleId(\\d+)',
         component: () => import('@/views/system/role/authUser'),
         name: 'AuthUser',
-        meta: {title: '分配用户', activeMenu: '/system/role'}
+        meta: { title: '分配用户', activeMenu: '/system/role' }
       }
     ]
   },
@@ -135,7 +135,7 @@ export const dynamicRoutes = [
         path: 'index/:dictId(\\d+)',
         component: () => import('@/views/system/dict/data'),
         name: 'Data',
-        meta: {title: '字典数据', activeMenu: '/system/dict'}
+        meta: { title: '字典数据', activeMenu: '/system/dict' }
       }
     ]
   },
@@ -149,7 +149,7 @@ export const dynamicRoutes = [
         path: 'index/:jobId(\\d+)',
         component: () => import('@/views/monitor/job/log'),
         name: 'JobLog',
-        meta: {title: '调度日志', activeMenu: '/monitor/job'}
+        meta: { title: '调度日志', activeMenu: '/monitor/job' }
       }
     ]
   },
@@ -163,7 +163,7 @@ export const dynamicRoutes = [
         path: 'index/:tableId(\\d+)',
         component: () => import('@/views/tool/gen/editTable'),
         name: 'GenEdit',
-        meta: {title: '修改生成配置', activeMenu: '/tool/gen'}
+        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
   },
@@ -175,7 +175,7 @@ export const dynamicRoutes = [
       {
         component: () => import('@/views/tender/tender1/details'),
         name: 'Details',
-        meta: {title: '招标项目-查看', activeMenu: '/tender/tender1'}
+        meta: { title: '招标项目-查看', activeMenu: '/tender/tender1' }
       }
     ]
   },
@@ -188,7 +188,7 @@ export const dynamicRoutes = [
         path: 'drawExpert',
         component: () => import('@/views/tender/tender1/drawExpert'),
         name: 'DrawExpert',
-        meta: {title: '抽取专家', activeMenu: '/tender/tender1'}
+        meta: { title: '抽取专家', activeMenu: '/tender/tender1' }
       }
     ]
   },
@@ -200,7 +200,7 @@ export const dynamicRoutes = [
       {
         component: () => import('@/views/tender/tender1/update'),
         name: 'Update',
-        meta: {title: '招标项目-编辑', activeMenu: '/tender/tender1'}
+        meta: { title: '招标项目-编辑', activeMenu: '/tender/tender1' }
       }
     ]
   },
@@ -212,7 +212,7 @@ export const dynamicRoutes = [
       {
         component: () => import('@/views/tender/tender1/bidding'),
         name: 'Bidding',
-        meta: {title: '进入项目', activeMenu: '/tender/tender1'}
+        meta: { title: '进入项目', activeMenu: '/tender/tender1' }
       }
     ]
   },
@@ -225,7 +225,7 @@ export const dynamicRoutes = [
         path: 'detail?hid=:hid(\\d+)&zr_id=:zr_id(\\d+)',
         component: () => import('@/views/supplier/sqe/detail'),
         name: 'Detail',
-        meta: {title: '查看', activeMenu: '/supplier'}
+        meta: { title: '查看', activeMenu: '/supplier' }
       }
     ]
   },
@@ -237,7 +237,7 @@ export const dynamicRoutes = [
         path: 'add?sid=:sid(\\d+)&gid=:gid(\\d+)',
         component: () => import('@/views/contract/cm/add'),
         name: 'Add',
-        meta: {title: '创建合同', activeMenu: '/contract'}
+        meta: { title: '创建合同', activeMenu: '/contract' }
       }
     ]
   },
@@ -250,7 +250,7 @@ export const dynamicRoutes = [
         path: 'process?zr_id=:zr_id(\\d+)',
         component: () => import('@/views/supplier/sqe/process'),
         name: 'Process',
-        meta: {title: '审核', activeMenu: '/supplier'}
+        meta: { title: '审核', activeMenu: '/supplier' }
       }
     ]
   },
@@ -262,7 +262,7 @@ export const dynamicRoutes = [
         path: 'riskHandling?rm_id=:rm_id(\\d+)',
         component: () => import('@/views/supplier/risk/riskHandling'),
         name: 'RiskHandling',
-        meta: {title: '供应商风险处理', activeMenu: '/supplier'}
+        meta: { title: '供应商风险处理', activeMenu: '/supplier' }
       }
     ]
   },
@@ -274,7 +274,7 @@ export const dynamicRoutes = [
         path: 'expertWare',
         component: () => import('@/views/expert/ewh/expertWare'),
         name: 'ExpertWare',
-        meta: {title: '专家', activeMenu: '/expert'}
+        meta: { title: '专家', activeMenu: '/expert' }
       }
     ]
   },
@@ -286,7 +286,7 @@ export const dynamicRoutes = [
         path: 'auditOrView?jid=:jid(\\d+)&param=:param(\\d+)',
         component: () => import('@/views/expert/ewh/auditOrView'),
         name: 'AuditOrView',
-        meta: {title: '查看或审核', activeMenu: '/expert'}
+        meta: { title: '查看或审核', activeMenu: '/expert' }
       }
     ]
   },
@@ -298,7 +298,7 @@ export const dynamicRoutes = [
         path: 'insert',
         component: () => import('@/views/purchase/otb/insert'),
         name: 'InsertOtb',
-        meta: {title: '新增采购计划', activeMenu: '/purchase'}
+        meta: { title: '新增采购计划', activeMenu: '/purchase' }
       }
     ]
   }, {
@@ -309,7 +309,7 @@ export const dynamicRoutes = [
         path: 'FrameworkPlanInsert',
         component: () => import('@/views/frameworkPlan/FrameworkPlanInsert'),
         name: 'FrameworkPlanInsert',
-        meta: {title: '新增框架计划', activeMenu: '/frameworkPlan'}
+        meta: { title: '新增框架计划', activeMenu: '/frameworkPlan' }
       }
     ]
   },
@@ -321,7 +321,7 @@ export const dynamicRoutes = [
         path: 'addFa?jhId=:jhId(\\d+)',
         component: () => import('@/views/contract/fam/addFa'),
         name: 'AddFa',
-        meta: {title: '创建框架协议', activeMenu: '/contract'}
+        meta: { title: '创建框架协议', activeMenu: '/contract' }
       }
     ]
   },
@@ -333,7 +333,7 @@ export const dynamicRoutes = [
         path: 'update?eid=:eid(\\d+)',
         component: () => import('@/views/contract/cm/update'),
         name: 'Update',
-        meta: {title: '修改合同', activeMenu: '/contract'}
+        meta: { title: '修改合同', activeMenu: '/contract' }
       }
     ]
   },
@@ -384,6 +384,54 @@ export const dynamicRoutes = [
         meta: { title: '合同详情', activeMenu: '/contract' }
       }
     ]
+  },
+  {
+    path: '/noTender/details1',
+    component: Details,
+    children: [
+      {
+        path: 'details1?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details1'),
+        name: 'Details1',
+        meta: { title: '查看询价', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details2',
+    component: Details,
+    children: [
+      {
+        path: 'details2?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details2'),
+        name: 'Details2',
+        meta: { title: '查看竞争性谈判', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details3',
+    component: Details,
+    children: [
+      {
+        path: 'details3?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details3'),
+        name: 'Details3',
+        meta: { title: '查看委托', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/details4',
+    component: Details,
+    children: [
+      {
+        path: 'details4?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details4'),
+        name: 'Details4',
+        meta: { title: '查看单一来源', activeMenu: '/noTender/RFQ' }
+      }
+    ]
   }
 ]
 
@@ -401,6 +449,6 @@ Router.prototype.replace = function push(location) {
 
 export default new Router({
   mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({y: 0}),
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

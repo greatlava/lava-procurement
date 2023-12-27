@@ -1,5 +1,6 @@
 package com.hh.nobidding.controller;
 
+import com.hh.nobidding.domain.ComQuotation;
 import com.hh.nobidding.domain.NobidNonPro;
 import com.hh.nobidding.service.INobidNonProService;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
@@ -23,8 +24,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/pro")
-public class NobidNonProController extends BaseController
-{
+public class NobidNonProController extends BaseController {
     @Autowired
     private INobidNonProService nobidNonProService;
 
@@ -33,8 +33,7 @@ public class NobidNonProController extends BaseController
      */
     @RequiresPermissions("system:pro:list")
     @GetMapping("/list")
-    public TableDataInfo list(NobidNonPro nobidNonPro)
-    {
+    public TableDataInfo list(NobidNonPro nobidNonPro) {
         startPage();
         List<NobidNonPro> list = nobidNonProService.selectNobidNonProList(nobidNonPro);
         return getDataTable(list);
@@ -46,8 +45,7 @@ public class NobidNonProController extends BaseController
     @RequiresPermissions("system:pro:export")
     @Log(title = "非招标项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, NobidNonPro nobidNonPro)
-    {
+    public void export(HttpServletResponse response, NobidNonPro nobidNonPro) {
         List<NobidNonPro> list = nobidNonProService.selectNobidNonProList(nobidNonPro);
         ExcelUtil<NobidNonPro> util = new ExcelUtil<NobidNonPro>(NobidNonPro.class);
         util.exportExcel(response, list, "非招标项目数据");
@@ -58,8 +56,7 @@ public class NobidNonProController extends BaseController
      */
     @RequiresPermissions("system:pro:query")
     @GetMapping(value = "/{gid}")
-    public AjaxResult getInfo(@PathVariable("gid") Long gid)
-    {
+    public AjaxResult getInfo(@PathVariable("gid") Long gid) {
         return success(nobidNonProService.selectNobidNonProByGid(gid));
     }
 
@@ -69,8 +66,7 @@ public class NobidNonProController extends BaseController
     @RequiresPermissions("system:pro:add")
     @Log(title = "非招标项目", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody NobidNonPro nobidNonPro)
-    {
+    public AjaxResult add(@RequestBody NobidNonPro nobidNonPro) {
         return toAjax(nobidNonProService.insertNobidNonPro(nobidNonPro));
     }
 
@@ -80,8 +76,7 @@ public class NobidNonProController extends BaseController
     @RequiresPermissions("system:pro:edit")
     @Log(title = "非招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody NobidNonPro nobidNonPro)
-    {
+    public AjaxResult edit(@RequestBody NobidNonPro nobidNonPro) {
         return toAjax(nobidNonProService.updateNobidNonPro(nobidNonPro));
     }
 
@@ -91,8 +86,16 @@ public class NobidNonProController extends BaseController
     @RequiresPermissions("system:pro:remove")
     @Log(title = "非招标项目", businessType = BusinessType.DELETE)
     @DeleteMapping("/{gids}")
-    public AjaxResult remove(@PathVariable Long[] gids)
-    {
+    public AjaxResult remove(@PathVariable Long[] gids) {
         return toAjax(nobidNonProService.deleteNobidNonProByGids(gids));
+    }
+
+    //查询项目报价
+    @GetMapping("/selectQuotation")
+    public TableDataInfo selectQuotation(String gfId) {
+        System.out.println("打印了一个gfId");
+        System.out.println(gfId);
+        List<ComQuotation> list = nobidNonProService.selectQuotation(gfId);
+        return getDataTable(list);
     }
 }

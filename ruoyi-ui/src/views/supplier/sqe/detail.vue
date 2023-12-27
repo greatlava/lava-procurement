@@ -471,13 +471,13 @@ export default {
       fState: null,
       fStatus: null,
       //营业执照
-      hCopies: null,
+      hCopies: '',
       hCopiesList: [],
       //法人身份证
-      idCardCopy: null,
+      idCardCopy: '',
       idCardCopyList: [],
       //业务经办人身份证
-      ywIdCardCopy: null,
+      ywIdCardCopy: '',
       ywIdCardCopyList: [],
       //业务经办人
       operator: {

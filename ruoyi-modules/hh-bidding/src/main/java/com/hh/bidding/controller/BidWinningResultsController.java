@@ -101,4 +101,10 @@ public class BidWinningResultsController extends BaseController
     {
         return toAjax(bidWinningResultsService.deleteBidWinningResultsByGsIds(gsIds));
     }
+
+    @GetMapping("/selectResultSupp/{sid}")
+    public AjaxResult SuppList( @PathVariable("sid") Long sid)
+    {
+        return success(bidWinningResultsService.selectResultSupp(sid));
+    }
 }

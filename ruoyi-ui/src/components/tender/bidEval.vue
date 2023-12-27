@@ -89,16 +89,16 @@
            </el-select>
          </el-form-item>
          <el-form-item label="发送时间" prop="zSendTime" class="form-input">
-           <el-date-picker clearable
-                           v-model="form.zSendTime"
-                           type="date"
-                           value-format="yyyy-MM-dd"
-                           placeholder="请选择发送时间">
+           <el-date-picker
+             v-model="form.zSendTime"
+             type="datetime"
+             placeholder="请选择发送时间"
+             value-format="yyyy-MM-dd hh:mm:ss"
+             default-time="09:00:00">
            </el-date-picker>
          </el-form-item>
-         <p style="color: red;margin-left: 40px;">*四种附件互为关联，请同时操作！</p>
          <el-form-item label="专家签到表" prop="zSign" class="form-input">
-           <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+           <el-upload ref="upload" class="upload-demo" :limit="1" accept=".doc, .docx, .rar, .txt, .png, .jpg"
                       multiple
                       :action="upload.url"
                       :on-change="changeFileLength"
@@ -111,7 +111,7 @@
            <!--           <el-input v-model="form.zSign" placeholder="请输入专家签到表" />-->
          </el-form-item>
          <el-form-item label="审查表" prop="zCensor" class="form-input">
-           <el-upload ref="upload2" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+           <el-upload ref="upload2" class="upload-demo" :limit="1" accept=".doc, .docx, .rar, .txt, .png, .jpg"
                       multiple
                       :action="upload.url"
                       :on-change="changeFileLength1"
@@ -124,7 +124,7 @@
            <!--           <el-input v-model="form.zCensor" placeholder="请输入审查表" />-->
          </el-form-item>
          <el-form-item label="评审表" prop="zReview" class="form-input">
-           <el-upload ref="upload3" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+           <el-upload ref="upload3" class="upload-demo" :limit="1" accept=".doc, .docx, .rar, .txt, .png, .jpg"
                       multiple
                       :action="upload.url"
                       :on-change="changeFileLength2"
@@ -137,7 +137,7 @@
            <!--           <el-input v-model="form.zReview" placeholder="请输入评审表" />-->
          </el-form-item>
          <el-form-item label="最终汇总表" prop="zSummary" class="form-input">
-           <el-upload ref="upload4" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+           <el-upload ref="upload4" class="upload-demo" :limit="1" accept=".doc, .docx, .rar, .txt, .png, .jpg"
                       multiple
                       :action="upload.url"
                       :on-change="changeFileLength3"
@@ -164,6 +164,7 @@ import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidat
 import {getToken} from "@/utils/auth";
 import {listSubmission,findSubmission} from "@/api/system/tender/submission";
 import {getSupplier} from "@/api/system/supplier";
+import {updateTender} from '@/api/system/tender/tender'
 
 export default {
   name: "Candidate",
@@ -210,13 +211,31 @@ export default {
       queryParams2:{
         sid:null,
       },
+      queryParams3:{
+        sid:0,
+        sCode:null,
+        sName:null,
+        sWay: null,
+        sMust:null,
+        sSway:null,
+        sType: null,
+        sBudget:null,
+        sUnit:null,
+        sPerson:null,
+        sPhone:null,
+        email:null,
+        sAddress:null,
+        fjFiles:null,
+        sProjectState:null,
+        sLeader:null,
+      },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        hid: [
-          { required: true, message: "供应商不能为空", trigger: "change" }
-        ],
+        // hid: [
+        //   { required: true, message: "供应商不能为空", trigger: "change" }
+        // ],
         zFinal: [
           { required: true, message: "最终报价不能为空", trigger: "blur" }
         ],
@@ -288,6 +307,7 @@ export default {
     };
   },
   created() {
+    this.queryParams.sid = this.$route.query.sid;
     this.getList();
     this.queryParams2.sid = this.$route.query.sid;
     this.getSubmission();
@@ -326,7 +346,7 @@ export default {
     //查询参与投标供应商
     getSubmission(){
       findSubmission(this.queryParams2.sid).then(res=>{
-        console.log(res,"res");
+        console.log(res,"sdfghj");
         this.submissionList = res.data;
       });
     },
@@ -348,6 +368,12 @@ export default {
       this.uploadFiles4= [];
       // 收集——上传文件的个数(最终汇总表)
       this.filesLength4= 0;
+
+      this.upload.fileList=[];
+      this.upload.fileList2=[];
+      this.upload.fileList3=[];
+      this.upload.fileList4=[];
+
       this.open = false;
       this.reset();
     },
@@ -408,8 +434,7 @@ export default {
       this.$refs["form"].validate(valid => {
           //表单验证
           if (valid) {
-            //1:如果没有文件，直接上传form表单
-            if(this.filesLength == 0){
+            if( this.filesLength == 0 && this.filesLength2 == 0 && this.filesLength3== 0 && this.filesLength4 == 0){
               //判断type值  update：修改  add：新增
               if (this.isType === 'update') {
                 updateCandidate(this.form).then(response => {
@@ -425,21 +450,42 @@ export default {
                   this.getList();
                 });
               }
+              //修改招标项目状态
+              this.upTender();
               this.cancel();
-
             }else{
-              //2:如果有文件
-              //2.1文件上传执行submit  即触发 handleFileSuccess函数
-              this.$refs.upload.submit();
-              //2.2:上传返回的URL地址，在handleFileSuccess中处理
-              //2.3：表单提交
+              if(this.filesLength > 0 && this.form.zSign == null){
+                this.$refs.upload.submit();
+              }else
+              if(this.filesLength2 > 0 && this.form.zCensor == null){
+                this.$refs.upload2.submit();
+              }else
+              if(this.filesLength3 > 0 && this.form.zReview == null){
+                this.$refs.upload3.submit();
+              }else
+              if(this.filesLength4 > 0 && this.form.zSummary == null){
+                this.$refs.upload4.submit();
+              }
             }
           }
       });
     },
+    //修改招标项目状态(=>定标中)
+    upTender(){
+      //判断中标候选人是否至少三人
+      console.log(this.queryParams,"query");
+      this.queryParams.sid = this.$route.query.sid;
+      listCandidate(this.queryParams).then(response => {
+        console.log(response,"res");
+        if(response.rows.length > 2){
+          this.queryParams3.sid = this.$route.query.sid;
+          this.queryParams3.sProjectState = 6;//定标中
+          //修改招标项目状态
+          updateTender(this.queryParams3).then(r=>{});
+        }
+      });
 
-
-
+    },
     /** 专家签到表 */
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
@@ -452,7 +498,6 @@ export default {
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       this.uploadFiles.push(file);
-      console.log(this.uploadFiles2,"dsgf");
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
       if (this.uploadFiles.length == this.filesLength){
         //已上传文件  --> 字符串
@@ -467,12 +512,44 @@ export default {
           return newObj;
         });
         this.form.zSign = JSON.stringify(updatedArray);//写入专家签到表
-        this.$refs.upload2.submit();
+
+        if(this.filesLength2 > 0 && this.form.zCensor == null){
+          this.$refs.upload2.submit();
+        }else
+        if(this.filesLength3 > 0 && this.form.zReview == null){
+          this.$refs.upload3.submit();
+        }else
+        if(this.filesLength4 > 0 && this.form.zSummary == null){
+          this.$refs.upload4.submit();
+        }else{
+          //执行操作
+          if(this.isType ==='update'){
+            //修改公告
+            updateCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }else if (this.isType ==='add'){
+            addCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }
+          //修改招标项目状态
+          this.upTender();
+        }
       }
       this.upload.isUploading = false;
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`确定移除 ${file.name}？`).then(res=>{
+        this.form.zSign=null;
+        this.upload.fileList = [];
+      });
     },
     beforeUpload(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
@@ -495,7 +572,7 @@ export default {
     handleFileSuccess1(response, file, fileList) {
       this.uploadFiles2.push(file);
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
-      if (this.uploadFiles2.length == this.filesLength){
+      if (this.uploadFiles2.length == this.filesLength2){
         //已上传文件  --> 字符串
         let updatedArray = fileList.map(obj => {
           let newObj = obj;
@@ -508,12 +585,44 @@ export default {
           return newObj;
         });
         this.form.zCensor = JSON.stringify(updatedArray);
-        this.$refs.upload3.submit();
+
+        if(this.filesLength > 0 && this.form.zSign == null){
+          this.$refs.upload.submit();
+        }else
+        if(this.filesLength3 > 0 && this.form.zReview == null){
+          this.$refs.upload3.submit();
+        }else
+        if(this.filesLength4 > 0 && this.form.zSummary == null){
+          this.$refs.upload4.submit();
+        }else{
+          //执行操作
+          if(this.isType ==='update'){
+            //修改公告
+            updateCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }else if (this.isType ==='add'){
+            addCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }
+          //修改招标项目状态
+          this.upTender();
+        }
       }
       this.upload.isUploading = false;
     },
     beforeRemove1(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`确定移除 ${file.name}？`).then(res=>{
+        this.form.zCensor=null;
+        this.upload.fileList2 = [];
+      });
     },
     beforeUpload1(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
@@ -537,7 +646,7 @@ export default {
     handleFileSuccess2(response, file, fileList) {
       this.uploadFiles3.push(file);
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
-      if (this.uploadFiles3.length == this.filesLength){
+      if (this.uploadFiles3.length == this.filesLength3){
         //已上传文件  --> 字符串
         let updatedArray = fileList.map(obj => {
           let newObj = obj;
@@ -550,12 +659,43 @@ export default {
           return newObj;
         });
         this.form.zReview = JSON.stringify(updatedArray);
-        this.$refs.upload4.submit();
+        if(this.filesLength > 0 && this.form.zSign == null){
+          this.$refs.upload.submit();
+        }else
+        if(this.filesLength2 > 0 && this.form.zCensor == null){
+          this.$refs.upload2.submit();
+        }else
+        if(this.filesLength4 > 0 && this.form.zSummary == null){
+          this.$refs.upload4.submit();
+        }else{
+          //执行操作
+          if(this.isType ==='update'){
+            //修改公告
+            updateCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }else if (this.isType ==='add'){
+            addCandidate(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+              this.cancel();
+            });
+          }
+          //修改招标项目状态
+          this.upTender();
+        }
       }
       this.upload.isUploading = false;
     },
     beforeRemove2(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`确定移除 ${file.name}？`).then(res=>{
+        this.upload.fileList3 = [];
+        this.form.zReview=null;
+      });
     },
     beforeUpload2(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
@@ -581,7 +721,7 @@ export default {
       this.form.sid = this.$route.query.sid;
       this.uploadFiles4.push(file);
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
-      if (this.uploadFiles4.length == this.filesLength){
+      if (this.uploadFiles4.length == this.filesLength4){
         //已上传文件  --> 字符串
         let updatedArray = fileList.map(obj => {
           let newObj = obj;
@@ -594,26 +734,44 @@ export default {
           return newObj;
         });
         this.form.zSummary = JSON.stringify(updatedArray);
-        if(this.isType ==='update'){
+
+        if(this.filesLength > 0 && this.form.zSign == null){
+          this.$refs.upload.submit();
+        }else
+        if(this.filesLength2 > 0 && this.form.zCensor == null){
+          this.$refs.upload2.submit();
+        }else
+        if(this.filesLength3 > 0 && this.form.zReview == null){
+          this.$refs.upload3.submit();
+        }else{
+          //执行操作
+          if(this.isType ==='update'){
             //修改公告
             updateCandidate(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+              this.cancel();
             });
           }else if (this.isType ==='add'){
             addCandidate(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+              this.cancel();
             });
           }
+          //修改招标项目状态
+          this.upTender();
+        }
       }
-      this.cancel();
       this.upload.isUploading = false;
     },
     beforeRemove3(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      return this.$confirm(`确定移除 ${file.name}？`).then(res=>{
+        this.form.zSummary=null;
+        this.upload.fileList4 = [];
+      });
     },
     beforeUpload3(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;

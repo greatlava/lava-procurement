@@ -33,8 +33,8 @@ public class BidDocuments extends BaseEntity
     private Long wSize;
 
     /** 上传时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "上传时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date wUploadTime;
 
     /** 文件大小 */

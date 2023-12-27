@@ -1,5 +1,6 @@
 package com.hh.nobidding.service.impl;
 
+import com.hh.nobidding.domain.ComQuotation;
 import com.hh.nobidding.domain.NobidNonPro;
 import com.hh.nobidding.mapper.NobidNonProMapper;
 import com.hh.nobidding.service.INobidNonProService;
@@ -17,8 +18,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class NobidNonProServiceImpl implements INobidNonProService
-{
+public class NobidNonProServiceImpl implements INobidNonProService {
     @Resource
     private NobidNonProMapper nobidNonProMapper;
 
@@ -29,8 +29,7 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 非招标项目
      */
     @Override
-    public NobidNonPro selectNobidNonProByGid(Long gid)
-    {
+    public NobidNonPro selectNobidNonProByGid(Long gid) {
         return nobidNonProMapper.selectNobidNonProByGid(gid);
     }
 
@@ -41,8 +40,7 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 非招标项目
      */
     @Override
-    public List<NobidNonPro> selectNobidNonProList(NobidNonPro nobidNonPro)
-    {
+    public List<NobidNonPro> selectNobidNonProList(NobidNonPro nobidNonPro) {
         return nobidNonProMapper.selectNobidNonProList(nobidNonPro);
     }
 
@@ -53,8 +51,7 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 结果
      */
     @Override
-    public int insertNobidNonPro(NobidNonPro nobidNonPro)
-    {
+    public int insertNobidNonPro(NobidNonPro nobidNonPro) {
         return nobidNonProMapper.insertNobidNonPro(nobidNonPro);
     }
 
@@ -65,8 +62,7 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 结果
      */
     @Override
-    public int updateNobidNonPro(NobidNonPro nobidNonPro)
-    {
+    public int updateNobidNonPro(NobidNonPro nobidNonPro) {
         return nobidNonProMapper.updateNobidNonPro(nobidNonPro);
     }
 
@@ -77,8 +73,7 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 结果
      */
     @Override
-    public int deleteNobidNonProByGids(Long[] gids)
-    {
+    public int deleteNobidNonProByGids(Long[] gids) {
         return nobidNonProMapper.deleteNobidNonProByGids(gids);
     }
 
@@ -89,8 +84,15 @@ public class NobidNonProServiceImpl implements INobidNonProService
      * @return 结果
      */
     @Override
-    public int deleteNobidNonProByGid(Long gid)
-    {
+    public int deleteNobidNonProByGid(Long gid) {
         return nobidNonProMapper.deleteNobidNonProByGid(gid);
     }
+
+    //查询项目报价
+    @Override
+    public List<ComQuotation> selectQuotation(String gfId) {
+        return nobidNonProMapper.selectQuotation(gfId);
+    }
+
+
 }

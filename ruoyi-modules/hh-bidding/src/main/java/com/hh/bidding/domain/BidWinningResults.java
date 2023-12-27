@@ -1,7 +1,9 @@
 package com.hh.bidding.domain;
 
 import java.util.Date;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
@@ -19,22 +21,23 @@ public class BidWinningResults extends BaseEntity
 
     /** 公示ID */
     private Long gsId;
-
     /** 招标项目ID */
     @Excel(name = "招标项目ID")
     private Long sid;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private String gsName;
+    @Excel(name = "供应商ID")
+    private Long hid;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    @Excel(name = "供应商名称")
+    private String hName;
+
+    @Excel(name = "公示状态")
     private Long gsState;
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "公示发布时间")
+    private Date gsResDate;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
-    private Date gsRelease;
+    private List<BsSupplier> bsSupplier;
 
     public void setGsId(Long gsId) 
     {
@@ -54,42 +57,56 @@ public class BidWinningResults extends BaseEntity
     {
         return sid;
     }
-    public void setGsName(String gsName) 
-    {
-        this.gsName = gsName;
-    }
-
-    public String getGsName() 
-    {
-        return gsName;
-    }
-    public void setGsState(Long gsState) 
-    {
-        this.gsState = gsState;
-    }
-
-    public Long getGsState() 
-    {
-        return gsState;
-    }
-    public void setGsRelease(Date gsRelease) 
-    {
-        this.gsRelease = gsRelease;
-    }
-
-    public Date getGsRelease() 
-    {
-        return gsRelease;
-    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("gsId", getGsId())
             .append("sid", getSid())
-            .append("gsName", getGsName())
+            .append("hid", getHid())
+            .append("hName", gethName())
             .append("gsState", getGsState())
-            .append("gsRelease", getGsRelease())
+            .append("gsResDate", getGsResDate())
             .toString();
+    }
+
+    public Date getGsResDate() {
+        return gsResDate;
+    }
+
+    public void setGsResDate(Date gsResDate) {
+        this.gsResDate = gsResDate;
+    }
+
+    public String gethName() {
+        return hName;
+    }
+
+    public void sethName(String hName) {
+        this.hName = hName;
+    }
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void setHid(Long hid) {
+        this.hid = hid;
+    }
+
+    public Long getGsState() {
+        return gsState;
+    }
+
+    public void setGsState(Long gsState) {
+        this.gsState = gsState;
+    }
+
+    public List<BsSupplier> getBsSupplier() {
+        return bsSupplier;
+    }
+
+    public void setBsSupplier(List<BsSupplier> bsSupplier) {
+        this.bsSupplier = bsSupplier;
     }
 }
