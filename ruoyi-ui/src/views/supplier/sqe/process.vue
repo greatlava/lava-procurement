@@ -366,13 +366,13 @@ export default {
       //相关附件
       accessoriesList: [],
       //营业执照
-      hCopies: null,
+      hCopies: '',
       hCopiesList: [],
       //法人身份证
-      idCardCopy: null,
+      idCardCopy: '',
       idCardCopyList: [],
       //业务经办人身份证
-      ywIdCardCopy: null,
+      ywIdCardCopy: '',
       ywIdCardCopyList: [],
       //业务经办人
       operator: {
@@ -443,7 +443,7 @@ export default {
           delAccess(this.zr_id).then(res => {
             if (res.code == 200) {
               this.$message({
-                message: '操作成功！',
+                message: '通过成功！',
                 type: 'success'
               });
               window.close()
@@ -459,7 +459,7 @@ export default {
         this.loading = true
         if (response.code == 200) {
           this.$message({
-            message: '操作成功！',
+            message: '驳回成功！',
             type: 'success'
           });
         }

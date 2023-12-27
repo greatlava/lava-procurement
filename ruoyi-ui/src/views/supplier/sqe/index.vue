@@ -39,7 +39,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -91,7 +92,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -149,7 +151,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -204,14 +207,16 @@
                 <router-link :to="'process?zr_id='+scope.row.zrId">
                   <el-button
                     size="small"
-                    v-if="scope.row.bsSupplier.fStatus == 0">审核
+                    v-if="scope.row.bsSupplier.fStatus == 0"
+                    v-hasRole="['controller']">审核
                   </el-button>
                 </router-link>
                 <router-link :to="'detail?zr_id='+scope.row.zrId+'&hid=0'">
                   <el-button
                     style="margin-left: 10px"
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>

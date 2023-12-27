@@ -185,7 +185,7 @@ export default {
         "rmHandingDate": this.formattedDate
       }).then(res => {
         console.log(res)
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("忽略成功");
       })
     },
     submit() {
@@ -199,7 +199,7 @@ export default {
         "rmHandingResult": this.formData.rmHandingResult
       }).then(res => {
         console.log(res)
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("提交成功");
       })
     }
   }

@@ -37,7 +37,6 @@ public class BsAchievementController extends BaseController {
     /**
      * 查询业绩列表
      */
-    @RequiresPermissions("system:achievement:list")
     @GetMapping("/list")
     public TableDataInfo list(BsAchievement bsAchievement) {
         startPage();

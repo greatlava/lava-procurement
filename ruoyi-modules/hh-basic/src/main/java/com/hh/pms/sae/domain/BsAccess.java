@@ -37,7 +37,7 @@ public class BsAccess extends BaseEntity {
     /**
      * 提交时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date zrTime;
 

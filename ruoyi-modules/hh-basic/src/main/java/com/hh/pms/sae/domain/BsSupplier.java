@@ -61,7 +61,7 @@ public class BsSupplier extends BaseEntity {
     /**
      * 成立日期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @Excel(name = "成立日期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date hStartTime;
 
@@ -115,7 +115,7 @@ public class BsSupplier extends BaseEntity {
     /**
      * 营业执照有效期
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
     @Excel(name = "营业执照有效期", width = 30, dateFormat = "yyyy-MM-dd")
     private Date hExpiration;
 

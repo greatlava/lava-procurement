@@ -37,7 +37,6 @@ public class BsAccessoriesController extends BaseController {
     /**
      * 查询相关附件列表
      */
-    @RequiresPermissions("system:accessories:list")
     @GetMapping("/list")
     public TableDataInfo list(BsAccessories bsAccessories) {
         startPage();

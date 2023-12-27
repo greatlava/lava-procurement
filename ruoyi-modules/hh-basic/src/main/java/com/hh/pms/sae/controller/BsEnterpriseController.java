@@ -37,7 +37,6 @@ public class BsEnterpriseController extends BaseController {
     /**
      * 查询企业资质列表
      */
-    @RequiresPermissions("system:enterprise:list")
     @GetMapping("/list")
     public TableDataInfo list(BsEnterprise bsEnterprise) {
         startPage();

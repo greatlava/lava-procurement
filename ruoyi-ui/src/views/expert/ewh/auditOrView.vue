@@ -216,14 +216,14 @@ export default {
     //通过
     pass() {
       updateExpert({"jid": this.jid, "jShState": 1, "jOpinion": this.basic.jOpinion}).then(res => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("通过成功");
         this.basic.jShState = 1
       })
     },
     //驳回
     overrule() {
       updateExpert({"jid": this.jid, "jShState": 2, "jOpinion": this.basic.jOpinion}).then(res => {
-        this.$modal.msgSuccess("操作成功");
+        this.$modal.msgSuccess("驳回成功");
         this.basic.jShState = 2
       })
     }
