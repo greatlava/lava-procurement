@@ -264,6 +264,8 @@ export default {
         this.total = response.total;
         this.loading = false;
         this.planList = response.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       });
     },
     query() {
@@ -288,6 +290,9 @@ export default {
         this.openByType = false;
         this.$modal.msgSuccess("操作成功！！");
         this.getList();
+      }).catch(err => {
+        this.fullscreenLoading = false
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     reset() {
@@ -334,8 +339,9 @@ export default {
         if (res.data.file.anName && res.data.file.anUrl) {
           this.file.fileUrls = res.data.file.anUrl.split(",");
           this.file.fileName = res.data.file.anName.split(",");
-          console.log(this.file.anName, "data")
         }
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     //采购寻源按钮

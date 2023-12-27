@@ -81,6 +81,7 @@
             <if test="aCreateDept != null">and a_create_dept like concat('%',#{aCreateDept},'%')</if>
             and ( a_astate = 2 or a_astate = 3 )
         </where>
+        order by update_time desc
     </select>
 
     <resultMap id="PpmProcurementPlanAndComPubAttament" type="com.hh.procure.domain.PpmProcurementPlan">

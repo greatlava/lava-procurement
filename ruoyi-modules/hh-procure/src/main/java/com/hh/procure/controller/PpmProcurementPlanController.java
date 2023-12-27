@@ -99,6 +99,7 @@ public class PpmProcurementPlanController extends BaseController {
     public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         ComPubAttachments comPubAttachments = ppmProcurementPlan.getFile();
         ppmProcurementPlan.setCreateBy(SecurityUtils.getLoginUser().getSysUser().getNickName());
+        ppmProcurementPlan.setaCreateDept(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
         int i = ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
         if (comPubAttachments != null) {
             comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));

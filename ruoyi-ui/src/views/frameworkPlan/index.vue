@@ -589,6 +589,9 @@ export default {
           updateComPubAttamentsByAid(obj, "success").then(res => {
             this.$modal.closeLoading();
             this.$modal.msgSuccess("删除成功！！")
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         }
       } else {
@@ -636,6 +639,8 @@ export default {
             } else {
               this.$modal.msgSuccess("文件上传失败");
             }
+          }).catch(err => {
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         } else {
           this.upload.fileSecuss.push(response.data.data);
@@ -685,28 +690,43 @@ export default {
     allowFarmeworkPlan(row) {
       let jhid = this.form.jhId || row.jhId;
       this.$modal.confirm("确定要通过编号为" + jhid + "的审核吗").then(() => {
+        this.$modal.loading("审核中.....")
         updateFarmeworkPlanStatus(jhid, 2).then(res => {
-          this.$modal.msgSuccess("操作成功！！");
+          this.$modal.closeLoading();
+          this.$modal.msgSuccess("审核成功！！");
           this.openFrameworkDetails = false;
           this.getList();
+        }).catch(err => {
+          this.$modal.closeLoading();
+          this.$modal.msgError("服务器出错，请联系管理员！！！");
         })
       })
     },
     rejectFarmeworkPlan() {
       this.$modal.confirm("确定要驳回编号为" + this.form.jhId + "的审核吗").then(() => {
+        this.$modal.loading("驳回中.......")
         updateFarmeworkPlanStatus(this.form.jhId, 0).then(res => {
-          this.$modal.msgSuccess("操作成功！！");
+          this.$modal.closeLoading();
+          this.$modal.msgSuccess("驳回成功！！");
           this.openFrameworkDetails = false;
           this.getList();
+        }).catch(err => {
+          this.$modal.closeLoading();
+          this.$modal.msgError("服务器出错，请联系管理员！！！");
         })
       })
     },
     sumbitFarmeworkPlan() {
       this.$modal.confirm("确定要提交编号为" + this.form.jhId + "的框架计划吗").then(() => {
+        this.$modal.loading("提交中.......")
         updateFarmeworkPlanStatus(this.form.jhId, 1).then(res => {
-          this.$modal.msgSuccess("操作成功！！");
+          this.$modal.closeLoading();
+          this.$modal.msgSuccess("提交成功！！");
           this.openFrameworkDetails = false;
           this.getList();
+        }).catch(err => {
+          this.$modal.closeLoading();
+          this.$modal.msgError("服务器出错，请联系管理员！！！");
         })
       })
     },
@@ -729,6 +749,9 @@ export default {
         }
         loading.close();
         this.openFrameworkDetails = true;
+      }).catch(err => {
+        loading.close();
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     /** 查询框架计划列表 */
@@ -738,6 +761,8 @@ export default {
         this.loading = false;
         this.framewokPlanList = res.rows;
         this.total = res.total;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     // 取消按钮
@@ -785,6 +810,8 @@ export default {
     getSupplier() {
       listSupplier(null).then(res => {
         this.supplierOptions = res.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     cancelFramework() {
@@ -794,14 +821,11 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
+
       const jhId = row.jhId || this.ids
+      this.$modal.loading("加载中.......");
       queryFrameworkPlanAndRelatedInformation(jhId).then(response => {
+        this.$modal.closeLoading();
         this.form = response.data;
         this.items = response.data.items;
         if (response.data.comPubAttachments.anUrl && response.data.comPubAttachments.anName) {
@@ -815,9 +839,11 @@ export default {
           })
         }
         this.open = true;
-        loading.close();
         this.title = "修改框架计划";
-      });
+      }).catch(err => {
+        this.$modal.closeLoading();
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      })
       this.getSupplier();
     },
     //设备关闭按钮
@@ -837,7 +863,10 @@ export default {
         this.device = res.rows;
         this.total = res.total;
         this.deviceLoding = false;
-      }))
+      })).catch(err => {
+        this.deviceLoding = false;
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      })
     },
     // 双击选择设备
     selectedMateria(row) {
@@ -852,18 +881,16 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.jhId != null) {
-            const loading = this.$loading({
-              lock: true,
-              text: 'Loading',
-              spinner: 'el-icon-loading',
-              background: 'rgba(0, 0, 0, 0.7)'
-            });
+            this.$modal.loading("修改中.....")
             updatePlan(this.form).then(response => {
-              loading.close();
+              this.$modal.closeLoading();
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
-            });
+            }).catch(err => {
+              this.$modal.closeLoading();
+              this.$modal.msgError("修改失败，请联系管理员！！！");
+            })
           } else {
             if (this.items.length == 0) {
               this.$modal.msgError("请至少添加一条项目信息");
@@ -894,12 +921,15 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const jhIds = row.jhId || this.ids;
-      this.$modal.confirm('是否确认删除框架计划编号为"' + jhIds + '"的数据项？').then(() => {
+      this.$modal.confirm('删除框架计划将删除所有行项目，是否继续删除框架计划编号为"' + jhIds + '"的数据项？').then(() => {
         this.$modal.loading("删除中.......");
         return deleteByJhId(jhIds).then(() => {
           this.getList();
           this.$modal.closeLoading();
           this.$modal.msgSuccess("删除成功");
+        }).catch(err => {
+          this.$modal.closeLoading();
+          this.$modal.msgError("删除失败，请联系管理员！！！");
         })
       })
     },

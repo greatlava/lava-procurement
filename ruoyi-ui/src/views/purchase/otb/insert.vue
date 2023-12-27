@@ -28,8 +28,8 @@ import {addBudget} from "@/api/system/budget";
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="创建部门" prop="aCreateDept">
-              <el-input v-model="form.aCreateDept" :disabled="form.aid!=null"/>
+            <el-form-item label="创建部门" >
+              <el-input :value="form.aid!=null || '系统自动生成' " disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -435,8 +435,12 @@ export default {
           obj["aid"] = this.form.aid;
           obj["anName"] = obj["name"];
           obj["anUrl"] = obj["url"];
+          this.$modal.loading("删除中.....")
           updateComPubAttamentsByAid(obj, "success").then(res => {
-            console.log("删除文件", res)
+            this.$modal.closeLoading();
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         }
       } else {
@@ -482,14 +486,18 @@ export default {
           obj["aid"] = this.form.aid;
           obj["anName"] = obj["name"];
           obj["anUrl"] = obj["url"];
+          this.$modal.loading("上传中.....");
           updateComPubAttamentsByAid(obj, "insert").then(res => {
-            console.log("Promise", res)
             if (res.code == 200) {
               this.$modal.msgSuccess(res.msg);
               return 1;
             } else {
               this.$modal.msgSuccess("文件上传失败");
             }
+            this.$modal.closeLoading();
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         } else {
           this.upload.fileSecuss.push(response.data.data);
@@ -545,7 +553,10 @@ export default {
         this.newDevice = res.rows;
         this.total = res.total;
         this.show.deviceLoding = false;
-      }))
+      })).catch(err => {
+        this.show.deviceLoding = false;
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      })
     },
     //关闭按钮
     cancel() {
@@ -584,7 +595,8 @@ export default {
             this.fullscreenLoading = false;
             this.show.openBudget = false;
           }).catch(err => {
-
+            this.fullscreenLoading = false;
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         } else {
           console.log("324")
@@ -596,8 +608,14 @@ export default {
     },
     //预算列表删除按钮
     handleDeleteBudget(row, index) {
+      this.$modal.loading("删除中.....")
       delBudget(row.duId).then(res => {
+        this.$modal.closeLoading();
+        this.$modal.msgSuccess("删除成功!!!!")
         this.budgetList.splice(index, 1)
+      }).catch(err => {
+        this.$modal.closeLoading();
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     //添加预算弹窗编号选择事件
@@ -661,10 +679,13 @@ export default {
               this.form["aCode"] = localStorage.getItem("procurementPlanID");
               addPlan(this.form).then(res => {
                 this.$modal.closeLoading();
-                Message.success("操作成功");
+                Message.success("添加成功");
                 setTimeout(() => {
                   this.$router.back();
                 }, 1000)
+              }).catch(err => {
+                this.$modal.closeLoading();
+                this.$modal.msgError("服务器出错，请联系管理员！！！");
               })
             }).catch(() => {
               this.$modal.msgError("请上传附件！！");
@@ -694,6 +715,9 @@ export default {
               setTimeout(() => {
                 this.$router.back();
               }, 1000)
+            }).catch(err => {
+              this.$modal.closeLoading();
+              this.$modal.msgError("服务器出错，请联系管理员！！！");
             })
           }
         } else {
@@ -707,12 +731,15 @@ export default {
     getItemsByPlanId() {
       selectProcurementPlanByIdForThreeTables(this.form.aid).then(res => {
         this.device = res.data.items;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
       selectPpmBudgetByAid(this.form.aCode).then(res => {
         this.budgetList = res.data;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
       selectedComPubAttamentsByAid(this.form.aid).then(res => {
-        console.log("file", res)
         if (res.data) {
           let names = res.data.anName.split(",");
           let urls = res.data.anUrl.split(",");
@@ -746,6 +773,9 @@ export default {
             setTimeout(() => {
               this.$router.back();
             }, 1000)
+          }).catch(err => {
+            this.fullscreenLoading = false;
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         }
       })

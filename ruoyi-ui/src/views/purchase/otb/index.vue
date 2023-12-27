@@ -32,7 +32,11 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="待提交" name="first">
           <el-table v-loading="loading" :data="planList">
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aBtype">
               <template slot-scope="scope">
@@ -91,7 +95,11 @@
                 </el-descriptions>
               </template>
             </el-table-column>
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
             <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
@@ -115,7 +123,11 @@
 
         <el-tab-pane label="已生效" name="third">
           <el-table v-loading="loading" :data="planList">
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aCreateDept"/>
             <el-table-column label="采购计划名称" align="center" prop="aName"/>
@@ -414,8 +426,8 @@ export default {
           listRecord({aid: this.form.aid}).then((res) => {
             this.loading = false;
             this.record_approval = res.rows;
-          }).catch((err) => {
-
+          }).catch(err => {
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           break;
         default:
@@ -435,6 +447,8 @@ export default {
                 }
               })
             }
+          }).catch(err => {
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           selectedComPubAttamentsByAid(aid).then(res => {
             if (res.data) {
@@ -446,7 +460,9 @@ export default {
               this.file.urls = [];
               this.file.names = [];
             }
-
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           break;
       }
@@ -473,6 +489,8 @@ export default {
         this.loading = false;
         this.total = response.total;
         this.planList = response.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     // 取消按钮
@@ -526,6 +544,8 @@ export default {
     selectRluesForm() {
       listRules(null).then(res => {
         this.codeRuleForm = res.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     /** 修改按钮操作 */
@@ -535,6 +555,8 @@ export default {
       getPlan(aid).then(response => {
         console.log(response.data)
         this.$router.push({path: '/purchase/insert', query: response.data})
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     /** 提交按钮 */
@@ -552,12 +574,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const aids = row.aid || this.ids
-      this.$modal.confirm('是否确认删除采购计划编号为"' + aids + '"的数据项？').then(function () {
+      this.$modal.confirm('采购计划下有行项目,是否确认删除采购计划编号为"' + aids + '"的数据项？').then(function () {
         return delPlan(aids)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')
-      }).catch(() => {
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     //单击查看预算
@@ -573,15 +596,22 @@ export default {
     },
     //提交采购计划修改状态
     sumbitPlan() {
-      this.ComUpdatePlan(1);
+      this.$modal.confirm("你确定要提交采购计划吗？").then(() => {
+        this.ComUpdatePlan(1);
+      })
+
     },
     //审核采购计划
     approved() {
-      this.ComUpdatePlan(2);
+      this.$modal.confirm("你确定要审核该采购计划吗？").then(() => {
+        this.ComUpdatePlan(2);
+      })
     },
     //驳回采购计划
     rejectPlan() {
-      this.ComUpdatePlan(0);
+      this.$modal.confirm("你确定要驳回采购计划吗？").then(()=>{
+        this.ComUpdatePlan(0);
+      })
     },
     //修改采购计划通用方法
     ComUpdatePlan(state) {
@@ -600,7 +630,10 @@ export default {
           this.queryParams.aAstate = 0;
           this.getList();
         }, 500)
-      });
+      }).catch(err => {
+        this.fullscreenLoading = false;
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      })
     }
   }
 }
