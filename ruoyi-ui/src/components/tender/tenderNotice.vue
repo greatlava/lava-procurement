@@ -9,6 +9,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
+          :disabled="status"
         >新增</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -40,18 +41,21 @@
                      type="text"
                      icon="el-icon-s-check"
                      @click="handleUpdateState2(scope.row,1)"
+                     :disabled="status"
           >审核</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row,1)"
+            :disabled="status"
           >编辑</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            :disabled="status"
           >删除</el-button>
           <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
@@ -64,6 +68,7 @@
             type="text"
             icon="el-icon-s-promotion"
             @click="handleUpdateState(scope.row)"
+            :disabled="status"
           >发布</el-button>
         </template>
       </el-table-column>
@@ -137,9 +142,6 @@
                                  :on-progress="handleFileUploadProgress"
                                  :on-success="handleFileSuccess" :auto-upload="false">
                         <el-button slot="trigger" size="small" type="primary" :disabled="noUpdate">选取文件</el-button>
-<!--                        <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
-<!--                                   @click="submitUpload">上传到服务器-->
-<!--                        </el-button>-->
                         <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>
                       </el-upload>
         </el-form-item>
@@ -149,10 +151,10 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
 <!--        v-show="showPass"-->
-        <el-button type="success"  @click="handleUpdateState2(form,2)" v-if="form.fjStatus == 2" v-has-role="['controller']">通 过</el-button>
-        <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)" v-if="form.fjStatus == 2" v-has-role="['controller']">驳 回</el-button>
+        <el-button type="success"  @click="handleUpdateState2(form,2)" :disabled="status" v-if="form.fjStatus == 2" v-has-role="['controller']">通 过</el-button>
+        <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)" :disabled="status"  v-if="form.fjStatus == 2" v-has-role="['controller']">驳 回</el-button>
 <!--        v-show="showBtn"-->
-        <el-button type="primary"  @click="submitForm" v-has-role="['common']">确 定</el-button>
+        <el-button type="primary"  @click="submitForm" v-has-role="['common']" :disabled="status">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -170,6 +172,7 @@ export default {
   name: "Notice",
   data() {
     return {
+      status:false,
       // 遮罩层
       loading: false,
       // 选中数组
@@ -295,6 +298,11 @@ export default {
     },"3000");
     this.queryParams.sid = this.$route.query.sid;
     this.getList();
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
     // 取消按钮

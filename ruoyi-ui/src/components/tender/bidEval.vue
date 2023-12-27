@@ -10,6 +10,7 @@
            icon="el-icon-plus"
            size="mini"
            @click="handleAdd"
+           :disabled="status"
          >新增</el-button>
        </el-col>
        <right-toolbar @queryTable="getList"></right-toolbar>
@@ -38,6 +39,7 @@
              type="text"
              icon="el-icon-delete"
              @click="handleDelete(scope.row)"
+             :disabled="status"
            >删除</el-button>
          </template>
        </el-table-column>
@@ -151,7 +153,7 @@
          </el-form-item>
        </el-form>
        <div slot="footer" class="dialog-footer">
-         <el-button type="primary" @click="submitForm">确 定</el-button>
+         <el-button type="primary" @click="submitForm"  :disabled="status">确 定</el-button>
          <el-button @click="cancel">取 消</el-button>
        </div>
      </el-dialog>
@@ -164,12 +166,13 @@ import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidat
 import {getToken} from "@/utils/auth";
 import {listSubmission,findSubmission} from "@/api/system/tender/submission";
 import {getSupplier} from "@/api/system/supplier";
-import {updateTender} from '@/api/system/tender/tender'
+import {getTender, updateTender} from '@/api/system/tender/tender'
 
 export default {
   name: "Candidate",
   data() {
     return {
+      status:false,
       isType:null,
       // 遮罩层
       loading: true,
@@ -311,6 +314,11 @@ export default {
     this.getList();
     this.queryParams2.sid = this.$route.query.sid;
     this.getSubmission();
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
     //是否推荐下拉框改变

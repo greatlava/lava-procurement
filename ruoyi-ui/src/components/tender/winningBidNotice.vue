@@ -7,6 +7,7 @@
             type="primary"
             plain
             size="mini"
+            :disabled="multiple"
             @click="handleUpdate"
           >发送通知</el-button>
         </el-col>
@@ -80,12 +81,13 @@
 <script>
 import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidate } from "@/api/system/tender/bidEval";
 import {addResults,selectResultSupp,listResults} from "@/api/system/tender/winningBidNotice";
-import {updateTender} from "@/api/system/tender/tender";
+import {getTender, updateTender} from "@/api/system/tender/tender";
 
 export default {
   name: "DetermineWin",
   data() {
     return {
+      status:false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -164,6 +166,11 @@ export default {
     this.queryParams.sid=this.$route.query.sid;
     this.getList();
     this.getResultList(this.queryParams.sid);
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
     /** 查询中标候选人列表 */
@@ -228,65 +235,70 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      const zids = row.zid || this.ids;
-      console.log(zids,"zids");
-      console.log(this.resultList2,"result2  init");
-      zids.forEach(zid=>{
-        console.log(this.resultList2,"result2  open");
-        //根据zid获取信息
-        getCandidate(zid).then(res=>{
-          this.reset2();//清空
-          this.queryParams2.sid = res.data.sid;
-          this.queryParams2.hid = res.data.hid;
-          //查看是否hid已发送通知
-          listResults(this.queryParams2).then(r=>{
-                this.resultList2=[];
-                if(r.rows.length  == 0){
-                  this.resultList2.push(res.data);
-                  console.log(this.resultList2,"result2 push");
-                }
-            if(this.resultList2.length > 0){
-              this.resultList2.forEach(item=>{
-                console.log(item,"row");
-                this.reset2();//重置
-                this.queryParams2.sid =item.sid;//招标项目Id
-                this.queryParams2.hid =item.hid;//供应商ID
-                this.queryParams2.hName =item.hName;//供应商名称
-                if(this.queryParams2.sid != null && this.queryParams2.hName != null && this.queryParams2.hid != null){
-                  //添加发送通知
-                  addResults(this.queryParams2).then(re => {
-                    console.log("open add-----");
-                    this.queryParams2.hid =null;
-                    this.queryParams2.hName =null;
-                    console.log(this.queryParams2,"q2");
-                    //验证已发送通知候选人和候选人是否一致
-                    listResults(this.queryParams2).then(r=>{
-                      console.log("open add----- listResults",r);
-                      this.queryParams2.sid = r.rows[0].sid;
-                      listCandidate(this.queryParams2).then(re=>{
-                        console.log("open add----- listCandidate",re);
-                        this.queryParams3.sid=this.queryParams2.sid;
-                        this.queryParams3.sProjectState=7;//已定标
-                        if(r.rows.length === re.rows.length){
-                          console.log("open add----- updateTender");
-                          updateTender(this.queryParams3).then(res=>{});
-                        }
+      if(this.status){
+        this.$alert("该项目已定标，不可进行操作！");
+        this.getList();
+      }else {
+        const zids = row.zid || this.ids;
+        console.log(zids,"zids");
+        console.log(this.resultList2,"result2  init");
+        zids.forEach(zid=>{
+          console.log(this.resultList2,"result2  open");
+          //根据zid获取信息
+          getCandidate(zid).then(res=>{
+            this.reset2();//清空
+            this.queryParams2.sid = res.data.sid;
+            this.queryParams2.hid = res.data.hid;
+            //查看是否hid已发送通知
+            listResults(this.queryParams2).then(r=>{
+              this.resultList2=[];
+              if(r.rows.length  == 0){
+                this.resultList2.push(res.data);
+                console.log(this.resultList2,"result2 push");
+              }
+              if(this.resultList2.length > 0){
+                this.resultList2.forEach(item=>{
+                  console.log(item,"row");
+                  this.reset2();//重置
+                  this.queryParams2.sid =item.sid;//招标项目Id
+                  this.queryParams2.hid =item.hid;//供应商ID
+                  this.queryParams2.hName =item.hName;//供应商名称
+                  if(this.queryParams2.sid != null && this.queryParams2.hName != null && this.queryParams2.hid != null){
+                    //添加发送通知
+                    addResults(this.queryParams2).then(re => {
+                      console.log("open add-----");
+                      this.queryParams2.hid =null;
+                      this.queryParams2.hName =null;
+                      console.log(this.queryParams2,"q2");
+                      //验证已发送通知候选人和候选人是否一致
+                      listResults(this.queryParams2).then(r=>{
+                        console.log("open add----- listResults",r);
+                        this.queryParams2.sid = r.rows[0].sid;
+                        listCandidate(this.queryParams2).then(re=>{
+                          console.log("open add----- listCandidate",re);
+                          this.queryParams3.sid=this.queryParams2.sid;
+                          this.queryParams3.sProjectState=7;//已定标
+                          if(r.rows.length === re.rows.length){
+                            console.log("open add----- updateTender");
+                            updateTender(this.queryParams3).then(res=>{});
+                          }
+                        });
                       });
+                      this.$modal.msgSuccess("发送成功！");
+                      this.getList();
+                      this.getResultList(this.queryParams.sid);
+                      this.reset2();
                     });
-                    this.$modal.msgSuccess("发送成功！");
-                    this.getList();
-                    this.getResultList(this.queryParams.sid);
-                    this.reset2();
-                  });
-                }
-              });
-            }else{
-              this.getResultList(this.queryParams.sid);
-              this.getList();
-            }
+                  }
+                });
+              }else{
+                this.getResultList(this.queryParams.sid);
+                this.getList();
+              }
+            });
           });
         });
-      });
+      }
     },
   }
 };

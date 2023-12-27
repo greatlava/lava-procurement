@@ -365,6 +365,16 @@ export default {
           this.$router.push({path: '/purchase/procurementSourcing', query: {aid: id}})
           break;
         case 1:
+          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          break;
+        case 2:
+          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          break;
+        case 3:
+          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          break;
+        case 4:
+          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
           break;
       }
     },
@@ -434,7 +444,7 @@ export default {
             title: e.sName,
             code: e.sCode,
             responsible_person: e.sLeader,
-            id: e.eid
+            id: e.sid
           };
           this.project_Kanban[1].content.push(obj);
         })
@@ -452,7 +462,7 @@ export default {
             title: e.sName,
             code: e.sCode,
             responsible_person: e.sLeader,
-            id: e.eid
+            id: e.sid
           };
           this.project_Kanban[2].content.push(obj);
         })
@@ -470,7 +480,7 @@ export default {
             title: e.sName,
             code: e.sCode,
             responsible_person: e.sLeader,
-            id: e.eid
+            id: e.sid
           };
           this.project_Kanban[3].content.push(obj);
         })
@@ -486,7 +496,7 @@ export default {
             title: e.sName,
             code: e.sCode,
             responsible_person: e.sLeader,
-            id: e.eid
+            id: e.sid
           };
           this.project_Kanban[4].content.push(obj);
         })

@@ -42,13 +42,23 @@
       </el-table-column>
       <el-table-column label="附件" type="expand" width="180">
         <template slot-scope="scope">
-          <el-form label-position="right" inline class="demo-table-expand">
+          <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="投标书">
-              <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
-                         multiple
-                         :file-list="JSON.parse(scope.row.fjFiles)"
-                         :auto-upload="false">
-              </el-upload>
+              <div>
+                <el-upload ref="upload" class="upload-demo" :limit="4" accept=".doc, .docx, .rar, .txt, .png, .jpg"
+                           multiple
+                           action="#"
+                           :file-list="JSON.parse(scope.row.fjFiles)"
+                           :auto-upload="false">
+                </el-upload>
+                <a :href="JSON.parse(scope.row.fjFiles)[0].url">
+                  <el-button
+                      size="small"
+                      type="primary"
+                      icon="el-icon-download"
+                  >下载</el-button>
+                </a>
+              </div>
             </el-form-item>
           </el-form>
         </template>
