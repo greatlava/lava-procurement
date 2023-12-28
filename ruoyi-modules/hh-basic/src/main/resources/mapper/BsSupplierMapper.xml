@@ -405,7 +405,7 @@
                i.v_count,
                i.v_person
         FROM nobid_non_pro p
-                 JOIN ppm_line_items i ON p.gid = i.gid
+                 JOIN ppm_line_items i ON p.xy_id = i.aid
                  JOIN ppm_device e ON i.tid = e.tid
         WHERE p.gid = #{gid}
     </select>
