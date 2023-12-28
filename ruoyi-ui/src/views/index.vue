@@ -264,8 +264,12 @@
                   <div class="supplier_describe div">
                     <p>法人：{{ item.hJuridical }}</p>
                     <h3>{{ item.hName }}</h3>
-                    <textOverflowHiding style="margin-top: 10px" :text="'公司简介：'+item.hDesc"
-                                        :width="300"></textOverflowHiding>
+                    <textOverflowHiding style="margin-top: 10px"
+                                        :text="'公司简介：'+ item.hDesc"
+                                        :width="300" v-if="item.hDesc"></textOverflowHiding>
+                    <textOverflowHiding style="margin-top: 10px"
+                                        :text="'公司简介：待填写~'"
+                                        :width="300" v-else></textOverflowHiding>
                   </div>
                   <div class="review_status">
                     <el-tag type="primary">已审核</el-tag>
@@ -275,7 +279,9 @@
                   <p>
                     <i class="el-icon-location-information"></i>
                     <text-overflow-hiding style="display: inline-block;height: 100%" :text="'联系地址：'+ item.hAddress"
-                                          :width="410"></text-overflow-hiding>
+                                          :width="410" v-if="item.hAddress"></text-overflow-hiding>
+                    <text-overflow-hiding style="display: inline-block;height: 100%" :text="'联系地址：待填写~'"
+                                          :width="410" v-else></text-overflow-hiding>
                   </p>
                 </div>
               </el-card>
@@ -365,16 +371,16 @@ export default {
           this.$router.push({path: '/purchase/procurementSourcing', query: {aid: id}})
           break;
         case 1:
-          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          this.$router.push({path: '/tender/bidding', query: {type: 'bidding', sid: id}})
           break;
         case 2:
-          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          this.$router.push({path: '/tender/bidding', query: {type: 'bidding', sid: id}})
           break;
         case 3:
-          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          this.$router.push({path: '/tender/bidding', query: {type: 'bidding', sid: id}})
           break;
         case 4:
-          this.$router.push({path: '/tender/bidding', query: {type:'bidding',sid: id}})
+          this.$router.push({path: '/tender/bidding', query: {type: 'bidding', sid: id}})
           break;
       }
     },
