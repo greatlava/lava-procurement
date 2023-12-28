@@ -117,6 +117,7 @@ public class BidDocumentsController extends BaseController
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
+            System.out.println("file:"+file);
             LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
             System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
