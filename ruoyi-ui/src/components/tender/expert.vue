@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" :disabled="status">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -152,8 +152,8 @@
                 操作
               </template>
               <template>
-                <el-button type="primary" @click="subApplication" v-show="isType=='add'">确定</el-button>
-                <el-button type="primary" @click="updateApplication" v-show="isType=='update'">修改</el-button>
+                <el-button type="primary" @click="subApplication" v-show="isType=='add'" :disabled="status">确定</el-button>
+                <el-button type="primary" @click="updateApplication" v-show="isType=='update'" :disabled="status">修改</el-button>
                 <el-button @click="cancel2">取消</el-button>
               </template>
             </el-descriptions-item>
@@ -257,7 +257,7 @@
             </el-table>
           </div>
           <div style="text-align: right;margin-top: 10px;">
-            <el-button type="primary" @click="sjcq" v-show="randomExpertList.length > 0">确定</el-button>
+            <el-button type="primary" @click="sjcq" v-show="randomExpertList.length > 0" :disabled="status">确定</el-button>
             <el-button @click="cancelDrawExerpt" >取消</el-button>
           </div>
         </div>
@@ -269,7 +269,7 @@
 <script>
   import {listCommittee, getCommittee, delCommittee, addCommittee, updateCommittee,findCommitAndExpert,delComBySid} from "@/api/system/tender/committee";
   // import DrawExpert from "@/views/tender/tender1/drawExpert.vue";
-  import {findTenderNotice} from "@/api/system/tender/tender";
+  import {findTenderNotice, getTender} from "@/api/system/tender/tender";
   import {listExpert} from "@/api/system/expert";
   import {addApplications, getmaxApp,listApplications,updateApplications} from "@/api/system/tender/bidApplication";
 
@@ -280,6 +280,7 @@
     dicts: ["ppm_procurement_plan"],
     data() {
       return {
+        status:false,
         // 遮罩层
         loading: true,
         // 评标委员会表格数据
@@ -380,6 +381,11 @@
       this.getExerpt(this.queryParams.sid);
       this.getList(this.queryParams.sid);
       this.selectBdList();
+      getTender(this.queryParams.sid).then(res=>{
+        if(res.data.sProjectState === 7){
+          this.status=true;
+        }
+      });
 
     },
     methods: {

@@ -8,6 +8,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
+          :disabled="status"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -54,6 +55,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            :disabled="status"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -94,7 +96,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm" :disabled="status">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -106,11 +108,13 @@ import { listDocuments, getDocuments, delDocuments, addDocuments, updateDocument
 import {addNotice, findStatus, updateNotice} from "@/api/system/tender/tenderNotice";
 import {getToken} from "@/utils/auth";
 import * as url from "url";
+import {getTender} from "@/api/system/tender/tender";
 
 export default {
   name: "Documents",
   data() {
     return {
+      status:false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -181,6 +185,11 @@ export default {
   },
   created() {
     this.getList();
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
     /** 查询招标文件列表 */
@@ -241,13 +250,18 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const wids = row.wid || this.ids;
-      this.$modal.confirm('是否确认删除招标文件编号为"' + wids + '"的数据项？').then(function() {
-        return delDocuments(wids);
-      }).then(() => {
+      if(this.status){
+        this.$alert("该项目已定标，不可进行操作！");
         this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }else{
+        const wids = row.wid || this.ids;
+        this.$modal.confirm('是否确认删除招标文件编号为"' + wids + '"的数据项？').then(function() {
+          return delDocuments(wids);
+        }).then(() => {
+          this.getList();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {});
+      }
     },
     /** 提交按钮 表单提交*/
     submitForm() {
