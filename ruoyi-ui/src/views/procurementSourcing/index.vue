@@ -238,7 +238,6 @@ export default {
   },
   created() {
     let obj = this.$route.query;
-    console.log(obj)
     if (obj && obj.aid) {
       this.handleClick(obj);
     }
@@ -258,7 +257,6 @@ export default {
       }
     },
     getList() {
-      alert(12321)
       this.loading = true;
       this.planList = [];
       FindProcurementPlanBy(this.queryParams).then(response => {
