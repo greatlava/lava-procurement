@@ -74,6 +74,16 @@ public class PpmProcurementPlan extends BaseEntity {
 
     private ComPubAttachments file;
 
+    private PpmApprovalRecord editor;
+
+    public PpmApprovalRecord getEditor() {
+        return editor;
+    }
+
+    public void setEditor(PpmApprovalRecord editor) {
+        this.editor = editor;
+    }
+
     public ComPubAttachments getFile() {
         return file;
     }
@@ -180,6 +190,7 @@ public class PpmProcurementPlan extends BaseEntity {
                 .append("aAstate", getaAstate())
                 .append("items", getItems())
                 .append("file", getFile())
+                .append("editor",getEditor())
                 .toString();
     }
 }
