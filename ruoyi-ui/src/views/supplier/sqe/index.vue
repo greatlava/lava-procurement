@@ -24,13 +24,18 @@
           <el-table stripe v-loading="loading" :data="supplierList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---' }}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
@@ -77,13 +82,18 @@
           <el-table stripe v-loading="loading" :data="noSupplierList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---' }}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
@@ -130,13 +140,18 @@
           <el-table stripe v-loading="loading" :data="supplierBadList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---'}}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="状态" align="center" prop="fState">
