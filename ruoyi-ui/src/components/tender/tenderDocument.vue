@@ -165,8 +165,6 @@ export default {
       uploadFiles: [],
       // 收集——上传文件的个数
       filesLength: 0,
-      //收集已上传的文件名
-      fileNameList:[],
       // 上传参数
       upload: {
         sid:this.$route.query.sid,

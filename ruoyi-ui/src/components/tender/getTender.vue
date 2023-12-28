@@ -7,7 +7,7 @@
         <el-table-column label="负责人" align="center" prop="sLeader" />
         <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="200">
           <template slot-scope="scope">
-            <span>{{ scope.row.bidNotices[0].uEndTime }}</span>
+            <span>{{ scope.row.bidNotices[0].uEndTime || '——'}}</span>
           </template>
         </el-table-column>
       </el-table>

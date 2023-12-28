@@ -115,4 +115,15 @@
             #{zid}
         </foreach>
     </delete>
+
+    <select id="selectSuppCand" parameterType="Long" resultMap="twoTable">
+        select zid,c.sid,z_final,z_fraction,z_recommend,z_ranking,z_sign,z_censor,z_review,z_summary,z_bidder,z_send_time,s.* from bid_candidate c inner join bs_supplier s on c.hid = s.hid where c.sid = #{sid}
+    </select>
+    <resultMap id="twoTable" type="com.hh.bidding.domain.BidCandidate">
+        <id column="zid" property="zid"/>
+        <collection property="bsSuppliers" ofType="com.hh.bidding.domain.BsSupplier">
+            <id property="hid" column="hid"/>
+            <association property="bsOperator"/>
+        </collection>
+    </resultMap>
 </mapper>

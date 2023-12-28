@@ -79,7 +79,7 @@ public class BidTenderController extends BaseController {
     /**
      * 修改招标项目
      */
-    @RequiresPermissions("system:tender:edit")
+//    @RequiresPermissions("system:tender:edit")
     @Log(title = "招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BidTender bidTender) {

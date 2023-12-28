@@ -97,4 +97,9 @@ public class BidWinningResultsServiceImpl implements IBidWinningResultsService
     public List<BidWinningResults> selectResultSupp(Long sid) {
         return bidWinningResultsMapper.selectResultSupp(sid);
     }
+
+    @Override
+    public BidWinningResults selectResultAndCandidate(Long sid) {
+        return bidWinningResultsMapper.selectResultAndCandidate(sid);
+    }
 }

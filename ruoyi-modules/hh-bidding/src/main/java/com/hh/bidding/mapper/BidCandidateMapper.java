@@ -59,4 +59,6 @@ public interface BidCandidateMapper
      * @return 结果
      */
     public int deleteBidCandidateByZids(Long[] zids);
+
+    public List<BidCandidate> selectSuppCand(Long sid);
 }

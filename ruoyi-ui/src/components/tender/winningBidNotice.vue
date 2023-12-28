@@ -7,13 +7,13 @@
             type="primary"
             plain
             size="mini"
-            :disabled="multiple"
+            :disabled="single"
             @click="handleUpdate"
           >发送通知</el-button>
         </el-col>
         <right-toolbar @queryTable="getList"></right-toolbar>
       </el-row>
-      <el-table v-loading="loading" :data="candidateList" @selection-change="handleSelectionChange">
+      <el-table v-loading="loading" :data="candidateList" @selection-change="handleSelectionChange" :default-sort = "{prop: 'zBidder', order: 'ascending'}">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="序号" type="index" align="center" />
         <el-table-column label="供应商名称" align="center" prop="hName"/>
@@ -25,15 +25,40 @@
           </template>
         </el-table-column>
         <el-table-column label="排名" align="center" prop="zRanking" />
-        <el-table-column label="是否中标" align="center" prop="zBidder" >
+        <el-table-column label="是否中标" align="center" prop="zBidder" sortable>
           <template slot-scope="scope">
             <span>{{scope.row.zBidder == 0?'是':'否'}}</span>
           </template>
         </el-table-column>
       </el-table>
+
+
+      <!-- 添加或修改招标公告对话框 -->
+      <el-dialog title="发送通知" :visible.sync="open" width="1080px" append-to-body>
+        <el-form ref="form"  :model="form" :rules="rules" label-width="120px" >
+          <el-form-item label="招标项目ID" prop="sid">
+            <el-input v-model="form.sid" disabled />
+          </el-form-item>
+          <el-form-item label="供应商ID" prop="hid" class="form-input">
+            <el-input v-model="form.hid" disabled/>
+          </el-form-item>
+          <el-form-item label="供应商名称" prop="uProject" class="form-input">
+            <el-input v-model="form.hName" disabled/>
+          </el-form-item>
+          <el-form-item label="公告标题" prop="resultTitle" class="form-input">
+            <el-input v-model="form.resultTitle" placeholder="请输入公告标题"/>
+          </el-form-item>
+          <el-form-item label="内容" prop="resultDesc">
+            <editor v-model="form.resultDesc" :min-height="192"/>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary"  @click="submitForm" :disabled="status">确 定</el-button>
+          <el-button @click="cancel">取 消</el-button>
+        </div>
+      </el-dialog>
     </div>
     <div  class="app-container">
-
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
           <div class="box">已发送</div>
@@ -80,7 +105,7 @@
 </template>
 <script>
 import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidate } from "@/api/system/tender/bidEval";
-import {addResults,selectResultSupp,listResults} from "@/api/system/tender/winningBidNotice";
+import {addResults, selectResultSupp, listResults, getResults} from "@/api/system/tender/winningBidNotice";
 import {getTender, updateTender} from "@/api/system/tender/tender";
 
 export default {
@@ -126,6 +151,7 @@ export default {
         zBidder: null,
         zSendTime: null,
         zid: null,
+        hid:null,
       },
       // 查询参数(中标结果公示)
       queryParams2: {
@@ -159,7 +185,10 @@ export default {
       form: {},
       // 表单校验
       rules: {
-      }
+        resultTitle: [
+          { required: true, message: "公告标题不能为空", trigger: "blur" }
+        ]
+      },
     };
   },
   created() {
@@ -231,75 +260,118 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.zid)
+      this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      if(this.status){
-        this.$alert("该项目已定标，不可进行操作！");
-        this.getList();
-      }else {
-        const zids = row.zid || this.ids;
-        console.log(zids,"zids");
-        console.log(this.resultList2,"result2  init");
-        zids.forEach(zid=>{
-          console.log(this.resultList2,"result2  open");
-          //根据zid获取信息
-          getCandidate(zid).then(res=>{
-            this.reset2();//清空
-            this.queryParams2.sid = res.data.sid;
-            this.queryParams2.hid = res.data.hid;
-            //查看是否hid已发送通知
-            listResults(this.queryParams2).then(r=>{
-              this.resultList2=[];
-              if(r.rows.length  == 0){
-                this.resultList2.push(res.data);
-                console.log(this.resultList2,"result2 push");
-              }
-              if(this.resultList2.length > 0){
-                this.resultList2.forEach(item=>{
-                  console.log(item,"row");
-                  this.reset2();//重置
-                  this.queryParams2.sid =item.sid;//招标项目Id
-                  this.queryParams2.hid =item.hid;//供应商ID
-                  this.queryParams2.hName =item.hName;//供应商名称
-                  if(this.queryParams2.sid != null && this.queryParams2.hName != null && this.queryParams2.hid != null){
-                    //添加发送通知
-                    addResults(this.queryParams2).then(re => {
-                      console.log("open add-----");
-                      this.queryParams2.hid =null;
-                      this.queryParams2.hName =null;
-                      console.log(this.queryParams2,"q2");
-                      //验证已发送通知候选人和候选人是否一致
-                      listResults(this.queryParams2).then(r=>{
-                        console.log("open add----- listResults",r);
-                        this.queryParams2.sid = r.rows[0].sid;
-                        listCandidate(this.queryParams2).then(re=>{
-                          console.log("open add----- listCandidate",re);
-                          this.queryParams3.sid=this.queryParams2.sid;
-                          this.queryParams3.sProjectState=7;//已定标
-                          if(r.rows.length === re.rows.length){
-                            console.log("open add----- updateTender");
-                            updateTender(this.queryParams3).then(res=>{});
-                          }
-                        });
-                      });
-                      this.$modal.msgSuccess("发送成功！");
-                      this.getList();
-                      this.getResultList(this.queryParams.sid);
-                      this.reset2();
-                    });
-                  }
-                });
-              }else{
-                this.getResultList(this.queryParams.sid);
-                this.getList();
-              }
-            });
-          });
-        });
-      }
+      const zids = row.zid || this.ids;
+      getCandidate(zids).then(res=>{
+        this.form = res.data;
+        this.queryParams2.sid = this.form.sid;
+        this.queryParams2.hid = this.form.hid;
+       if(this.queryParams2.sid!==null && this.queryParams2.hid!==null){
+         console.log(this.queryParams2,"q2");
+         listResults(this.queryParams2).then(response=>{
+           //已存在
+           if(response.rows.length > 0){
+             this.$alert("该候选人已发送过通知！");
+             this.getList();
+           }else{
+             this.open = true;
+           }
+         });
+       }
+      });
+      // if(this.status){
+      //   this.$alert("该项目已定标，不可进行操作！");
+      //   this.getList();
+      // }else {
+      //   const zids = row.zid || this.ids;
+      //   console.log(zids,"zids");
+      //   console.log(this.resultList2,"result2  init");
+      //   zids.forEach(zid=>{
+      //     console.log(this.resultList2,"result2  open");
+      //     //根据zid获取信息
+      //     getCandidate(zid).then(res=>{
+      //       this.reset2();//清空
+      //       this.queryParams2.sid = res.data.sid;
+      //       this.queryParams2.hid = res.data.hid;
+      //       //查看是否hid已发送通知
+      //       listResults(this.queryParams2).then(r=>{
+      //         this.resultList2=[];
+      //         if(r.rows.length  == 0){
+      //           this.resultList2.push(res.data);
+      //           console.log(this.resultList2,"result2 push");
+      //         }
+      //         if(this.resultList2.length > 0){
+      //           this.resultList2.forEach(item=>{
+      //             console.log(item,"row");
+      //             this.reset2();//重置
+      //             this.queryParams2.sid =item.sid;//招标项目Id
+      //             this.queryParams2.hid =item.hid;//供应商ID
+      //             this.queryParams2.hName =item.hName;//供应商名称
+      //             if(this.queryParams2.sid != null && this.queryParams2.hName != null && this.queryParams2.hid != null){
+      //               //添加发送通知
+      //               addResults(this.queryParams2).then(re => {
+      //                 console.log("open add-----");
+      //                 this.queryParams2.hid =null;
+      //                 this.queryParams2.hName =null;
+      //                 console.log(this.queryParams2,"q2");
+      //                 //验证已发送通知候选人和候选人是否一致
+      //                 listResults(this.queryParams2).then(r=>{
+      //                   console.log("open add----- listResults",r);
+      //                   this.queryParams2.sid = r.rows[0].sid;
+      //                   listCandidate(this.queryParams2).then(re=>{
+      //                     console.log("open add----- listCandidate",re);
+      //                     this.queryParams3.sid=this.queryParams2.sid;
+      //                     this.queryParams3.sProjectState=7;//已定标
+      //                     if(r.rows.length === re.rows.length){
+      //                       console.log("open add----- updateTender");
+      //                       updateTender(this.queryParams3).then(res=>{});
+      //                     }
+      //                   });
+      //                 });
+      //                 this.$modal.msgSuccess("发送成功！");
+      //                 this.getList();
+      //                 this.getResultList(this.queryParams.sid);
+      //                 this.reset2();
+      //               });
+      //             }
+      //           });
+      //         }else{
+      //           this.getResultList(this.queryParams.sid);
+      //           this.getList();
+      //         }
+      //       });
+      //     });
+      //   });
+      // }
     },
+    submitForm(){
+      this.$refs["form"].validate(valid => {
+        if(valid){
+          addResults(this.form).then(r=>{
+            this.queryParams.sid = this.form.sid;
+            this.queryParams.hid = this.form.hid;
+            if(this.queryParams.sid!==null && this.queryParams.hid!==null){
+              listCandidate(this.queryParams).then(re=>{
+                //如果给中标人发送通知，则修改招标状态
+                if(re.rows[0].zBidder === 0){
+                  this.queryParams3.sid=this.queryParams2.sid;
+                  this.queryParams3.sProjectState=7;//已定标
+                  updateTender(this.queryParams3).then(res=>{});
+                }
+              });
+            }
+            this.open = false;
+            this.$modal.msgSuccess("发送成功！");
+            this.getList();
+            this.getResultList(this.queryParams.sid);
+          });
+        }
+      });
+    }
   }
 };
 </script>

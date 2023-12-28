@@ -58,4 +58,6 @@ public interface IBidCandidateService
      * @return 结果
      */
     public int deleteBidCandidateByZid(Long zid);
+
+    public List<BidCandidate> selectSuppCand(Long sid);
 }

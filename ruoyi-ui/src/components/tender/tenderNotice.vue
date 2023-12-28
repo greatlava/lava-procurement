@@ -49,6 +49,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row,1)"
             :disabled="status"
+            v-has-role="['common']"
           >编辑</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
@@ -56,6 +57,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             :disabled="status"
+            v-has-role="['common']"
           >删除</el-button>
           <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
@@ -69,6 +71,7 @@
             icon="el-icon-s-promotion"
             @click="handleUpdateState(scope.row)"
             :disabled="status"
+            v-has-role="['common']"
           >发布</el-button>
         </template>
       </el-table-column>
@@ -88,7 +91,7 @@
           <el-input v-model="form.uTitle" placeholder="请输入公告标题" :disabled="noUpdate"/>
         </el-form-item>
         <el-form-item label="关联项目" prop="uProject" class="form-input">
-          <el-input v-model="form.uProject" disabled="disabled" :disabled="noUpdate"/>
+          <el-input v-model="form.uProject" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="项目资金" prop="uMoney" class="form-input">
           <el-input v-model="form.uMoney" placeholder="请输入项目资金" :disabled="noUpdate"/>
@@ -127,7 +130,7 @@
           <el-date-picker
             v-model="form.uKaiTime"
             type="datetime"
-            placeholder="请选择投标截止时间"
+            placeholder="请选择开标时间"
             value-format="yyyy-MM-dd hh:mm:ss"
             default-time="09:00:00"
             :disabled="noUpdate">
@@ -266,8 +269,6 @@ export default {
       uploadFiles: [],
       // 收集——上传文件的个数
       filesLength: 0,
-      //收集已上传的文件名
-      fileNameList:[],
       urls:[],
       fjList:[],
       //未上传前文件列表
@@ -305,6 +306,22 @@ export default {
     });
   },
   methods: {
+    rest2(){
+      this.fileList=[],
+        // 收集——上传文件的列表
+        this.uploadFiles=[]
+        // 收集——上传文件的个数
+        this.filesLength=0
+        this.urls=[]
+        this.fjList=[]
+        //未上传前文件列表
+        this.noFiles=[]
+        //未上传清除后文件列表
+        this.noFiles2=[]
+        //接收过滤的已上传文件
+        this.filterList=[]
+        this.upload.fileList=[];
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -357,6 +374,7 @@ export default {
       getTender(this.queryParams.sid).then(res=>{
           this.form.uProject =res.data.sName;
       });
+      this.upload.fileList=[];
       this.open = true;
       this.loading = true;
       this.title = "添加招标公告";
@@ -505,17 +523,16 @@ export default {
           if (valid) {
             //1:如果没有文件，直接上传form表单
             if(this.noFiles2.length == 0){
+              console.log("pt add update");
              //拿到剩余文件生成字符串
              this.form.fjAnnex = JSON.stringify(this.filterList);
               //判断type值  update：修改  add：新增
               if (this.queryParams.type === 'update') {
-
                 updateNotice(this.form).then(response => {
                   this.$modal.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
                 });
-
               } else if(this.queryParams.type === 'add'){
                 this.form.sid = this.$route.query.sid;//确定对应招标项目
                 //新增公告
@@ -527,6 +544,7 @@ export default {
 
               }
             }else{
+              console.log("upload add update");
               this.noFiles2=[];
               //2:如果有文件
               //2.1文件上传执行submit  即触发 handleFileSuccess函数
@@ -558,10 +576,22 @@ export default {
       this.urls.push({id: this.urls.length + 1, url});
       this.fjList.push({id: this.fjList.length + 1, ...file });
       this.uploadFiles.push(file);
+      console.log(this.urls,"urls");
+      console.log(this.fjList,"fjList");
+      console.log(this.uploadFiles.length,"uploadFiles len");
+      console.log(this.filesLength,"len2");
+      console.log(this.upload.fileList.length,"len3");
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
+      // this.upload.fileList = this.filterList;
+      // console.log(this.upload.fileList,"upload.fileList");
+      if(this.filterList.length > 0){
+        this.upload.fileList = this.filterList;
+      }
       if (this.uploadFiles.length === this.filesLength - this.upload.fileList.length){
+        // console.log(this.fjList,"open jr");
         //清空未上传文件列表
         this.noFiles2=[];
+        // console.log( this.noFiles2,"noFiles2 sc");
         let fjLists = this.fjList.map(obj=>{
           let newObj = obj;
           delete newObj.percentage;
@@ -571,24 +601,30 @@ export default {
           obj.url = '';
           return newObj;
         });
+        console.log( fjLists,"fjLists");
         const result = fjLists.map((item, index) => {
           item.url = this.urls[index].url;
           return item;
         });
+        console.log( result,"result");
         if(this.upload.fileList.length > 0){
+          // console.log("open  upload");
           this.upload.fileList.forEach(f=>{
             f.id = result.length+1;
             result.push(f);
           });
+          console.log( result,"result");
           this.upload.fileList=[];//清空
-          this.form.fjAnnex = JSON.stringify(result);
         }
+        this.form.fjAnnex = JSON.stringify(result);
+        console.log( this.form.fjAnnex,"fjAnnex");
        if(this.queryParams.type ==='update'){
          //修改公告
          updateNotice(this.form).then(response => {
            this.$modal.msgSuccess("修改成功");
            this.open = false;
            this.getList();
+           this.rest2();
          });
        }else if (this.queryParams.type ==='add'){
          //新增公告
@@ -596,6 +632,7 @@ export default {
            this.$modal.msgSuccess("新增成功");
            this.open = false;
            this.getList();
+           this.rest2();
          });
        }
       }
@@ -605,9 +642,9 @@ export default {
       if(this.queryParams.type ==='add'){
         this.noFiles2 =  this.noFiles.filter(f=>f.name !== file.name);
       }else if(this.queryParams.type ==='update'){
+
         this.filterList = this.upload.fileList.filter(f=>f.name!==file.name);
-        this.noFiles2 = this.noFiles.filter(f=>f.name!==file.name);
-        console.log( this.noFiles2,"noFiles2");
+        console.log( this.filterList,"filterList");
       }
       return this.$confirm(`确定移除 ${file.name}？`);
     },

@@ -37,7 +37,7 @@ public class BidWinningResultsController extends BaseController
     /**
      * 查询中标结果公示列表
      */
-    @RequiresPermissions("system:results:list")
+//    @RequiresPermissions("system:results:list")
     @GetMapping("/list")
     public TableDataInfo list( BidWinningResults bidWinningResults)
     {
@@ -106,5 +106,10 @@ public class BidWinningResultsController extends BaseController
     public AjaxResult SuppList( @PathVariable("sid") Long sid)
     {
         return success(bidWinningResultsService.selectResultSupp(sid));
+    }
+    @GetMapping("/selectResultAndCandidate/{sid}")
+    public AjaxResult selectResultAndCandidate( @PathVariable("sid") Long sid)
+    {
+        return success(bidWinningResultsService.selectResultAndCandidate(sid));
     }
 }

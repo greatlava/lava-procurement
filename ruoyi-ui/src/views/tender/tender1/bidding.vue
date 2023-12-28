@@ -142,8 +142,10 @@ export default {
     getDetails(){
       this.queryParams.fjStatus = 5;
       listNotice(this.queryParams).then(res=>{
+        if(res.rows.length > 0){
           this.queryParams.uKaiTime = res.rows[0].uKaiTime;
           this.computeDate();
+        }
       });
     },
     computeDate(){

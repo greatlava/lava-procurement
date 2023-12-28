@@ -37,7 +37,16 @@ public class BidWinningResults extends BaseEntity
     @Excel(name = "公示发布时间")
     private Date gsResDate;
 
+    @Excel(name = "内容")
+    private String resultDesc;
+
+    @Excel(name = "标题")
+    private String resultTitle;
+
+
     private List<BsSupplier> bsSupplier;
+
+    private BidCandidate bidCandidate;
 
     public void setGsId(Long gsId) 
     {
@@ -67,6 +76,8 @@ public class BidWinningResults extends BaseEntity
             .append("hName", gethName())
             .append("gsState", getGsState())
             .append("gsResDate", getGsResDate())
+                .append("resultDesc", getResultDesc())
+                .append("resultTitle", getResultTitle())
             .toString();
     }
 
@@ -108,5 +119,29 @@ public class BidWinningResults extends BaseEntity
 
     public void setBsSupplier(List<BsSupplier> bsSupplier) {
         this.bsSupplier = bsSupplier;
+    }
+
+    public String getResultDesc() {
+        return resultDesc;
+    }
+
+    public void setResultDesc(String resultDesc) {
+        this.resultDesc = resultDesc;
+    }
+
+    public String getResultTitle() {
+        return resultTitle;
+    }
+
+    public void setResultTitle(String resultTitle) {
+        this.resultTitle = resultTitle;
+    }
+
+    public BidCandidate getBidCandidate() {
+        return bidCandidate;
+    }
+
+    public void setBidCandidate(BidCandidate bidCandidate) {
+        this.bidCandidate = bidCandidate;
     }
 }

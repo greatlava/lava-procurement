@@ -1,6 +1,8 @@
 package com.hh.bidding.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -71,6 +73,8 @@ public class BidCandidate extends BaseEntity
 
     @Excel(name = "供应商名称")
     private String hName;
+
+    private List<BsSupplier> bsSuppliers;
 
     public void setZid(Long zid) 
     {
@@ -216,5 +220,13 @@ public class BidCandidate extends BaseEntity
 
     public void sethName(String hName) {
         this.hName = hName;
+    }
+
+    public List<BsSupplier> getBsSuppliers() {
+        return bsSuppliers;
+    }
+
+    public void setBsSuppliers(List<BsSupplier> bsSuppliers) {
+        this.bsSuppliers = bsSuppliers;
     }
 }

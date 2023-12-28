@@ -92,4 +92,9 @@ public class BidCandidateServiceImpl implements IBidCandidateService
     {
         return bidCandidateMapper.deleteBidCandidateByZid(zid);
     }
+
+    @Override
+    public List<BidCandidate> selectSuppCand(Long sid) {
+        return bidCandidateMapper.selectSuppCand(sid);
+    }
 }

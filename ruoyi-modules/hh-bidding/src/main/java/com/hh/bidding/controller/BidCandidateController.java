@@ -37,7 +37,7 @@ public class BidCandidateController extends BaseController
     /**
      * 查询中标候选人列表
      */
-    @RequiresPermissions("system:candidate:list")
+//    @RequiresPermissions("system:candidate:list")
     @GetMapping("/list")
     public TableDataInfo list(BidCandidate bidCandidate)
     {
@@ -101,4 +101,12 @@ public class BidCandidateController extends BaseController
     {
         return toAjax(bidCandidateService.deleteBidCandidateByZids(zids));
     }
+
+    @GetMapping(value = "/suppCand/{sid}")
+    public AjaxResult suppCand(@PathVariable("sid") Long sid)
+    {
+        return success(bidCandidateService.selectSuppCand(sid));
+    }
+
+
 }

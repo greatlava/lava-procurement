@@ -65,7 +65,7 @@
     <select id="findAllByEndTime" resultType="com.hh.bidding.domain.BidNotice" resultMap="TwoTableResult">
         select n.uid uid,u_title,u_project,u_money,u_get_time,u_accept_time,u_end_time,u_kai_time,fj_remark,fj_annex,fj_status,u_updateTime,t.*
         from bid_notice n inner join bid_tender t on n.sid = t.sid
-        WHERE  fj_status = 5 and now() >= u_end_time
+        WHERE  fj_status = 5 and s_project_state=7
     </select>
 
     <select id="findStatus" resultType="com.hh.bidding.domain.BidNotice">

@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column label="性别" align="center" prop="pbSex">
         <template slot-scope="scope">
-          <span>{{scope.row.bsExpert.jSex == 0?'女':'男'}}</span>
+          <span>{{scope.row.bsExpert.jSex == 1?'女':'男'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="身份证号" align="center" prop="pbIdCard">
@@ -110,8 +110,16 @@
                 评标开始时间
               </template>
               <template>
-                <el-date-picker v-model="queryParams.xStartTime" id="input-common1" type="date" placeholder="请选择评标开始时间">
+                <el-date-picker
+                  v-model="queryParams.xStartTime"
+                  type="datetime"
+                  id="input-common1"
+                  placeholder="请选择评标开始时间"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  default-time="09:00:00">
                 </el-date-picker>
+<!--                <el-date-picker v-model="queryParams.xStartTime"  type="date" placeholder="请选择评标开始时间">-->
+<!--                </el-date-picker>-->
               </template>
             </el-descriptions-item>
             <el-descriptions-item>
@@ -119,8 +127,16 @@
                 评标结束时间
               </template>
               <template>
-                <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">
+                <el-date-picker
+                  v-model="queryParams.xEndTime"
+                  type="datetime"
+                  id="input-common1"
+                  placeholder="请选择评标结束时间"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  default-time="09:00:00">
                 </el-date-picker>
+<!--                <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">-->
+<!--                </el-date-picker>-->
               </template>
             </el-descriptions-item>
             <el-descriptions-item>
@@ -181,8 +197,7 @@
                       <el-table-column prop="jName" label="专家名称" width="120" align="center"/>
                       <el-table-column prop="jSex" label="性别" width="100" align="center">
                         <template slot-scope="scope">
-                          <span v-if="scope.row.jSex==1">男</span>
-                          <span v-else>女</span>
+                          <span>{{scope.row.jSex == 1?'女':'男'}}</span>
                         </template>
                       </el-table-column>
                       <el-table-column prop="jIdentity" label="身份证号" width="150" align="center"/>
@@ -478,8 +493,8 @@
       },
       //查询所有准入专家
       selectBdList() {
+        this.queryParams2.jShState = 1;
         listExpert(this.queryParams2).then(res => {
-          // console.log(res, "res");
           this.expertList = res.rows;
           this.objList =this.expertList.slice();
         });

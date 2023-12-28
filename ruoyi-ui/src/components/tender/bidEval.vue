@@ -15,17 +15,17 @@
        </el-col>
        <right-toolbar @queryTable="getList"></right-toolbar>
      </el-row>
-     <el-table v-loading="loading" :data="candidateList">
-       <el-table-column label="序号" type="index" align="center" />
+     <el-table v-loading="loading" :data="candidateList" :default-sort = "{prop: 'zRanking', order: 'ascending'}">
+       <el-table-column label="序号" type="index" align="center"/>
        <el-table-column label="供应商名称" align="center" prop="hName"/>
        <el-table-column label="最终报价(万元)" align="center" prop="zFinal" />
-       <el-table-column label="最终得分" align="center" prop="zFraction" />
+       <el-table-column label="最终得分" align="center" prop="zFraction" sortable/>
        <el-table-column label="是否推荐" align="center" prop="zRecommend" >
          <template slot-scope="scope">
              <span>{{scope.row.zRecommend == 0?'是':'否'}}</span>
          </template>
        </el-table-column>
-       <el-table-column label="排名" align="center" prop="zRanking" />
+       <el-table-column label="排名" align="center" prop="zRanking" sortable/>
        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
          <template slot-scope="scope">
            <el-button
