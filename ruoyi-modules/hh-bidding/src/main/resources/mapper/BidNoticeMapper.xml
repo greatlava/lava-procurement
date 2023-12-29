@@ -37,7 +37,6 @@
         from bid_notice
     </sql>
 
-
     <select id="selectBidNoticeList" parameterType="com.hh.bidding.domain.BidNotice" resultMap="BidNoticeResult">
         <include refid="selectBidNoticeVo"/>
         <where>
@@ -49,7 +48,7 @@
             <if test="uGetTime != null ">and u_get_time = #{uGetTime}</if>
             <if test="uAcceptTime != null ">and u_accept_time = #{uAcceptTime}</if>
             <if test="uEndTime != null ">and u_end_time >= now() and u_end_time >= u_updateTime</if>
-            <if test="uKaiTime != null ">and u_kai_time = #{uKaiTime}</if>
+            <if test="uKaiTime != null ">and DATE(u_kai_time) = CURDATE()</if>
             <if test="fjAnnex != null ">and fj_annex = #{fjAnnex}</if>
             <if test="fjStatus != null ">and fj_status = #{fjStatus}</if>
             <if test="fjRemark != null  and fjRemark != ''">and fj_remark = #{fjRemark}</if>
