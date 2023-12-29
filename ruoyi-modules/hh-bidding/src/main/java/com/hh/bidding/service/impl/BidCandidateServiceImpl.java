@@ -92,4 +92,10 @@ public class BidCandidateServiceImpl implements IBidCandidateService
     {
         return bidCandidateMapper.deleteBidCandidateByZid(zid);
     }
+
+    //查询中标供应商
+    @Override
+    public BidCandidate selectBidCandidateBySid(Long sid) {
+        return bidCandidateMapper.selectBidCandidateBySid(sid);
+    }
 }

@@ -89,7 +89,7 @@
     </select>
 
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
-        <include refid="selectBidTenderVo"/>
+        select * from
         where sid = #{sid}
     </select>
 

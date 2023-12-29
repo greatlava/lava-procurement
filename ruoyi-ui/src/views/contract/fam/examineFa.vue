@@ -282,7 +282,7 @@ export default {
   methods: {
     //创建合同
     addFa() {
-      //判断是否上传文件
+      //判断是否上传文件供应商
       this.submitNextUpload()
     },
     add() {

@@ -115,7 +115,7 @@ export function updateContract(data) {
   })
 }
 
-// 查询公共附件详细
+// 查询公共附件详细eid
 export function getAttachments(eid) {
   return request({
     url: '/basic/contract/selectCom',

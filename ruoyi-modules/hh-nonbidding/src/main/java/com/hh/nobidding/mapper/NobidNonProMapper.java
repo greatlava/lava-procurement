@@ -1,5 +1,6 @@
 package com.hh.nobidding.mapper;
 
+import com.hh.nobidding.domain.ComPubAttachments;
 import com.hh.nobidding.domain.ComQuotation;
 import com.hh.nobidding.domain.NobidNonPro;
 
@@ -11,8 +12,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2023-12-11
  */
-public interface NobidNonProMapper
-{
+public interface NobidNonProMapper {
     /**
      * 查询非招标项目
      *
@@ -63,4 +63,30 @@ public interface NobidNonProMapper
 
     //查询项目报价
     public List<ComQuotation> selectQuotation(String gfId);
+
+    //查询公共附件
+    public ComPubAttachments selectComPubAttachmentsByAid(Integer aid);
+
+    /**
+     * 修改公共附件
+     *
+     * @param comPubAttachments 公共附件
+     * @return 结果
+     */
+    public int updateComPubAttachments(ComPubAttachments comPubAttachments);
+
+    //查询可创建合同的非招标项目表
+    public List<NobidNonPro> selectNobidNonProList1(NobidNonPro nobidNonPro);
+
+    //新增公共附件
+    public int insertComPubAttachments(ComPubAttachments comPubAttachments);
+
+    //新增报价单
+    public int insertComQuotation(ComQuotation comQuotation);
+
+    //删除报价单
+    public int deleteComQuotationByGfIds(String gfId);
+
+    //查询是否存在
+    public List<ComQuotation> selectComPubAttachmentsByGfId(String gfId);
 }

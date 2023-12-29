@@ -43,9 +43,6 @@ public class PpmProcurementPlanController extends BaseController {
     public TableDataInfo list(PpmProcurementPlan ppmProcurementPlan) {
         startPage();
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectPpmProcurementPlanList(ppmProcurementPlan);
-        System.out.println("============================");
-        System.out.println(list.get(0));
-        System.out.println("============================");
         return getDataTable(list);
     }
 

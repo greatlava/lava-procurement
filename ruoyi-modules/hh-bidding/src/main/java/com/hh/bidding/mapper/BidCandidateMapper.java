@@ -59,4 +59,7 @@ public interface BidCandidateMapper
      * @return 结果
      */
     public int deleteBidCandidateByZids(Long[] zids);
+
+    //查询中标供应商
+    public BidCandidate selectBidCandidateBySid(Long sid);
 }

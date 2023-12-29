@@ -43,34 +43,42 @@
             <el-table-column label="项目名称" align="center" prop="gName"/>
             <el-table-column label="公开/邀请" align="center" prop="gIsPublic">
               <template slot-scope="scope">
-                <span v-if="scope.row.gIsPublic===0">公开</span>
-                <span v-else-if="scope.row.gIsPublic===1">邀请</span>
+                <span v-if="scope.row.gIsPublic===1">公开</span>
+                <span v-else-if="scope.row.gIsPublic===2">邀请</span>
               </template>
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
             <el-table-column label="报价截止时间" align="center" prop="gDeadline">
               <template slot-scope="scope">
-                <span>{{ scope.row.gDeadline }}</span>
+                <span v-if="scope.row.gDeadline!=null">{{ scope.row.gDeadline }}</span>
+                <span v-else>- -</span>
               </template>
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details1?gid='+scope.row.gid">
+                <router-link v-if="scope.row.gRelease===1||scope.row.gRelease===2" :to="'details1?gid='+scope.row.gid">
                   <el-button
-                      size="mini"
-                      type="text"
+                    size="mini"
+                    type="text"
                   >进入项目
+                  </el-button>
+                </router-link>
+                <router-link v-else :to="'details1?gid='+scope.row.gid">
+                  <el-button
+                    size="mini"
+                    type="text"
+                  >发布项目
                   </el-button>
                 </router-link>
               </template>
             </el-table-column>
           </el-table>
           <pagination
-              v-show="total1>0"
-              :total="total1"
-              :page.sync="queryParams1.pageNum"
-              :limit.sync="queryParams1.pageSize"
-              @pagination="getList1"
+            v-show="total1>0"
+            :total="total1"
+            :page.sync="queryParams1.pageNum"
+            :limit.sync="queryParams1.pageSize"
+            @pagination="getList1"
           />
         </el-tab-pane>
 
@@ -81,19 +89,30 @@
             <el-table-column label="项目名称" align="center" prop="gName"/>
             <el-table-column label="公开/邀请" align="center" prop="gIsPublic">
               <template slot-scope="scope">
-                <span v-if="scope.row.gIsPublic===0">公开</span>
-                <span v-else-if="scope.row.gIsPublic===1">邀请</span>
+                <span v-if="scope.row.gIsPublic===1">公开</span>
+                <span v-else-if="scope.row.gIsPublic===2">邀请</span>
               </template>
             </el-table-column>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="报价截止时间" align="center" prop="gDeadline"/>
-            <el-table-column label="报价数量" align="center" prop="gCount"/>
+            <el-table-column label="报价截止时间" align="center" prop="gDeadline">
+              <template slot-scope="scope">
+                <span v-if="scope.row.gDeadline!=null">{{ scope.row.gDeadline }}</span>
+                <span v-else>- -</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="报价数量" align="center" prop="gCount">
+              <template slot-scope="scope">
+                <span v-if="scope.row.gCount>0">{{ scope.row.gCount }}</span>
+                <span v-else>0</span>
+              </template>
+            </el-table-column>
+
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <router-link :to="'details2?gid='+scope.row.gid">
                   <el-button
-                      size="mini"
-                      type="text"
+                    size="mini"
+                    type="text"
                   >进入项目
                   </el-button>
                 </router-link>
@@ -114,20 +133,19 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="项目编号" align="center" prop="gCode"/>
             <el-table-column label="项目名称" align="center" prop="gName"/>
-            <el-table-column label="公开/邀请" align="center" prop="gIsPublic">
+            <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
+            <el-table-column label="委托单位" align="center" prop="gUnit">
               <template slot-scope="scope">
-                <span v-if="scope.row.gIsPublic===0">公开</span>
-                <span v-else-if="scope.row.gIsPublic===1">邀请</span>
+                <span v-if="scope.row.gUnit!=null">{{ scope.row.gUnit }}</span>
+                <span v-else>- -</span>
               </template>
             </el-table-column>
-            <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="委托单位" align="center" prop="gUnit"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <router-link :to="'details3?gid='+scope.row.gid">
                   <el-button
-                      size="mini"
-                      type="text"
+                    size="mini"
+                    type="text"
                   >进入项目
                   </el-button>
                 </router-link>
@@ -135,11 +153,11 @@
             </el-table-column>
           </el-table>
           <pagination
-              v-show="total3>0"
-              :total="total3"
-              :page.sync="queryParams3.pageNum"
-              :limit.sync="queryParams3.pageSize"
-              @pagination="getList3"
+            v-show="total3>0"
+            :total="total3"
+            :page.sync="queryParams3.pageNum"
+            :limit.sync="queryParams3.pageSize"
+            @pagination="getList3"
           />
         </el-tab-pane>
 
@@ -148,20 +166,19 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="项目编号" align="center" prop="gCode"/>
             <el-table-column label="项目名称" align="center" prop="gName"/>
-            <el-table-column label="公开/邀请" align="center" prop="gIsPublic">
+            <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
+            <el-table-column label="报价轮次" align="center" prop="gRounds">
               <template slot-scope="scope">
-                <span v-if="scope.row.gIsPublic===0">公开</span>
-                <span v-else-if="scope.row.gIsPublic===1">邀请</span>
+                <span v-if="scope.row.gRounds>0">{{ scope.row.gRounds }}</span>
+                <span v-else>0</span>
               </template>
             </el-table-column>
-            <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="报价轮次" align="center" prop="gRounds"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <router-link :to="'details4?gid='+scope.row.gid">
                   <el-button
-                      size="mini"
-                      type="text"
+                    size="mini"
+                    type="text"
                   >进入项目
                   </el-button>
                 </router-link>
@@ -169,11 +186,11 @@
             </el-table-column>
           </el-table>
           <pagination
-              v-show="total4>0"
-              :total="total4"
-              :page.sync="queryParams4.pageNum"
-              :limit.sync="queryParams4.pageSize"
-              @pagination="getList4"
+            v-show="total4>0"
+            :total="total4"
+            :page.sync="queryParams4.pageNum"
+            :limit.sync="queryParams4.pageSize"
+            @pagination="getList4"
           />
         </el-tab-pane>
 
@@ -214,7 +231,7 @@ export default {
         gSpawnTime: null,//生成时间
         gDeadline: null,//报价截至时间
         gStatus: null,//单据状态
-        gTendertype: 1//业务类型
+        gTendertype: 3//业务类型
       },
       queryParams2: {
         pageNum: 1,//页数
@@ -227,7 +244,7 @@ export default {
         gDeadline: null,//报价截至时间
         gStatus: null,//单据状态
         gCount: null,//报价数量
-        gTendertype: 2//业务类型
+        gTendertype: 5//业务类型
       },
       queryParams3: {
         pageNum: 1,//页数
@@ -240,7 +257,7 @@ export default {
         gDeadline: null,//报价截至时间
         gStatus: null,//单据状态
         gUnit: null,//委托单位
-        gTendertype: 3//业务类型
+        gTendertype: 4//业务类型
       },
       queryParams4: {
         pageNum: 1,//页数
@@ -253,7 +270,7 @@ export default {
         gDeadline: null,//报价截至时间
         gStatus: null,//单据状态
         gRounds: null,//报价轮次
-        gTendertype: 4//业务类型
+        gTendertype: 6//业务类型
       },
       // 表单校验
       rules: {},

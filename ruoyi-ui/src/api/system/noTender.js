@@ -103,3 +103,59 @@ export function getQuotation(gfId) {
     params: gfId
   })
 }
+
+// 查询公共附件详细aid
+export function getAttachmentsByAid(aid) {
+  return request({
+    url: '/nonbidding/pro/selectCom',
+    method: 'get',
+    params: {
+      aid: aid
+    }
+  })
+}
+
+// 修改非招标项目
+export function upePro(data) {
+  return request({
+    url: '/nonbidding/pro',
+    method: 'put',
+    data: data
+  })
+}
+
+// 查询非招标项目列表
+export function listPro1(query) {
+  return request({
+    url: '/nonbidding/pro/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询招标项目详细
+export function getBidCandidate(sid) {
+  return request({
+    url: '/bidding/candidate/' + sid,
+    method: 'get'
+  })
+}
+
+
+// 查询框架计划内的设备信息
+export function getItemsDevice1(aid) {
+  return request({
+    url: '/nonbidding/items/getItemsDevice',
+    method: 'get',
+    params: aid
+  })
+}
+
+// 新增报价单
+export function addQuotation(data) {
+  return request({
+    url: '/nonbidding/pro/addCom',
+    method: 'post',
+    data: data
+  })
+}

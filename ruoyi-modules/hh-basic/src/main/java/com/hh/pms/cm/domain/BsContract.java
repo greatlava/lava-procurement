@@ -37,6 +37,11 @@ public class BsContract extends BaseEntity {
     private Long sid;
 
     /**
+     * 非招标项目ID
+     */
+    private Long gid;
+
+    /**
      * 合同编号
      */
     @Excel(name = "合同编号")
@@ -153,6 +158,14 @@ public class BsContract extends BaseEntity {
 
     public void setSid(Long sid) {
         this.sid = sid;
+    }
+
+    public Long getGid() {
+        return gid;
+    }
+
+    public void setGid(Long gid) {
+        this.gid = gid;
     }
 
     private List<BsInventory> bsInventoryList;
@@ -337,6 +350,7 @@ public class BsContract extends BaseEntity {
                 .append("eid", getEid())
                 .append("hid", getHid())
                 .append("sid", getSid())
+                .append("gid", getGid())
                 .append("eHcode", geteHcode())
                 .append("eHname", geteHname())
                 .append("eStatus", geteStatus())

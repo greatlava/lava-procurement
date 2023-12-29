@@ -58,4 +58,7 @@ public interface IBidCandidateService
      * @return 结果
      */
     public int deleteBidCandidateByZid(Long zid);
+
+    //查询中标供应商
+    public BidCandidate selectBidCandidateBySid(Long sid);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 import com.hh.pms.cm.domain.ComPubAttachments;
+import com.hh.pms.cm.domain.NobidNonPro;
 
 /**
  * 合同Mapper接口
@@ -90,4 +91,7 @@ public interface BsContractMapper {
 
     //查询生成合同的项目
     public Long selectSid(Long eid);
+
+    //修改非招标项目eid
+    public int updateNobidNonProSid(NobidNonPro nobidNonPro);
 }

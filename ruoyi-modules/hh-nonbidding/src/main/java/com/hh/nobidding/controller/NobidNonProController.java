@@ -1,5 +1,6 @@
 package com.hh.nobidding.controller;
 
+import com.hh.nobidding.domain.BsInventory;
 import com.hh.nobidding.domain.ComQuotation;
 import com.hh.nobidding.domain.NobidNonPro;
 import com.hh.nobidding.service.INobidNonProService;
@@ -11,10 +12,13 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 非招标项目Controller
@@ -24,6 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/pro")
+@Transactional
 public class NobidNonProController extends BaseController {
     @Autowired
     private INobidNonProService nobidNonProService;
@@ -36,6 +41,14 @@ public class NobidNonProController extends BaseController {
     public TableDataInfo list(NobidNonPro nobidNonPro) {
         startPage();
         List<NobidNonPro> list = nobidNonProService.selectNobidNonProList(nobidNonPro);
+        return getDataTable(list);
+    }
+
+    //查询可创建合同的非招标项目表
+    @GetMapping("/list1")
+    public TableDataInfo list1(NobidNonPro nobidNonPro) {
+        startPage();
+        List<NobidNonPro> list = nobidNonProService.selectNobidNonProList1(nobidNonPro);
         return getDataTable(list);
     }
 
@@ -77,7 +90,20 @@ public class NobidNonProController extends BaseController {
     @Log(title = "非招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody NobidNonPro nobidNonPro) {
-        return toAjax(nobidNonProService.updateNobidNonPro(nobidNonPro));
+        int i = nobidNonProService.updateNobidNonPro(nobidNonPro);
+        if (i > 0) {
+            int i1;
+            if (nobidNonPro.getComPubAttachments().getAnId() == null) {
+                i1 = nobidNonProService.insertComPubAttachments(nobidNonPro.getComPubAttachments());
+            } else {
+                i1 = nobidNonProService.updateComPubAttachments(nobidNonPro.getComPubAttachments());
+            }
+            if (i1 == 0) {
+                return AjaxResult.error("发布失败");
+            }
+            return AjaxResult.success("发布成功");
+        }
+        return AjaxResult.error("发布失败");
     }
 
     /**
@@ -93,9 +119,36 @@ public class NobidNonProController extends BaseController {
     //查询项目报价
     @GetMapping("/selectQuotation")
     public TableDataInfo selectQuotation(String gfId) {
-        System.out.println("打印了一个gfId");
-        System.out.println(gfId);
         List<ComQuotation> list = nobidNonProService.selectQuotation(gfId);
         return getDataTable(list);
+    }
+
+    //获取附件详细信息
+    @GetMapping("/selectCom")
+    public AjaxResult selectCom(Integer aid) {
+        System.out.println("打印了一个aid");
+        System.out.println(aid);
+        return success(nobidNonProService.selectComPubAttachmentsByAid(aid));
+    }
+
+
+    /**
+     * 新增报价单
+     */
+    @PostMapping("/addCom")
+    public AjaxResult addCom(@RequestBody List<ComQuotation> comQuotations) {
+        try {
+            List<ComQuotation> list = nobidNonProService.selectComPubAttachmentsByGfId(comQuotations.get(0).getGfId());
+            if (list.size() > 0) {
+                nobidNonProService.deleteComQuotationByGfIds(comQuotations.get(0).getGfId());
+                for (ComQuotation com : comQuotations) {
+                    nobidNonProService.insertComQuotation(com);
+                }
+                return AjaxResult.success("添加成功");
+            }
+        } catch (Exception e) {
+            return AjaxResult.error("添加失败: ");
+        }
+        return AjaxResult.error("添加失败: ");
     }
 }

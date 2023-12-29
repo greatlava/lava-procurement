@@ -278,11 +278,7 @@ export default {
       this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
       this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
-        if (e.tid == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return e.tid != null;
       })
       addManagement(this.queryParams).then(response => {
         console.log(response)

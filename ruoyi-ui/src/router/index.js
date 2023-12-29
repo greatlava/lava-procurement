@@ -432,6 +432,30 @@ export const dynamicRoutes = [
         meta: { title: '查看单一来源', activeMenu: '/noTender/RFQ' }
       }
     ]
+  },
+  {
+    path: '/noTender/noContract',
+    component: Details,
+    children: [
+      {
+        path: 'noContract',
+        component: () => import('@/views/noTender/noContract'),
+        name: 'NoContract',
+        meta: { title: '非招标合同管理', activeMenu: '/noTender' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/addNoTender',
+    component: Details,
+    children: [
+      {
+        path: 'addNoTender?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/addNoTender'),
+        name: 'AddNoTender',
+        meta: { title: '非招标采购合同', activeMenu: '/noTender' }
+      }
+    ]
   }
 ]
 

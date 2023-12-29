@@ -9,6 +9,7 @@ import com.hh.pms.cm.domain.*;
 import com.hh.pms.cm.service.*;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
+import com.hh.pms.sae.domain.ComQuotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,7 +90,7 @@ public class BsContractController extends BaseController {
     }
 
     /**
-     * 新增合同
+     * 新增招标合同
      */
     @RequiresPermissions("system:contract:add")
     @Log(title = "合同", businessType = BusinessType.INSERT)
@@ -153,6 +154,74 @@ public class BsContractController extends BaseController {
         }
         return AjaxResult.error("添加异常");
     }
+
+
+    /**
+     * 新增非招标合同
+     */
+    @RequiresPermissions("system:contract:add")
+    @Log(title = "合同", businessType = BusinessType.INSERT)
+    @PostMapping("/noTender")
+    public AjaxResult add1(@RequestBody BsContract bsContract) {
+        System.out.println(bsContract);
+        CodeRulesResult result = CodeRuleHelp.createCode(codeRulesService, CodeRuleUtil.CONTROLLER);
+        //获取已经匹配的规则
+        String eHcode = result.getCode();
+        bsContract.seteHcode(eHcode);
+        bsContract.setCreateBy("欧");
+        bsContract.seteStatus(2L);
+        bsContract.setoHstatus(2L);
+        //创建合同
+        int k = bsContractService.insertBsContract(bsContract);
+        if (k > 0) {
+            Long eid = bsContract.getEid();
+            BidTender bidTender = new BidTender();
+            bidTender.setEid(eid);
+            bidTender.setSid(bsContract.getSid());
+            int i1 = bsContractService.updateBidTenderEid(bidTender);
+            if (i1 == 0) {
+                return AjaxResult.error("添加异常");
+            }
+            //添加设备信息
+            List<BsInventory> list1 = bsContract.getBsInventoryList();
+            if (list1 != null) {
+                for (BsInventory bsInventory : list1) {
+                    bsInventory.setEid(eid);
+                    int i = inventoryService.insertBsInventory(bsInventory);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
+                }
+            }
+            List<BsPayment> list2 = bsContract.getBsPaymentList();
+            if (list2 != null) {
+                for (BsPayment bsPayment : list2) {
+                    bsPayment.setEid(eid);
+                    int i = paymentService.insertBsPayment(bsPayment);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
+                }
+            }
+            BsSign bsSign = bsContract.getBsSign();
+            bsSign.setEid(eid);
+            int i = signService.insertBsSign(bsSign);
+            if (i == 0) {
+                return AjaxResult.error("添加异常");
+            }
+            ComPubAttachments comPubAttachments = bsContract.getComPubAttachments();
+            if (comPubAttachments.getAnUrl() != null) {
+                comPubAttachments.setEid(Math.toIntExact(eid));
+                int k1 = bsContractService.insertComPubAttachments(comPubAttachments);
+                if (k1 == 0) {
+                    return AjaxResult.error("添加异常");
+                }
+            }
+            return AjaxResult.success("添加成功");
+        }
+        return AjaxResult.error("添加异常");
+    }
+
 
     /**
      * 修改合同

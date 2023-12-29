@@ -236,7 +236,7 @@ public class PpmProcurementPlanController extends BaseController {
                     nobidNonPro.setXyId(item.getAid());
                     nobidNonPro.setgName(item.getaName());
                     nobidNonPro.setgIsPublic(noBidType);
-                    nobidNonPro.setTendertype(item.getaBtype());
+                    nobidNonPro.setTendertype(type);
                     ppmProcurementPlanService.insertNoBidPro(nobidNonPro);
                     break;
             }

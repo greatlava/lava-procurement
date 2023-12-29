@@ -8,6 +8,7 @@
         <result property="eid" column="eid"/>
         <result property="hid" column="hid"/>
         <result property="sid" column="sid"/>
+        <result property="gid" column="gid"/>
         <result property="eHcode" column="e_hcode"/>
         <result property="eHname" column="e_hname"/>
         <result property="eStatus" column="e_status"/>
@@ -63,6 +64,7 @@
         select eid,
                hid,
                sid,
+               gid,
                e_hcode,
                e_hname,
                e_status,
@@ -121,6 +123,7 @@
             <if test="eid != null">eid,</if>
             <if test="hid != null">hid,</if>
             <if test="sid != null">sid,</if>
+            <if test="gid != null">gid,</if>
             <if test="eHcode != null">e_hcode,</if>
             <if test="eHname != null">e_hname,</if>
             <if test="eStatus != null">e_status,</if>
@@ -144,6 +147,7 @@
             <if test="eid != null">#{eid},</if>
             <if test="hid != null">#{hid},</if>
             <if test="sid != null">#{sid},</if>
+            <if test="gid != null">#{gid},</if>
             <if test="eHcode != null">#{eHcode},</if>
             <if test="eHname != null">#{eHname},</if>
             <if test="eStatus != null">#{eStatus},</if>
@@ -244,6 +248,13 @@
         update bid_tender
         set eid = #{eid}
         where sid = #{sid}
+    </update>
+
+    <!--修改非招标项目里的eid-->
+    <update id="updateNobidNonProSid" parameterType="com.hh.pms.cm.domain.NobidNonPro">
+        update nobid_non_pro
+        set eid = #{eid}
+        where gid = #{gid}
     </update>
 
     <select id="selectBidTenderBySid" resultType="com.hh.pms.cm.domain.BsContract">

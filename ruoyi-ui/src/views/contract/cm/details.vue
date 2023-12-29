@@ -622,19 +622,11 @@ export default {
       console.log('add-----------------')
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
-        if (e.tid == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return e.tid != null;
       })
       this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
         delete e.id
-        if (e.payContent == null || e.payAmount == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return !(e.payContent == null || e.payAmount == null);
       })
       this.form.bsSign = this.qsFormData
       this.form.comPubAttachments = this.ComPubAttachments
