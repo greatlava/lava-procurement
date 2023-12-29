@@ -391,7 +391,7 @@
             g_tenderType in (3,5) and g_release = 1 and g_deadline &gt; now()
             <if test="gName != null  and gName != ''">and g_name like concat('%', #{gName}, '%')</if>
         </where>
-        order by g_spawn_time desc
+        order by g_timeon asc
     </select>
 
     <select id="queryOneByCode" resultMap="NobidNonProResult">
