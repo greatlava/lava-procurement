@@ -45,14 +45,14 @@ public class BidSubmission extends BaseEntity {
     /**
      * 成功递交时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "成功递交时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date tdSuccessTime;
 
     /**
      * 文件撤回时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date tdFailTime;
 
@@ -65,14 +65,26 @@ public class BidSubmission extends BaseEntity {
 
     private Long sWay;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "创建日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date createTime;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd kk:mm:ss")
     @Excel(name = "结束日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date sEndTime;
 
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd kk:mm:ss")
+    @Excel(name = "投标截止日期", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    private Date uEndTime;
+
+
+    public Date getuEndTime() {
+        return uEndTime;
+    }
+
+    public void setuEndTime(Date uEndTime) {
+        this.uEndTime = uEndTime;
+    }
 
     public String getsCode() {
         return sCode;

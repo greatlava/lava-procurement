@@ -17,6 +17,7 @@
         <module>hh-bidding</module>
         <module>hh-basic</module>
         <module>hh-nonbidding</module>
+        <module>hh-procure</module>
     </modules>
 
     <artifactId>ruoyi-modules</artifactId>

@@ -96,6 +96,8 @@ public interface BsSupplierMapper {
      */
     public BsSupplier loginSupplier(@Param("hLoginAccount") String hLoginAccount, @Param("hPassword") String hPassword);
 
+    public BsSupplier onlyHCreditCode(String hCreditCode);
+
     //查询非招标项目
     public List<NobidNonPro> selectAllNoBid(NobidNonPro nobidNonPro);
 

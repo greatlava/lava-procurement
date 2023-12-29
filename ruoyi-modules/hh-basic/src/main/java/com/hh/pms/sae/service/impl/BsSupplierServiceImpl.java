@@ -110,6 +110,11 @@ public class BsSupplierServiceImpl implements IBsSupplierService {
     }
 
     @Override
+    public BsSupplier onlyHCreditCode(String hCreditCode) {
+        return bsSupplierMapper.onlyHCreditCode(hCreditCode);
+    }
+
+    @Override
     public List<NobidNonPro> selectAllNoBid(NobidNonPro nobidNonPro) {
         return bsSupplierMapper.selectAllNoBid(nobidNonPro);
     }

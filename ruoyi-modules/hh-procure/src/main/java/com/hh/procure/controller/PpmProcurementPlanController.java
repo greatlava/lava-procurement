@@ -99,6 +99,7 @@ public class PpmProcurementPlanController extends BaseController {
     public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         ComPubAttachments comPubAttachments = ppmProcurementPlan.getFile();
         ppmProcurementPlan.setCreateBy(SecurityUtils.getLoginUser().getSysUser().getNickName());
+        ppmProcurementPlan.setaCreateDept(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
         int i = ppmProcurementPlanService.insertPpmProcurementPlan(ppmProcurementPlan);
         if (comPubAttachments != null) {
             comPubAttachments.setAnName(StringPathUtils.cutToTheEndStr(comPubAttachments.getAnName()));
@@ -117,9 +118,10 @@ public class PpmProcurementPlanController extends BaseController {
     @PutMapping
     @Transactional
     public AjaxResult edit(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+        System.out.println("ppmProcurementPlan:" + ppmProcurementPlan);
         PpmProcurementPlan result = ppmProcurementPlanService.selectPpmProcurementPlanByAid(ppmProcurementPlan.getAid());
         if (!result.getaAstate().equals(ppmProcurementPlan.getaAstate())) {
-            PpmApprovalRecord obj = new PpmApprovalRecord();
+            PpmApprovalRecord obj = ppmProcurementPlan.getEditor();
             obj.setProcessedBy(tokenService.getLoginUser().getSysUser().getNickName());
             obj.setAid(ppmProcurementPlan.getAid());
             obj.setDepnt(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
@@ -129,17 +131,14 @@ public class PpmProcurementPlanController extends BaseController {
                 case 0:
                     obj.setNode("部门主管审批");
                     obj.setOpinion("驳回");
-                    obj.setOpinionDetails("计划不合格，请改正");
                     break;
                 case 1:
                     obj.setNode("提交采购计划");
                     obj.setOpinion("发起申请");
-                    obj.setOpinionDetails("采购计划已准备，需审核");
                     break;
                 case 2:
                     obj.setNode("采购计划通过审核");
                     obj.setOpinion("通过");
-                    obj.setOpinionDetails("你的采购计划审核已通过");
                     break;
             }
             PpmApprovalRecordService.insertPpmApprovalRecord(obj);

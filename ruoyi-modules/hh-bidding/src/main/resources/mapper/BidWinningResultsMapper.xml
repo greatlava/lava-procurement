@@ -7,22 +7,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.hh.bidding.domain.BidWinningResults" id="BidWinningResultsResult">
         <result property="gsId"    column="gs_id"    />
         <result property="sid"    column="sid"    />
-        <result property="gsName"    column="gs_name"    />
+        <result property="hid"    column="hid"    />
+        <result property="hName"    column="h_name"    />
         <result property="gsState"    column="gs_state"    />
-        <result property="gsRelease"    column="gs_release"    />
+        <result property="gsResDate"    column="gs_res_date"    />
+        <result property="resultDesc"    column="result_desc"    />
+        <result property="resultTitle"    column="result_title"    />
     </resultMap>
 
     <sql id="selectBidWinningResultsVo">
-        select gs_id, sid, gs_name, gs_state, gs_release from bid_winning_results
+        select result_title, gs_id, sid,hid, h_name, gs_state, gs_res_date,result_desc from bid_winning_results
     </sql>
 
     <select id="selectBidWinningResultsList" parameterType="com.hh.bidding.domain.BidWinningResults" resultMap="BidWinningResultsResult">
         <include refid="selectBidWinningResultsVo"/>
         <where>  
             <if test="sid != null "> and sid = #{sid}</if>
-            <if test="gsName != null  and gsName != ''"> and gs_name like concat('%', #{gsName}, '%')</if>
+            <if test="hid != null "> and hid = #{hid}</if>
+            <if test="hName != null  and hName != ''"> and h_name = #{hName}</if>
             <if test="gsState != null "> and gs_state = #{gsState}</if>
-            <if test="gsRelease != null "> and gs_release = #{gsRelease}</if>
+            <if test="gsResDate != null "> and gs_res_date = #{gsResDate}</if>
+            <if test="resultDesc != null "> and result_desc = #{resultDesc}</if>
+            <if test="resultTitle != null ">and result_title = #{resultTitle}</if>
         </where>
     </select>
     
@@ -36,16 +42,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gsId != null">gs_id,</if>
             <if test="sid != null">sid,</if>
-            <if test="gsName != null">gs_name,</if>
+            <if test="hid != null ">hid,</if>
+            <if test="hName != null  and hName != ''">h_name,</if>
             <if test="gsState != null">gs_state,</if>
-            <if test="gsRelease != null">gs_release,</if>
+            <if test="gsResDate != null">gs_res_date,</if>
+            <if test="resultDesc != null ">result_desc,</if>
+            <if test="resultTitle != null ">result_title,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gsId != null">#{gsId},</if>
             <if test="sid != null">#{sid},</if>
-            <if test="gsName != null">#{gsName},</if>
+            <if test="hid != null ">#{hid},</if>
+            <if test="hName != null  and hName != ''">#{hName},</if>
             <if test="gsState != null">#{gsState},</if>
-            <if test="gsRelease != null">#{gsRelease},</if>
+            <if test="gsResDate != null">#{gsRelease},</if>
+            <if test="resultDesc != null ">#{resultDesc},</if>
+            <if test="resultTitle != null ">#{resultTitle},</if>
          </trim>
     </insert>
 
@@ -53,9 +65,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update bid_winning_results
         <trim prefix="SET" suffixOverrides=",">
             <if test="sid != null">sid = #{sid},</if>
-            <if test="gsName != null">gs_name = #{gsName},</if>
+            <if test="hid != null ">hid = #{hid},</if>
+            <if test="hName != null  and hName != ''">h_name =#{hName},</if>
             <if test="gsState != null">gs_state = #{gsState},</if>
-            <if test="gsRelease != null">gs_release = #{gsRelease},</if>
+            <if test="gsResDate != null">gs_release = #{gsRelease},</if>
+            <if test="resultDesc != null ">result_desc = #{resultDesc},</if>
+            <if test="resultTitle != null ">result_title = #{resultTitle},</if>
         </trim>
         where gs_id = #{gsId}
     </update>
@@ -70,4 +85,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{gsId}
         </foreach>
     </delete>
+
+
+    <select id="selectResultSupp" parameterType="Long" resultMap="hhh">
+        SELECT r.result_title,r.result_desc, r.gs_id,r.sid,r.gs_state,r.gs_res_date,s.*,o.* FROM `bid_winning_results` r
+                                                                       inner join bs_supplier s on r.hid = s.hid
+                                                                       left join bs_operator o on o.hid = r.hid
+                                                              where r.sid=#{sid}
+    </select>
+
+    <resultMap id="hhh" type="com.hh.bidding.domain.BidWinningResults">
+        <id property="gsId" column="gs_id"/>
+        <collection property="bsSupplier" ofType="com.hh.bidding.domain.BsSupplier">
+            <id property="hid" column="hid"/>
+            <association property="bsOperator"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectResultAndCandidate" resultMap="twoTable2" parameterType="Long">
+        SELECT gs_id,w.h_name,gs_state,gs_res_date,result_desc,result_title,c.* FROM `bid_winning_results` w inner join bid_candidate c on w.sid = c.sid and w.hid = c.hid where z_bidder = 0
+                                                                                                                                                                             and c.sid = #{sid}
+    </select>
+    <resultMap id="twoTable2" type="com.hh.bidding.domain.BidWinningResults">
+        <id property="gsId" column="gs_id"/>
+        <association property="bidCandidate"/>
+    </resultMap>
 </mapper>

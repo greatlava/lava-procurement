@@ -61,4 +61,6 @@ public interface IBidCandidateService
 
     //查询中标供应商
     public BidCandidate selectBidCandidateBySid(Long sid);
+
+    public List<BidCandidate> selectSuppCand(Long sid);
 }

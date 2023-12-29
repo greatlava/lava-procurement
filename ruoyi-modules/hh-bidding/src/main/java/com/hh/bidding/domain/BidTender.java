@@ -27,7 +27,7 @@ public class BidTender extends BaseEntity {
      * 采购计划序号
      */
     @Excel(name = "采购计划序号")
-    private Long xyId;
+    private Integer xyId;
 
     /**
      * 招标项目编号
@@ -162,6 +162,9 @@ public class BidTender extends BaseEntity {
     @Excel(name = "合同ID")
     private Long eid;
 
+    @Excel(name = "附件")
+    private String fjFiles;
+
     private List<BidNotice> bidNotices;
 
     public void setBidNotices(List<BidNotice> bidNotices) {
@@ -180,11 +183,11 @@ public class BidTender extends BaseEntity {
         return sid;
     }
 
-    public void setXyId(Long xyId) {
+    public void setXyId(Integer xyId) {
         this.xyId = xyId;
     }
 
-    public Long getXyId() {
+    public Integer getXyId() {
         return xyId;
     }
 
@@ -383,6 +386,15 @@ public class BidTender extends BaseEntity {
                 .append("sProjectState", getsProjectState())
                 .append("sDeadline", getsDeadline())
                 .append("eid", getEid())
+                .append("fjFiles", getFjFiles())
                 .toString();
+    }
+
+    public String getFjFiles() {
+        return fjFiles;
+    }
+
+    public void setFjFiles(String fjFiles) {
+        this.fjFiles = fjFiles;
     }
 }

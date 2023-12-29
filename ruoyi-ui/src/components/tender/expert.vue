@@ -18,7 +18,7 @@
       </el-table-column>
       <el-table-column label="性别" align="center" prop="pbSex">
         <template slot-scope="scope">
-          <span>{{scope.row.bsExpert.jSex == 0?'女':'男'}}</span>
+          <span>{{scope.row.bsExpert.jSex == 1?'女':'男'}}</span>
         </template>
       </el-table-column>
       <el-table-column label="身份证号" align="center" prop="pbIdCard">
@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)" :disabled="status">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -110,8 +110,16 @@
                 评标开始时间
               </template>
               <template>
-                <el-date-picker v-model="queryParams.xStartTime" id="input-common1" type="date" placeholder="请选择评标开始时间">
+                <el-date-picker
+                  v-model="queryParams.xStartTime"
+                  type="datetime"
+                  id="input-common1"
+                  placeholder="请选择评标开始时间"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  default-time="09:00:00">
                 </el-date-picker>
+<!--                <el-date-picker v-model="queryParams.xStartTime"  type="date" placeholder="请选择评标开始时间">-->
+<!--                </el-date-picker>-->
               </template>
             </el-descriptions-item>
             <el-descriptions-item>
@@ -119,8 +127,16 @@
                 评标结束时间
               </template>
               <template>
-                <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">
+                <el-date-picker
+                  v-model="queryParams.xEndTime"
+                  type="datetime"
+                  id="input-common1"
+                  placeholder="请选择评标结束时间"
+                  value-format="yyyy-MM-dd hh:mm:ss"
+                  default-time="09:00:00">
                 </el-date-picker>
+<!--                <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">-->
+<!--                </el-date-picker>-->
               </template>
             </el-descriptions-item>
             <el-descriptions-item>
@@ -152,9 +168,9 @@
                 操作
               </template>
               <template>
-                <el-button type="primary" @click="subApplication" v-show="isType=='add'">确定</el-button>
-                <el-button type="primary" @click="updateApplication" v-show="isType=='update'">修改</el-button>
-                <el-button @click="cancel">取消</el-button>
+                <el-button type="primary" @click="subApplication" v-show="isType=='add'" :disabled="status">确定</el-button>
+                <el-button type="primary" @click="updateApplication" v-show="isType=='update'" :disabled="status">修改</el-button>
+                <el-button @click="cancel2">取消</el-button>
               </template>
             </el-descriptions-item>
           </el-descriptions>
@@ -181,8 +197,7 @@
                       <el-table-column prop="jName" label="专家名称" width="120" align="center"/>
                       <el-table-column prop="jSex" label="性别" width="100" align="center">
                         <template slot-scope="scope">
-                          <span v-if="scope.row.jSex==1">男</span>
-                          <span v-else>女</span>
+                          <span>{{scope.row.jSex == 1?'女':'男'}}</span>
                         </template>
                       </el-table-column>
                       <el-table-column prop="jIdentity" label="身份证号" width="150" align="center"/>
@@ -257,7 +272,7 @@
             </el-table>
           </div>
           <div style="text-align: right;margin-top: 10px;">
-            <el-button type="primary" @click="sjcq" v-show="randomExpertList.length > 0">确定</el-button>
+            <el-button type="primary" @click="sjcq" v-show="randomExpertList.length > 0" :disabled="status">确定</el-button>
             <el-button @click="cancelDrawExerpt" >取消</el-button>
           </div>
         </div>
@@ -269,7 +284,7 @@
 <script>
   import {listCommittee, getCommittee, delCommittee, addCommittee, updateCommittee,findCommitAndExpert,delComBySid} from "@/api/system/tender/committee";
   // import DrawExpert from "@/views/tender/tender1/drawExpert.vue";
-  import {findTenderNotice} from "@/api/system/tender/tender";
+  import {findTenderNotice, getTender} from "@/api/system/tender/tender";
   import {listExpert} from "@/api/system/expert";
   import {addApplications, getmaxApp,listApplications,updateApplications} from "@/api/system/tender/bidApplication";
 
@@ -280,6 +295,7 @@
     dicts: ["ppm_procurement_plan"],
     data() {
       return {
+        status:false,
         // 遮罩层
         loading: true,
         // 评标委员会表格数据
@@ -380,6 +396,11 @@
       this.getExerpt(this.queryParams.sid);
       this.getList(this.queryParams.sid);
       this.selectBdList();
+      getTender(this.queryParams.sid).then(res=>{
+        if(res.data.sProjectState === 7){
+          this.status=true;
+        }
+      });
 
     },
     methods: {
@@ -405,9 +426,12 @@
       },
       //打开抽取专家对话框
       openDrawExerpt(){
+        console.log(this.queryParams,"this.queryParams");
         listApplications(this.queryParams).then(res=>{
+          // console.log(res,"resssssss");
           if(res.rows.length > 0){
             this.isType = "update";
+            // alert(this.isType);
             this.queryParams.xStartTime = res.rows[0].xStartTime;
             this.queryParams.xEndTime = res.rows[0].xEndTime;
             this.queryParams.xDaiCount = res.rows[0].xDaiCount;
@@ -417,6 +441,7 @@
             this.queryParams.xid = res.rows[0].xid;
           }else{
             this.isType = "add";
+            // alert(this.isType);
             this.queryParams.xWay = "1";
           }
           this.queryParams.xType = this.tenderList[0].sSway;
@@ -441,14 +466,26 @@
           this.loading = false;
         });
       },
-      // 取消按钮
+      // 取消按钮（关闭抽取专家对话框）
       cancel() {
         this.queryParams.xStartTime = null;
         this.queryParams.xEndTime = null;
         this.queryParams.xDaiCount = null;
         this.queryParams.xCount = null;
         this.queryParams.xArea = null;
-        this.queryParams.xWay ="1";
+        this.queryParams.xWay =null;
+        this.lTableData=[];
+        this.lSelectedRows=[];
+        this.lTableColumns=[];
+        this.getExerpt(this.queryParams.sid);
+      },
+      // 取消申请按钮
+      cancel2() {
+        this.queryParams.xStartTime = null;
+        this.queryParams.xEndTime = null;
+        this.queryParams.xDaiCount = null;
+        this.queryParams.xCount = null;
+        this.queryParams.xArea = null;
         this.lTableData=[];
         this.lSelectedRows=[];
         this.lTableColumns=[];
@@ -456,8 +493,8 @@
       },
       //查询所有准入专家
       selectBdList() {
+        this.queryParams2.jShState = 1;
         listExpert(this.queryParams2).then(res => {
-          // console.log(res, "res");
           this.expertList = res.rows;
           this.objList =this.expertList.slice();
         });

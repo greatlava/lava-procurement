@@ -98,4 +98,9 @@ public class BidCandidateServiceImpl implements IBidCandidateService
     public BidCandidate selectBidCandidateBySid(Long sid) {
         return bidCandidateMapper.selectBidCandidateBySid(sid);
     }
+
+    @Override
+    public List<BidCandidate> selectSuppCand(Long sid) {
+        return bidCandidateMapper.selectSuppCand(sid);
+    }
 }

@@ -51,7 +51,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:monitor:add']"
+          v-hasRole="['common','controller']"
         >新增
         </el-button>
       </el-col>
@@ -102,7 +102,7 @@
             type="primary"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:monitor:edit']"
+            v-hasRole="['common','controller']"
           >修改
           </el-button>
           <router-link :to="'riskHandling?rm_id='+scope.row.rmId">
@@ -110,6 +110,7 @@
               size="small"
               icon="el-icon-document-checked"
               style="margin-left: 10px"
+              v-hasRole="['controller']"
             >风险处理
             </el-button>
           </router-link>

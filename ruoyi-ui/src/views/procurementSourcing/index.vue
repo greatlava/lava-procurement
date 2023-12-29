@@ -25,11 +25,11 @@
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
-            type="primary"
-            plain
-            size="mini"
-            @click="handleSubmit"
-            v-hasPermi="['system:rules:add']"
+          type="primary"
+          plain
+          size="mini"
+          @click="handleSubmit"
+          v-hasPermi="['system:rules:add']"
         >执行采购寻源
         </el-button>
       </el-col>
@@ -62,21 +62,21 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-              size="mini"
-              type="text"
-              @click="handleClick(scope.row)"
-              v-hasPermi="['system:plan:edit']"
+            size="mini"
+            type="text"
+            @click="handleClick(scope.row)"
+            v-hasPermi="['system:plan:edit']"
           >查看
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination
-        v-show="total>0"
-        :total="total"
-        :page.sync="queryParams.pageNum"
-        :limit.sync="queryParams.pageSize"
-        @pagination="getList"
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
     />
     <el-dialog @close="closeDialog" title="查看采购计划" :visible.sync="open" width="1000px" append-to-body>
       <el-tabs @tab-click="handleClick" v-model="paneName">
@@ -103,36 +103,31 @@
             </template>
           </el-table-column>
           <el-table-column
-              height="250"
-              align="center"
-              header-align="center"
-              prop="duDept"
-              label="部门名称"
-          >
+            height="250"
+            align="center"
+            header-align="center"
+            prop="duDept"
+            label="部门名称">
           </el-table-column>
           <el-table-column
-              prop="duId"
-              align="center"
-              label="预算科目编号"
-          >
+            prop="duId"
+            align="center"
+            label="预算科目编号">
           </el-table-column>
           <el-table-column
-              prop="duName"
-              align="center"
-              label="预算科目名称"
-          >
+            prop="duName"
+            align="center"
+            label="预算科目名称">
           </el-table-column>
           <el-table-column
-              prop="duTotal"
-              align="center"
-              label="总金额"
-          >
+            prop="duTotal"
+            align="center"
+            label="总金额">
           </el-table-column>
         </el-table>
         <!-- 行项目 -->
         <el-table @cell-click="click" max-height="250" v-loading="loading" :data="itemList"
-                  style="margin-top: 20px"
-        >
+                  style="margin-top: 20px">
           <el-table-column type="expand">
             <template slot-scope="props">
               <el-descriptions border>
@@ -176,7 +171,7 @@
           <el-radio :label="6">单一来源</el-radio>
         </el-radio-group>
       </div>
-      <el-card shadow="never" v-if="typeRadio == 3 || typeRadio ==5 " class="box-card">
+      <el-card shadow="never" v-if="typeRadio != 1 && typeRadio != 2" class="box-card">
         <div slot="header" class="clearfix">
           <span>是否公开/邀请</span>
           <!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->
@@ -242,57 +237,61 @@ export default {
     }
   },
   created() {
-    let obj = this.$route.query
-    console.log(obj)
+    let obj = this.$route.query;
     if (obj && obj.aid) {
-      this.handleClick(obj)
+      this.handleClick(obj);
     }
     this.getList()
   },
   methods: {
     closeDialog() {
-      this.file.fileUrls = []
-      this.file.fileName = []
-      this.budgetData = []
+      this.file.fileUrls = [];
+      this.file.fileName = [];
+      this.budgetData = [];
     },
     selectable(row, index) {
       if (row.aAstate == 2) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     },
     getList() {
-      this.loading = true
-      this.planList = []
+      this.loading = true;
+      this.planList = [];
       FindProcurementPlanBy(this.queryParams).then(response => {
-        this.total = response.total
-        this.loading = false
-        this.planList = response.rows
-      })
+        this.total = response.total;
+        this.loading = false;
+        this.planList = response.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      });
     },
     query() {
       this.$nextTick(() => {
         this.$refs['elForm'].validate(valid => {
           if (!valid) return
         })
-        this.getList()
+        this.getList();
       })
     },
     //关闭采购寻源方式选择
     cancelType() {
-      this.typeRadio = 1
-      this.openByType = false
+      this.typeRadio = 1;
+      this.openByType = false;
 
     },
     //采购寻源方式选择确定按钮
     sumbitType() {
-      this.fullscreenLoading = true
+      this.fullscreenLoading = true;
       updateStateAndAddBidWinning(this.yilist, this.typeRadio, this.noBidType).then(res => {
         this.fullscreenLoading = false
-        this.openByType = false
-        this.$modal.msgSuccess('操作成功！！')
-        this.getList()
+        this.openByType = false;
+        this.$modal.msgSuccess("操作成功！！");
+        this.getList();
+      }).catch(err => {
+        this.fullscreenLoading = false
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     reset() {
@@ -311,7 +310,7 @@ export default {
         aBtype: null,
         aAstate: 0
       }
-      this.queryParams.aBtype = null
+      this.queryParams.aBtype = null;
       this.resetForm('form')
     },
     resetForm() {
@@ -320,60 +319,61 @@ export default {
       })
     },
     resetQuery() {
-      this.reset()
-      this.getList()
+      this.reset();
+      this.getList();
     },
     handleClick(row) {
       selectProcurementPlanByIdForThreeTables(row.aid).then(res => {
-        this.open = true
-        this.itemList = res.data.items
-        this.loading = false
-        this.form = res.data
+        this.open = true;
+        this.itemList = res.data.items;
+        this.loading = false;
+        this.form = res.data;
         if (res.data.items) {
           res.data.items.forEach((e, i) => {
             if (e.ppmBudget.duId) {
-              this.budgetData.push(e.ppmBudget)
+              this.budgetData.push(e.ppmBudget);
             }
           })
         }
         if (res.data.file.anName && res.data.file.anUrl) {
-          this.file.fileUrls = res.data.file.anUrl.split(',')
-          this.file.fileName = res.data.file.anName.split(',')
-          console.log(this.file.anName, 'data')
+          this.file.fileUrls = res.data.file.anUrl.split(",");
+          this.file.fileName = res.data.file.anName.split(",");
         }
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     //采购寻源按钮
     handleSubmit() {
       if (this.yilist.length > 0) {
-        this.openByType = true
+        this.openByType = true;
       } else {
-        this.$modal.msgError('请选择采购寻源')
+        this.$modal.msgError("请选择采购寻源")
       }
     },
     cancel() {
-      this.open = false
-      this.reset()
+      this.open = false;
+      this.reset();
     },
     click(row) {
       if (row.ppmBudget.duName != null && row.ppmBudget.duName != undefined) {
-        let list = []
+        let list = [];
         list.push(row.ppmBudget)
-        this.budgetData = list
+        this.budgetData = list;
       } else {
-        this.budgetData = null
+        this.budgetData = null;
       }
     },
     handleSelectionChange(e) {
-      this.yilist = e
+      this.yilist = e;
     },
     download() {
       if (this.file.fileUrls.length == 0) {
-        this.$modal.msgError('没有附件可下载，请上传附件！！')
-        return
+        this.$modal.msgError("没有附件可下载，请上传附件！！")
+        return;
       }
-      let name = encodeURIComponent(this.file.fileUrls)
-      var url = `http://localhost:8080/ppm/file/downloadFiles?file=${name}`
+      let name = encodeURIComponent(this.file.fileUrls);
+      var url = `http://localhost:8080/ppm/file/downloadFiles?file=${name}`;
       const a = document.createElement('a')
       a.setAttribute('target', '_blank')
       a.setAttribute('href', url)

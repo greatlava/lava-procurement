@@ -37,7 +37,7 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 查询供应商风险监控列表
      */
-    @RequiresPermissions("system:monitor:list")
+    @RequiresPermissions("system:monitor:riskMonitor")
     @GetMapping("/list")
     public TableDataInfo list(BsRiskMonitor bsRiskMonitor) {
         startPage();
@@ -60,7 +60,6 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 获取供应商风险监控详细信息
      */
-    @RequiresPermissions("system:monitor:query")
     @GetMapping(value = "/{rmId}")
     public AjaxResult getInfo(@PathVariable("rmId") Long rmId) {
         return success(bsRiskMonitorService.selectBsRiskMonitorByRmId(rmId));

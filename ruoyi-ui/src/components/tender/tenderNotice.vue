@@ -9,6 +9,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
+          :disabled="status"
         >新增</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -40,18 +41,23 @@
                      type="text"
                      icon="el-icon-s-check"
                      @click="handleUpdateState2(scope.row,1)"
+                     :disabled="status"
           >审核</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row,1)"
+            :disabled="status"
+            v-has-role="['common']"
           >编辑</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
+            :disabled="status"
+            v-has-role="['common']"
           >删除</el-button>
           <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
@@ -64,6 +70,8 @@
             type="text"
             icon="el-icon-s-promotion"
             @click="handleUpdateState(scope.row)"
+            :disabled="status"
+            v-has-role="['common']"
           >发布</el-button>
         </template>
       </el-table-column>
@@ -80,44 +88,52 @@
     <el-dialog :title="title" :visible.sync="open" width="1080px" append-to-body>
       <el-form ref="form"  :model="form" :rules="rules" label-width="120px"  v-loading="loading">
         <el-form-item label="公告标题" prop="uTitle">
-          <el-input v-model="form.uTitle" placeholder="请输入公告标题"/>
+          <el-input v-model="form.uTitle" placeholder="请输入公告标题" :disabled="noUpdate"/>
         </el-form-item>
         <el-form-item label="关联项目" prop="uProject" class="form-input">
           <el-input v-model="form.uProject" disabled="disabled"/>
         </el-form-item>
         <el-form-item label="项目资金" prop="uMoney" class="form-input">
-          <el-input v-model="form.uMoney" placeholder="请输入项目资金"/>
+          <el-input v-model="form.uMoney" placeholder="请输入项目资金" :disabled="noUpdate"/>
         </el-form-item>
-        <el-form-item label="标注获取时间" prop="uGetTime" class="form-input">
-          <el-date-picker clearable
-                          v-model="form.uGetTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择标注获取时间">
+        <el-form-item label="标书获取时间" prop="uGetTime" class="form-input">
+          <el-date-picker
+            v-model="form.uGetTime"
+            type="datetime"
+            placeholder="请选择标书获取时间"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            default-time="09:00:00"
+            :disabled="noUpdate">
           </el-date-picker>
         </el-form-item >
         <el-form-item label="接受答疑时间" prop="uAcceptTime" class="form-input">
-          <el-date-picker clearable
-                          v-model="form.uAcceptTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择接受答疑时间">
+          <el-date-picker
+            v-model="form.uAcceptTime"
+            type="datetime"
+            placeholder="请选择接受答疑时间"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            default-time="09:00:00"
+            :disabled="noUpdate">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="投标截止时间" prop="uEndTime" class="form-input">
-          <el-date-picker clearable
-                          v-model="form.uEndTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择投标截止时间">
+          <el-date-picker
+            v-model="form.uEndTime"
+            type="datetime"
+            placeholder="请选择投标截止时间"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            default-time="09:00:00"
+            :disabled="noUpdate">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="开标时间" prop="uKaiTime" class="form-input">
-          <el-date-picker clearable
-                          v-model="form.uKaiTime"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择开标时间">
+          <el-date-picker
+            v-model="form.uKaiTime"
+            type="datetime"
+            placeholder="请选择开标时间"
+            value-format="yyyy-MM-dd hh:mm:ss"
+            default-time="09:00:00"
+            :disabled="noUpdate">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="附件" prop="fjAnnex">
@@ -128,21 +144,20 @@
                                  :headers="upload.headers" :file-list="upload.fileList" :before-remove="beforeRemove"
                                  :on-progress="handleFileUploadProgress"
                                  :on-success="handleFileSuccess" :auto-upload="false">
-                        <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-<!--                        <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"-->
-<!--                                   @click="submitUpload">上传到服务器-->
-<!--                        </el-button>-->
+                        <el-button slot="trigger" size="small" type="primary" :disabled="noUpdate">选取文件</el-button>
                         <div slot="tip" class="el-upload__tip">只能上传.doc, .docx, .rar, .txt, .png, .jpg文件，且不超过5MB</div>
                       </el-upload>
         </el-form-item>
         <el-form-item label="内容" prop="fjRemark">
-          <editor v-model="form.fjRemark" :min-height="192"/>
+          <editor v-model="form.fjRemark" :min-height="192" :disabled="noUpdate"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="success" v-show="showPass" @click="handleUpdateState2(form,2)">通 过</el-button>
-        <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)">驳 回</el-button>
-        <el-button type="primary" v-show="showBtn" @click="submitForm">确 定</el-button>
+<!--        v-show="showPass"-->
+        <el-button type="success"  @click="handleUpdateState2(form,2)" :disabled="status" v-if="form.fjStatus == 2" v-has-role="['controller']">通 过</el-button>
+        <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)" :disabled="status"  v-if="form.fjStatus == 2" v-has-role="['controller']">驳 回</el-button>
+<!--        v-show="showBtn"-->
+        <el-button type="primary"  @click="submitForm" v-has-role="['common']" :disabled="status">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -151,7 +166,7 @@
 
 <script>
 import { listNotice, getNotice, delNotice, addNotice, updateNotice,findStatus,delYfb,selMax} from "@/api/system/tender/tenderNotice";
-import { getTender } from '@/api/system/tender/tender'
+import { getTender ,updateTender} from '@/api/system/tender/tender'
 import {findTwoDocInfo,addDocuments} from "@/api/system/document";
 import {getToken} from "@/utils/auth";
 
@@ -160,6 +175,7 @@ export default {
   name: "Notice",
   data() {
     return {
+      status:false,
       // 遮罩层
       loading: false,
       // 选中数组
@@ -180,6 +196,8 @@ export default {
       open: false,
       showBtn:true,
       showPass:false,
+      //是否可以编辑
+      noUpdate:false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -199,6 +217,24 @@ export default {
         fjRemark: null,
         max:null,
         type:null,
+      },
+      queryParams2:{
+        sid:0,
+        sCode:"",
+        sName:"",
+        sWay: "0",
+        sMust:"0",
+        sSway: "0",
+        sType: "0",
+        sBudget:"",
+        sUnit:"",
+        sPerson:"",
+        sPhone:"",
+        email:"",
+        sAddress:"",
+        fjFiles:null,
+        sProjectState:null,
+        sLeader:null,
       },
       // 表单参数
       form: {
@@ -233,8 +269,14 @@ export default {
       uploadFiles: [],
       // 收集——上传文件的个数
       filesLength: 0,
-      //收集已上传的文件名
-      fileNameList:[],
+      urls:[],
+      fjList:[],
+      //未上传前文件列表
+      noFiles:[],
+      //未上传清除后文件列表
+      noFiles2:[],
+      //接收过滤的已上传文件
+      filterList:[],
       // 上传参数
       upload: {
         // 上传的文件列表
@@ -257,13 +299,35 @@ export default {
     },"3000");
     this.queryParams.sid = this.$route.query.sid;
     this.getList();
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
+    rest2(){
+      this.fileList=[],
+        // 收集——上传文件的列表
+        this.uploadFiles=[]
+        // 收集——上传文件的个数
+        this.filesLength=0
+        this.urls=[]
+        this.fjList=[]
+        //未上传前文件列表
+        this.noFiles=[]
+        //未上传清除后文件列表
+        this.noFiles2=[]
+        //接收过滤的已上传文件
+        this.filterList=[]
+        this.upload.fileList=[];
+    },
     // 取消按钮
     cancel() {
       this.open = false;
       this.showBtn=true;
       this.showPass=false;
+      this.noUpdate = false;
       this.upload.fileList =[];
       this.reset();
     },
@@ -310,6 +374,7 @@ export default {
       getTender(this.queryParams.sid).then(res=>{
           this.form.uProject =res.data.sName;
       });
+      this.upload.fileList=[];
       this.open = true;
       this.loading = true;
       this.title = "添加招标公告";
@@ -329,11 +394,9 @@ export default {
       const uid = row.uid || this.ids;
       getNotice(uid).then(response => {
         this.form = response.data;
-        // console.log(this.form.fjAnnex,"fileList1");
         if(this.form.fjAnnex != null){
           this.upload.fileList = JSON.parse(this.form.fjAnnex);
         }
-        console.log(this.upload.fileList,"fileList2");
         getTender(this.queryParams.sid).then(res=>{
           this.form.uProject =res.data.sName;
         });
@@ -342,6 +405,7 @@ export default {
           this.title = "修改招标公告";
         }else{
           this.title = "招标公告详情";
+          this.noUpdate = true;
         }
       });
       this.queryParams.type = 'update';
@@ -368,6 +432,29 @@ export default {
             row.fjStatus = 5;//改变状态
             return updateNotice(row);
           }).then(() => {
+              //修改招标项目状态
+           this.queryParams2={
+                sid:0,
+                sCode:null,
+                sName:null,
+                sWay: null,
+                sMust:null,
+                sSway: null,
+                sType: null,
+                sBudget:null,
+                sUnit:null,
+                sPerson:null,
+                sPhone:null,
+                email:null,
+                sAddress:null,
+                fjFiles:null,
+                sProjectState:null,
+                sLeader:null,
+              };
+              this.queryParams2.sid = this.$route.query.sid;
+              this.queryParams2.sProjectState=3;//修改状态为投标中
+              return updateTender(this.queryParams2);
+            }).then(() => {
             this.getList();
             this.$modal.msgSuccess("公告发布成功");
           }).catch(() => {});
@@ -381,11 +468,10 @@ export default {
               row.fjStatus = 5; // 改变状态
               return updateNotice(row);
             })
-            .then(() => {
+            .then(()=>{
               this.getList();
               this.$modal.msgSuccess("公告发布成功");
-            })
-            .catch(() => {
+            }).catch(() => {
               // 在这里处理错误
               console.error("An error occurred");
             });
@@ -397,7 +483,7 @@ export default {
     handleUpdateState2(row,num){
       console.log(row,"row.....");
       if(num === 1){
-        this.$modal.confirm('是否确认审核编号为"' + row.uid + '"的招标公告？').then(function() {
+        this.$modal.confirm('是否确认发起审核编号为"' + row.uid + '"的招标公告？').then(function() {
           row.fjStatus = 2;//改变状态
           return updateNotice(row);
         }).then(() => {
@@ -430,23 +516,23 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         //已发布状态 点击退出
-        if(this.form.fjStatus === 5){
+        if(this.form.fjStatus === 5 || this.form.fjStatus === 3 || this.form.fjStatus === 2){
           this.open = false;
         }else{
           //表单验证
           if (valid) {
             //1:如果没有文件，直接上传form表单
-            if(this.filesLength == 0){
-
+            if(this.noFiles2.length == 0){
+              console.log("pt add update");
+             //拿到剩余文件生成字符串
+             this.form.fjAnnex = JSON.stringify(this.filterList);
               //判断type值  update：修改  add：新增
               if (this.queryParams.type === 'update') {
-
                 updateNotice(this.form).then(response => {
                   this.$modal.msgSuccess("修改成功");
                   this.open = false;
                   this.getList();
                 });
-
               } else if(this.queryParams.type === 'add'){
                 this.form.sid = this.$route.query.sid;//确定对应招标项目
                 //新增公告
@@ -458,6 +544,8 @@ export default {
 
               }
             }else{
+              console.log("upload add update");
+              this.noFiles2=[];
               //2:如果有文件
               //2.1文件上传执行submit  即触发 handleFileSuccess函数
               this.$refs.upload.submit();
@@ -474,40 +562,69 @@ export default {
     },
     // 修改当前文件列表长度
     changeFileLength(file, fileList){
+      this.noFiles.push(file);
+      this.noFiles2.push(file);
+      console.log( this.noFiles,"noFiles cg");
+      console.log( this.noFiles2,"noFiles2 cg");
       this.filesLength = fileList.length;
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
       //拿到招标项目id
       this.form.sid = this.$route.query.sid;
-
+      const url =response.data.data.url;
+      this.urls.push({id: this.urls.length + 1, url});
+      this.fjList.push({id: this.fjList.length + 1, ...file });
       this.uploadFiles.push(file);
+      console.log(this.urls,"urls");
+      console.log(this.fjList,"fjList");
+      console.log(this.uploadFiles.length,"uploadFiles len");
+      console.log(this.filesLength,"len2");
+      console.log(this.upload.fileList.length,"len3");
       //每上传完一个文件都会执行该函数，所以必须等上传完成后再提交表单
-      if (this.uploadFiles.length == this.filesLength){
-        //将上传文件信息从fileList中拼接
-        // this.form.fileList=fileList;
-
-        //已上传文件  --> 字符串
-        let updatedArray = fileList.map(obj => {
+      // this.upload.fileList = this.filterList;
+      // console.log(this.upload.fileList,"upload.fileList");
+      if(this.filterList.length > 0){
+        this.upload.fileList = this.filterList;
+      }
+      if (this.uploadFiles.length === this.filesLength - this.upload.fileList.length){
+        // console.log(this.fjList,"open jr");
+        //清空未上传文件列表
+        this.noFiles2=[];
+        // console.log( this.noFiles2,"noFiles2 sc");
+        let fjLists = this.fjList.map(obj=>{
           let newObj = obj;
-          delete newObj.response;
-          delete newObj.raw;
           delete newObj.percentage;
+          delete newObj.raw;
           delete newObj.status;
-          obj.url = response.data.data.url;
           delete newObj.response;
+          obj.url = '';
           return newObj;
         });
-        this.form.fjAnnex = JSON.stringify(updatedArray);
-        // console.log(this.uploadFiles,"uploadFiles");
-        // console.log(this.form.fjAnnex,"fileList");
-        // console.log(JSON.parse(this.form.fjAnnex),"fileList2");
+        console.log( fjLists,"fjLists");
+        const result = fjLists.map((item, index) => {
+          item.url = this.urls[index].url;
+          return item;
+        });
+        console.log( result,"result");
+        if(this.upload.fileList.length > 0){
+          // console.log("open  upload");
+          this.upload.fileList.forEach(f=>{
+            f.id = result.length+1;
+            result.push(f);
+          });
+          console.log( result,"result");
+          this.upload.fileList=[];//清空
+        }
+        this.form.fjAnnex = JSON.stringify(result);
+        console.log( this.form.fjAnnex,"fjAnnex");
        if(this.queryParams.type ==='update'){
          //修改公告
          updateNotice(this.form).then(response => {
            this.$modal.msgSuccess("修改成功");
            this.open = false;
            this.getList();
+           this.rest2();
          });
        }else if (this.queryParams.type ==='add'){
          //新增公告
@@ -515,19 +632,24 @@ export default {
            this.$modal.msgSuccess("新增成功");
            this.open = false;
            this.getList();
+           this.rest2();
          });
-
        }
-        console.log("上传后文件列表:"+fileList);
       }
       this.upload.isUploading = false;
     },
     beforeRemove(file, fileList) {
+      if(this.queryParams.type ==='add'){
+        this.noFiles2 =  this.noFiles.filter(f=>f.name !== file.name);
+      }else if(this.queryParams.type ==='update'){
+
+        this.filterList = this.upload.fileList.filter(f=>f.name!==file.name);
+        console.log( this.filterList,"filterList");
+      }
       return this.$confirm(`确定移除 ${file.name}？`);
     },
     beforeUpload(file) {
       const isLt5M = file.size / 1024 / 1024 < 5;
-
       if (!isLt5M) {
         this.$message.error('文件大小不能超过5MB');
       }

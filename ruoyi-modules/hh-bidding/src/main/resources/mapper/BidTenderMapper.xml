@@ -30,6 +30,7 @@
         <result property="sDeadline" column="s_deadline"/>
         <result property="createTime" column="create_time"/>
         <result property="eid" column="eid"/>
+        <result property="fjFiles" column="fj_files"/>
     </resultMap>
 
     <sql id="selectBidTenderVo">
@@ -56,7 +57,8 @@
                s_end_time,
                s_project_state,
                s_deadline,
-               eid
+               eid,
+               fj_files
         from bid_tender
     </sql>
 
@@ -84,8 +86,9 @@
                 #{rangeEndTime}
             </if>
             <if test="eid != null ">and eid = #{eid}</if>
+            <if test="fjFiles != null ">and fj_files = #{fjFiles}</if>
         </where>
-        order by s_way
+        order by create_time desc
     </select>
 
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
@@ -140,6 +143,7 @@
             <if test="sProjectState != null">s_project_state,</if>
             <if test="sDeadline != null">s_deadline,</if>
             <if test="eid != null">eid,</if>
+            <if test="fjFiles != null ">fj_files,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="sid != null">#{sid},</if>
@@ -166,6 +170,7 @@
             <if test="sProjectState != null">#{sProjectState},</if>
             <if test="sDeadline != null">#{sDeadline},</if>
             <if test="eid != null">#{eid},</if>
+            <if test="fjFiles != null ">#{fjFiles},</if>
         </trim>
     </insert>
 
@@ -176,7 +181,7 @@
             <if test="sCode != null">s_code = #{sCode},</if>
             <if test="sName != null">s_name = #{sName},</if>
             <if test="sWay != null">s_way = #{sWay},</if>
-            <if test="sLeader != null ">and s_leader = #{sLeader}</if>
+            <if test="sLeader != null ">s_leader = #{sLeader},</if>
             <if test="sMust != null">s_must = #{sMust},</if>
             <if test="sSway != null">s_sway = #{sSway},</if>
             <if test="sType != null">s_type = #{sType},</if>
@@ -195,6 +200,7 @@
             <if test="sProjectState != null">s_project_state = #{sProjectState},</if>
             <if test="sDeadline != null">s_deadline = #{sDeadline},</if>
             <if test="eid != null">eid = #{eid},</if>
+            <if test="fjFiles != null ">fj_files = #{fjFiles},</if>
         </trim>
         where sid = #{sid}
     </update>

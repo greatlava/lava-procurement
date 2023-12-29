@@ -359,6 +359,8 @@ export default {
         this.jobList = response.rows;
         this.total = response.total;
         this.loading = false;
+      }).catch(err => {
+        this.$modal.msgError("服务器错误请联系管理员");
       });
     },
     // 任务组名字典翻译
@@ -425,6 +427,7 @@ export default {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
         row.status = row.status === "0" ? "1" : "0";
+        this.$modal.msgError("服务器出错，请联系管理员！！");
       });
     },
     /* 立即执行一次 */
@@ -433,13 +436,18 @@ export default {
         return runJob(row.jobId, row.jobGroup);
       }).then(() => {
         this.$modal.msgSuccess("执行成功");
-      }).catch(() => {});
+      }).catch(err => {
+        this.$modal.closeLoading();
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      });
     },
     /** 任务详细信息 */
     handleView(row) {
       getJob(row.jobId).then(response => {
         this.form = response.data;
         this.openView = true;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       });
     },
     /** cron表达式按钮操作 */
@@ -470,6 +478,8 @@ export default {
         this.form = response.data;
         this.open = true;
         this.title = "修改任务";
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       });
     },
     /** 提交按钮 */
@@ -477,16 +487,26 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.jobId != undefined) {
+            this.$modal.loading("修改中......");
             updateJob(this.form).then(response => {
+              this.$modal.closeLoading();
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
+            }).catch(err => {
+              this.$modal.closeLoading();
+              this.$modal.msgError("服务器出错，请联系管理员！！！");
             });
           } else {
+            this.$modal.loading("新增中......")
             addJob(this.form).then(response => {
+              this.$modal.closeLoading();
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
+            }).catch(err => {
+              this.$modal.closeLoading();
+              this.$modal.msgError("服务器出错，请联系管理员！！！");
             });
           }
         }
@@ -500,7 +520,9 @@ export default {
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

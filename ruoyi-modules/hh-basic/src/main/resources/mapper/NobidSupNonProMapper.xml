@@ -48,6 +48,7 @@
             <if test="gfQtime != null ">and gf_qtime = #{gfQtime}</if>
             <if test="gfQstate != null ">and gf_qstate = #{gfQstate}</if>
         </where>
+        order by gf_qtime asc
     </select>
 
     <select id="selectNobidSupNonProByGfId" parameterType="String" resultMap="NobidSupNonProResult">

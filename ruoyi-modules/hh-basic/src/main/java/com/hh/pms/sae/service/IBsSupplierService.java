@@ -97,6 +97,8 @@ public interface IBsSupplierService {
      */
     public BsSupplier loginSupplier(String hLoginAccount, String hPassword);
 
+    public BsSupplier onlyHCreditCode(String hCreditCode);
+
     //查询非招标项目
     public List<NobidNonPro> selectAllNoBid(NobidNonPro nobidNonPro);
 

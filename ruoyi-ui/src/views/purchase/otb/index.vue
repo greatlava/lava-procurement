@@ -32,7 +32,11 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="待提交" name="first">
           <el-table v-loading="loading" :data="planList">
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aBtype">
               <template slot-scope="scope">
@@ -91,7 +95,11 @@
                 </el-descriptions>
               </template>
             </el-table-column>
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
             <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
@@ -115,7 +123,11 @@
 
         <el-tab-pane label="已生效" name="third">
           <el-table v-loading="loading" :data="planList">
-            <el-table-column label="序号" align="center" prop="aid" width="80"/>
+            <el-table-column label="序号" align="center" prop="aid" width="80">
+              <template slot-scope="scope">
+                {{ scope.$index + 1 }}
+              </template>
+            </el-table-column>
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="采购业务类型" align="center" prop="aCreateDept"/>
             <el-table-column label="采购计划名称" align="center" prop="aName"/>
@@ -133,7 +145,7 @@
         </el-tab-pane>
       </el-tabs>
       <!-- 添加或修改采购计划对话框 -->
-      <el-dialog :title="title" :visible.sync="open" width="1000px" append-to-body>
+      <el-dialog @close="cancel" :title="title" :visible.sync="open" width="1000px" append-to-body>
         <el-tabs @tab-click="handleClick" v-model="paneName">
           <el-tab-pane label="基础资料" name="basic">
             <el-descriptions direction="vertical" class="margin-top" :column="4" size="medium" border>
@@ -207,8 +219,18 @@
               <el-table-column label="需求说明" align="center" prop="vIllustrate"/>
               <el-table-column label="采购方式" align="center" prop="procurementMethod"/>
             </el-table>
+            <el-card v-if="form.aAstate != 2" ref="card" style="margin-top: 20px" class="never">
+              <div slot="header" class="clearfix">
+                <span>审核意见详情</span>
+                <el-button @click="item.show = ! item.show" style="float: right; padding: 3px 0" type="text">
+                  {{ item.show ? '隐藏意见' : '显示意见' }}
+                </el-button>
+              </div>
+              <div v-if="item.show" class="text item">
+                <editor v-model="form.editor" :min-height="120"/>
+              </div>
+            </el-card>
           </el-tab-pane>
-
           <el-tab-pane label="审批记录" name="record_approval">
 
             <el-steps space="200" simple :active="form.aAstate + 1">
@@ -218,9 +240,24 @@
             </el-steps>
 
             <el-table style="margin-top: 20px" max-height="250" v-loading="loading" :data="record_approval">
-              <el-table-column label="id" align="center" prop="rid"/>
-              <el-table-column label="采购计划id" align="center" prop="aid" width="110"/>
-              <el-table-column label="流程节点" align="center" prop="node" width="110"/>
+              <el-table-column type="expand">
+                <template  slot-scope="scope">
+                  <el-card  class="box-card">
+                    <div slot="header" class="clearfix">
+                      <span>意见详情</span>
+                      <el-button @click="expand(scope.row.opinionDetails)" style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+                    </div>
+                    <div style="height: 100px" v-html="scope.row.opinionDetails" class="text item"></div>
+                  </el-card>
+                </template>
+              </el-table-column>
+              <el-table-column label="序号" align="center" prop="rid">
+                <template slot-scope="scope">
+                  {{ scope.$index + 1 }}
+                </template>
+              </el-table-column>
+              <!--              <el-table-column label="采购计划id" align="center" prop="aid" width="110"/>-->
+              <el-table-column label="流程节点" align="center" prop="node" width="135"/>
               <el-table-column label="处理人" align="center" prop="processedBy"/>
               <el-table-column label="所属部门" align="center" prop="depnt"/>
               <el-table-column label="处理时间" align="center" prop="updateTime" width="180">
@@ -228,11 +265,12 @@
                   <span>{{ scope.row.updateTime }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="处理意见" align="center" prop="opinion"/>
-              <el-table-column label="意见详情" align="center" prop="opinionDetails" width="200"/>
+              <el-table-column label="状态" align="center" prop="opinion"/>
+              <!--              <el-table-column show-overflow-tooltip label="意见详情" align="center" prop="opinionDetails" width="200"/>-->
               <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
                   <el-button
+                    disabled
                     size="mini"
                     type="text"
                     icon="el-icon-delete"
@@ -263,6 +301,14 @@
           <el-button @click="cancel">取 消</el-button>
         </div>
       </el-dialog>
+      <el-drawer
+        append-to-body
+        title="意见查看"
+        direction="btt"
+        size="40%"
+        :visible.sync="drawer">
+        <div style="padding: 10px" v-html="opinionDetails"></div>
+      </el-drawer>
     </div>
     <pagination
       v-show="total>0"
@@ -297,6 +343,11 @@ export default {
   props: [],
   data() {
     return {
+      opinionDetails: '',
+      drawer: false,
+      item: {
+        show: true,
+      },
       fileUrls: "",
       file: {
         urls: [],
@@ -373,6 +424,10 @@ export default {
     this.getList()
   },
   methods: {
+    expand(content){
+      this.drawer=true;
+      this.opinionDetails = content;
+    },
     //点击在线预览文件
     onlinePreViewFile(url, fileName) {
       console.log("url", url)
@@ -414,8 +469,8 @@ export default {
           listRecord({aid: this.form.aid}).then((res) => {
             this.loading = false;
             this.record_approval = res.rows;
-          }).catch((err) => {
-
+          }).catch(err => {
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           break;
         default:
@@ -435,6 +490,8 @@ export default {
                 }
               })
             }
+          }).catch(err => {
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           selectedComPubAttamentsByAid(aid).then(res => {
             if (res.data) {
@@ -446,7 +503,9 @@ export default {
               this.file.urls = [];
               this.file.names = [];
             }
-
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
           break;
       }
@@ -473,11 +532,14 @@ export default {
         this.loading = false;
         this.total = response.total;
         this.planList = response.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     // 取消按钮
     cancel() {
       this.open = false
+      this.item.show = true;
       setTimeout(() => {
         this.budgetData = [];
         this.itemList = [];
@@ -500,7 +562,8 @@ export default {
         aOpinion: null,
         aProjectCount: null,
         aBtype: null,
-        aAstate: 0
+        aAstate: 0,
+        editor: ""
       }
       this.queryParams.aBtype = null;
       this.resetForm('form')
@@ -526,6 +589,8 @@ export default {
     selectRluesForm() {
       listRules(null).then(res => {
         this.codeRuleForm = res.rows;
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     /** 修改按钮操作 */
@@ -535,6 +600,8 @@ export default {
       getPlan(aid).then(response => {
         console.log(response.data)
         this.$router.push({path: '/purchase/insert', query: response.data})
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
       })
     },
     /** 提交按钮 */
@@ -552,12 +619,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const aids = row.aid || this.ids
-      this.$modal.confirm('是否确认删除采购计划编号为"' + aids + '"的数据项？').then(function () {
+      this.$modal.confirm('采购计划下有行项目,是否确认删除采购计划编号为"' + aids + '"的数据项？').then(function () {
         return delPlan(aids)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功')
-      }).catch(() => {
       })
     },
     //单击查看预算
@@ -573,21 +639,39 @@ export default {
     },
     //提交采购计划修改状态
     sumbitPlan() {
-      this.ComUpdatePlan(1);
+      this.$modal.confirm("你确定要提交采购计划吗？").then(() => {
+        this.ComUpdatePlan(1);
+      })
+
     },
     //审核采购计划
     approved() {
-      this.ComUpdatePlan(2);
+      if (!this.form.editor) {
+        this.$modal.msgError("请输入审核意见")
+        return;
+      }
+      this.$modal.confirm("你确定要审核该采购计划吗？").then(() => {
+        this.ComUpdatePlan(2);
+      })
     },
     //驳回采购计划
     rejectPlan() {
-      this.ComUpdatePlan(0);
+      if (!this.form.editor) {
+        this.$modal.msgError("请输入驳回意见")
+        return;
+      }
+      this.$modal.confirm("你确定要驳回采购计划吗？").then(() => {
+        this.ComUpdatePlan(0);
+      })
     },
     //修改采购计划通用方法
     ComUpdatePlan(state) {
       this.fullscreenLoading = true;
       let obj = {...this.form};
       obj['aAstate'] = state;
+      obj['editor'] = {
+        opinionDetails: this.form.editor
+      }
       updatePlan(obj).then(res => {
         this.fullscreenLoading = false;
         Message.success("操作成功！！");
@@ -600,7 +684,10 @@ export default {
           this.queryParams.aAstate = 0;
           this.getList();
         }, 500)
-      });
+      }).catch(err => {
+        this.fullscreenLoading = false;
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      })
     }
   }
 }

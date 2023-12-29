@@ -79,7 +79,7 @@ public class BidTenderController extends BaseController {
     /**
      * 修改招标项目
      */
-    @RequiresPermissions("system:tender:edit")
+//    @RequiresPermissions("system:tender:edit")
     @Log(title = "招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BidTender bidTender) {
@@ -100,7 +100,6 @@ public class BidTenderController extends BaseController {
      * 获取没有合同的项目
      */
     @GetMapping("/NoEidTenderList")
-    @RequiresPermissions("system:tender:list")
     public TableDataInfo noContract(BidTender bidTender) {
         startPage();
         List<BidTender> list = bidTenderService.selectNoEidTenderList(bidTender);

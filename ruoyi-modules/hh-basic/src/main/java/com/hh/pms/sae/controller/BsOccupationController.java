@@ -37,7 +37,6 @@ public class BsOccupationController extends BaseController {
     /**
      * 查询职业列表
      */
-    @RequiresPermissions("system:occupation:list")
     @GetMapping("/list")
     public TableDataInfo list(BsOccupation bsOccupation) {
         startPage();

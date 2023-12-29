@@ -12,19 +12,19 @@
       </el-col>
       <right-toolbar @queryTable="getList"></right-toolbar>
     </el-row>
-    <el-table v-loading="loading" :data="candidateList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+    <el-table v-loading="loading" :data="candidateList" @selection-change="handleSelectionChange" :default-sort = "{prop: 'zRanking', order: 'ascending'}">
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="序号" type="index" align="center" />
       <el-table-column label="供应商名称" align="center" prop="hName"/>
       <el-table-column label="最终报价(万元)" align="center" prop="zFinal" />
-      <el-table-column label="最终得分" align="center" prop="zFraction" />
+      <el-table-column label="最终得分" align="center" prop="zFraction" sortable/>
       <el-table-column label="是否推荐" align="center" prop="zRecommend" >
         <template slot-scope="scope">
           <span>{{scope.row.zRecommend == 0?'是':'否'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排名" align="center" prop="zRanking" />
-      <el-table-column label="是否推荐" align="center" prop="zBidder" >
+      <el-table-column label="排名" align="center" prop="zRanking" sortable/>
+      <el-table-column label="是否中标" align="center" prop="zBidder" >
         <template slot-scope="scope">
           <span>{{scope.row.zBidder == 0?'是':'否'}}</span>
         </template>
@@ -41,11 +41,14 @@
 </template>
 <script>
 import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidate } from "@/api/system/tender/bidEval";
+import {delNotice} from "@/api/system/tender/tenderNotice";
+import {getTender} from "@/api/system/tender/tender";
 
 export default {
   name: "DetermineWin",
   data() {
     return {
+      status:false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -79,7 +82,8 @@ export default {
         zReview: null,
         zSummary: null,
         zBidder: null,
-        zSendTime: null
+        zSendTime: null,
+        zid: null,
       },
       // 表单参数
       form: {},
@@ -89,12 +93,19 @@ export default {
     };
   },
   created() {
+    this.queryParams.sid=this.$route.query.sid;
     this.getList();
+    getTender(this.queryParams.sid).then(res=>{
+      if(res.data.sProjectState === 7){
+        this.status=true;
+      }
+    });
   },
   methods: {
     /** 查询中标候选人列表 */
     getList() {
       this.loading = true;
+      this.queryParams.zBidder = null;
       listCandidate(this.queryParams).then(response => {
         this.candidateList = response.rows;
         this.total = response.total;
@@ -142,11 +153,74 @@ export default {
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      row.zBidder = "0";//修改是否中标
-      updateCandidate(row).then(response => {
-
-      });
+      if(this.status){
+        this.$alert("该项目已定标，不可进行操作！");
+        this.getList();
+      }else{
+        this.reset();
+        const zids = row.zid || this.ids[0];
+        this.queryParams.zBidder = "0";//修改是否中标
+        listCandidate(this.queryParams).then(r=>{
+          this.queryParams.zid = zids;//zid
+          getCandidate(this.queryParams.zid).then(re=>{
+            if(re.data.zRanking !== 1){
+              this.$modal.confirm('检测到该供应商评估排名不为优先，是否确定该供应商为中标人？').then(()=>{
+                //已存在中标人
+                if(r.rows.length > 0){
+                  this.queryParams.zid = r.rows[0].zid;
+                  this.$modal.confirm('检测到已存在中标人，是否仍然确定？').then(()=> {
+                    this.queryParams.zBidder = "1";
+                    //修改中标为未中标
+                    return updateCandidate(this.queryParams);
+                  }).then(() => {
+                    this.queryParams.zBidder = "0";
+                    this.queryParams.zid = zids;//zid
+                    return updateCandidate(this.queryParams);
+                  }).then(() => {
+                    this.queryParams.zBidder = null;
+                    this.queryParams.zid = null;
+                    this.getList();
+                    this.$modal.msgSuccess("确定成功");
+                  }).catch(() => {});
+                }else{
+                  updateCandidate(this.queryParams).then(res=>{
+                    this.queryParams.zBidder = null;
+                    this.queryParams.zid = null;
+                    this.getList();
+                    this.$modal.msgSuccess("确定成功");
+                  });
+                }
+              })
+            }else{
+              //已存在中标人
+              if(r.rows.length > 0){
+                this.queryParams.zid = r.rows[0].zid;
+                this.$modal.confirm('检测到已存在中标人，是否仍然确定？').then(()=> {
+                  this.queryParams.zBidder = "1";
+                  //修改中标为未中标
+                  return updateCandidate(this.queryParams);
+                }).then(() => {
+                  this.queryParams.zBidder = "0";
+                  this.queryParams.zid = zids;//zid
+                  return updateCandidate(this.queryParams);
+                }).then(() => {
+                  this.queryParams.zBidder = null;
+                  this.queryParams.zid = null;
+                  this.getList();
+                  this.$modal.msgSuccess("确定成功");
+                }).catch(() => {});
+              }else{
+                updateCandidate(this.queryParams).then(res=>{
+                  this.queryParams.zBidder = null;
+                  this.queryParams.zid = null;
+                  this.getList();
+                  this.$modal.msgSuccess("确定成功");
+                });
+              }
+            }
+          });
+        });
+      }
     },
   }
 };

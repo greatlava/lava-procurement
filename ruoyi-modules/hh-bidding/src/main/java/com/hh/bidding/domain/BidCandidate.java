@@ -1,6 +1,8 @@
 package com.hh.bidding.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -65,12 +67,14 @@ public class BidCandidate extends BaseEntity
     private Long zBidder;
 
     /** 发送时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "发送时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "发送时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date zSendTime;
 
     @Excel(name = "供应商名称")
     private String hName;
+
+    private List<BsSupplier> bsSuppliers;
 
     public void setZid(Long zid) 
     {
@@ -216,5 +220,13 @@ public class BidCandidate extends BaseEntity
 
     public void sethName(String hName) {
         this.hName = hName;
+    }
+
+    public List<BsSupplier> getBsSuppliers() {
+        return bsSuppliers;
+    }
+
+    public void setBsSuppliers(List<BsSupplier> bsSuppliers) {
+        this.bsSuppliers = bsSuppliers;
     }
 }

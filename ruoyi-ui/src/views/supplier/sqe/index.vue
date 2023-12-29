@@ -24,13 +24,18 @@
           <el-table stripe v-loading="loading" :data="supplierList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---' }}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
@@ -39,7 +44,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -76,13 +82,18 @@
           <el-table stripe v-loading="loading" :data="noSupplierList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---' }}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="统一社会信用代码" align="center" prop="hCreditCode"/>
@@ -91,7 +102,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -128,13 +140,18 @@
           <el-table stripe v-loading="loading" :data="supplierBadList">
             <el-table-column type="index" label="序号" align="center" width="80"/>
             <el-table-column label="供应商名称" align="center" prop="hName"/>
-            <el-table-column label="企业性质" align="center" prop="hQuality"/>
+            <el-table-column label="企业性质" align="center" prop="hQuality">
+              <template slot-scope="scope">
+                {{ scope.row.hQuality ? scope.row.hQuality : '---'}}
+              </template>
+            </el-table-column>
             <el-table-column label="机构类型" align="center" prop="hInstitution">
               <template slot-scope="scope">
                 <el-tag
                   size="small"
-                  disable-transitions>{{ scope.row.hInstitution }}
+                  disable-transitions v-if="scope.row.hInstitution">{{ scope.row.hInstitution }}
                 </el-tag>
+                <span v-else>---</span>
               </template>
             </el-table-column>
             <el-table-column label="状态" align="center" prop="fState">
@@ -149,7 +166,8 @@
                 <router-link :to="'detail?hid='+scope.row.hid+'&zr_id=0'">
                   <el-button
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>
@@ -186,6 +204,11 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="业务编号" align="center" prop="zrBnumber">
               <template slot-scope="scope">
+                {{ scope.row.zrBnumber }}
+              </template>
+            </el-table-column>
+            <el-table-column label="供应商名称" align="center" prop="hName">
+              <template slot-scope="scope">
                 {{ scope.row.bsSupplier.hName }}
                 <el-tag size="small" style="margin-left: 20px" v-if="scope.row.bsSupplier.fStatus == 2"
                         type="danger">
@@ -204,14 +227,16 @@
                 <router-link :to="'process?zr_id='+scope.row.zrId">
                   <el-button
                     size="small"
-                    v-if="scope.row.bsSupplier.fStatus == 0">审核
+                    v-if="scope.row.bsSupplier.fStatus == 0"
+                    v-hasRole="['controller']">审核
                   </el-button>
                 </router-link>
                 <router-link :to="'detail?zr_id='+scope.row.zrId+'&hid=0'">
                   <el-button
                     style="margin-left: 10px"
                     size="small"
-                    type="primary">查看
+                    type="primary"
+                    v-hasRole="['common','controller']">查看
                   </el-button>
                 </router-link>
               </template>

@@ -37,7 +37,6 @@ public class BsEducateController extends BaseController {
     /**
      * 查询教育列表
      */
-    @RequiresPermissions("system:educate:list")
     @GetMapping("/list")
     public TableDataInfo list(BsEducate bsEducate) {
         startPage();

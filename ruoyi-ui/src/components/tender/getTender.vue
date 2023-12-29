@@ -7,7 +7,7 @@
         <el-table-column label="负责人" align="center" prop="sLeader" />
         <el-table-column label="标书获取截止时间" align="center" prop="uEndTime" width="200">
           <template slot-scope="scope">
-            <span>{{ scope.row.bidNotices[0].uEndTime }}</span>
+            <span>{{ scope.row.bidNotices[0].uEndTime || '——'}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -48,16 +48,16 @@
                 <span>{{ scope.row.yDownloadTime }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-zoom-in"
-                  @click="handleDetail"
-                >详情</el-button>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->
+<!--              <template slot-scope="scope">-->
+<!--                <el-button-->
+<!--                  size="mini"-->
+<!--                  type="text"-->
+<!--                  icon="el-icon-zoom-in"-->
+<!--                  @click="handleDetail"-->
+<!--                >详情</el-button>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
           </el-table>
         </el-tab-pane>
       </el-tabs>

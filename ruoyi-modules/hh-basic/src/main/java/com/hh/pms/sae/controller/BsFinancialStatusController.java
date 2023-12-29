@@ -37,7 +37,6 @@ public class BsFinancialStatusController extends BaseController {
     /**
      * 查询财务状态列表
      */
-    @RequiresPermissions("system:status:list")
     @GetMapping("/list")
     public TableDataInfo list(BsFinancialStatus bsFinancialStatus) {
         startPage();

@@ -1,5 +1,6 @@
 package com.hh.bidding.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.annotation.Resource;
@@ -116,6 +117,7 @@ public class BidDocumentsController extends BaseController
     @PostMapping("/upload1")
     public AjaxResult upload1(MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
+            System.out.println("file:"+file);
             LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
             System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
@@ -130,20 +132,20 @@ public class BidDocumentsController extends BaseController
 
     @PostMapping("/upload2")
     public AjaxResult upload2(MultipartFile [] file) throws IOException {
-
+       List<String> urls =new ArrayList<>();
         for (MultipartFile f:file) {
             if (!f.isEmpty()) {
                 LoginUser loginUser = SecurityUtils.getLoginUser();
                 R<SysFile> fileResult = remoteFileService.upload(f);
                 System.out.println("fileResult:" + fileResult.getData().getName() + "\t" + fileResult.getData().getUrl());
                 System.out.println("文件上传成功！。。。。");
+                urls.add(fileResult.getData().getUrl());
                 //结果非空
-                if (!StringUtils.isNull(fileResult) || !StringUtils.isNull(fileResult.getData())) {
-
-                    return AjaxResult.success("上传文件成功！",fileResult.getData());
+                if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
+                    return AjaxResult.error("上传文件异常，请联系管理员");
                 }
             }
         }
-        return AjaxResult.error("上传文件异常，请联系管理员");
+        return AjaxResult.success("上传文件成功！",urls);
     }
 }
