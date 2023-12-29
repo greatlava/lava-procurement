@@ -251,7 +251,7 @@
     </update>
 
     <!--修改非招标项目里的eid-->
-    <update id="updateNobidNonProSid" parameterType="com.hh.pms.cm.domain.NobidNonPro">
+    <update id="updateNobidNonProSid" parameterType="com.hh.pms.sae.domain.NobidNonPro">
         update nobid_non_pro
         set eid = #{eid}
         where gid = #{gid}

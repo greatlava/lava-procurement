@@ -5,7 +5,7 @@ import java.util.List;
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 import com.hh.pms.cm.domain.ComPubAttachments;
-import com.hh.pms.cm.domain.NobidNonPro;
+import com.hh.pms.sae.domain.NobidNonPro;
 
 /**
  * 合同Mapper接口
