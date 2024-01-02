@@ -83,7 +83,7 @@ public interface BsContractMapper {
     //修改合同管理状态
     public int updateoHstatus(BsContract bsContract);
 
-    //修改合同管理状态
+    //修改招标Eid为空
     public int updateBidTender(BidTender bidTender);
 
     //合同作废
@@ -94,4 +94,15 @@ public interface BsContractMapper {
 
     //修改非招标项目eid
     public int updateNobidNonProSid(NobidNonPro nobidNonPro);
+
+    //查询非招标签定中项目
+    public List<BsContract> selectBsContractList1(BsContract bsContract);
+
+    //查询非招标签定中项目
+    public List<BsContract> selectBsContractList2(BsContract bsContract);
+
+    //修改非招标Eid为空
+    public int updateNobidNonPro(NobidNonPro nobidNonPro);
+
+
 }

@@ -7,8 +7,8 @@
         <h3>非招标基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="项目名称" prop="gName" style="width: 45%">
-            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===0" />
-            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===1" readonly/>
+            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===0"/>
+            <el-input v-model="form.gName" clearable class="cInput" v-else readonly/>
           </el-form-item>
           <el-form-item label="项目编号" prop="gCode" style="width: 45%">
             <el-input v-model="form.gCode" clearable class="cInput" readonly/>
@@ -107,7 +107,7 @@
           <el-table-column label="序号" type="index" width="80"/>
           <el-table-column label="供应商名称" prop="hName" width="300">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.bsSupplier.hName" readonly/>
+              <el-input v-model="scope.row.hName" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="报价次数" prop="bjSecond" width="200">
@@ -155,7 +155,8 @@
 
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy" v-if="show">发布</el-button>
+      <el-button size="medium" type="primary" @click="addXy" v-if="show">提交</el-button>
+      <el-button size="medium" type="primary" @click="faBu" v-if="form.gRelease===1">完成</el-button>
     </div>
   </div>
 </template>
@@ -221,6 +222,7 @@ export default {
       open: false,
       // 表单参数
       form: {
+        hid: null,
         gName: null,
         gCode: null,
         gIsPublic: null,
@@ -292,12 +294,25 @@ export default {
         }
       },
       chuan: [],
-      show1: false
+      show1: false,
+      currentTime: null,
+      show2: false,
+      upFile: null,
+      info1: {
+        gid: null,
+        gRelease: null,
+        hid: null
+      }
     }
   },
   mounted() {
     this.lCalculateTotalSubtotal()
     this.getList()
+
+    this.getCurrentTime()
+    this.myTimeDisplay = setInterval(() => {
+      this.getCurrentTime() //每秒更新一次时间
+    }, 1000)
   },
   created() {
     // this.selectSupplier()
@@ -306,10 +321,28 @@ export default {
     })
   },
   methods: {
+    //时间
+    getCurrentTime() {
+      //获取当前时间并打印
+      let _this = this
+      let yy = new Date().getFullYear()
+      let mm = new Date().getMonth() + 1
+      let dd = new Date().getDate()
+      let hh = new Date().getHours()
+      let mf = new Date().getMinutes() < 10 ? '0' + new Date().getMinutes() : new Date().getMinutes()
+      _this.gettime = yy + '-' + mm + '-' + dd + ' ' + hh + ':' + mf
+      this.currentTime = _this.gettime
+      if (this.currentTime >= (this.form.gDeadline)) {
+        this.show2 = true
+        clearInterval(this.myTimeDisplay)
+      } else {
+        // console.log(this.currentTime)
+      }
+    },
     onchange2(files, fileList) {
       this.fileList2 = fileList
       console.log('--------------')
-      if (files.size == 0) {
+      if (files.size === 0) {
         this.$message.error('选择的文件不能为空，请重新选择！')
         this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
       }
@@ -337,9 +370,13 @@ export default {
                 if (this.fileList2.length === 0) {
                   this.$message.warning('请上传附件')
                 } else {
-                  console.log(1)
-                  this.chuan.push(...this.fileList2)
-                  this.$refs.up2.submit()
+                  if (this.hasNewFiles()) {
+                    console.log(1)
+                    this.chuan.push(...this.fileList2)
+                    this.$refs.up2.submit()
+                  } else {
+                    this.add()
+                  }
                 }
               }
             }
@@ -350,21 +387,42 @@ export default {
         }
       )
     },
+    hasNewFiles() {
+      // 检查 fileList2 中是否包含新文件
+      for (let file of this.fileList2) {
+        if (!file.url) {
+          return true // 如果有文件没有 url 属性，表示是新文件
+        }
+      }
+      return false // 如果所有文件都有 url 属性，表示没有新文件
+    },
+    //发布项目
+    faBu() {
+      this.info1.gid = this.gid
+      this.info1.gRelease = 2
+      this.info1.hid = this.ComQuotation[0].hid
+      console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
+      upePro(this.info1).then((res) => {
+        this.$message.success(res.msg)
+        this.$router.push('/noTender/project')
+      }).catch((error) => {
+        this.$message.error('发布失败')
+      })
+    },
     add() {
       console.log(4)
       this.info.gTimeon = this.form.gTimeon
       this.info.gDeadline = this.form.gDeadline
       this.info.gRelease = 1
-      console.log(this.chuan, 'chuan')
       this.info.comPubAttachments.anUrl = this.chuan.map(item => item.response ? item.response.data.url : item.url).join(',')
       this.info.comPubAttachments.anName = this.chuan.map(item => item.response ? item.response.data.name : item.name).join(',')
       console.log(this.info.comPubAttachments.anUrl, 'this.info.comPubAttachments.anUrl')
       console.log(this.info.comPubAttachments.anName, 'this.info.comPubAttachments.anName')
       upePro(this.info).then((res) => {
-        this.$message.success('发布成功')
+        this.$message.success('项目已提交')
         this.$router.push('/noTender/project')
       }).catch((error) => {
-        this.$message.error('发布失败')
+        this.$message.error('提交异常')
       })
     },
     //上传协议文件-------------------------------------------------
@@ -385,6 +443,7 @@ export default {
     //查询采购计划信息
     getList() {
       getPro(this.gid).then(response => {
+        console.log(response.data, '123')
         this.aid = response.data.xyId
         this.info.comPubAttachments.aid = response.data.xyId
         this.info.gid = response.data.gid
@@ -392,16 +451,16 @@ export default {
         if (response.data.gRelease === 0) {
           this.show = true
         }
-        if (response.data.gTendertype == 3) {
+        if (response.data.gTendertype === 3) {
           this.form.gTendertype = '询价'
-        } else if (response.data.gTendertype == 5) {
+        } else if (response.data.gTendertype === 5) {
           this.form.gTendertype = '竞争性谈判'
-        } else if (response.data.gTendertype == 4) {
+        } else if (response.data.gTendertype === 4) {
           this.form.gTendertype = '委托'
-        } else if (response.data.gTendertype == 6) {
+        } else if (response.data.gTendertype === 6) {
           this.form.gTendertype = '单一来源'
         }
-        if (response.data.gIsPublic == 1) {
+        if (response.data.gIsPublic === 1) {
           this.form.gIsPublic = '公开'
         } else {
           this.form.gIsPublic = '邀请'
@@ -414,7 +473,17 @@ export default {
       }).then(res => {
         this.form.createBy = res[0].data.createBy
         this.form.createDept = res[0].data.aCreateDept
-        this.ComQuotation = res[1].rows
+        // console.log(res[1].rows.bsSupplier.hName)
+        res[1].rows.forEach(row => {
+          let quo = {
+            hid: row.bjHid,
+            hName: row.bsSupplier.hName,
+            bjSecond: row.bjSecond,
+            bjTotal: row.bjTotal,
+            createTime: row.createTime
+          }
+          this.ComQuotation.push(quo)
+        })
         //查询产品信息
         return getItemsDevice({ 'aid': this.aid })
       }).then(res => {
@@ -437,6 +506,9 @@ export default {
     getComPubAttachments() {
       getAttachmentsByAid(this.aid).then(res => {
         console.log(res, 'res')
+        if(!res.data){
+         return
+        }
         this.info.comPubAttachments.anId = res.data.anId
         if (res.data.anName && res.data.anUrl) {
           const names = res.data.anName.split(',')

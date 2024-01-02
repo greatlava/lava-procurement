@@ -156,13 +156,11 @@ export function delContract(eid) {
 }
 
 // 合同作废
-export function HtCancel(eid) {
+export function HtCancel(data) {
   return request({
     url: '/basic/contract/HtCancel',
-    method: 'get',
-    params: {
-      eid: eid
-    }
+    method: 'put',
+    data: data
   })
 }
 
@@ -205,5 +203,25 @@ export function upOidbyOid(data) {
     url: '/ppm/framework/upOidbyOid',
     method: 'put',
     data: data
+  })
+}
+
+// 新增非招标合同
+export function addNoContract(data) {
+  return request({
+    url: '/basic/contract/noTender',
+    method: 'post',
+    data: data
+  })
+}
+
+//查询中标供应商信息
+export function selectSuppHid(sid) {
+  return request({
+    url: '/bidding/candidate/getSuppHid',
+    method: 'get',
+    params: {
+      sid: sid
+    }
   })
 }

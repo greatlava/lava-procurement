@@ -131,7 +131,7 @@
                 </el-button>
                 <!--状态2-->
                 <!--进入合同-->
-                <router-link :to="'update?eid='+scope.row.eid">
+                <router-link :to="'upNoTender?eid='+scope.row.eid">
                   <el-button
                     style="margin-right: 20px"
                     v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
@@ -153,7 +153,7 @@
                 >删除
                 </el-button>
                 <!--状态3-->
-                <router-link :to="'examine?eid='+scope.row.eid">
+                <router-link :to="'examineNo?eid='+scope.row.eid">
                   <el-button
                     v-if="scope.row.eStatus === 3"
                     size="mini"
@@ -199,7 +199,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details?eid='+scope.row.eid">
+                <router-link :to="'viewNo?eid='+scope.row.eid">
                   <el-button
                     style="margin-right: 20px"
                     size="mini"
@@ -214,7 +214,7 @@
                   v-if="scope.row.eCancel===0"
                   type="text"
                   icon="el-icon-delete"
-                  @click="cancel(scope.row.eid)"
+                  @click="cancel(scope.row)"
                   v-hasPermi="['system:contract:delete']"
                 >作废
                 </el-button>
@@ -236,9 +236,8 @@
 </template>
 
 <script>
-import { listContract, listTender } from '@/api/system/cm'
 import { delContract, updateoHstatus, HtCancel } from '../../api/system/addContract'
-import { listPro1 } from '../../api/system/noTender'
+import { delContract1, listNoContract, listNoContract1, listNoTender, listPro1 } from '../../api/system/noTender'
 
 export default {
   name: 'Contract',
@@ -277,12 +276,14 @@ export default {
         gCode: null,
         gName: null,
         gIsPublic: null,
+        oHstatus: 1,
         gTendertype: null
       },
       queryParams2: {
         pageNum: 1,
         pageSize: 10,
         hid: null,
+        gid: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
@@ -295,6 +296,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         hid: null,
+        gid: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
@@ -326,16 +328,17 @@ export default {
   },
   methods: {
     //合同作废
-    cancel(eid) {
+    cancel(row) {
+      console.log(row)
       this.$confirm('确定使该合同作废?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        HtCancel(eid).then(response => {
+        HtCancel({ 'eid': row.eid, 'gid': row.gid }).then(response => {
           console.log(response)
-          if (response.msg = '修改成功') {
-            this.activeName = 'third'
+          if (response.msg === '修改成功') {
+            this.activeName = 'first'
             this.getList3()
             this.$message({ type: 'info', message: '已作废' })
           } else {
@@ -344,25 +347,36 @@ export default {
         })
       }).catch(() => {
         this.$message({
-          type: 'info',
+          type: 'warning',
           message: '已取消'
         })
       })
     },
     //删除合同
     delectHt(eid) {
-      delContract(eid).then(response => {
-        console.log(response)
-        if (response.msg == '删除成功') {
-          this.activeName = 'third'
-          this.$message({
-            message: '删除成功',
-            type: 'success'
-          })
-          this.getList3()
-        } else {
-          this.$message.error('删除异常')
-        }
+      this.$confirm('确定删除该合同?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delContract1(eid).then(response => {
+          console.log(response)
+          if (response.msg === '删除成功') {
+            this.activeName = 'third'
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.getList3()
+          } else {
+            this.$message.error('删除异常')
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
       })
     },
     //上传签订合同
@@ -387,32 +401,27 @@ export default {
       if (tab.name === 'first') {
         this.change = 1
         // 执行标签页first的查询操作
-        this.getList1(),
-          console.log('执行标签页1的查询操作')
+        this.getList1()
       } else if (tab.name === 'second') {
         this.change = 2
         // 执行标签页second的查询操作
-        this.getList2(),
-          console.log('执行标签页2的查询操作')
+        this.getList2()
       } else {
         // 执行标签页third的查询操作
         this.change = 2
-        this.getList3(),
-          console.log('执行标签页3的查询操作')
+        this.getList3()
       }
     },
     query() {
       // 模糊查询按钮点击时的处理逻辑
-      console.log('执行模糊查询')
-      this.queryParams1.sCode = this.formData.field101
-      this.queryParams1.sName = this.formData.field102
+      this.queryParams1.gCode = this.formData.field101
+      this.queryParams1.gName = this.formData.field102
       this.queryParams1.pageNum = 1
       // 在这里执行模糊查询操作,
       this.getList1()
     },
     query1() {
       // 模糊查询按钮点击时的处理逻辑
-      console.log('执行模糊查询')
       this.queryParams2.eHcode = this.formData1.field101
       this.queryParams2.eHname = this.formData1.field102
       this.queryParams3.eHcode = this.formData1.field101
@@ -428,9 +437,11 @@ export default {
      */
     resetForm() {
       this.$refs.elForm.resetFields()
+      this.query()
     },
     resetForm1() {
       this.$refs.elForm1.resetFields()
+      this.query1()
     },
     /** 查询待创建合同列表 */
     getList1() {
@@ -444,8 +455,7 @@ export default {
     /** 查询签订中合同列表 */
     getList2() {
       this.loading = true
-      listContract(this.queryParams2).then(response => {
-        console.log(response.rows)
+      listNoContract(this.queryParams2).then(response => {
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false
@@ -454,7 +464,7 @@ export default {
     /** 查询已签订合同列表 */
     getList3() {
       this.loading = true
-      listContract(this.queryParams3).then(response => {
+      listNoContract(this.queryParams3).then(response => {
         console.log(response.rows)
         this.contractList3 = response.rows
         this.total3 = response.total

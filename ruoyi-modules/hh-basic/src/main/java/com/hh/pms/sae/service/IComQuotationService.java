@@ -61,5 +61,8 @@ public interface IComQuotationService {
     public int deleteComQuotationByBjId(Long bjId);
 
     public ComQuotation oneQuotation(String gfId, Long bjHid);
+
+    //查询项目报价总数
+    public int selectBjCount(String bjId);
 }
 

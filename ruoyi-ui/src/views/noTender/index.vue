@@ -175,11 +175,25 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details4?gid='+scope.row.gid">
+                <router-link :to="'details4?gid='+scope.row.gid" v-if="scope.row.gRelease===0">
                   <el-button
                     size="mini"
                     type="text"
                   >进入项目
+                  </el-button>
+                </router-link>
+                <router-link :to="'details5?gid='+scope.row.gid" v-if="scope.row.gRelease===1">
+                  <el-button
+                    size="mini"
+                    type="text"
+                  >发布项目
+                  </el-button>
+                </router-link>
+                <router-link :to="'details5?gid='+scope.row.gid" v-else>
+                  <el-button
+                    size="mini"
+                    type="text"
+                  >查看
                   </el-button>
                 </router-link>
               </template>
@@ -201,7 +215,7 @@
 </template>
 
 <script>
-import { listPlan, listPro } from '../../api/system/noTender'
+import { getBjCount, listPlan, listPro } from '../../api/system/noTender'
 
 export default {
   data() {
@@ -287,25 +301,6 @@ export default {
     query() {
       // 模糊查询按钮点击时的处理逻辑
       console.log('执行模糊查询')
-      if (this.form.field101 != null) {
-        this.queryParams1.gSpawnTime = this.form.field101[0]
-        this.queryParams1.gDeadline = this.form.field101[1]
-        this.queryParams2.gSpawnTime = this.form.field101[0]
-        this.queryParams2.gDeadline = this.form.field101[1]
-        this.queryParams3.gSpawnTime = this.form.field101[0]
-        this.queryParams3.gDeadline = this.form.field101[1]
-        this.queryParams4.gSpawnTime = this.form.field101[0]
-        this.queryParams4.gDeadline = this.form.field101[1]
-      } else {
-        this.queryParams1.gSpawnTime = null
-        this.queryParams1.gDeadline = null
-        this.queryParams2.gSpawnTime = null
-        this.queryParams2.gDeadline = null
-        this.queryParams3.gSpawnTime = null
-        this.queryParams3.gDeadline = null
-        this.queryParams4.gSpawnTime = null
-        this.queryParams4.gDeadline = null
-      }
       this.queryParams1.gName = this.form.field102
       this.queryParams1.pageNum = 1
       this.getList1()
@@ -350,6 +345,7 @@ export default {
     getList2() {
       this.loading = true
       listPro(this.queryParams2).then(response => {
+        console.log(response.rows)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false

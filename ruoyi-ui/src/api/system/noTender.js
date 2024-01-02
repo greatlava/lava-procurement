@@ -133,14 +133,16 @@ export function listPro1(query) {
   })
 }
 
-// 查询招标项目详细
+// 获取附件详细信息
 export function getBidCandidate(sid) {
   return request({
-    url: '/bidding/candidate/' + sid,
-    method: 'get'
+    url: '/basic/contract/selectCom',
+    method: 'get',
+    params: {
+      sid: sid
+    }
   })
 }
-
 
 // 查询框架计划内的设备信息
 export function getItemsDevice1(aid) {
@@ -156,6 +158,60 @@ export function addQuotation(data) {
   return request({
     url: '/nonbidding/pro/addCom',
     method: 'post',
-    data: data
+    data: data,
+    headers: {
+      isRepeatSubmit: true
+    }
+  })
+}
+
+// 查询没有合同的非招标项目列表
+export function listNoTender(query) {
+  return request({
+    url: '/bidding/tender/NoEidTenderList',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询非招标签订中合同列表
+export function listNoContract(query) {
+  return request({
+    url: '/basic/contract/list1',
+    method: 'get',
+    params: query
+  })
+}
+
+// 删除非招标合同
+export function delContract1(eid) {
+  return request({
+    url: '/basic/contract/del1',
+    method: 'get',
+    params: {
+      eid: eid
+    }
+  })
+}
+
+// 删除非招标合同
+export function getBjCount(gfId) {
+  return request({
+    url: '/basic/quotation/getBjCount',
+    method: 'get',
+    params: {
+      gfId: gfId
+    }
+  })
+}
+
+// 删除报价单
+export function delQuotation(gfId) {
+  return request({
+    url: '/nonbidding/pro/delByGfId',
+    method: 'delete',
+    params: {
+      gfId: gfId
+    }
   })
 }

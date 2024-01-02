@@ -5,6 +5,7 @@ import java.util.List;
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 import com.hh.pms.cm.domain.ComPubAttachments;
+import com.hh.pms.sae.domain.NobidNonPro;
 import com.ruoyi.common.core.utils.DateUtils;
 import org.springframework.stereotype.Service;
 import com.hh.pms.cm.mapper.BsContractMapper;
@@ -149,5 +150,29 @@ public class BsContractServiceImpl implements IBsContractService {
     @Override
     public Long selectSid(Long eid) {
         return bsContractMapper.selectSid(eid);
+    }
+
+    //修改非招标项目eid
+    @Override
+    public int updateNobidNonProSid(NobidNonPro nobidNonPro) {
+        return bsContractMapper.updateNobidNonProSid(nobidNonPro);
+    }
+
+    //查询非招标签定中项目
+    @Override
+    public List<BsContract> selectBsContractList1(BsContract bsContract) {
+        return bsContractMapper.selectBsContractList1(bsContract);
+    }
+
+    //查询非招标签定中项目
+    @Override
+    public List<BsContract> selectBsContractList2(BsContract bsContract) {
+        return bsContractMapper.selectBsContractList2(bsContract);
+    }
+
+    //修改非招标Eid为空
+    @Override
+    public int updateNobidNonPro(NobidNonPro nobidNonPro) {
+        return bsContractMapper.updateNobidNonPro(nobidNonPro);
     }
 }

@@ -297,16 +297,77 @@
         where eid = #{eid}
     </select>
 
+    <!--修改招标Eid为空-->
     <update id="updateBidTender" parameterType="com.hh.pms.cm.domain.BidTender">
         update bid_tender
         set eid = null
         where eid = #{eid}
     </update>
 
+    <!--修改非招标Eid为空-->
+    <update id="updateNobidNonPro" parameterType="com.hh.pms.sae.domain.NobidNonPro">
+        update nobid_non_pro
+        set eid = null
+        where eid = #{eid}
+    </update>
+
+    <!--作废-->
     <update id="updateHtCancel" parameterType="com.hh.pms.cm.domain.BsContract">
         update bs_contract
         set e_cancel = 1
         where eid = #{eid}
     </update>
+
+    <!--查询非招标签定中项目-->
+    <select id="selectBsContractList1" parameterType="com.hh.pms.cm.domain.BsContract" resultMap="BsContractResult">
+        select * from bs_contract c
+        inner join bs_supplier s on c.hid = s.hid
+        <where>
+            gid is not null
+            <if test="hid != null ">and c.hid = #{hid}</if>
+            <if test="eHcode != null  and eHcode != ''">and e_hcode like concat('%', #{eHcode}, '%')</if>
+            <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
+            <if test="eStatus != null ">and e_status = #{eStatus}</if>
+            <if test="eDeliveryTime != null ">and e_delivery_time = #{eDeliveryTime}</if>
+            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="eType != null ">and e_type = #{eType}</if>
+            <if test="eCon != null ">and e_con = #{eCon}</if>
+            <if test="eStartdate != null ">and e_startDate = #{eStartdate}</if>
+            <if test="eEnddate != null ">and e_endDate = #{eEnddate}</if>
+            <if test="eAmount != null ">and e_amount = #{eAmount}</if>
+            <if test="eDescription != null  and eDescription != ''">and e_description = #{eDescription}</if>
+            <if test="eOpinion != null  and eOpinion != ''">and e_opinion = #{eOpinion}</if>
+            <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
+            <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
+            <if test="eCancel != null ">and e_cancel = #{eCancel}</if>
+        </where>
+        order by c.create_time desc
+    </select>
+
+    <!--查询招标签定中项目-->
+    <select id="selectBsContractList2" parameterType="com.hh.pms.cm.domain.BsContract" resultMap="BsContractResult">
+        select * from bs_contract c
+        inner join bs_supplier s on c.hid = s.hid
+        <where>
+            sid is not null
+            <if test="hid != null ">and c.hid = #{hid}</if>
+            <if test="eHcode != null  and eHcode != ''">and e_hcode like concat('%', #{eHcode}, '%')</if>
+            <if test="eHname != null  and eHname != ''">and e_hname like concat('%', #{eHname}, '%')</if>
+            <if test="eStatus != null ">and e_status = #{eStatus}</if>
+            <if test="eDeliveryTime != null ">and e_delivery_time = #{eDeliveryTime}</if>
+            <if test="oHstatus != null ">and o_hstatus = #{oHstatus}</if>
+            <if test="eType != null ">and e_type = #{eType}</if>
+            <if test="eCon != null ">and e_con = #{eCon}</if>
+            <if test="eStartdate != null ">and e_startDate = #{eStartdate}</if>
+            <if test="eEnddate != null ">and e_endDate = #{eEnddate}</if>
+            <if test="eAmount != null ">and e_amount = #{eAmount}</if>
+            <if test="eDescription != null  and eDescription != ''">and e_description = #{eDescription}</if>
+            <if test="eOpinion != null  and eOpinion != ''">and e_opinion = #{eOpinion}</if>
+            <if test="eImage != null  and eImage != ''">and e_image = #{eImage}</if>
+            <if test="eDocuments != null  and eDocuments != ''">and e_documents = #{eDocuments}</if>
+            <if test="eCancel != null ">and e_cancel = #{eCancel}</if>
+        </where>
+        order by c.create_time desc
+    </select>
 
 </mapper>

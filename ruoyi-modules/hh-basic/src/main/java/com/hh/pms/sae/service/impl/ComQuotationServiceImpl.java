@@ -89,4 +89,10 @@ public class ComQuotationServiceImpl implements IComQuotationService {
     public ComQuotation oneQuotation(String gfId, Long bjHid) {
         return comQuotationMapper.oneQuotation(gfId, bjHid);
     }
+
+    //查询项目报价总数
+    @Override
+    public int selectBjCount(String bjId) {
+        return comQuotationMapper.selectBjCount(bjId);
+    }
 }
