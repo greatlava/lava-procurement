@@ -101,7 +101,9 @@
             <if test="aCode != null  and aCode != ''">and a_code = #{aCode}</if>
             <if test="aBtype != null  and aBtype != ''">and a_btype = #{aBtype}</if>
             <if test="aAstate != null ">and a_astate = #{aAstate}</if>
+            <if test="aName != null">and a_name like concat('%',#{aName},'%')</if>
         </where>
+        order by p.create_time desc
     </select>
 
     <select id="selectPpmpProcurementCount" resultType="java.lang.Integer">

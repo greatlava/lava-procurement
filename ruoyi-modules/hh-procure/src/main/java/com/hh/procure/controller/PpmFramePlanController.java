@@ -18,6 +18,7 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.model.LoginUser;
 import com.ruoyi.system.api.domain.BidTender;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ public class PpmFramePlanController extends BaseController {
     @Log(title = "框架计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PpmFramePlan ppmFramePlan) {
+
         return toAjax(ppmFramePlanService.insertPpmFramePlan(ppmFramePlan));
     }
 
@@ -130,6 +132,7 @@ public class PpmFramePlanController extends BaseController {
         ComCodeRules rules = iComCodeRulesService.selectComCodeRulesByTargetForm(CodeRuleUtil.FRAMEWORK);
         CodeRulesResult result = CodeRuleHelp.GetCodeRule(rules);
         ppmFramePlan.setJhCode(result.getCode());
+        ppmFramePlan.setDept(loginUser.getSysUser().getDept().getDeptName());
         ppmFramePlan.setJhFounder(loginUser.getSysUser().getNickName());
         ppmFramePlanService.insertPpmFramePlan(ppmFramePlan);
         rules.setMaxMantissa(result.getMax());
