@@ -82,7 +82,6 @@
                 ref="up1"
                 class="upload-demo"
                 :action="url"
-                :on-preview="handlePreview"
                 :before-remove="beforeRemove"
                 :auto-upload="false"
                 :limit="1"
@@ -177,24 +176,23 @@
           </el-table-column>
           <el-table-column label="小计" prop="inSubtotal" width="140">
             <template slot-scope="scope">
-              <!--              <el-input v-model="k[scope.$index]" readonly/>-->
               <el-input v-model="scope.row.inSubtotal" readonly/>
             </template>
           </el-table-column>
         </el-table>
         <div :style="{textAlign:'right'}">
           <span :style="{marginRight:'100px'}">总价:</span>
-          <span :style="{fontWeight:'700'}">{{ parseFloat(oTotalprice).toFixed(2) }}</span>
+          <span :style="{fontWeight:'700'}">{{ oTotalprice.toFixed(2) }}</span>
         </div>
       </div>
     </div>
     <el-button size="medium" @click="back1">返回</el-button>
-    <el-button type="primary" @click="addFa">提交</el-button>
+    <el-button type="primary" @click="addFa">创建框架协议</el-button>
   </div>
 </template>
 
 <script>
-import { getManagement, listDevice, listInventory, updateManagement } from '../../../api/system/addContract'
+import { addManagement, listDevice, selectItemsDevice, upOidbyOid } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
@@ -202,18 +200,13 @@ export default {
     return {
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
       oTotalprice: 0,
-      //获取框架计划ID
-      oid: this.$route.query.oid,
-      //设置label的样式
+      size: '0',
       labelStyle: {
         width: '180px',
         textAlign: 'center'
       },
-      textColor: {
-        color: '#00afff'
-      },
-      size: '0',
-      //数据列表
+      //获取框架计划ID
+      jhId: this.$route.query.jhId,
       queryParams: {
         tid: null,
         oCode: null,
@@ -225,64 +218,39 @@ export default {
         oEnddate: null,
         oFile: null,
         oType: '采购框架协议',
-        oHstatus: 2,
-        oDescribe: null
+        oHstatus: 1,
+        oDescribe: null,
+        oOpinion: null
       },
       //协议文件
       fileList: [],
-      /* ------------------------添加产品信息------------------------ */
-      lTotalSubtotal: 0, // 初始化总价格为0
-      lTableColumns: [],
       lSelectedRows: [],
       lTableData: [],
-      //产品集合
-      deviceList: [],
+      //产品显示
       cpDialog: false,
-      total: 0
-      /* ------------------------添加产品信息------------------------ */
+      deviceList: [],
+      total: 1,
+      lTableColumns: []
     }
   },
   created() {
     this.hh()
-    this.xx()
-    // this.getSign()
-  },
-  watch: {
-    // '$route.query.oid': function(newOid, oldOid) {
-    //   if (oldOid != newOid) {
-    //     this.jhId = newOid
-    //     this.hh()
-    //   }
-    // },
-    'queryParams.oStartdate': function(newDate) {
-      if (newDate) {
-        const startDate = new Date(newDate)
-        const endDate = new Date(startDate.getFullYear() + 2, startDate.getMonth(), startDate.getDate())
-        this.queryParams.oEnddate = endDate.toISOString().slice(0, 10)
-      }
-    }
   },
   methods: {
-    //创建合同
-    addFa() {
-      //判断是否上传文件
+    //上传协议文件-------------------------------------------------
+    success(response) {
+      console.log(111)
+      this.queryParams.oFile = response.data.url
+      console.log('打印up1-------------------------')
+      console.log(this.queryParams.oFile)
+      //调用下一个上传的方法
       this.submitNextUpload()
     },
-    add() {
-      this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
-      this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
-        delete e.id
-        return e.tid != null
-      })
-      this.queryParams.oHstatus = 2
-      this.loading = true
-      updateManagement(this.queryParams).then(response => {
-        console.log(response)
-        if (response.msg === '修改成功') {
-          this.$router.push('/contract/fam')
-        }
-      })
-      this.loading = false
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
     },
     onchange1(files, fileList) {
       this.fileList = fileList
@@ -292,73 +260,57 @@ export default {
         this.fileList.splice(this.fileList.indexOf(files[0]), 1)
       }
     },
-    //查询框架协议信息
+    //上传协议文件-------------------------------------------------
+    //查询计划信息信息
     hh() {
-      this.loading = true
-      getManagement(this.oid).then(response => {
-        console.log('打印框架协议信息')
-        console.log(response)
-        this.queryParams = response.data
-        let k = response.data.oFile
-        console.log(k)
-        if (k != null || k !== '') {
-          //获取第一个文件的名称
-          let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
-          this.fileList = [{
-            name: imgName1,
-            url: k
-          }]
-          if (!response.data.oFile) {
-            this.form.oFile = response.data.oFile
-          }
-        } else {
-          this.fileList = []
-          this.fileList.oFile = null
-        }
-      })
-    },
-    xx() {
-      listInventory({ 'oid': this.oid }).then(response => {
-        console.log(response.rows)
-        // this.lTableData = response.rows
-        let list = response.rows
-        list.forEach((e, i) => {
+      selectItemsDevice({ 'jhId': this.jhId }).then(response => {
+        console.log(response, 'er')
+        this.queryParams.hName = response.rows[0].ppmFramePlan.bsSupplier.hName
+        this.queryParams.hid = response.rows[0].ppmFramePlan.bsSupplier.hid
+        this.queryParams.oName = response.rows[0].ppmFramePlan.jhName + '协议'
+        this.queryParams.jhId = this.jhId
+        response.rows.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
-            inName: e.inName,
-            inModel: e.inModel,
-            inVat: (e.inVat).toFixed(2),
-            inUnit: e.inUnit,
-            inSubtotal: (e.inCount * e.inVat).toFixed(2),
+            inName: e.ppmDevice.tName,
+            inModel: e.ppmDevice.tModel,
+            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inUnit: e.ppmDevice.tUnit,
+            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
             tid: e.tid,
-            inCount: e.inCount
-            // inId: e.inId
+            inCount: e.vCount
           })
+          this.oTotalprice += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
         })
-        this.loading = false
-        this.lCalculateTotalSubtotal()
       })
     },
-    //上传协议文件-------------------------------------------------
-    success(response) {
-      console.log(333)
-      console.log(response)
-      this.queryParams.oFile = response.data.url
-      console.log('打印up3-------------------------')
-      console.log(this.queryParams.oFile)
-      //调用下一个上传的方法
+    addFa() {
       this.submitNextUpload()
     },
-    handlePreview(file) {
-      window.open(this.fileList[0].url, '_blank', 'charset=utf-8')
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove(file, fileList) {
-      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList = []
-        this.queryParams.oFile = null
+    add() {
+      this.queryParams['oTotalprice'] = parseFloat(this.oTotalprice).toFixed(2)
+      // this.queryParams['oTotalprice'] = '20000'
+      this.queryParams['bsInventoryList'] = [...this.lTableData].filter(e => {
+        delete e.id
+        return e.tid != null
+      })
+      addManagement(this.queryParams).then(response => {
+        console.log(response)
+        if (response.msg === '操作成功') {
+          return upOidbyOid({ 'oid': response.data.frameManagement.oid, 'jhId': response.data.frameManagement.jhId })
+        } else {
+          this.$message.error('添加失败')
+        }
+      }).then(res => {
+        console.log('打印二------------------')
+        console.log(res)
+        console.log('打印二------------------')
+        if (res.msg === '修改成功') {
+          this.$message.success('添加成功')
+          this.$router.push('/contract/fam')
+        } else {
+          this.$message.error('修改失败')
+        }
       })
     },
     submitNextUpload() {
@@ -371,8 +323,50 @@ export default {
         this.add()
       }
     },
-    //上传协议文件-------------------------------------------------
-    /* ------------------------添加产品信息------------------------ */
+    back1() {
+      this.$router.back()
+    },
+    //产品数量输入框失去焦点时
+    spCountBlur(row) {
+      if (row.inVat == null) {
+        row.inVat = 0.00
+      }
+      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
+      this.lCalculateTotalSubtotal()
+    },
+    //产品数量输入框的值改变时
+    spCountChange(row) {
+      if (row.inVat == null) {
+        row.inVat = 0.00
+      }
+      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
+      this.lCalculateTotalSubtotal()
+    },
+    //显示产品对话框
+    openCp(row) {
+      this.selectRow = row
+      this.cpDialog = true
+      this.selectBdList()
+    },    //查询产品信息
+    selectBdList() {
+      listDevice(this.queryParams).then(response => {
+        console.log(response)
+        this.deviceList = response.rows
+        this.total = response.total
+      })
+    },
+    //产品行点击事件
+    handleRowClick(row) {
+      this.selectRow.inName = row.tName
+      this.selectRow.tid = row.tid
+      this.selectRow.inModel = row.tModel
+      this.selectRow.inUnit = row.tUnit
+      this.selectRow.inVat = (row.tPrice * 1.13).toFixed(2)
+      this.selectRow.inCount = 1
+      this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
+      this.cpDialog = false
+      this.lCalculateTotalSubtotal()
+    },
     //添加
     lAddRow() {
       let newRow = {}
@@ -426,70 +420,12 @@ export default {
     lHandleSelectionChange(selection) {
       this.lSelectedRows = selection
     },
-    //显示产品对话框
-    openCp(row) {
-      this.selectRow = row
-      this.cpDialog = true
-      this.selectBdList()
-    },
-    //产品行点击事件
-    handleRowClick(row) {
-      // 在这里处理行点击事件
-      // this.lTableData.forEach((e, i) => {
-      //   if (row.tid === e.tid) {
-      //     e.vCount += 1
-      //     e.subtotal = (e.vCount * e.tPrice).toFixed(2)
-      //     this.cpDialog = false
-      //     this.lCalculateTotalSubtotal()
-      //     return
-      //   }
-      // })
-      this.selectRow.inName = row.tName
-      this.selectRow.tid = row.tid
-      this.selectRow.inModel = row.tModel
-      this.selectRow.inUnit = row.tUnit
-      this.selectRow.inVat = (row.tPrice * 1.13).toFixed(2)
-      this.selectRow.inCount = 1
-      this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
-      this.cpDialog = false
-      this.lCalculateTotalSubtotal()
-    },
-    //查询产品信息
-    selectBdList() {
-      listDevice(this.queryParams).then(response => {
-        console.log(response)
-        this.deviceList = response.rows
-        this.total = response.total
-      })
-    },
-    //产品数量输入框失去焦点时
-    spCountBlur(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
-    //产品数量输入框的值改变时
-    spCountChange(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
     // 计算产品总价格方法
     lCalculateTotalSubtotal() {
       this.oTotalprice = this.lTableData.reduce((total, row) => {
-        // let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
         let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
-        let kk = total + totalValue // 将每行的小计相加得到总价格
-        return kk
+        return total + totalValue// 将每行的小计相加得到总价格
       }, 0)
-    },/* ------------------------添加产品信息------------------------ */
-    //返回上个页面
-    back1() {
-      this.$router.back()
     }
   }
 }

@@ -803,7 +803,6 @@ export default {
         this.form.eType = k.eType
         this.form.eCon = k.eCon
         this.form.sid = k.sid
-        // alert(k.sid)
         if (k.eImage != null && k.eImage != '') {
           //获取第一个文件的名称
           let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
@@ -836,7 +835,6 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         console.log('打印了相关项目信息')
         console.log(response.data)

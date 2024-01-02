@@ -99,12 +99,12 @@
                 <span v-else>- -</span>
               </template>
             </el-table-column>
-            <el-table-column label="报价数量" align="center" prop="gCount">
-              <template slot-scope="scope">
-                <span v-if="scope.row.gCount>0">{{ scope.row.gCount }}</span>
-                <span v-else>0</span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="报价数量" align="center" prop="gCount">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="scope.row.gCount>0">{{ scope.row.gCount }}</span>-->
+<!--                <span v-else>0</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
 
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
@@ -166,12 +166,12 @@
             <el-table-column label="项目编号" align="center" prop="gCode"/>
             <el-table-column label="项目名称" align="center" prop="gName"/>
             <el-table-column label="生成时间" align="center" prop="gSpawnTime"/>
-            <el-table-column label="报价轮次" align="center" prop="gRounds">
-              <template slot-scope="scope">
-                <span v-if="scope.row.gRounds>0">{{ scope.row.gRounds }}</span>
-                <span v-else>0</span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="报价轮次" align="center" prop="gRounds">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span v-if="scope.row.gRounds>0">{{ scope.row.gRounds }}</span>-->
+<!--                <span v-else>0</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <router-link :to="'details4?gid='+scope.row.gid" v-if="scope.row.gRelease===0">

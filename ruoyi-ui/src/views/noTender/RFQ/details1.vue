@@ -29,12 +29,20 @@
             <el-input v-model="form.gIsPublic" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="报价开始时间" prop="gTimeon" style="width: 45%">
-            <el-input v-model="form.gTimeon" type="text" class="cInput" v-if="form.gRelease===1" readonly/>
-            <el-input v-model="form.gTimeon" type="text" class="cInput" v-else/>
+            <!--            <el-input v-model="form.gTimeon" type="text" class="cInput" v-if="form.gRelease===1" readonly/>-->
+            <!--            <el-input v-model="form.gTimeon" type="text" class="cInput" v-else/>-->
+            <el-date-picker v-model="form.gTimeon" type="datetime" placeholder="选择日期时间"
+                            v-if="form.gRelease===1||form.gRelease===2" readonly
+            />
+            <el-date-picker v-model="form.gTimeon" type="datetime" placeholder="选择日期时间" v-else/>
           </el-form-item>
           <el-form-item label="报价截止时间" prop="gDeadline" style="width: 45%">
-            <el-input v-model="form.gDeadline" type="text" class="cInput" v-if="form.gRelease===1" readonly/>
-            <el-input v-model="form.gDeadline" type="text" class="cInput" v-else/>
+            <!--            <el-input v-model="form.gDeadline" type="text" class="cInput" v-if="form.gRelease===1" readonly/>-->
+            <!--            <el-input v-model="form.gDeadline" type="text" class="cInput" v-else/>-->
+            <el-date-picker v-model="form.gDeadline" type="datetime" placeholder="选择日期时间"
+                            v-if="form.gRelease===1||form.gRelease===2" readonly
+            />
+            <el-date-picker v-model="form.gDeadline" type="datetime" placeholder="选择日期时间" v-else/>
           </el-form-item>
         </el-row>
       </el-form>
@@ -43,12 +51,12 @@
       <h3>合同标的清单</h3>
       <div class="cl">
         <el-table
-          :data="lTableData"
-          :row-key="row => row.id"
-          @selection-change="lHandleSelectionChange"
-          border
-          stripe
-          :style="{marginTop:'10px'}"
+            :data="lTableData"
+            :row-key="row => row.id"
+            @selection-change="lHandleSelectionChange"
+            border
+            stripe
+            :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
@@ -97,12 +105,12 @@
       <h3 v-if="!show">供应商报价信息</h3>
       <div class="cl" v-if="!show">
         <el-table
-          :data="ComQuotation"
-          :row-key="row => row.id"
-          @selection-change="lHandleSelectionChange"
-          border
-          stripe
-          :style="{marginTop:'10px'}"
+            :data="ComQuotation"
+            :row-key="row => row.id"
+            @selection-change="lHandleSelectionChange"
+            border
+            stripe
+            :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" type="index" width="80"/>
           <el-table-column label="供应商名称" prop="hName" width="300">
@@ -134,17 +142,17 @@
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
-              ref="up2"
-              class="upload-demo"
-              :action="url"
-              :before-remove="beforeRemove2"
-              :auto-upload="false"
-              :limit="3"
-              :on-exceed="handleExceed2"
-              :on-success="success2"
-              :on-change="onchange2"
-              :file-list="fileList2"
-              :disabled="form.gRelease === 1"
+                ref="up2"
+                class="upload-demo"
+                :action="url"
+                :before-remove="beforeRemove2"
+                :auto-upload="false"
+                :limit="3"
+                :on-exceed="handleExceed2"
+                :on-success="success2"
+                :on-change="onchange2"
+                :file-list="fileList2"
+                :disabled="form.gRelease === 1"
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
@@ -245,22 +253,18 @@ export default {
             required: true,
             message: '请选择报价开始时间',
             trigger: 'blur'
-          },
-          {
-            pattern: /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]) (?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
-            message: '时间格式不正确，正确格式为YYYY-MM-DD HH:MM',
-            trigger: 'blur'
           }
+          // ,
+          // {
+          //   pattern: /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]) (?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
+          //   message: '时间格式不正确，正确格式为YYYY-MM-DD HH:MM',
+          //   trigger: 'blur'
+          // }
         ],
         gDeadline: [
           {
             required: true,
             message: '请选择报价截止时间',
-            trigger: 'blur'
-          },
-          {
-            pattern: /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]) (?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
-            message: '时间格式不正确，正确格式为YYYY-MM-DD HH:MM',
             trigger: 'blur'
           }
         ]
@@ -350,41 +354,41 @@ export default {
     //创建合同
     addXy() {
       this.$refs.elForm.validate(valid => {
-          if (valid) {
-            // 获取当前时间
-            let currentTime = new Date()
-            // 获取报价开始时间和截止时间
-            let startTime = new Date(this.form.gTimeon)
-            let deadline = new Date(this.form.gDeadline)
-            // 验证时间是否大于当前时间
-            if (startTime < currentTime || deadline < currentTime) {
-              this.$message.error('报价开始时间和截止时间不能小于当前时间')
-            } else {
-              // 时间验证通过，继续验证时间间隔和文件上传
-              let timeDiff = Math.abs(deadline.getTime() - startTime.getTime())
-              let diffHours = timeDiff / (1000 * 3600) // 计算相差的小时数
-              if (diffHours < 24) {
-                this.$message.error('报价开始时间和截止时间的间隔不能小于24小时')
+            if (valid) {
+              // 获取当前时间
+              let currentTime = new Date()
+              // 获取报价开始时间和截止时间
+              let startTime = new Date(this.form.gTimeon)
+              let deadline = new Date(this.form.gDeadline)
+              // 验证时间是否大于当前时间
+              if (startTime < currentTime || deadline < currentTime) {
+                this.$message.error('报价开始时间和截止时间不能小于当前时间')
               } else {
-                // 时间间隔验证通过，继续验证文件上传
-                if (this.fileList2.length === 0) {
-                  this.$message.warning('请上传附件')
+                // 时间验证通过，继续验证时间间隔和文件上传
+                let timeDiff = Math.abs(deadline.getTime() - startTime.getTime())
+                let diffHours = timeDiff / (1000 * 3600) // 计算相差的小时数
+                if (diffHours < 24) {
+                  this.$message.error('报价开始时间和截止时间的间隔不能小于24小时')
                 } else {
-                  if (this.hasNewFiles()) {
-                    console.log(1)
-                    this.chuan.push(...this.fileList2)
-                    this.$refs.up2.submit()
+                  // 时间间隔验证通过，继续验证文件上传
+                  if (this.fileList2.length === 0) {
+                    this.$message.warning('请上传附件')
                   } else {
-                    this.add()
+                    if (this.hasNewFiles()) {
+                      console.log(1)
+                      this.chuan.push(...this.fileList2)
+                      this.$refs.up2.submit()
+                    } else {
+                      this.add()
+                    }
                   }
                 }
               }
+            } else {
+              this.$message.error('请填写完整信息')
+              return false
             }
-          } else {
-            this.$message.error('请填写完整信息')
-            return false
           }
-        }
       )
     },
     hasNewFiles() {
@@ -398,6 +402,10 @@ export default {
     },
     //发布项目
     faBu() {
+      if (this.ComQuotation.length === 0) {
+        this.$message.warning('供应商未报价')
+        return false
+      }
       this.info1.gid = this.gid
       this.info1.gRelease = 2
       this.info1.hid = this.ComQuotation[0].hid
@@ -409,10 +417,18 @@ export default {
         this.$message.error('发布失败')
       })
     },
+    //转换日期
+    convertAndFormatDate(originalDate) {
+      const dateObj = new Date(originalDate)
+      const formattedDate = dateObj.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      return formattedDate.replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, function(match, month, day, year, hours, minutes, seconds, ampm) {
+        const hours24 = (ampm === 'PM' && hours < 12) ? parseInt(hours, 10) + 12 : hours
+        return `${year}-${month}-${day} ${hours24}:${minutes}:${seconds}`
+      })
+    },
     add() {
-      console.log(4)
-      this.info.gTimeon = this.form.gTimeon
-      this.info.gDeadline = this.form.gDeadline
+      this.info.gTimeon = this.convertAndFormatDate(this.form.gTimeon)
+      this.info.gDeadline = this.convertAndFormatDate(this.form.gDeadline)
       this.info.gRelease = 1
       this.info.comPubAttachments.anUrl = this.chuan.map(item => item.response ? item.response.data.url : item.url).join(',')
       this.info.comPubAttachments.anName = this.chuan.map(item => item.response ? item.response.data.name : item.name).join(',')

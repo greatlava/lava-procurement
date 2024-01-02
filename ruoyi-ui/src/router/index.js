@@ -314,13 +314,13 @@ export const dynamicRoutes = [
     ]
   },
   {
-    path: '/contract/addFa',
+    path: '/contract/faAdd',
     component: Details,
     children: [
       {
-        path: 'addFa?jhId=:jhId(\\d+)',
-        component: () => import('@/views/contract/fam/addFa'),
-        name: 'AddFa',
+        path: 'faAdd?jhId=:jhId(\\d+)',
+        component: () => import('@/views/contract/fam/faAdd'),
+        name: 'FaAdd',
         meta: { title: '创建框架协议', activeMenu: '/contract' }
       }
     ]

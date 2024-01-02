@@ -29,12 +29,16 @@
             <el-input v-model="form.gIsPublic" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="报价开始时间" prop="gTimeon" style="width: 45%">
-            <el-input v-model="form.gTimeon" type="text" class="cInput" v-if="form.gRelease===1" readonly/>
-            <el-input v-model="form.gTimeon" type="text" class="cInput" v-else/>
+            <el-date-picker v-model="form.gTimeon" type="datetime" placeholder="选择日期时间"
+                            v-if="form.gRelease===1||form.gRelease===2" readonly
+            />
+            <el-date-picker v-model="form.gTimeon" type="datetime" placeholder="选择日期时间" v-else/>
           </el-form-item>
           <el-form-item label="报价截止时间" prop="gDeadline" style="width: 45%">
-            <el-input v-model="form.gDeadline" type="text" class="cInput" v-if="form.gRelease===1" readonly/>
-            <el-input v-model="form.gDeadline" type="text" class="cInput" v-else/>
+            <el-date-picker v-model="form.gDeadline" type="datetime" placeholder="选择日期时间"
+                            v-if="form.gRelease===1||form.gRelease===2" readonly
+            />
+            <el-date-picker v-model="form.gDeadline" type="datetime" placeholder="选择日期时间" v-else/>
           </el-form-item>
         </el-row>
       </el-form>

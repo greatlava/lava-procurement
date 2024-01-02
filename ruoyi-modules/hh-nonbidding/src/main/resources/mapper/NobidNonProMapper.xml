@@ -198,7 +198,7 @@
                  inner join bs_supplier s on q.bj_hid = s.hid
         where q.gf_id = #{gfId}
           and q.is_delete != 1
-        ORDER BY q.bj_total DESC
+        ORDER BY q.bj_total
     </select>
 
     <!--查询公共附件-->

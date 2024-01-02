@@ -623,7 +623,6 @@ export default {
     add() {
       console.log('add-----------------')
       this.form.sid = this.sid
-      // alert(this.form.sid)
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         return e.tid != null;
@@ -827,7 +826,6 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName

@@ -223,6 +223,7 @@
             resultMap="PpmFramePlanResult">
         <include refid="selectPpmFramePlanVo"/>
         <where>
+            oid is null
             <if test="oid != null ">and oid = #{oid}</if>
             <if test="jhCode != null  and jhCode != ''">and jh_code = #{jhCode}</if>
             <if test="jhName != null  and jhName != ''">and jh_name like concat('%', #{jhName}, '%')</if>
@@ -234,7 +235,6 @@
             <if test="jhFounder != null  and jhFounder != ''">and jh_founder = #{jhFounder}</if>
             <if test="hid != null ">and hid = #{hid}</if>
             <if test="businessType != null ">and business_type = #{businessType}</if>
-            and NOT EXISTS (SELECT * FROM bs_frame_management f WHERE f.jh_id = p.jh_id)
         </where>
     </select>
 

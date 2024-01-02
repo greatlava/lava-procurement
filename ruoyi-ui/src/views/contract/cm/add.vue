@@ -599,7 +599,6 @@ export default {
     },
     add() {
       this.form.sid = this.sid
-      // alert(this.form.sid)
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         return e.tid != null
@@ -722,7 +721,6 @@ export default {
     //查询供应商信息和业务经办人信息
     selectSupplier(hid) {
       /* 业务经办人信息 */
-      // alert(this.hid)
       getOperator(hid).then(response => {
         // console.log(response)
         let k = response.data

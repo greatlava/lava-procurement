@@ -367,7 +367,6 @@ export default {
     },
     //上传签订合同
     UploadHt(eid) {
-      alert(eid)
       updateoHstatus({ 'oHstatus': 3, 'eid': eid }).then(response => {
         console.log(response)
         if (response.data > 0) {

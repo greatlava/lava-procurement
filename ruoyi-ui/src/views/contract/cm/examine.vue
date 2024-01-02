@@ -626,7 +626,6 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      // alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName

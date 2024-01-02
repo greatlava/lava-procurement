@@ -644,7 +644,6 @@ export default {
       // 在这里处理行点击事件
       this.form.gUnit = row.hName
       this.info.hid = row.hid
-      alert(this.info.hid)
       this.GysDialog = false
     }
     ,
