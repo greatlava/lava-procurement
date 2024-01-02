@@ -48,7 +48,6 @@ public class BsAccessController extends BaseController {
     /**
      * 导出供应商准入列表
      */
-    @RequiresPermissions("system:access:export")
     @Log(title = "供应商准入", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsAccess bsAccess) {
@@ -60,7 +59,6 @@ public class BsAccessController extends BaseController {
     /**
      * 获取供应商准入详细信息
      */
-    @RequiresPermissions("system:access:query")
     @GetMapping(value = "/{zrId}")
     public AjaxResult getInfo(@PathVariable("zrId") Long zrId) {
         return success(bsAccessService.selectBsAccessByZrId(zrId));
@@ -69,7 +67,6 @@ public class BsAccessController extends BaseController {
     /**
      * 新增供应商准入
      */
-    @RequiresPermissions("system:access:add")
     @Log(title = "供应商准入", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsAccess bsAccess) {
@@ -79,7 +76,6 @@ public class BsAccessController extends BaseController {
     /**
      * 修改供应商准入
      */
-    @RequiresPermissions("system:access:edit")
     @Log(title = "供应商准入", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsAccess bsAccess) {
@@ -89,7 +85,6 @@ public class BsAccessController extends BaseController {
     /**
      * 删除供应商准入
      */
-    @RequiresPermissions("system:access:remove")
     @Log(title = "供应商准入", businessType = BusinessType.DELETE)
     @DeleteMapping("/{zrIds}")
     public AjaxResult remove(@PathVariable Long[] zrIds) {

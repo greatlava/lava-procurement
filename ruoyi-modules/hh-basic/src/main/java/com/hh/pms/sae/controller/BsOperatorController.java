@@ -72,7 +72,6 @@ public class BsOperatorController extends BaseController {
     /**
      * 新增业务经办人信息
      */
-    @RequiresPermissions("system:operator:add")
     @Log(title = "业务经办人信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsOperator bsOperator) {
@@ -82,7 +81,6 @@ public class BsOperatorController extends BaseController {
     /**
      * 修改业务经办人信息
      */
-    @RequiresPermissions("system:operator:edit")
     @Log(title = "业务经办人信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsOperator bsOperator) {
@@ -92,7 +90,6 @@ public class BsOperatorController extends BaseController {
     /**
      * 删除业务经办人信息
      */
-    @RequiresPermissions("system:operator:remove")
     @Log(title = "业务经办人信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ywIds}")
     public AjaxResult remove(@PathVariable Long[] ywIds) {
