@@ -7,8 +7,8 @@
         <h3>非招标基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="项目名称" prop="gName" style="width: 45%">
-            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===0" />
-            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===1" readonly/>
+            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===0"/>
+            <el-input v-model="form.gName" clearable class="cInput" v-else readonly/>
           </el-form-item>
           <el-form-item label="项目编号" prop="gCode" style="width: 45%">
             <el-input v-model="form.gCode" clearable class="cInput" readonly/>
@@ -107,7 +107,7 @@
           <el-table-column label="序号" type="index" width="80"/>
           <el-table-column label="供应商名称" prop="hName" width="300">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.bsSupplier.hName" readonly/>
+              <el-input v-model="scope.row.hName" readonly/>
             </template>
           </el-table-column>
           <el-table-column label="报价次数" prop="bjSecond" width="200">
@@ -156,6 +156,7 @@
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
       <el-button size="medium" type="primary" @click="addXy" v-if="show">发布</el-button>
+      <el-button size="medium" type="primary" @click="faBu" v-if="form.gRelease===1&&this.ComQuotation.length>0">完成</el-button>
     </div>
   </div>
 </template>
@@ -290,7 +291,12 @@ export default {
         }
       },
       chuan: [],
-      show1: false
+      show1: false,
+      info1: {
+        gid: null,
+        gRelease: null,
+        hid: null
+      }
     }
   },
   mounted() {
@@ -307,10 +313,23 @@ export default {
     onchange2(files, fileList) {
       this.fileList2 = fileList
       console.log('--------------')
-      if (files.size == 0) {
+      if (files.size === 0) {
         this.$message.error('选择的文件不能为空，请重新选择！')
         this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
       }
+    },
+    //发布项目
+    faBu() {
+      this.info1.gid = this.gid
+      this.info1.gRelease = 2
+      this.info1.hid = this.ComQuotation[0].hid
+      console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
+      upePro(this.info1).then((res) => {
+        this.$message.success(res.msg)
+        this.$router.push('/noTender/project')
+      }).catch((error) => {
+        this.$message.error('发布失败')
+      })
     },
     //创建合同
     addXy() {
@@ -412,7 +431,16 @@ export default {
       }).then(res => {
         this.form.createBy = res[0].data.createBy
         this.form.createDept = res[0].data.aCreateDept
-        this.ComQuotation = res[1].rows
+        res[1].rows.forEach(row => {
+          let quo = {
+            hid: row.bjHid,
+            hName: row.bsSupplier.hName,
+            bjSecond: row.bjSecond,
+            bjTotal: row.bjTotal,
+            createTime: row.createTime
+          }
+          this.ComQuotation.push(quo)
+        })
         //查询产品信息
         return getItemsDevice({ 'aid': this.aid })
       }).then(res => {
@@ -435,6 +463,9 @@ export default {
     getComPubAttachments() {
       getAttachmentsByAid(this.aid).then(res => {
         console.log(res, 'res')
+        if(!res.data){
+          return
+        }
         this.info.comPubAttachments.anId = res.data.anId
         if (res.data.anName && res.data.anUrl) {
           const names = res.data.anName.split(',')

@@ -3,7 +3,7 @@
     <div class="con">
       <h2>采购合同</h2>
       <el-divider direction="horizontal"/>
-      <el-form ref="elForm" :model="form" :rules="rules1" size="medium" label-width="180px" label-position="left">
+      <el-form ref="formData" :model="form" :rules="rules1" size="medium" label-width="180px" label-position="left">
         <h3>合同基本信息</h3>
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同名称" prop="eHname" style="width: 45%">
@@ -56,7 +56,7 @@
             <el-input v-model="form.tenderNo" class="cInput" readonly/>
           </el-form-item>
           <!--采购方式-->
-          <el-form-item label="招标方式" prop="tenderWay" style="width: 45%">
+          <el-form-item label="采购方式" prop="tenderWay" style="width: 45%">
             <el-input v-model="form.tenderWay" class="cInput" readonly/>
           </el-form-item>
           <!--业务类型-->
@@ -224,7 +224,7 @@
       </div>
 
       <h3>合同签署状态</h3>
-      <el-form ref="qsForm" :model="qsFormData" :rules="rules2" size="medium" label-width="180px" label-position="left">
+      <el-form ref="formData3" :model="qsFormData" :rules="formRules3" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="签署方数" prop="gnSignatorycount" style="width: 45%">
             <el-select v-model="qsFormData.gnSignatorycount" class="cInput" @change="qsHandleChange">
@@ -382,7 +382,7 @@
 <script>
 import { getTender } from '../../api/system/tender/tender'
 import { getItemsDevice, getPro } from '../../api/system/noTender'
-import { addContract, listDevice } from '../../api/system/addContract'
+import { addContract, addNoContract, listDevice } from '../../api/system/addContract'
 import { getSupplier, listSupplier } from '../../api/system/supplier'
 import { getOperator } from '../../api/system/operator'
 
@@ -466,7 +466,7 @@ export default {
       // 表单参数
       form: {
         hid: null,
-        sid: null,
+        gid: null,
         eHname: null,
         eHcode: null,
         eType: null,
@@ -540,30 +540,45 @@ export default {
         ],
         eEnddate: [
           { required: true, message: '结束时间不能为空', trigger: 'blur' }
+        ],
+        eDeliveryTime: [
+          { required: true, message: '交付时间不能为空', trigger: 'blur' }
         ]
       },
-      rules2: {
-        // gnPbcif: [
-        //   { required: true, message: '乙方联系方式不能为空', trigger: 'blur' },
-        //   {
-        //     pattern: /^1[3456789]\d{9}$/,
-        //     message: '请输入正确的手机号码',
-        //     trigger: 'blur'
-        //   }
-        // ]
+      form1: {
+        inName: null
       },
-      rules3: {},
+      formRules3: {
+        gnPbcif: [
+          { required: true, message: '乙方联系方式不能为空', trigger: 'blur' },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: '请输入正确的手机号码',
+            trigger: 'blur'
+          }
+        ]
+      }
+      ,
+      rules3: {}
+      ,
       selectRow: null,
-      fileList1: [],
-      fileList2: [],
-      fileList3: [],
+      fileList1:
+        [],
+      fileList2:
+        [],
+      fileList3:
+        [],
       //附件
-      ComPubAttachments: {
-        anSize: null,
-        anUrl: null,
-        anName: null
-      },
-      aid:null
+      ComPubAttachments:
+        {
+          anSize: null,
+          anUrl:
+            null,
+          anName:
+            null
+        }
+      ,
+      aid: null
     }
   },
   mounted() {
@@ -606,42 +621,51 @@ export default {
       //判断是否上传文件
       this.submitNextUpload()
     },
-    add() {
-      this.form.sid = this.sid
-      // alert(this.form.sid)
-      this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
-        delete e.id
-        if (e.tid == null) {
-          // 如果存在空的tid，直接跳过当前元素
+    //判断是否为空
+    isNull() {
+      this.$refs.formData.validate(valid => {
+        if (valid) {
+          this.$refs.formData3.validate(valid => {
+            if (valid) {
+              this.add()
+            } else {
+              this.$message.warning('请填写完整信息')
+              return false
+            }
+          })
+        } else {
+          this.$message.warning('请填写完整信息')
           return false
         }
-        return true
+      })
+    },
+    add() {
+      this.form.gid = this.gid
+      this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
+        delete e.id
+        return e.tid != null
       })
       this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
         delete e.id
-        if (e.payContent == null || e.payAmount == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return !(e.payContent == null || e.payAmount == null)
       })
       this.form.bsSign = this.qsFormData
       this.form.comPubAttachments = this.ComPubAttachments
-      console.log('打印this.form.ComPubAttachments')
-      console.log(this.form.ComPubAttachments)
       //添加合同
-      addContract(this.form).then(response => {
+      addNoContract(this.form).then(response => {
         console.log(response)
-        if (response.msg == '添加成功') {
-          this.$router.push('/contract/cm')
-          this.$message.success('添加成功')
+        if (response.msg === '添加成功') {
+          this.$router.push('/noTender/noContract')
+          this.$message.success('创建成功')
         }
       })
-    },
+    }
+    ,
     //上传协议文件-------------------------------------------------
     handleExceed1(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
+    }
+    ,
     beforeRemove1(file) {
       return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
         this.fileList2 = []
@@ -649,7 +673,8 @@ export default {
         this.ComPubAttachments.anName = null
         this.ComPubAttachments.anSize = null
       })
-    },
+    }
+    ,
     success1(response) {
       console.log(111)
       this.form.eImage = response.data.url
@@ -657,13 +682,16 @@ export default {
       console.log(this.form.eImage)
       //调用下一个上传的方法
       this.submitNextUpload()
-    },
+    }
+    ,
     handleExceed2(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
+    }
+    ,
     beforeRemove2(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
-    },
+    }
+    ,
     success2(response, fileList) {
       console.log(222)
       this.ComPubAttachments.anName = response.data.name
@@ -673,13 +701,16 @@ export default {
       console.log(this.ComPubAttachments)
       //调用下一个上传的方法
       this.submitNextUpload()
-    },
+    }
+    ,
     handleExceed3(files, fileList) {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
+    }
+    ,
     beforeRemove3(file) {
       return this.$confirm(`确定移除 ${file.name}？`)
-    },
+    }
+    ,
     success3(response) {
       console.log(333)
       console.log(response)
@@ -688,7 +719,8 @@ export default {
       console.log(this.form.eDocuments)
       //调用下一个上传的方法
       this.submitNextUpload()
-    },
+    }
+    ,
     submitNextUpload() {
       // 根据条件判断调用下一个上传
       if (this.fileList1.length > 0 && this.form.eImage == null) {
@@ -699,9 +731,10 @@ export default {
         this.$refs.up3.submit()
       } else {
         console.log('打印提交-------------------------')
-        this.add()
+        this.isNull()
       }
-    },
+    }
+    ,
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
     spCountBlur(row) {
@@ -710,7 +743,8 @@ export default {
       }
       row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
       this.lCalculateTotalSubtotal()
-    },
+    }
+    ,
     //产品数量输入框的值改变时
     spCountChange(row) {
       if (row.inVat == null) {
@@ -718,7 +752,8 @@ export default {
       }
       row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
       this.lCalculateTotalSubtotal()
-    },
+    }
+    ,
     // 计算产品总价格方法
     lCalculateTotalSubtotal() {
       this.lTotalSubtotal = this.lTableData.reduce((total, row) => {
@@ -728,11 +763,12 @@ export default {
         this.qsFormData.gnPbamount = kk.toFixed(2)
         return kk
       }, 0)
-    },
+    }
+    ,
     //查询产品信息
     selectBdList() {
       getItemsDevice({ 'aid': this.aid }).then(res => {
-        console.log(res,"getItemsDevice")
+        console.log(res, 'getItemsDevice')
         res.rows.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
@@ -745,10 +781,13 @@ export default {
             inCount: e.vCount
           })
           this.lTotalSubtotal += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
+          this.qsFormData.gnPbamount = (this.lTotalSubtotal).toFixed(2)
+          this.form.eAmount = (this.lTotalSubtotal).toFixed(2)
         })
       })
       this.selectSupplier()
-    },
+    }
+    ,
     //查询供应商信息和业务经办人信息
     selectSupplier() {
       /* 业务经办人信息 */
@@ -770,7 +809,8 @@ export default {
         this.qsFormData.gnPbid = k.hid
         this.form.hid = k.hid
       })
-    },
+    }
+    ,
     //产品行点击事件
     handleRowClick(row) {
       // 在这里处理行点击事件
@@ -784,26 +824,30 @@ export default {
       this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
       this.cpDialog = false
       this.lCalculateTotalSubtotal()
-    },
+    }
+    ,
     //产品行点击事件
     handleRowClick1(row) {
       // 在这里处理行点击事件
       this.selectRow.hName = row.hName
       this.selectRow.tid = row.tid
       this.GysDialog = false
-    },
+    }
+    ,
     //关闭产品名称对话框
     closeDialog1() {
       this.cpDialog = false
-    },
+    }
+    ,
     //关闭产品名称对话框
     closeDialog2() {
       this.GysDialog = false
-    },
+    }
+    ,
     /* 查询相关项目信息 */
     selectNoTenderBySid() {
       getPro(this.gid).then(res => {
-        console.log(res,"res")
+        console.log(res, 'res')
         let k = res.data
         //项目名称
         this.form.tenderName = k.gName
@@ -824,23 +868,26 @@ export default {
           this.form.tenderType = '邀请'
         }
         this.form.eType = '一般采购合同'
-        this.aid=k.xyId
-        this.hid=k.hid
+        this.aid = k.xyId
+        this.hid = k.hid
         this.selectBdList()
       })
-    },
+    }
+    ,
     //显示产品对话框
     openCp(row) {
       this.selectRow = row
       this.cpDialog = true
       this.selectBdList()
-    },
+    }
+    ,
     //显示产品对话框
     openGys(row) {
       this.selectRow = row
       this.GysDialog = true
       this.selectGysList()
-    },
+    }
+    ,
     //查询供应商信息
     selectGysList() {
       listSupplier(this.queryParams1).then(response => {
@@ -848,19 +895,22 @@ export default {
         this.supplierList = response.rows
         this.total1 = response.total
       })
-    },
+    }
+    ,
     /* 签署执行状态 */
     qsHandleChange(value) {
       this.qsFormData.gnSignatorycount = value  // 更新选择项的值
-      if (this.gnSignatorycount == 0) {
+      if (this.gnSignatorycount === 0) {
         this.qsFormData.gnPccurrency = null
       } else {
         this.qsFormData.gnPccurrency = '人民币'
       }
-    },
+    }
+    ,
     back1() {
       this.$router.back()
-    },
+    }
+    ,
     /* 合同标的清单 */
     lAddRow() {
       const newRow = {}
@@ -871,7 +921,8 @@ export default {
       newRow.inSubtotal = (0).toFixed(2)
       newRow.inCount = 1
       this.lTableData.push(newRow)
-    },
+    }
+    ,
     lDeleteRows() {
       this.$confirm('确定删除选中的行吗?', '提示', {
         confirmButtonText: '确定',
@@ -892,7 +943,8 @@ export default {
           message: '已取消删除'
         })
       })
-    },
+    }
+    ,
     //复制
     lCopyRows() {
       const copiedRows = this.lSelectedRows.map(row => ({ ...row }))
@@ -901,17 +953,20 @@ export default {
         this.lTableData.push(row)
       })
       this.lCalculateTotalSubtotal()
-    },
+    }
+    ,
     //行数变化
     lUpdateRowIds() {
       this.lTableData.forEach((row, index) => {
         row.id = index + 1
       })
-    },
+    }
+    ,
     //单选多选
     lHandleSelectionChange(selection) {
       this.lSelectedRows = selection
-    },
+    }
+    ,
     /* 合同付款约定 */
     payAddRow() {
       const newRow = {}
@@ -920,7 +975,8 @@ export default {
       newRow.hName = this.qsFormData.gnPbname
       newRow.hid = this.form.hid
       this.payTableData.push(newRow)
-    },
+    }
+    ,
     //删除
     payDeleteRows() {
       this.$confirm('确定删除选中的行吗?', '提示', {
@@ -941,7 +997,8 @@ export default {
           message: '已取消删除'
         })
       })
-    },
+    }
+    ,
     //复制
     payCopyRows() {
       const copiedRows = this.paySelectedRows.map(row => ({ ...row }))
@@ -949,22 +1006,31 @@ export default {
         row.id = this.payTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
         this.payTableData.push(row)
       })
-    },
+    }
+    ,
     //行数变化
     payUpdateRowIds() {
       this.payTableData.forEach((row, index) => {
         row.id = index + 1
       })
-    },
+    }
+    ,
     //单选多选
     payHandleSelectionChange(selection) {
       this.paySelectedRows = selection
-    },
+    }
+    ,
     payHandleBlur(row) {
       if (row.payAmount) {
         row.payAmount = parseFloat(row.payAmount).toFixed(2)
       }
-    },
+      //获取已付款的值
+      let totalPay = this.payTableData.reduce((total, row) => total + (parseFloat(row.payAmount) || parseFloat(0)), 0)
+      this.qsFormData.gnPbpayment = totalPay.toFixed(2)
+      //剩余金额
+      this.qsFormData.gnPbbalance = (this.qsFormData.gnPbamount - this.qsFormData.gnPbpayment).toFixed(2)
+    }
+    ,
     payHandleInput(row) {
       // 只保留数字和一个小数点
       row.payAmount = row.payAmount.replace(/[^\d.]/g, '')

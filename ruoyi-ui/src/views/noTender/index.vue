@@ -6,11 +6,10 @@
           <el-col :span="23">
             <el-row type="flex" justify="start" align="middle" :gutter="30">
               <el-col :span="24">
-                <el-form-item label="时间" prop="field101">
-                  <el-date-picker type="daterange" v-model="form.field101" format="yyyy-MM-dd"
-                                  value-format="yyyy-MM-dd" :style="{width: '100%'}" start-placeholder="年/月/日"
-                                  end-placeholder="年/月/日" range-separator="至" clearable
-                  ></el-date-picker>
+                <el-form-item label="项目编号" prop="field101">
+                  <el-input v-model="form.field101" placeholder="请输入项目编号" clearable
+                            :style="{width: '100%'}"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -175,11 +174,25 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details4?gid='+scope.row.gid">
+                <router-link :to="'details4?gid='+scope.row.gid" v-if="scope.row.gRelease===0">
                   <el-button
                     size="mini"
                     type="text"
                   >进入项目
+                  </el-button>
+                </router-link>
+                <router-link :to="'details5?gid='+scope.row.gid" v-if="scope.row.gRelease===1">
+                  <el-button
+                    size="mini"
+                    type="text"
+                  >发布项目
+                  </el-button>
+                </router-link>
+                <router-link :to="'details5?gid='+scope.row.gid" v-else>
+                  <el-button
+                    size="mini"
+                    type="text"
+                  >查看
                   </el-button>
                 </router-link>
               </template>
@@ -201,7 +214,7 @@
 </template>
 
 <script>
-import { listPlan, listPro } from '../../api/system/noTender'
+import { getBjCount, listPlan, listPro } from '../../api/system/noTender'
 
 export default {
   data() {
@@ -287,34 +300,19 @@ export default {
     query() {
       // 模糊查询按钮点击时的处理逻辑
       console.log('执行模糊查询')
-      if (this.form.field101 != null) {
-        this.queryParams1.gSpawnTime = this.form.field101[0]
-        this.queryParams1.gDeadline = this.form.field101[1]
-        this.queryParams2.gSpawnTime = this.form.field101[0]
-        this.queryParams2.gDeadline = this.form.field101[1]
-        this.queryParams3.gSpawnTime = this.form.field101[0]
-        this.queryParams3.gDeadline = this.form.field101[1]
-        this.queryParams4.gSpawnTime = this.form.field101[0]
-        this.queryParams4.gDeadline = this.form.field101[1]
-      } else {
-        this.queryParams1.gSpawnTime = null
-        this.queryParams1.gDeadline = null
-        this.queryParams2.gSpawnTime = null
-        this.queryParams2.gDeadline = null
-        this.queryParams3.gSpawnTime = null
-        this.queryParams3.gDeadline = null
-        this.queryParams4.gSpawnTime = null
-        this.queryParams4.gDeadline = null
-      }
+      this.queryParams1.gCode = this.form.field101
       this.queryParams1.gName = this.form.field102
       this.queryParams1.pageNum = 1
       this.getList1()
+      this.queryParams2.gCode = this.form.field101
       this.queryParams2.gName = this.form.field102
       this.queryParams2.pageNum = 1
       this.getList2()
+      this.queryParams3.eHcode = this.form.field101
       this.queryParams3.gName = this.form.field102
       this.queryParams3.pageNum = 1
       this.getList3()
+      this.queryParams4.eHcode = this.form.field101
       this.queryParams4.gName = this.form.field102
       this.queryParams4.pageNum = 1
       this.getList4()
@@ -350,6 +348,7 @@ export default {
     getList2() {
       this.loading = true
       listPro(this.queryParams2).then(response => {
+        console.log(response.rows)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false

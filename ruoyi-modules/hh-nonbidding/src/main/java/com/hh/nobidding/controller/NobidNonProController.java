@@ -93,15 +93,24 @@ public class NobidNonProController extends BaseController {
         int i = nobidNonProService.updateNobidNonPro(nobidNonPro);
         if (i > 0) {
             int i1;
-            if (nobidNonPro.getComPubAttachments().getAnId() == null) {
-                i1 = nobidNonProService.insertComPubAttachments(nobidNonPro.getComPubAttachments());
+            if (nobidNonPro.getgRelease() == 2) {
+                int i2 = nobidNonProService.updateNobidNonPro(nobidNonPro);
+                if (i2 == 0) {
+                    return AjaxResult.error("发布失败");
+                } else {
+                    return AjaxResult.success("发布成功");
+                }
             } else {
-                i1 = nobidNonProService.updateComPubAttachments(nobidNonPro.getComPubAttachments());
+                if (nobidNonPro.getComPubAttachments().getAnId() == null) {
+                    i1 = nobidNonProService.insertComPubAttachments(nobidNonPro.getComPubAttachments());
+                } else {
+                    i1 = nobidNonProService.updateComPubAttachments(nobidNonPro.getComPubAttachments());
+                }
+                if (i1 == 0) {
+                    return AjaxResult.error("发布失败");
+                }
+                return AjaxResult.success("发布成功");
             }
-            if (i1 == 0) {
-                return AjaxResult.error("发布失败");
-            }
-            return AjaxResult.success("发布成功");
         }
         return AjaxResult.error("发布失败");
     }
@@ -136,19 +145,16 @@ public class NobidNonProController extends BaseController {
      * 新增报价单
      */
     @PostMapping("/addCom")
-    public AjaxResult addCom(@RequestBody List<ComQuotation> comQuotations) {
-        try {
-            List<ComQuotation> list = nobidNonProService.selectComPubAttachmentsByGfId(comQuotations.get(0).getGfId());
-            if (list.size() > 0) {
-                nobidNonProService.deleteComQuotationByGfIds(comQuotations.get(0).getGfId());
-                for (ComQuotation com : comQuotations) {
-                    nobidNonProService.insertComQuotation(com);
-                }
-                return AjaxResult.success("添加成功");
-            }
-        } catch (Exception e) {
-            return AjaxResult.error("添加失败: ");
-        }
-        return AjaxResult.error("添加失败: ");
+    public AjaxResult addCom(@RequestBody ComQuotation comQuotations) {
+        return success(nobidNonProService.insertComQuotation(comQuotations));
     }
+
+    /**
+     * 删除报价单
+     */
+    @DeleteMapping("/delByGfId")
+    public AjaxResult remove(String gfId) {
+        return success(nobidNonProService.deleteComQuotationByGfIds(gfId));
+    }
+
 }

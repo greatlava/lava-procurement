@@ -177,13 +177,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
-              <el-form-item label="创建人" prop="jhFounder" class="required label-center-align">
-                <el-input :disabled="form.jhId!=null" v-model="form.jhFounder" type="text"></el-input>
+              <el-form-item label="创建人" class="required label-center-align">
+                <el-input disabled :value="form.jhFounder || '系统自动生成' " type="text"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
               <el-form-item label="创建部门" prop="dept" class="required label-center-align">
-                <el-input :disabled="form.jhId!=null" v-model="form.dept" type="text"></el-input>
+                <el-input :value="form.dept || '系统自动生成' " disabled type="text"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="24" class="grid-cell">
@@ -255,12 +255,12 @@
             </el-table-column>
             <el-table-column label="交付时间" align="center" prop="vDeliveryTime" width="200">
               <template slot-scope="scope">
-                <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>
+                <el-date-picker style="width: 150px" type="date"  placeholder="选择日期" v-model="scope.row.vDeliveryTime"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="180">
               <template slot-scope="scope">
-                <el-input class="borderNone" v-model="scope.row.vDeliveryArea">
+                <el-input  class="borderNone" v-model="scope.row.vDeliveryArea">
                   {{ parseTime(scope.row.tDate, '{y}-{m}-{d}') }}
                 </el-input>
               </template>
@@ -359,7 +359,12 @@
           <template slot="label">
             审批人
           </template>
-          {{ form.jhPerson }}
+          <span v-if="form.jhPerson != null && form.jhPerson != ''">
+            {{ form.jhPerson }}
+          </span>
+          <span style="color: #cccccc" v-else>
+            未审核
+          </span>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
@@ -554,10 +559,6 @@ export default {
         jhFounder: [{
           required: true,
           message: '创建人不可为空',
-        }],
-        dept: [{
-          required: true,
-          message: '创建部门不可为空',
         }],
       },
     };
@@ -903,7 +904,7 @@ export default {
             this.$modal.loading("添加中.......")
             this.form['items'] = this.items;
             AddPlanAndOther(this.form).then(res => {
-              this.$modal.msgSuccess("操作成功");
+              this.$modal.msgSuccess("添加成功");
               this.open = false;
               this.$modal.closeLoading();
 

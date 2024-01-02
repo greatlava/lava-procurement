@@ -60,3 +60,13 @@ export function delContract(eid) {
     method: 'delete'
   })
 }
+
+
+// 查询招标签订中合同列表
+export function listNoContract(query) {
+  return request({
+    url: '/basic/contract/list2',
+    method: 'get',
+    params: query
+  })
+}

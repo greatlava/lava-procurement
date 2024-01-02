@@ -41,14 +41,59 @@
     <select id="selectNobidNonProList1" resultType="com.hh.nobidding.domain.NobidNonPro">
         select *
         from nobid_non_pro
-        where g_release = 2
-          and g_tenderType!=4
+        <where>
+            g_release = 2
+            and g_tenderType !=4
+            and eid is null
+            <if test="gCode != null  and gCode != ''">
+                and g_code like concat('%', #{gCode}, '%')
+            </if>
+            <if test="gName != null  and gName != ''">
+                and g_name like concat('%', #{gName}, '%')
+            </if>
+        </where>
         order by g_deadline desc
     </select>
 
+    <resultMap type="com.hh.nobidding.domain.NobidNonPro" id="ProResult">
+        <result property="gid" column="gid"/>
+        <result property="hid" column="hid"/>
+        <result property="xyId" column="xy_id"/>
+        <result property="gCode" column="g_code"/>
+        <result property="gName" column="g_name"/>
+        <result property="gIsPublic" column="g_is_public"/>
+        <result property="gSpawnTime" column="g_spawn_time"/>
+        <result property="gDeadline" column="g_deadline"/>
+        <result property="gCount" column="g_count"/>
+        <result property="gUnit" column="g_unit"/>
+        <result property="gRounds" column="g_rounds"/>
+        <result property="gTendertype" column="g_tenderType"/>
+        <association property="comQuotation">
+            <id property="bjId" column="bj_id"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectProVo">
+        select gid,
+               xy_id,
+               g_code,
+               g_name,
+               g_is_public,
+               g_spawn_time,
+               g_timeon,
+               g_deadline,
+               g_count,
+               g_unit,
+               g_rounds,
+               g_tenderType,
+               g_release,
+               hid
+        from nobid_non_pro
+    </sql>
+
     <select id="selectNobidNonProList" parameterType="com.hh.nobidding.domain.NobidNonPro"
-            resultMap="NobidNonProResult">
-        <include refid="selectNobidNonProVo"/>
+            resultMap="ProResult">
+        <include refid="selectProVo"/>
         <where>
             <if test="xyId != null ">and xy_id = #{xyId}</if>
             <if test="gCode != null  and gCode != ''">and g_code = #{gCode}</if>

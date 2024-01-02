@@ -90,8 +90,8 @@ export function FindProcurementPlanBy(data) {
 export function selectePpmProcurementPlanAndComPubAttamentByAid(data) {
   return request({
     url: "/ppm/plan/PpmProcurementPlanAndComPubAttament",
-    method: "post",
-    data: data
+    method: "GET",
+    params: data
   })
 }
 

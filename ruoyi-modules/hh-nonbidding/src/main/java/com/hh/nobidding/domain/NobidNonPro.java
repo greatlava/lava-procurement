@@ -235,6 +235,16 @@ public class NobidNonPro extends BaseEntity
         return gRelease;
     }
 
+    private ComQuotation comQuotation;
+
+    public ComQuotation getComQuotation() {
+        return comQuotation;
+    }
+
+    public void setComQuotation(ComQuotation comQuotation) {
+        this.comQuotation = comQuotation;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -254,6 +264,7 @@ public class NobidNonPro extends BaseEntity
                 .append("gCompany", getgCompany())
                 .append("gNotes", getgNotes())
                 .append("gRelease", getgRelease())
+                .append("ComQuotation", getComQuotation())
                 .append("ComPubAttachments", getComPubAttachments())
                 .toString();
     }

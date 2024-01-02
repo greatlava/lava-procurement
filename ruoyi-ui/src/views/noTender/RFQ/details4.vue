@@ -8,7 +8,7 @@
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="项目名称" prop="gName" style="width: 45%">
             <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===0"/>
-            <el-input v-model="form.gName" clearable class="cInput" v-if="form.gRelease===1" readonly/>
+            <el-input v-model="form.gName" clearable class="cInput" v-else readonly/>
           </el-form-item>
           <el-form-item label="项目编号" prop="gCode" style="width: 45%">
             <el-input v-model="form.gCode" clearable class="cInput" readonly/>
@@ -28,7 +28,7 @@
           <el-form-item label="目标供应商" prop="gUnit" style="width: 45%" clearable class="cInput">
             <template slot-scope="scope">
               <el-input v-model="form.gUnit" clearable class="cInput" readonly>
-                <i slot="suffix" class="el-icon-search" @click="openGys()" style="margin-top: 10px" v-if="form.gRelease===0"/>
+                <i slot="suffix" class="el-icon-search" @click="openGys()" style="margin-top: 10px"/>
               </el-input>
               <el-dialog title="产品名称" :visible.sync="GysDialog">
                 <el-table
@@ -113,8 +113,8 @@
       </div>
 
       <!--供应商报价信息-->
-      <h3 v-if="!show">供应商报价信息</h3>
-      <div class="cl" v-if="!show">
+      <h3>供应商报价信息</h3>
+      <div class="cl">
         <el-button @click="bAddRow" :disabled="this.form.gUnit === null">新增</el-button>
         <el-button @click="bDeleteRows" :disabled="bSelectedRows.length === 0">删除</el-button>
         <el-button @click="bCopyRows" :disabled="bSelectedRows.length === 0">复制</el-button>
@@ -143,15 +143,7 @@
               <el-input v-model="scope.row.bjTotal" @blur="bHandleBlur(scope.row)" @input="bHandleInput(scope.row)"/>
             </template>
           </el-table-column>
-          <!--          <el-table-column label="报价时间" prop="createTime">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <el-input v-model="scope.row.createTime" readonly/>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
         </el-table>
-      </div>
-      <div style="text-align: right;margin-top: 20px">
-        <el-button type="primary" @click="addBj">添加</el-button>
       </div>
 
       <!--合同签署文件-->
@@ -181,7 +173,7 @@
 
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy" v-if="form.gRelease===0">提交</el-button>
+      <el-button type="primary" @click="addBj">添加</el-button>
     </div>
   </div>
 </template>
@@ -190,7 +182,7 @@
 import {
   getPlan, getPro, getItemsDevice, getQuotation,
   getAttachments, getAttachmentsByAid, updatePro,
-  upePro, addQuotation
+  upePro, addQuotation, delQuotation
 } from '../../../api/system/noTender'
 import { listDevice } from '../../../api/system/addContract'
 import router from '../../../router'
@@ -317,6 +309,11 @@ export default {
       hid: null,
       bSelectedRows: [],
       bTableColumns: [],
+      info1: {
+        gid: null,
+        gRelease: null,
+        hid: null
+      }
     }
   },
   mounted() {
@@ -338,46 +335,35 @@ export default {
         this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
       }
     },
-    addXy() {
-      this.$confirm('提交后不可再修改！', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (this.ComQuotation.length === 0) {
-          this.$message({ type: 'warning', message: '请先添加报价信息！' })
-          return false
-        } else {
-          addQuotation(this.ComQuotation).then((res) => {
-          }).catch((err) => {
-            this.$message.error(err)
-          })
-        }
-      }).catch(() => {
-        this.$message({ type: 'info', message: '已取消' })
+    faBu() {
+      this.info1.gid = this.gid
+      this.info1.gRelease = 2
+      this.info1.hid = this.ComQuotation[0].hid
+      console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
+      upePro(this.info1).then((res) => {
+        this.$message.success(res.msg)
+        this.$router.push('/noTender/project')
+      }).catch((error) => {
+        this.$message.error('发布失败')
       })
+    },
+    addXy() {
+      //   this.$confirm('提交后不可再修改！', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //     type: 'warning'
+      //   }).then(() => {
+      //     addQuotation(this.ComQuotation).then((res) => {
+      //       console.log(res, 'this.ComQuotation')
+      //     }).catch((err) => {
+      //       this.$message.error(err)
+      //     })
+      //   }).catch(() => {
+      //     this.$message({ type: 'info', message: '已取消' })
+      //   })
     },
     //创建合同
     addXy1() {
-      this.$refs.elForm.validate(valid => {
-          if (valid) {
-            if (this.fileList2.length === 0) {
-              this.$message.warning('请上传附件')
-            } else {
-              if (this.hasNewFiles()) {
-                console.log(1)
-                this.chuan.push(...this.fileList2)
-                this.$refs.up2.submit()
-              } else {
-                this.add()
-              }
-            }
-          } else {
-            this.$message.error('请填写完整信息')
-            return false
-          }
-        }
-      )
     },
     hasNewFiles() {
       // 检查 fileList2 中是否包含新文件
@@ -387,18 +373,6 @@ export default {
         }
       }
       return false // 如果所有文件都有 url 属性，表示没有新文件
-    },
-    add() {
-      this.info.gRelease = 1
-      this.info.comPubAttachments.anUrl = this.chuan.map(item => item.response ? item.response.data.url : item.url).join(',')
-      this.info.comPubAttachments.anName = this.chuan.map(item => item.response ? item.response.data.name : item.name).join(',')
-      console.log(this.info, 'this.info')
-      upePro(this.info).then((res) => {
-        this.$message.success(res.msg)
-        this.$router.push('/noTender/project')
-      }).catch((error) => {
-        this.$message.error('提交失败')
-      })
     },
     //上传协议文件-------------------------------------------------
     handleExceed2(files, fileList) {
@@ -411,7 +385,7 @@ export default {
       })
     },
     success2(response, fileList) {
-      this.add()
+      this.tc()
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
@@ -444,23 +418,12 @@ export default {
         }
         this.form.gCompany = '鸿鹄科技有限公司'
         this.gfId = this.form.gCode
-        this.getComPubAttachments()
+        // this.getComPubAttachments()
         // this.selectSupplier(this.hid)
         return Promise.all([getPlan(this.aid), getQuotation({ 'gfId': this.gfId })])
       }).then(res => {
         this.form.createBy = res[0].data.createBy
         this.form.createDept = res[0].data.aCreateDept
-        this.ComQuotation = res[1].rows
-        this.form.gUnit = res[1].rows[0].bsSupplier.hName
-        this.ComQuotation.forEach((row, id) => {
-          row.hName = res[1].rows[0].bsSupplier.hName
-          if (id < res[1].rows.length) {
-            res[1].rows.forEach((row, index) => {
-              row.id = index + 1
-            })
-          }
-        })
-        console.log(res[1].rows, 'res[1].rows')
         //查询产品信息
         return getItemsDevice({ 'aid': this.aid })
       }).then(res => {
@@ -481,65 +444,59 @@ export default {
       })
     },
     addBj() {
-      this.$confirm('确定添加本次新增报价信息?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (this.ComQuotation.length === 0) {
-          this.$message({ type: 'warning', message: '报价金额不能为空' })
-          return false
-        } else {
-          this.ComQuotation = this.ComQuotation.filter(e => {
-            delete e.id
-            return e.bjTotal != null
-          })
-          for (let i = 0; i < this.ComQuotation.length; i++) {
-            this.ComQuotation[i].bjHid = this.hid
-            this.ComQuotation[i].gfId = this.form.gCode
+      this.$refs.elForm.validate(valid => {
+        if (valid) {
+          if (this.fileList2.length === 0) {
+            this.$message.warning('请上传附件')
+          } else {
+            if (this.hasNewFiles()) {
+              console.log(1)
+              this.chuan.push(...this.fileList2)
+              this.$refs.up2.submit()
+            } else {
+              this.tc()
+            }
           }
-          console.log(this.ComQuotation)
-          addQuotation(this.ComQuotation).then((res) => {
-            console.log(res)
-          }).catch((err) => {
-            this.$message(err)
-          })
+        } else {
+          this.$message.error('请填写完整信息')
+          return false
         }
-      }).catch(() => {
-        this.$message({ type: 'info', message: '已取消添加' })
       })
     },
-    //查询附件信息
-    getComPubAttachments() {
-      getAttachmentsByAid(this.aid).then(res => {
-        // console.log(res, 'res')
-        if (res.data != null) {
-          this.info.comPubAttachments.anId = res.data.anId
-          if (res.data.anName && res.data.anUrl) {
-            const names = res.data.anName.split(',')
-            const urls = res.data.anUrl.split(',')
-            let fileList = []
-            for (let i = 0; i < names.length; i++) {
-              fileList.push({
-                name: names[i],
-                url: urls[i]
-              })
-            }
-            this.fileList2 = fileList
-            this.info.comPubAttachments.anName = res.data.anName
-            this.info.comPubAttachments.anUrl = res.data.anUrl
-          } else {
-            this.fileList2 = []
-            this.info.comPubAttachments.anName = null
-            this.info.comPubAttachments.anUrl = null
-          }
-        } else {
-          this.info.comPubAttachments.anId = null
-          this.fileList2 = []
-          this.info.comPubAttachments.anName = null
-          this.info.comPubAttachments.anUrl = null
-        }
-
+    tc() {
+      if (this.ComQuotation.length === 0) {
+        this.$message({ type: 'warning', message: '报价金额不能为空' })
+        return false
+      } else {
+        this.ComQuotation = this.ComQuotation.filter(e => {
+          delete e.id
+          return e.bjTotal != null
+        })
+        //添加报价
+        delQuotation(this.form.gCode).then((res) => {
+          console.log(res, 'res')
+          this.ComQuotation.forEach((e) => {
+            e.bjHid = 2
+            e.gfId = this.form.gCode
+            addQuotation(e).then((res) => {
+              this.add()
+            })
+          })
+        })
+      }
+    },
+    add() {
+      this.info.gRelease = 1
+      this.info1.gid = this.gid
+      this.info1.hid = this.ComQuotation[0].hid
+      this.info.comPubAttachments.anUrl = this.chuan.map(item => item.response ? item.response.data.url : item.url).join(',')
+      this.info.comPubAttachments.anName = this.chuan.map(item => item.response ? item.response.data.name : item.name).join(',')
+      console.log(this.info, 'this.info')
+      upePro(this.info).then((res) => {
+        this.$message.success(res.msg)
+        this.$router.push('/noTender/project')
+      }).catch((error) => {
+        this.$message.error('添加失败')
       })
     },
     //查询供应商信息
@@ -551,7 +508,8 @@ export default {
         // let foundSupplier = this.supplierList.find(supplier => supplier.hid === this.hid)
         // this.form.gUnit = foundSupplier.hName
       })
-    },
+    }
+    ,
     spCountBlur(row) {
       if (row.inVat == null) {
         row.inVat = 0.00
@@ -632,7 +590,7 @@ export default {
       // 在这里处理行点击事件
       this.form.gUnit = row.hName
       this.info.hid = row.hid
-      alert(this.info.hid)
+      // alert(this.info.hid)
       this.GysDialog = false
     }
     ,
@@ -645,7 +603,8 @@ export default {
     openGys() {
       this.GysDialog = true
       this.selectGysList()
-    },
+    }
+    ,
     //显示产品对话框
     openCp(row) {
       this.selectRow = row
@@ -662,11 +621,13 @@ export default {
     rest() {
       this.form.gUnit = null
       this.GysDialog = false
-    },
+    }
+    ,
     //单选多选
     lHandleSelectionChange(selection) {
       this.lSelectedRows = selection
-    },
+    }
+    ,
     bAddRow() {
       const newRow = {}
       this.bTableColumns.forEach(column => {
@@ -676,7 +637,8 @@ export default {
       newRow.bjSecond = this.ComQuotation.length + 1
       newRow.hName = this.form.gUnit
       this.ComQuotation.push(newRow)
-    },
+    }
+    ,
     bDeleteRows() {
       this.$confirm('确定删除选中的行吗?', '提示', {
         confirmButtonText: '确定',
@@ -696,7 +658,8 @@ export default {
           message: '已取消删除'
         })
       })
-    },
+    }
+    ,
     //复制
     bCopyRows() {
       const copiedRows = this.bSelectedRows.map(row => ({ ...row }))
@@ -704,17 +667,20 @@ export default {
         row.id = this.ComQuotation.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
         this.ComQuotation.push(row)
       })
-    },
+    }
+    ,
     //行数变化
     bUpdateRowIds() {
       this.ComQuotation.forEach((row, index) => {
         row.id = index + 1
       })
-    },
+    }
+    ,
     //单选多选
     bHandleSelectionChange(selection) {
       this.bSelectedRows = selection
-    },
+    }
+    ,
     bHandleBlur(row) {
       if (row.bjTotal) {
         row.bjTotal = parseFloat(row.bjTotal).toFixed(2)
@@ -722,7 +688,8 @@ export default {
           row.bjTotal = null
         }
       }
-    },
+    }
+    ,
     bHandleInput(row) {
       // 只保留数字和一个小数点
       row.bjTotal = row.bjTotal.replace(/[^\d.]/g, '')

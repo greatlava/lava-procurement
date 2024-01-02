@@ -61,4 +61,7 @@ public interface ComQuotationMapper {
     public int deleteComQuotationByBjIds(Long[] bjIds);
 
     public ComQuotation oneQuotation(@Param("gfId") String gfId, @Param("bjHid") Long bjHid);
+
+    //查询项目报价总数
+    public int selectBjCount(String bjId);
 }

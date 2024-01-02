@@ -434,6 +434,18 @@ export const dynamicRoutes = [
     ]
   },
   {
+    path: '/noTender/details5',
+    component: Details,
+    children: [
+      {
+        path: 'details5?gid=:gid(\\d+)',
+        component: () => import('@/views/noTender/RFQ/details5'),
+        name: 'Details5',
+        meta: { title: '单一来源详情', activeMenu: '/noTender/RFQ' }
+      }
+    ]
+  },
+  {
     path: '/noTender/noContract',
     component: Details,
     children: [
@@ -453,7 +465,43 @@ export const dynamicRoutes = [
         path: 'addNoTender?gid=:gid(\\d+)',
         component: () => import('@/views/noTender/addNoTender'),
         name: 'AddNoTender',
-        meta: { title: '非招标采购合同', activeMenu: '/noTender' }
+        meta: { title: '非招标采购合同新增', activeMenu: '/noTender' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/upNoTender',
+    component: Details,
+    children: [
+      {
+        path: 'upNoTender?eid=:eid(\\d+)',
+        component: () => import('@/views/noTender/upNoTender'),
+        name: 'UpNoTender',
+        meta: { title: '非招标采购合同修改', activeMenu: '/noTender' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/examineNo',
+    component: Details,
+    children: [
+      {
+        path: 'examineNo?eid=:eid(\\d+)',
+        component: () => import('@/views/noTender/examineNo'),
+        name: 'ExamineNo',
+        meta: { title: '非招标采购合同审核', activeMenu: '/noTender' }
+      }
+    ]
+  },
+  {
+    path: '/noTender/viewNo',
+    component: Details,
+    children: [
+      {
+        path: 'viewNo?eid=:eid(\\d+)',
+        component: () => import('@/views/noTender/viewNo'),
+        name: 'ViewNo',
+        meta: { title: '非招标采购合同查看', activeMenu: '/noTender' }
       }
     ]
   }

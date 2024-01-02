@@ -28,28 +28,28 @@ import {addBudget} from "@/api/system/budget";
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="创建部门" >
-              <el-input :value="form.aid!=null || '系统自动生成' " disabled/>
+            <el-form-item label="创建部门">
+              <el-input :value="form.aid || '系统自动生成' " disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="附件" prop="fjAnnex">
               <div>
                 <el-upload
-                  ref="upload"
-                  :action="upload.url"
-                  :headers="upload.headers"
-                  :file-list="upload.fileList"
-                  :multiple="true"
-                  :on-progress="handleFileUploadProgress"
-                  :on-success="handleFileSuccess"
-                  :limit="5"
-                  :on-exceed="exceedingMaximumLimit"
-                  :on-error="uploadError"
-                  :before-upload="beforeUpload"
-                  :before-remove="beforeRemove"
-                  :on-remove="removeFile"
-                  :auto-upload="false">
+                    ref="upload"
+                    :action="upload.url"
+                    :headers="upload.headers"
+                    :file-list="upload.fileList"
+                    :multiple="true"
+                    :on-progress="handleFileUploadProgress"
+                    :on-success="handleFileSuccess"
+                    :limit="5"
+                    :on-exceed="exceedingMaximumLimit"
+                    :on-error="uploadError"
+                    :before-upload="beforeUpload"
+                    :before-remove="beforeRemove"
+                    :on-remove="removeFile"
+                    :auto-upload="false">
                   <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                   <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
                              @click="submitUpload">上传到服务器
@@ -69,10 +69,10 @@ import {addBudget} from "@/api/system/budget";
             <el-form-item label="采购业务类型名称" prop="aBtype">
               <el-select style="width: 202px" v-model="form.aBtype" placeholder="请选择采购业务类型名称">
                 <el-option
-                  v-for="dict in dict.type.ppm_procurement_plan"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
+                    v-for="dict in dict.type.ppm_procurement_plan"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -102,18 +102,18 @@ import {addBudget} from "@/api/system/budget";
             <!--            @click="handleDeleteBudget(scope.row,scope.$index)"-->
             <template slot-scope="scope">
               <el-popconfirm
-                confirm-button-text='删除'
-                cancel-button-text='取消'
-                icon="el-icon-info"
-                icon-color="red"
-                :title="'你确定要删除编号为'+scope.row.aid+'吗？'"
-                @confirm="handleDeleteBudget(scope.row,scope.$index)"
+                  confirm-button-text='删除'
+                  cancel-button-text='取消'
+                  icon="el-icon-info"
+                  icon-color="red"
+                  :title="'你确定要删除编号为'+scope.row.aid+'吗？'"
+                  @confirm="handleDeleteBudget(scope.row,scope.$index)"
               >
                 <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  slot="reference"
+                    size="mini"
+                    type="text"
+                    icon="el-icon-delete"
+                    slot="reference"
 
                 >删除
                 </el-button>
@@ -166,9 +166,9 @@ import {addBudget} from "@/api/system/budget";
             <template slot-scope="scope">
               <div class="block">
                 <el-date-picker
-                  v-model="scope.row.vDeliveryTime"
-                  type="date"
-                  placeholder="选择日期">
+                    v-model="scope.row.vDeliveryTime"
+                    type="date"
+                    placeholder="选择日期">
                 </el-date-picker>
               </div>
               <!--              <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>-->
@@ -195,11 +195,11 @@ import {addBudget} from "@/api/system/budget";
           <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row,scope.$index)"
-                v-hasPermi="['system:record:remove']"
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="handleDelete(scope.row,scope.$index)"
+                  v-hasPermi="['system:record:remove']"
               >删除
               </el-button>
             </template>
@@ -221,18 +221,18 @@ import {addBudget} from "@/api/system/budget";
       <el-form :model="form" ref="queryForm" size="small" :inline="true" label-width="68px">
         <el-form-item label="产品编码" prop="tid">
           <el-input
-            v-model="queryParams.tid"
-            placeholder="请输入产品编码"
-            clearable
-            @keyup.enter.native="handleQuery"
+              v-model="queryParams.tid"
+              placeholder="请输入产品编码"
+              clearable
+              @keyup.enter.native="handleQuery"
           />
         </el-form-item>
         <el-form-item label="产品名称" prop="tName">
           <el-input
-            v-model="queryParams.tName"
-            placeholder="请输入产品名称"
-            clearable
-            @keyup.enter.native="handleQuery"
+              v-model="queryParams.tName"
+              placeholder="请输入产品名称"
+              clearable
+              @keyup.enter.native="handleQuery"
           />
         </el-form-item>
         <el-form-item>
@@ -247,11 +247,11 @@ import {addBudget} from "@/api/system/budget";
       </el-table>
       <div :class="{'hidden':hidden}" class="pagination-container">
         <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getMaterialList"
+            v-show="total>0"
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getMaterialList"
         />
       </div>
 
@@ -295,7 +295,12 @@ import {addBudget} from "@/api/system/budget";
         <el-table-column label="部门名称" align="center" prop="duDept"/>
         <el-table-column label="预算科目名称" align="center" prop="duName"/>
         <el-table-column label="总金额" align="center" prop="duTotal"/>
-        <el-table-column label="已使用金额" align="center" prop="duUsedMoney"/>
+        <el-table-column label="已使用金额" align="center" prop="duUsedMoney">
+          <template slot-scope="scope">
+            <span v-if="scope.row.duUsedMoney != null && scope.row.duUsedMoney != ''">{{ scope.row.duUsedMoney }}</span>
+            <span style="color: #cccccc" v-else>未添加</span>
+          </template>
+        </el-table-column>
       </el-table>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancel">返 回</el-button>
@@ -555,7 +560,7 @@ export default {
         this.show.deviceLoding = false;
       })).catch(err => {
         this.show.deviceLoding = false;
-        this.$modal.msgError("服务器出错，请联系管理员！！！");
+        this.$modal.msgError("服务器出错，请联系管理员！！！" + err);
       })
     },
     //关闭按钮
@@ -711,7 +716,7 @@ export default {
             this.$modal.loading("添加中！！");
             addPlan(this.form).then(res => {
               this.$modal.closeLoading();
-              Message.success("操作成功");
+              Message.success("添加成功");
               setTimeout(() => {
                 this.$router.back();
               }, 1000)
@@ -730,14 +735,16 @@ export default {
     },
     getItemsByPlanId() {
       selectProcurementPlanByIdForThreeTables(this.form.aid).then(res => {
-        this.device = res.data.items;
+        if (res.data) {
+          this.device = res.data.items;
+        }
       }).catch(err => {
-        this.$modal.msgError("服务器出错，请联系管理员！！！");
+        this.$modal.msgError("服务器出错，请联系管理员！！！" + err);
       })
       selectPpmBudgetByAid(this.form.aCode).then(res => {
         this.budgetList = res.data;
       }).catch(err => {
-        this.$modal.msgError("服务器出错，请联系管理员！！！");
+        this.$modal.msgError("服务器出错，请联系管理员！！！" + err);
       })
       selectedComPubAttamentsByAid(this.form.aid).then(res => {
         if (res.data) {
