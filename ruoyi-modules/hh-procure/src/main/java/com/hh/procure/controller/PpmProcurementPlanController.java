@@ -200,7 +200,6 @@ public class PpmProcurementPlanController extends BaseController {
     @PostMapping("/updateStateAndAddBidWinning")
     @Transactional
     public AjaxResult updateStateAndAddBidWinning(@RequestBody List<PpmProcurementPlan> ppmProcurementPlan, Integer type, Integer noBidType) {
-        System.out.println("noBidType:" + noBidType);
         BidTender bidTender = new BidTender();
         NobidNonPro nobidNonPro = new NobidNonPro();
         for (PpmProcurementPlan item : ppmProcurementPlan) {
@@ -251,8 +250,8 @@ public class PpmProcurementPlanController extends BaseController {
     }
 
     @RequiresPermissions("system:plan:list")
-    @PostMapping("/PpmProcurementPlanAndComPubAttament")
-    public TableDataInfo selectePpmProcurementPlanAndComPubAttamentByAid(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+    @GetMapping("/PpmProcurementPlanAndComPubAttament")
+    public TableDataInfo selectePpmProcurementPlanAndComPubAttamentByAid( PpmProcurementPlan ppmProcurementPlan) {
         System.out.println("执行了PpmProcurementPlanAndComPubAttament：" + ppmProcurementPlan);
         startPage();
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectePpmProcurementPlanAndComPubAttamentByAid(ppmProcurementPlan);

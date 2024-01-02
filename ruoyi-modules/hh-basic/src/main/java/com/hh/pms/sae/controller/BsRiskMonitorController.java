@@ -48,7 +48,6 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 导出供应商风险监控列表
      */
-    @RequiresPermissions("system:monitor:export")
     @Log(title = "供应商风险监控", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsRiskMonitor bsRiskMonitor) {
@@ -68,7 +67,6 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 新增供应商风险监控
      */
-    @RequiresPermissions("system:monitor:add")
     @Log(title = "供应商风险监控", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsRiskMonitor bsRiskMonitor) {
@@ -78,7 +76,6 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 修改供应商风险监控
      */
-    @RequiresPermissions("system:monitor:edit")
     @Log(title = "供应商风险监控", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsRiskMonitor bsRiskMonitor) {
@@ -88,7 +85,6 @@ public class BsRiskMonitorController extends BaseController {
     /**
      * 删除供应商风险监控
      */
-    @RequiresPermissions("system:monitor:remove")
     @Log(title = "供应商风险监控", businessType = BusinessType.DELETE)
     @DeleteMapping("/{rmIds}")
     public AjaxResult remove(@PathVariable Long[] rmIds) {

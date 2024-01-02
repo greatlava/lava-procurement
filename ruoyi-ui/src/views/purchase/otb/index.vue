@@ -1,30 +1,31 @@
 <template>
   <div class="app-container">
     <div>
-      <el-form ref="elForm" :model="form" :rules="rules" size="medium" label-width="150px">
-        <el-row type="flex" justify="start" align="middle" :gutter="15">
-          <el-form-item label="采购计划编码" prop="field107">
-            <el-input v-model="form.field107" placeholder="请输入采购计划编码" clearable :style="{width: '100%'}">
-            </el-input>
-          </el-form-item>
-          <el-form-item label="采购业务类型">
-            <el-select ref="cClear" v-model="form.aBtype" placeholder="请选择业务类型" @change="change">
-              <el-option
-                v-for="dict in dict.type.ppm_procurement_plan"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item size="medium">
-            <el-button type="primary" @click="query">查询</el-button>
-            <router-link to="insert">
-              <el-button style="margin: 0px 20px" type="primary" @click="handleAdd">新建</el-button>
-            </router-link>
-            <el-button @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-row>
+      <el-form inline ref="elForm" :model="form" :rules="rules" size="medium" label-width="150px">
+        <el-form-item label="采购计划编码" prop="field107">
+          <el-input v-model="queryParams.aCode" placeholder="请输入采购计划编码" clearable :style="{width: '100%'}">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="采购业务类型">
+          <el-select ref="cClear" v-model="queryParams.aBtype" placeholder="请选择业务类型" @change="change">
+            <el-option
+              v-for="dict in dict.type.ppm_procurement_plan"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="采购计划名称">
+          <el-input v-model="queryParams.aName" placeholder="请输入采购计划名称"></el-input>
+        </el-form-item>
+        <el-form-item size="medium">
+          <el-button type="primary" @click="query">查询</el-button>
+          <router-link to="insert">
+            <el-button style="margin: 0px 20px" type="primary" @click="handleAdd">新建</el-button>
+          </router-link>
+          <el-button @click="resetQuery">重置</el-button>
+        </el-form-item>
       </el-form>
     </div>
 
@@ -103,8 +104,6 @@
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
             <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
-            <!--            <el-table-column label="采购计划审核意见" align="center" prop="aOpinion"/>-->
-            <!--            <el-table-column label="行项目数量" align="center" prop="aProjectCount"/>-->
             <el-table-column label="采购业务类型名称" align="center" prop="aBtype"/>
             <el-table-column label="采购审批状态" align="center" prop="aAstate">
               <template slot-scope="scop">
@@ -217,11 +216,12 @@
               </el-table-column>
               <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="150"/>
               <el-table-column label="需求说明" align="center" prop="vIllustrate"/>
-              <el-table-column label="采购方式" align="center" prop="procurementMethod"/>
+<!--              <el-table-column label="采购方式" align="center" prop="procurementMethod"/>-->
             </el-table>
             <el-card v-if="form.aAstate != 2" ref="card" style="margin-top: 20px" class="never">
               <div slot="header" class="clearfix">
-                <span>审核意见详情</span>
+                <span v-if="form.aAstate == 0">提交意见</span>
+                <span v-if="form.aAstate == 1">审核意见</span>
                 <el-button @click="item.show = ! item.show" style="float: right; padding: 3px 0" type="text">
                   {{ item.show ? '隐藏意见' : '显示意见' }}
                 </el-button>
@@ -241,11 +241,13 @@
 
             <el-table style="margin-top: 20px" max-height="250" v-loading="loading" :data="record_approval">
               <el-table-column type="expand">
-                <template  slot-scope="scope">
-                  <el-card  class="box-card">
+                <template slot-scope="scope">
+                  <el-card class="box-card">
                     <div slot="header" class="clearfix">
                       <span>意见详情</span>
-                      <el-button @click="expand(scope.row.opinionDetails)" style="float: right; padding: 3px 0" type="text">查看更多</el-button>
+                      <el-button @click="expand(scope.row.opinionDetails)" style="float: right; padding: 3px 0"
+                                 type="text">查看更多
+                      </el-button>
                     </div>
                     <div style="height: 100px" v-html="scope.row.opinionDetails" class="text item"></div>
                   </el-card>
@@ -266,20 +268,6 @@
                 </template>
               </el-table-column>
               <el-table-column label="状态" align="center" prop="opinion"/>
-              <!--              <el-table-column show-overflow-tooltip label="意见详情" align="center" prop="opinionDetails" width="200"/>-->
-              <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width">
-                <template slot-scope="scope">
-                  <el-button
-                    disabled
-                    size="mini"
-                    type="text"
-                    icon="el-icon-delete"
-                    @click="handleDelete(scope.row)"
-                    v-hasPermi="['system:procurement:remove']"
-                  >删除
-                  </el-button>
-                </template>
-              </el-table-column>
             </el-table>
           </el-tab-pane>
         </el-tabs>
@@ -334,6 +322,7 @@ import {listRecord} from "@/api/system/approval";
 import {listRules} from "@/api/code/rules";
 import {Message} from "element-ui";
 import {selectedComPubAttamentsByAid} from "@/api/file/attachments";
+import modal from "@/plugins/modal";
 
 
 export default {
@@ -424,8 +413,8 @@ export default {
     this.getList()
   },
   methods: {
-    expand(content){
-      this.drawer=true;
+    expand(content) {
+      this.drawer = true;
       this.opinionDetails = content;
     },
     //点击在线预览文件
@@ -450,7 +439,6 @@ export default {
     },
     /*查看采购计划*/
     handleClick(activeName, oldActiveName) {
-      console.log(activeName, oldActiveName)
       switch (activeName.name) {
         case 'first':
           this.queryParams.aAstate = 0;
@@ -571,11 +559,14 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1
+      this.queryParams.aCode = null;
+      this.queryParams.aName = null;
+      this.queryParams.aBtype = null;
       this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.reset('queryForm')
+      this.reset('elForm');
       this.handleQuery()
     },
 
@@ -619,12 +610,18 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const aids = row.aid || this.ids
-      this.$modal.confirm('采购计划下有行项目,是否确认删除采购计划编号为"' + aids + '"的数据项？').then(function () {
-        return delPlan(aids)
-      }).then(() => {
-        this.getList()
-        this.$modal.msgSuccess('删除成功')
-      })
+      this.$modal.confirm('采购计划下有行项目,是否确认删除采购计划编号为"' + aids + '"的数据项？')
+        .then(() => {
+          this.$modal.loading("删除中....")
+          delPlan(aids).then(data => {
+            this.$modal.closeLoading();
+            this.$modal.msgSuccess('删除成功')
+            this.getList()
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgSuccess('删除失败' + err)
+          })
+        })
     },
     //单击查看预算
     click(row, column, cell, event) {
@@ -657,7 +654,7 @@ export default {
     //驳回采购计划
     rejectPlan() {
       if (!this.form.editor) {
-        this.$modal.msgError("请输入驳回意见")
+        this.$modal.msgError("请输入审核意见")
         return;
       }
       this.$modal.confirm("你确定要驳回采购计划吗？").then(() => {

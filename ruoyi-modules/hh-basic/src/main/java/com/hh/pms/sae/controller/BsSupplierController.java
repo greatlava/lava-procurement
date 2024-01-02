@@ -278,7 +278,6 @@ public class BsSupplierController extends BaseController {
     /**
      * 删除供应商
      */
-    @RequiresPermissions("system:supplier:remove")
     @Log(title = "供应商", businessType = BusinessType.DELETE)
     @DeleteMapping("/{hids}")
     public AjaxResult remove(@PathVariable Long[] hids) {
