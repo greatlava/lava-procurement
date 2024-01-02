@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" style="opacity: 0.9;background-color: silver">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" >
       <h3 class="title">登 录</h3>
       <el-form-item prop="username">
         <el-input
