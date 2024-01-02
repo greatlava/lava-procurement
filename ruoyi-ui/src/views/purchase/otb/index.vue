@@ -104,7 +104,11 @@
             <el-table-column label="采购计划编号" align="center" prop="aCode"/>
             <el-table-column label="计划名称" align="center" prop="aName"/>
             <el-table-column label="创建部门" align="center" prop="aCreateDept"/>
-            <el-table-column label="采购业务类型名称" align="center" prop="aBtype"/>
+            <el-table-column label="采购业务类型名称" align="center" prop="aBtype">
+              <template slot-scope="scope">
+                <dict-tag :options="dict.type.ppm_procurement_plan" :value="scope.row.aBtype"/>
+              </template>
+            </el-table-column>
             <el-table-column label="采购审批状态" align="center" prop="aAstate">
               <template slot-scope="scop">
                 <el-tag size="danger">待审批</el-tag>
