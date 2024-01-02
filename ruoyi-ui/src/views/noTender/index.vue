@@ -6,11 +6,10 @@
           <el-col :span="23">
             <el-row type="flex" justify="start" align="middle" :gutter="30">
               <el-col :span="24">
-                <el-form-item label="时间" prop="field101">
-                  <el-date-picker type="daterange" v-model="form.field101" format="yyyy-MM-dd"
-                                  value-format="yyyy-MM-dd" :style="{width: '100%'}" start-placeholder="年/月/日"
-                                  end-placeholder="年/月/日" range-separator="至" clearable
-                  ></el-date-picker>
+                <el-form-item label="项目编号" prop="field101">
+                  <el-input v-model="form.field101" placeholder="请输入项目编号" clearable
+                            :style="{width: '100%'}"
+                  ></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="24">
@@ -301,15 +300,19 @@ export default {
     query() {
       // 模糊查询按钮点击时的处理逻辑
       console.log('执行模糊查询')
+      this.queryParams1.gCode = this.form.field101
       this.queryParams1.gName = this.form.field102
       this.queryParams1.pageNum = 1
       this.getList1()
+      this.queryParams2.gCode = this.form.field101
       this.queryParams2.gName = this.form.field102
       this.queryParams2.pageNum = 1
       this.getList2()
+      this.queryParams3.eHcode = this.form.field101
       this.queryParams3.gName = this.form.field102
       this.queryParams3.pageNum = 1
       this.getList3()
+      this.queryParams4.eHcode = this.form.field101
       this.queryParams4.gName = this.form.field102
       this.queryParams4.pageNum = 1
       this.getList4()

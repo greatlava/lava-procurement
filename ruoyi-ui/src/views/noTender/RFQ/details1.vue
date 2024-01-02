@@ -506,8 +506,8 @@ export default {
     getComPubAttachments() {
       getAttachmentsByAid(this.aid).then(res => {
         console.log(res, 'res')
-        if(!res.data){
-         return
+        if (!res.data) {
+          return
         }
         this.info.comPubAttachments.anId = res.data.anId
         if (res.data.anName && res.data.anUrl) {
