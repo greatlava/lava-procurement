@@ -127,4 +127,14 @@ public class BidNoticeController extends BaseController {
         return AjaxResult.success(bidNoticeService.selMax());
     }
 
+
+    /**
+     * 根据sid修改公告公示时间
+     * @return
+     */
+    @PutMapping("/updateStatus/{sid}")
+    public AjaxResult updateStatus(@PathVariable Long sid) {
+        return toAjax(bidNoticeService.updateStatus(sid));
+    }
+
 }

@@ -68,4 +68,6 @@ public interface BidNoticeMapper
     public BidNotice findTwoInfo(Long uid);
 
     public BidNotice selMax();
+
+    public int updateStatus(Long sid);
 }

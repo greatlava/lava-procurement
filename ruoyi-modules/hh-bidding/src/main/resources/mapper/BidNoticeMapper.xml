@@ -156,4 +156,9 @@
         select * from bid_notice order by uid desc limit 1;
     </select>
 
+
+    <update id="updateStatus" parameterType="Long">
+        update bid_notice set u_updateTime = now() where fj_status = 5 and sid = #{sid}
+    </update>
+
 </mapper>

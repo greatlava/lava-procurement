@@ -107,6 +107,7 @@
 import { listCandidate, getCandidate, delCandidate, addCandidate, updateCandidate } from "@/api/system/tender/bidEval";
 import {addResults, selectResultSupp, listResults, getResults} from "@/api/system/tender/winningBidNotice";
 import {getTender, updateTender} from "@/api/system/tender/tender";
+import {updateNotice,updateStatus} from "@/api/system/tender/tenderNotice";
 
 export default {
   name: "DetermineWin",
@@ -360,7 +361,10 @@ export default {
                 if(re.rows[0].zBidder === 0){
                   this.queryParams3.sid=this.queryParams2.sid;
                   this.queryParams3.sProjectState=7;//已定标
+                  //修改招标项目状态
                   updateTender(this.queryParams3).then(res=>{});
+                  //修改公示时间（已中标，直接关闭投标）
+                  updateStatus(this.queryParams3.sid).then(res=>{});
                 }
               });
             }

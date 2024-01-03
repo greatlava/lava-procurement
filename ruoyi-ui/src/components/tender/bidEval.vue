@@ -95,7 +95,7 @@
              v-model="form.zSendTime"
              type="datetime"
              placeholder="请选择发送时间"
-             value-format="yyyy-MM-dd hh:mm:ss"
+             value-format="yyyy-MM-dd HH:mm:ss"
              default-time="09:00:00">
            </el-date-picker>
          </el-form-item>

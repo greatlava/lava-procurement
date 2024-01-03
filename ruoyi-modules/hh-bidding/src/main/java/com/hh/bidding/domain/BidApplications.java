@@ -41,13 +41,13 @@ public class BidApplications extends BaseEntity
     private Long xType;
 
     /** 评标开始时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "评标开始时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "评标开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date xStartTime;
 
     /** 评标结束时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "评标结束时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "评标结束时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date xEndTime;
 
     /** 专家人数 */

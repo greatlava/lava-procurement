@@ -66,3 +66,11 @@ export function selMax() {
     method: 'get'
   })
 }
+
+// 根据sid修改公告公示时间
+export function updateStatus(sid) {
+  return request({
+    url: '/bidding/notice/updateStatus/' + sid,
+    method: 'put'
+  })
+}

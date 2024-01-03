@@ -61,7 +61,7 @@
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
-            项目预算
+            项目预算（万元）
           </template>
           <template>
             <span  v-if="routeType ==='details'|| routeType ==='bidding'"> {{queryParams.sBudget}}</span>
@@ -221,8 +221,10 @@ export default {
     getList(sid) {
       this.loading = false
       getTender(sid).then(response=>{
+        if(response.data){
           this.queryParams.sCode=response.data.sCode;
           this.queryParams.sName=response.data.sName;
+        }
           if(response.data.sWay != null){
             this.queryParams.sWay=response.data.sWay.toString();
           }

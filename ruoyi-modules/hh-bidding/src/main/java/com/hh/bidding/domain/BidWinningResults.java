@@ -33,7 +33,7 @@ public class BidWinningResults extends BaseEntity
 
     @Excel(name = "公示状态")
     private Long gsState;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "公示发布时间")
     private Date gsResDate;
 

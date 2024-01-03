@@ -36,13 +36,13 @@ public class BidSubmission extends BaseEntity
     private Long tdStatus;
 
     /** 成功递交时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "成功递交时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "成功递交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date tdSuccessTime;
 
     /** 文件撤回时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "文件撤回时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date tdFailTime;
 
     @Excel(name = "上传标书")

@@ -119,4 +119,9 @@ public class BidNoticeServiceImpl implements IBidNoticeService
     public BidNotice selMax() {
         return bidNoticeMapper.selMax();
     }
+
+    @Override
+    public int updateStatus(Long sid) {
+        return bidNoticeMapper.updateStatus(sid);
+    }
 }

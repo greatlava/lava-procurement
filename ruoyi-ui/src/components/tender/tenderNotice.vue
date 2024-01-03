@@ -93,7 +93,7 @@
         <el-form-item label="关联项目" prop="uProject" class="form-input">
           <el-input v-model="form.uProject" disabled="disabled"/>
         </el-form-item>
-        <el-form-item label="项目资金" prop="uMoney" class="form-input">
+        <el-form-item label="项目资金(万元)" prop="uMoney" class="form-input">
           <el-input v-model="form.uMoney" placeholder="请输入项目资金" :disabled="noUpdate"/>
         </el-form-item>
         <el-form-item label="标书获取时间" prop="uGetTime" class="form-input">
@@ -101,7 +101,7 @@
             v-model="form.uGetTime"
             type="datetime"
             placeholder="请选择标书获取时间"
-            value-format="yyyy-MM-dd hh:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             default-time="09:00:00"
             :disabled="noUpdate">
           </el-date-picker>
@@ -111,7 +111,7 @@
             v-model="form.uAcceptTime"
             type="datetime"
             placeholder="请选择接受答疑时间"
-            value-format="yyyy-MM-dd hh:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             default-time="09:00:00"
             :disabled="noUpdate">
           </el-date-picker>
@@ -121,7 +121,7 @@
             v-model="form.uEndTime"
             type="datetime"
             placeholder="请选择投标截止时间"
-            value-format="yyyy-MM-dd hh:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             default-time="09:00:00"
             :disabled="noUpdate">
           </el-date-picker>
@@ -131,7 +131,7 @@
             v-model="form.uKaiTime"
             type="datetime"
             placeholder="请选择开标时间"
-            value-format="yyyy-MM-dd hh:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
             default-time="09:00:00"
             :disabled="noUpdate">
           </el-date-picker>
@@ -525,7 +525,7 @@ export default {
             if(this.noFiles2.length == 0){
               console.log("pt add update");
              //拿到剩余文件生成字符串
-             this.form.fjAnnex = JSON.stringify(this.filterList);
+             this.form.fjAnnex = JSON.stringify(this.upload.fileList);
               //判断type值  update：修改  add：新增
               if (this.queryParams.type === 'update') {
                 updateNotice(this.form).then(response => {
@@ -564,8 +564,8 @@ export default {
     changeFileLength(file, fileList){
       this.noFiles.push(file);
       this.noFiles2.push(file);
-      console.log( this.noFiles,"noFiles cg");
-      console.log( this.noFiles2,"noFiles2 cg");
+      // console.log( this.noFiles,"noFiles cg");
+      // console.log( this.noFiles2,"noFiles2 cg");
       this.filesLength = fileList.length;
     },
     // 文件上传成功处理

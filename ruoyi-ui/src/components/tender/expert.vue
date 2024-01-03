@@ -115,7 +115,7 @@
                   type="datetime"
                   id="input-common1"
                   placeholder="请选择评标开始时间"
-                  value-format="yyyy-MM-dd hh:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                   default-time="09:00:00">
                 </el-date-picker>
 <!--                <el-date-picker v-model="queryParams.xStartTime"  type="date" placeholder="请选择评标开始时间">-->
@@ -132,7 +132,7 @@
                   type="datetime"
                   id="input-common1"
                   placeholder="请选择评标结束时间"
-                  value-format="yyyy-MM-dd hh:mm:ss"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                   default-time="09:00:00">
                 </el-date-picker>
 <!--                <el-date-picker v-model="queryParams.xEndTime" id="input-common2" type="date" placeholder="请选择评标结束时间">-->
