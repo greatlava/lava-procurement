@@ -6,6 +6,7 @@
 
     <resultMap type="com.hh.nobidding.domain.NobidNonPro" id="NobidNonProResult">
         <result property="gid" column="gid"/>
+        <result property="hid" column="hid"/>
         <result property="xyId" column="xy_id"/>
         <result property="gCode" column="g_code"/>
         <result property="gName" column="g_name"/>
@@ -25,16 +26,74 @@
                g_name,
                g_is_public,
                g_spawn_time,
+               g_timeon,
                g_deadline,
                g_count,
                g_unit,
                g_rounds,
-               g_tenderType
+               g_tenderType,
+               g_release,
+               hid
         from nobid_non_pro
     </sql>
 
-    <select id="selectNobidNonProList" parameterType="com.hh.nobidding.domain.NobidNonPro" resultMap="NobidNonProResult">
-        <include refid="selectNobidNonProVo"/>
+    <!--    查询可创建合同的非招标项目表-->
+    <select id="selectNobidNonProList1" resultType="com.hh.nobidding.domain.NobidNonPro">
+        select *
+        from nobid_non_pro
+        <where>
+            g_release = 2
+            and g_tenderType !=4
+            and eid is null
+            <if test="gCode != null  and gCode != ''">
+                and g_code like concat('%', #{gCode}, '%')
+            </if>
+            <if test="gName != null  and gName != ''">
+                and g_name like concat('%', #{gName}, '%')
+            </if>
+        </where>
+        order by g_deadline desc
+    </select>
+
+    <resultMap type="com.hh.nobidding.domain.NobidNonPro" id="ProResult">
+        <result property="gid" column="gid"/>
+        <result property="hid" column="hid"/>
+        <result property="xyId" column="xy_id"/>
+        <result property="gCode" column="g_code"/>
+        <result property="gName" column="g_name"/>
+        <result property="gIsPublic" column="g_is_public"/>
+        <result property="gSpawnTime" column="g_spawn_time"/>
+        <result property="gDeadline" column="g_deadline"/>
+        <result property="gCount" column="g_count"/>
+        <result property="gUnit" column="g_unit"/>
+        <result property="gRounds" column="g_rounds"/>
+        <result property="gTendertype" column="g_tenderType"/>
+        <association property="comQuotation">
+            <id property="bjId" column="bj_id"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectProVo">
+        select gid,
+               xy_id,
+               g_code,
+               g_name,
+               g_is_public,
+               g_spawn_time,
+               g_timeon,
+               g_deadline,
+               g_count,
+               g_unit,
+               g_rounds,
+               g_tenderType,
+               g_release,
+               hid
+        from nobid_non_pro
+    </sql>
+
+    <select id="selectNobidNonProList" parameterType="com.hh.nobidding.domain.NobidNonPro"
+            resultMap="ProResult">
+        <include refid="selectProVo"/>
         <where>
             <if test="xyId != null ">and xy_id = #{xyId}</if>
             <if test="gCode != null  and gCode != ''">and g_code = #{gCode}</if>
@@ -47,7 +106,11 @@
             <if test="gUnit != null  and gUnit != ''">and g_unit = #{gUnit}</if>
             <if test="gRounds != null ">and g_rounds = #{gRounds}</if>
             <if test="gTendertype != null ">and g_tenderType = #{gTendertype}</if>
+            <if test="gTimeon != null ">and g_timeon = #{gTimeon}</if>
+            <if test="gDeadline != null ">and g_deadline = #{gDeadline}</if>
+            <if test="gRelease != null ">and g_release = #{gRelease}</if>
         </where>
+        order by g_spawn_time desc
     </select>
 
     <select id="selectNobidNonProByGid" parameterType="Long" resultMap="NobidNonProResult">
@@ -59,6 +122,7 @@
         insert into nobid_non_pro
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gid != null">gid,</if>
+            <if test="hid != null">hid,</if>
             <if test="xyId != null">xy_id,</if>
             <if test="gCode != null">g_code,</if>
             <if test="gName != null">g_name,</if>
@@ -72,6 +136,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gid != null">#{gid},</if>
+            <if test="hid != null">#{hid},</if>
             <if test="xyId != null">#{xyId},</if>
             <if test="gCode != null">#{gCode},</if>
             <if test="gName != null">#{gName},</if>
@@ -89,15 +154,20 @@
         update nobid_non_pro
         <trim prefix="SET" suffixOverrides=",">
             <if test="xyId != null">xy_id = #{xyId},</if>
+            <if test="hid != null">hid = #{hid},</if>
             <if test="gCode != null">g_code = #{gCode},</if>
             <if test="gName != null">g_name = #{gName},</if>
             <if test="gIsPublic != null">g_is_public = #{gIsPublic},</if>
             <if test="gSpawnTime != null">g_spawn_time = #{gSpawnTime},</if>
+            <if test="gTimeon != null">g_timeon = #{gTimeon},</if>
             <if test="gDeadline != null">g_deadline = #{gDeadline},</if>
             <if test="gCount != null">g_count = #{gCount},</if>
             <if test="gUnit != null">g_unit = #{gUnit},</if>
             <if test="gRounds != null">g_rounds = #{gRounds},</if>
             <if test="gTendertype != null">g_tenderType = #{gTendertype},</if>
+            <if test="gCompany != null">g_company = #{gCompany},</if>
+            <if test="gNotes != null">g_notes = #{gNotes},</if>
+            <if test="gRelease != null">g_release = #{gRelease},</if>
         </trim>
         where gid = #{gid}
     </update>
@@ -123,12 +193,98 @@
     </resultMap>
 
     <select id="selectQuotation" resultType="com.hh.nobidding.domain.ComQuotation" resultMap="GetQuotation">
-        select q.*,s.h_name
+        select q.*, s.*
         from com_quotation q
-        inner join bs_supplier s on q.bj_hid=s.hid
-        where q.gf_id=#{gfId}
-        and q.is_delete != 1
-        ORDER BY q.bj_total DESC
+                 inner join bs_supplier s on q.bj_hid = s.hid
+        where q.gf_id = #{gfId}
+          and q.is_delete != 1
+        ORDER BY q.bj_total
+    </select>
+
+    <!--查询公共附件-->
+    <select id="selectComPubAttachmentsByAid" resultType="com.hh.nobidding.domain.ComPubAttachments">
+        select *
+        from com_pub_attachments
+        where aid = #{aid}
+    </select>
+
+
+    <update id="updateComPubAttachments" parameterType="com.hh.nobidding.domain.ComPubAttachments">
+        update com_pub_attachments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aid != null">aid = #{aid},</if>
+            <if test="jhid != null">jhid = #{jhid},</if>
+            <if test="eid != null">eid = #{eid},</if>
+            <if test="anName != null and anName != ''">an_name = #{anName},</if>
+            <if test="anType != null">an_type = #{anType},</if>
+            <if test="anDan != null">an_dan = #{anDan},</if>
+            <if test="anUrl != null and anName != ''">an_url = #{anUrl},</if>
+            <if test="anSize != null">an_size = #{anSize},</if>
+            <if test="anUploadTime != null">an_upload_time = #{anUploadTime},</if>
+        </trim>
+        where aid = #{aid}
+    </update>
+
+    <!--新增公共附件-->
+    <insert id="insertComPubAttachments" parameterType="com.hh.nobidding.domain.ComPubAttachments">
+        insert into com_pub_attachments
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="anId != null">an_id,</if>
+            <if test="aid != null">aid,</if>
+            <if test="jhid != null">jhid,</if>
+            <if test="eid != null">eid,</if>
+            <if test="anName != null">an_name,</if>
+            <if test="anType != null">an_type,</if>
+            <if test="anDan != null">an_dan,</if>
+            <if test="anUrl != null">an_url,</if>
+            <if test="anSize != null">an_size,</if>
+            <if test="anUploadTime != null">an_upload_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="anId != null">#{anId},</if>
+            <if test="aid != null">#{aid},</if>
+            <if test="jhid != null">#{jhid},</if>
+            <if test="eid != null">#{eid},</if>
+            <if test="anName != null">#{anName},</if>
+            <if test="anType != null">#{anType},</if>
+            <if test="anDan != null">#{anDan},</if>
+            <if test="anUrl != null">#{anUrl},</if>
+            <if test="anSize != null">#{anSize},</if>
+            <if test="anUploadTime != null">#{anUploadTime},</if>
+        </trim>
+    </insert>
+
+    <!--新增报价单-->
+    <insert id="insertComQuotation" parameterType="com.hh.nobidding.domain.ComQuotation">
+        insert into com_quotation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bjId != null">bj_id,</if>
+            <if test="gfId != null">gf_id,</if>
+            <if test="bjHid != null">bj_hid,</if>
+            <if test="bjSecond != null">bj_second,</if>
+            <if test="bjTotal != null">bj_total,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bjId != null">#{bjId},</if>
+            <if test="gfId != null">#{gfId},</if>
+            <if test="bjHid != null">#{bjHid},</if>
+            <if test="bjSecond != null">#{bjSecond},</if>
+            <if test="bjTotal != null">#{bjTotal},</if>
+        </trim>
+    </insert>
+
+    <!--删除报价单-->
+    <delete id="deleteComQuotationByGfIds" parameterType="String">
+        delete
+        from com_quotation
+        where gf_id = #{gfId}
+    </delete>
+
+
+    <select id="selectComPubAttachmentsByGfId" resultType="com.hh.nobidding.domain.ComQuotation">
+        select *
+        from com_quotation
+        where gf_id = #{gfId}
     </select>
 
 </mapper>

@@ -10,7 +10,7 @@
             <el-input v-model="form.eHname" clearable class="cInput"/>
           </el-form-item>
           <el-form-item label="合同编号" prop="eHcode" style="width: 45%">
-            <el-input v-model="form.eHcode" clearable class="cInput" placeholder="系统自动生成" disabled/>
+            <el-input v-model="form.eHcode" clearable class="cInput" placeholder="系统自动生成" readonly/>
           </el-form-item>
           <el-form-item label="类型" prop="eType" style="width: 45%">
             <el-input v-model="form.eType" clearable class="cInput" readonly/>
@@ -55,11 +55,11 @@
             <el-input v-model="form.tenderNo" class="cInput" readonly/>
           </el-form-item>
           <!--采购方式-->
-          <el-form-item label="招标方式" prop="tenderWay" style="width: 45%">
+          <el-form-item label="采购方式" prop="tenderWay" style="width: 45%">
             <el-input v-model="form.tenderWay" class="cInput" readonly/>
           </el-form-item>
           <!--业务类型-->
-          <el-form-item label="业务类型" prop="tenderType" style="width: 45%">
+          <el-form-item label="公开/邀请" prop="tenderType" style="width: 45%">
             <el-input v-model="form.tenderType" class="cInput" readonly/>
           </el-form-item>
         </el-row>
@@ -258,7 +258,7 @@
             <el-input v-model="qsFormData.gnPbaccount" clearable class="cInput"/>
           </el-form-item>
           <el-form-item label="合同方金额" prop="gnPbamount" style="width: 45%">
-            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput"/>
+            <el-input v-model="qsFormData.gnPbamount" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="币别" prop="gnPbcurrency" style="width: 45%">
             <el-input v-model="qsFormData.gnPbcurrency" clearable class="cInput"/>
@@ -328,6 +328,8 @@
               :on-exceed="handleExceed1"
               :on-success="success1"
               :on-change="onchange1"
+              :file-list="fileList1"
+              :on-preview="handlePreview1"
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
             </el-upload>
@@ -343,6 +345,8 @@
               :on-exceed="handleExceed2"
               :on-success="success2"
               :on-change="onchange2"
+              :file-list="fileList2"
+              :on-preview="handlePreview2"
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
@@ -358,39 +362,36 @@
               :on-exceed="handleExceed3"
               :on-success="success3"
               :on-change="onchange3"
+              :file-list="fileList3"
+              :on-preview="handlePreview3"
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
             </el-upload>
           </el-form-item>
-          <!--          <el-form-item label="意见" prop="eOpinion" style="width: 100%">-->
-          <!--            <el-col>-->
-          <!--              <el-input v-model="form.eOpinion" type="textarea" :rows="4" clearable class="cInput"/>-->
-          <!--            </el-col>-->
-          <!--          </el-form-item>-->
         </el-row>
       </el-form>
     </div>
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy">创建合同</el-button>
+      <el-button size="medium" type="primary" @click="addXy">提交</el-button>
     </div>
   </div>
 </template>
 
 
 <script>
-import { getTender } from '../../../api/system/tender/tender'
-import { addContract, listDevice, selectSuppHid } from '../../../api/system/addContract'
-import { getSupplier, listSupplier } from '../../../api/system/supplier'
-import { getOperator } from '../../../api/system/operator'
-import { getBidCandidate, getItemsDevice } from '../../../api/system/noTender'
+import { getAttachments, getContract, listDevice, listInventory, listPayment, SelectSign, updateContract } from '../../api/system/addContract'
+import { getPro, upNoContract } from '../../api/system/noTender'
 
 export default {
   data() {
     return {
+      fileList1: [],
+      fileList2: [],
+      fileList3: [],
       url: process.env.VUE_APP_BASE_API + '/basic/supplier/upload1',
-      /* 招标项目ID */
-      sid: this.$route.query.sid,
+      /* 合同ID */
+      eid: this.$route.query.eid,
       /* 标的清单 */
       //合同标的表格
       lTableData: [],
@@ -466,11 +467,14 @@ export default {
       // 表单参数
       form: {
         hid: null,
+        gid: null,
         sid: null,
+        eid: null,
         eHname: null,
         eHcode: null,
         eType: null,
         eCon: 1,
+        eStatus: 3,
         eStartdate: null,
         eEnddate: null,
         eAmount: 0,
@@ -529,6 +533,7 @@ export default {
         gnPcfixedprice: null,//锁定金额
         gnPcbalance: null//剩余金额
       },
+      hid: 2,
       // 表单校验
       rules1: {
         eHname: [
@@ -541,20 +546,24 @@ export default {
           { required: true, message: '结束时间不能为空', trigger: 'blur' }
         ]
       },
-      rules2: {},
+      rules2: {
+        // gnPbcif: [
+        //   { required: true, message: '乙方联系方式不能为空', trigger: 'blur' },
+        //   {
+        //     pattern: /^1[3456789]\d{9}$/,
+        //     message: '请输入正确的手机号码',
+        //     trigger: 'blur'
+        //   }
+        // ]
+      },
       rules3: {},
       selectRow: null,
-      fileList1: [],
-      fileList2: [],
-      fileList3: [],
       //附件
       ComPubAttachments: {
         anSize: null,
         anUrl: null,
         anName: null
-      },
-      aid: null,
-      hid: null
+      }
     }
   },
   mounted() {
@@ -562,12 +571,25 @@ export default {
   },
   created() {
     //查询相关项目信息
-    this.selectTenderBySid()
+    this.selectContractByEid()
+    this.selectListInventory()
+    this.selectListPayment()
+    this.getSign()
+    this.getComPubAttachments()
     this.getDicts('bs_contract_pay').then(res => {
       this.payTypes = res.data
     })
   },
   methods: {
+    handlePreview1() {
+      window.open(this.fileList1[0].url, '_blank', 'charset=utf-8')
+    },
+    handlePreview2() {
+      window.open(this.fileList2[0].url, '_blank', 'charset=utf-8')
+    },
+    handlePreview3() {
+      window.open(this.fileList3[0].url, '_blank', 'charset=utf-8')
+    },
     onchange1(files, fileList) {
       this.fileList1 = fileList
       console.log(this.fileList1, 'fileList1 onchange')
@@ -581,15 +603,15 @@ export default {
       console.log(this.fileList2, 'fileList2 onchange')
       if (files.size == 0) {
         this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList2.splice(this.fileList2.indexOf(files[0]), 1)
+        this.fileList2.splice(this.fileList1.indexOf(files[0]), 1)
       }
     },
     onchange3(files, fileList) {
       this.fileList3 = fileList
       console.log(this.fileList3, 'fileList3 onchange')
-      if (files.size === 0) {
+      if (files.size == 0) {
         this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList3.splice(this.fileList3.indexOf(files[0]), 1)
+        this.fileList3.splice(this.fileList1.indexOf(files[0]), 1)
       }
     },
     //创建合同
@@ -598,7 +620,8 @@ export default {
       this.submitNextUpload()
     },
     add() {
-      this.form.sid = this.sid
+      console.log('add-----------------')
+      this.form.gid = this.gid
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
         return e.tid != null
@@ -609,14 +632,12 @@ export default {
       })
       this.form.bsSign = this.qsFormData
       this.form.comPubAttachments = this.ComPubAttachments
-      console.log('打印this.form.ComPubAttachments')
-      console.log(this.form.ComPubAttachments)
-      //添加合同
-      addContract(this.form).then(response => {
-        console.log(response)
-        if (response.msg === '添加成功') {
-          this.$router.push('/contract/cm')
-          this.$message.success('创建合同成功')
+      //修改合同
+      updateContract(this.form).then(response => {
+        console.log(response.msg)
+        if (response.msg === '修改成功') {
+          this.$router.push('/noTender/noContract')
+          this.$message.success('修改成功')
         }
       })
     },
@@ -626,10 +647,8 @@ export default {
     },
     beforeRemove1(file) {
       return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList2 = []
-        this.ComPubAttachments.anUrl = null
-        this.ComPubAttachments.anName = null
-        this.ComPubAttachments.anSize = null
+        this.fileList1 = []
+        this.form.eImage = null
       })
     },
     success1(response) {
@@ -644,7 +663,12 @@ export default {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove2(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList2 = []
+        this.ComPubAttachments.anUrl = null
+        this.ComPubAttachments.anName = null
+        this.ComPubAttachments.anSize = null
+      })
     },
     success2(response, fileList) {
       console.log(222)
@@ -660,11 +684,14 @@ export default {
       this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
     },
     beforeRemove3(file) {
-      return this.$confirm(`确定移除 ${file.name}？`)
+      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
+        this.fileList3 = []
+        this.form.eDocuments
+      })
     },
     success3(response) {
       console.log(333)
-      // console.log(response)
+      console.log(response)
       this.form.eDocuments = response.data.url
       console.log('打印up3-------------------------')
       console.log(this.form.eDocuments)
@@ -674,13 +701,16 @@ export default {
     submitNextUpload() {
       // 根据条件判断调用下一个上传
       if (this.fileList1.length > 0 && this.form.eImage == null) {
+        console.log(1)
         this.$refs.up1.submit()
-      } else if (this.fileList2.length > 0 && this.ComPubAttachments.anUrl == null && this.ComPubAttachments.anSize == null && this.ComPubAttachments.anName == null) {
+      } else if (this.fileList2.length > 0 && this.ComPubAttachments.anUrl == null) {
+        console.log(2)
         this.$refs.up2.submit()
       } else if (this.fileList3.length > 0 && this.form.eDocuments == null) {
+        console.log(3)
         this.$refs.up3.submit()
       } else {
-        console.log('打印提交-------------------------')
+        console.log(4)
         this.add()
       }
     },
@@ -718,28 +748,6 @@ export default {
         this.total = response.total
       })
     },
-    //查询供应商信息和业务经办人信息
-    selectSupplier(hid) {
-      /* 业务经办人信息 */
-      getOperator(hid).then(response => {
-        // console.log(response)
-        let k = response.data
-        this.qsFormData.gnPbcontact = k.ywName
-        this.qsFormData.gnPbcif = k.ywPhone
-      })
-      /* 供应商信息 */
-      getSupplier(hid).then(res => {
-        // console.log('打印了供应商的信息')
-        // console.log(res)
-        let k = res.data
-        this.qsFormData.gnPbname = k.hName
-        this.qsFormData.gnPbaddress = k.hAddress
-        this.qsFormData.gnPbbank = k.hBankAddress
-        this.qsFormData.gnPbaccount = k.hAccount
-        this.qsFormData.gnPbid = k.hid
-        this.form.hid = k.hid
-      })
-    },
     //产品行点击事件
     handleRowClick(row) {
       // 在这里处理行点击事件
@@ -769,59 +777,149 @@ export default {
     closeDialog2() {
       this.GysDialog = false
     },
-    // 查询相关项目信息
-    selectTenderBySid() {
-      getTender(this.sid).then(response => {
-        // console.log(response, '相关项目')
+    //查询合同信息
+    selectContractByEid() {
+      getContract(this.eid).then(response => {
+        // console.log('打印了合同的信息')
         let k = response.data
-        this.form.tenderName = k.sName
-        this.form.tenderNo = k.sCode
-        if (k.sWay === 1) {
-          this.form.tenderWay = '公开招标'
+        this.form.eid = k.eid
+        this.form.eHname = k.eHname
+        this.form.eHcode = k.eHcode
+        this.form.eDescription = k.eDescription
+        this.form.eStartdate = k.eStartdate
+        this.form.eEnddate = k.eEnddate
+        this.form.eDeliveryTime = k.eDeliveryTime
+        this.form.eAmount = k.eAmount.toFixed(2)
+        this.form.eType = k.eType
+        this.form.eCon = k.eCon
+        this.form.gid = k.gid
+        if (k.eImage != null && k.eImage !== '') {
+          //获取第一个文件的名称
+          let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
+          this.fileList1 = [{
+            name: imgName1,
+            url: k.eImage
+          }]
+          this.form.eImage = k.eImage
         } else {
-          this.form.tenderWay = '邀请招标'
+          this.fileList1 = []
+          this.fileList1.eImage = null
         }
-        if (k.sType === 1) {
-          this.form.tenderType = '办公类型'
-        } else if (k.sType === 1) {
-          this.form.tenderType = '固定资产'
-        } else if (k.sType === 2) {
-          this.form.tenderType = '资讯类'
-        } else if (k.sType === 3) {
-          this.form.tenderType = '服务类'
+        if (k.eDocuments != null && k.eDocuments !== '') {
+          //获取第三个文件的名称
+          let imgName2 = (k.eDocuments).substring((k.eDocuments).lastIndexOf('/') + 1)
+          this.fileList3 = [{
+            name: imgName2,
+            url: k.eDocuments
+          }]
+          this.form.eDocuments = k.eDocuments
+        } else {
+          this.fileList3 = []
+          this.form.eDocuments = null
+        }
+        //查询相关项目信息
+        this.selectTenderBySid()
+      })
+    },
+    //查询相关项目信息
+    selectTenderBySid() {
+      getPro(this.form.gid).then(res => {
+        console.log(res, 'res')
+        let k = res.data
+        //项目名称
+        this.form.tenderName = k.gName
+        //项目编号
+        this.form.tenderNo = k.gCode
+        //采购方式
+        if (k.gTendertype === 3) {
+          this.form.tenderWay = '询价'
+        } else if (k.gTendertype === 5) {
+          this.form.tenderWay = '竞争性谈判'
+        } else {
+          this.form.tenderWay = '单一来源'
+        }
+        //公开/邀请
+        if (k.gIsPublic === 1) {
+          this.form.tenderType = '公开'
+        } else {
+          this.form.tenderType = '邀请'
         }
         this.form.eType = '一般采购合同'
         this.aid = k.xyId
-        this.selectBidCandidateBySid()
+        this.hid = k.hid
+        this.selectBdList()
       })
     },
-    //查询中标供应商
-    selectBidCandidateBySid() {
-      selectSuppHid(this.sid).then(res => {
-        this.hid = res.data.hid
-        this.selectSupplier(this.hid)
-      })
-      this.selectItemsDevice()
-    },
-    //查询产品信息
-    selectItemsDevice() {
-      getItemsDevice({ 'aid': this.aid }).then(res => {
-        // console.log(res, 'getItemsDevice')
-        res.rows.forEach((e, i) => {
+    //查询合同内的产品信息
+    selectListInventory() {
+      this.loading = true
+      listInventory({ 'eid': this.eid }).then(response => {
+        let list = response.rows
+        list.forEach((e, i) => {
           this.lTableData.push({
             id: i + 1,
-            inName: e.ppmDevice.tName,
-            inModel: e.ppmDevice.tModel,
-            inVat: (e.ppmDevice.tPrice * 1.13).toFixed(2),
-            inUnit: e.ppmDevice.tUnit,
-            inSubtotal: (e.vCount * e.ppmDevice.tPrice * 1.13).toFixed(2),
+            inName: e.inName,
+            inModel: e.inModel,
+            inVat: (e.inVat).toFixed(2),
+            inUnit: e.inUnit,
+            inSubtotal: (e.inCount * e.inVat).toFixed(2),
             tid: e.tid,
-            inCount: e.vCount
+            inCount: e.inCount
+            // inId: e.inId
           })
-          this.lTotalSubtotal += e.vCount * e.ppmDevice.tPrice * 1.13.toFixed(2)
-          this.qsFormData.gnPbamount = (this.lTotalSubtotal).toFixed(2)
-          this.form.eAmount = (this.lTotalSubtotal).toFixed(2)
         })
+        this.loading = false
+        this.lCalculateTotalSubtotal()
+      })
+    },
+    //查询支付信息
+    selectListPayment() {
+      listPayment({ 'eid': this.eid }).then(response => {
+        // console.log(response.rows)
+        let list = response.rows
+        list.forEach((e, i) => {
+          this.payTableData.push({
+            id: i + 1,
+            hid: e.hid,
+            hName: e.hName,
+            payContent: e.payContent,
+            payAmount: (e.payAmount).toFixed(2),
+            payDate: e.payDate,
+            payTerms: e.payTerms,
+            payer: e.payer,
+            // payId: e.payId,
+            debty: e.debty
+          })
+        })
+      })
+    },
+    //查询签署执行状态信息
+    getSign() {
+      SelectSign({ 'eid': this.eid }).then(response => {
+        this.qsFormData = response.data
+      })
+    },
+    //查询附件信息
+    getComPubAttachments() {
+      getAttachments(this.eid).then(response => {
+        console.log('查询附件信息')
+        console.log(response)
+        if (response.data != null) {
+          let fileListData = [{
+            name: response.data.anName,
+            url: response.data.anUrl,
+            size: response.data.anSize
+          }]
+          this.fileList2 = fileListData
+          this.ComPubAttachments.anUrl = response.data.anUrl
+          this.ComPubAttachments.anName = response.data.anName
+          this.ComPubAttachments.anSize = response.data.anSize
+        } else {
+          this.fileList2 = []
+          this.ComPubAttachments.anUrl = null
+          this.ComPubAttachments.anName = null
+          this.ComPubAttachments.anSize = null
+        }
       })
     },
     //显示产品对话框
@@ -829,20 +927,6 @@ export default {
       this.selectRow = row
       this.cpDialog = true
       this.selectBdList()
-    },
-    //显示产品对话框
-    openGys(row) {
-      this.selectRow = row
-      this.GysDialog = true
-      this.selectGysList()
-    },
-    //查询供应商信息
-    selectGysList() {
-      listSupplier(this.queryParams1).then(response => {
-        // console.log(response)
-        this.supplierList = response.rows
-        this.total1 = response.total
-      })
     },
     /* 签署执行状态 */
     qsHandleChange(value) {
@@ -959,11 +1043,6 @@ export default {
       if (row.payAmount) {
         row.payAmount = parseFloat(row.payAmount).toFixed(2)
       }
-      //获取已付款的值
-      let totalPay = this.payTableData.reduce((total, row) => total + (parseFloat(row.payAmount) || parseFloat(0)), 0)
-      this.qsFormData.gnPbpayment = totalPay.toFixed(2)
-      //剩余金额
-      this.qsFormData.gnPbbalance = (this.qsFormData.gnPbamount - this.qsFormData.gnPbpayment).toFixed(2)
     },
     payHandleInput(row) {
       // 只保留数字和一个小数点

@@ -9,6 +9,8 @@ import com.hh.pms.cm.domain.*;
 import com.hh.pms.cm.service.*;
 import com.hh.pms.cm.util.CodeRuleHelp;
 import com.hh.pms.cm.util.CodeRuleUtil;
+import com.hh.pms.sae.domain.ComQuotation;
+import com.hh.pms.sae.domain.NobidNonPro;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,7 +91,7 @@ public class BsContractController extends BaseController {
     }
 
     /**
-     * 新增合同
+     * 新增招标合同
      */
     @RequiresPermissions("system:contract:add")
     @Log(title = "合同", businessType = BusinessType.INSERT)
@@ -243,13 +245,140 @@ public class BsContractController extends BaseController {
     }
 
     //合同作废
-    @GetMapping("/HtCancel")
-    public AjaxResult HtCancel(Long eid) {
-        int i = bsContractService.updateHtCancel(eid);
-        if (i > 0) {
-            return AjaxResult.success("修改成功");
+    @PutMapping("/HtCancel")
+    public AjaxResult HtCancel(@RequestBody BsContract bsContract) {
+        System.out.println(bsContract);
+        int i = bsContractService.updateHtCancel(bsContract.getEid());
+        if (bsContract.getGid() != null) {
+            NobidNonPro pro = new NobidNonPro();
+            pro.setEid(bsContract.getEid());
+            System.out.println("---------------");
+            System.out.println(pro);
+            System.out.println("---------------");
+            bsContractService.updateNobidNonPro(pro);
+        } else {
+            BidTender tender = new BidTender();
+            tender.setEid(bsContract.getEid());
+            System.out.println("---------------");
+            System.out.println(tender);
+            System.out.println("---------------");
+            bsContractService.updateBidTender(tender);
         }
-        return AjaxResult.error("修改失败");
+        if (i == 0) {
+            return AjaxResult.success("修改失败");
+        }
+        return AjaxResult.success("修改成功");
+    }
+
+    /**
+     * ------------------------------------------------------------------------
+     * 新增非招标合同
+     */
+    @RequiresPermissions("system:contract:add")
+    @Log(title = "合同", businessType = BusinessType.INSERT)
+    @PostMapping("/noTender")
+    public AjaxResult add1(@RequestBody BsContract bsContract) {
+        CodeRulesResult result = CodeRuleHelp.createCode(codeRulesService, CodeRuleUtil.CONTROLLER);
+        //获取已经匹配的规则
+        String eHcode = result.getCode();
+        bsContract.seteHcode(eHcode);
+        bsContract.setCreateBy("欧");
+        bsContract.seteStatus(2L);
+        bsContract.setoHstatus(2L);
+        System.out.println(bsContract);
+        //创建合同
+        int k = bsContractService.insertBsContract(bsContract);
+        if (k > 0) {
+            Long eid = bsContract.getEid();
+            NobidNonPro pro = new NobidNonPro();
+            pro.setEid(eid);
+            pro.setGid(bsContract.getGid());
+            //添加非招标项目里的eid
+            int i1 = bsContractService.updateNobidNonProSid(pro);
+            if (i1 == 0) {
+                return AjaxResult.error("添加异常");
+            }
+            //添加设备信息
+            List<BsInventory> list1 = bsContract.getBsInventoryList();
+            if (list1 != null) {
+                for (BsInventory bsInventory : list1) {
+                    bsInventory.setEid(eid);
+                    int i = inventoryService.insertBsInventory(bsInventory);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
+                }
+            }
+            List<BsPayment> list2 = bsContract.getBsPaymentList();
+            if (list2 != null) {
+                for (BsPayment bsPayment : list2) {
+                    bsPayment.setEid(eid);
+                    int i = paymentService.insertBsPayment(bsPayment);
+                    if (i == 0) {
+                        return AjaxResult.error("添加异常");
+                    }
+                }
+            }
+            BsSign bsSign = bsContract.getBsSign();
+            bsSign.setEid(eid);
+            int i = signService.insertBsSign(bsSign);
+            if (i == 0) {
+                return AjaxResult.error("添加异常");
+            }
+            ComPubAttachments comPubAttachments = bsContract.getComPubAttachments();
+            if (comPubAttachments.getAnUrl() != null) {
+                comPubAttachments.setEid(Math.toIntExact(eid));
+                int k1 = bsContractService.insertComPubAttachments(comPubAttachments);
+                if (k1 == 0) {
+                    return AjaxResult.error("添加异常");
+                }
+            }
+            return AjaxResult.success("添加成功");
+        }
+        return AjaxResult.error("添加异常");
+//        return null;
+    }
+
+    /**
+     * 查询非招标签订中合同列表
+     */
+//    @RequiresPermissions("system:contract:list")
+    @GetMapping("/list1")
+    public TableDataInfo list1(BsContract bsContract) {
+        startPage();
+        List<BsContract> list = bsContractService.selectBsContractList1(bsContract);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 查询招标签订中合同列表
+     */
+    @GetMapping("/list2")
+    public TableDataInfo list2(BsContract bsContract) {
+        startPage();
+        List<BsContract> list = bsContractService.selectBsContractList2(bsContract);
+        return getDataTable(list);
+    }
+
+    /**
+     * 删除非招标合同
+     */
+    @Log(title = "合同", businessType = BusinessType.DELETE)
+    @GetMapping("/del1")
+    public AjaxResult remove1(Long eid) {
+        System.out.println(eid);
+        inventoryService.deleteBsInventoryByEid(eid);
+        paymentService.deleteBsPaymentByEid(eid);
+        signService.deleteBsSignByEid(eid);
+        int i = bsContractService.deleteBsContractByEid(eid);
+        if (i == 0) {
+            return AjaxResult.error("删除异常");
+        }
+        NobidNonPro nobidNonPro = new NobidNonPro();
+        nobidNonPro.setEid(eid);
+        bsContractService.updateNobidNonPro(nobidNonPro);
+        return AjaxResult.success("删除成功");
     }
 
 }

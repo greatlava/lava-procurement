@@ -5,6 +5,7 @@ import java.util.List;
 import com.hh.pms.cm.domain.BidTender;
 import com.hh.pms.cm.domain.BsContract;
 import com.hh.pms.cm.domain.ComPubAttachments;
+import com.hh.pms.sae.domain.NobidNonPro;
 
 /**
  * 合同Service接口
@@ -61,7 +62,7 @@ public interface IBsContractService {
      */
     public int deleteBsContractByEid(Long eid);
 
-     //修改招标项目eid
+    //修改招标项目eid
     public int updateBidTenderEid(BidTender bidTender);
 
     //查询招标项目ID
@@ -90,4 +91,16 @@ public interface IBsContractService {
 
     //查询生成合同的项目
     public Long selectSid(Long eid);
+
+    //修改非招标项目eid
+    public int updateNobidNonProSid(NobidNonPro nobidNonPro);
+
+    //查询非招标签定中项目
+    public List<BsContract> selectBsContractList1(BsContract bsContract);
+
+    //查询非招标签定中项目
+    public List<BsContract> selectBsContractList2(BsContract bsContract);
+
+    //修改非招标Eid为空
+    public int updateNobidNonPro(NobidNonPro nobidNonPro);
 }

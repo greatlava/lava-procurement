@@ -18,10 +18,10 @@
           <el-form-item label="密级" prop="eCon" style="width: 45%">
             <el-select v-model="form.eCon" placeholder="请选择" class="cInput" disabled>
               <el-option
-                  v-for="item in mjOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in mjOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               />
             </el-select>
           </el-form-item>
@@ -69,11 +69,11 @@
       <h3>合同标的清单</h3>
       <div class="cl">
         <el-table
-            :data="lTableData"
-            :row-key="row => row.id"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="lTableData"
+          :row-key="row => row.id"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
@@ -106,13 +106,13 @@
           <el-table-column label="数量" prop="inCount" width="150">
             <template slot-scope="scope" disabled="">
               <el-input-number
-                  v-model="scope.row.inCount"
-                  :min="1"
-                  :precision="0"
-                  controls-position="right"
-                  style="width: 120px;"
-                  @blur="spCountBlur(scope.row)"
-                  @change="spCountChange(scope.row)"
+                v-model="scope.row.inCount"
+                :min="1"
+                :precision="0"
+                controls-position="right"
+                style="width: 120px;"
+                @blur="spCountBlur(scope.row)"
+                @change="spCountChange(scope.row)"
               />
             </template>
           </el-table-column>
@@ -132,21 +132,21 @@
       <h3>合同付款约定</h3>
       <div class="cl">
         <el-table
-            :data="payTableData"
-            :row-key="row => row.id"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="payTableData"
+          :row-key="row => row.id"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="款项内容" prop="payContent">
             <template slot-scope="scope">
               <el-select v-model="scope.row.payContent" class="cInput" disabled>
                 <el-option
-                    v-for="item in payTypes"
-                    :key="item.dictValue"
-                    :label="item.dictLabel"
-                    :value="Number(item.dictValue)"
+                  v-for="item in payTypes"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
                 />
               </el-select>
             </template>
@@ -192,10 +192,10 @@
           <el-form-item label="签署方数" prop="gnSignatorycount" style="width: 45%">
             <el-select v-model="qsFormData.gnSignatorycount" class="cInput" disabled>
               <el-option
-                  v-for="item in qsOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in qsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
@@ -279,43 +279,43 @@
 
       <!--合同签署文件-->
       <h3>合同签署文件</h3>
-      <el-form ref="elForm" :model="form" :rules="rules3" size="medium" label-width="180px" label-position="left">
+      <el-form ref="elForm1" :model="form" :rules="rules3" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同影像上传" prop="eImage" style="width: 45%">
             <el-upload
-                ref="up1"
-                class="upload-demo"
-                :action="url"
-                :auto-upload="false"
-                :limit="1"
-                :file-list="fileList1"
-                disabled
+              ref="up1"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList1"
+              disabled
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
-                ref="up2"
-                class="upload-demo"
-                :action="url"
-                :auto-upload="false"
-                :limit="1"
-                :file-list="fileList2"
-                disabled
+              ref="up2"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList2"
+              disabled
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="合同文件" prop="eDocuments" style="width: 45%">
             <el-upload
-                ref="up3"
-                class="upload-demo"
-                :action="url"
-                :auto-upload="false"
-                :limit="1"
-                :file-list="fileList3"
-                disabled
+              ref="up3"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList3"
+              disabled
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
             </el-upload>
@@ -513,7 +513,11 @@ export default {
         //   }
         // ]
       },
-      rules3: {},
+      rules3: {
+        eOpinion: [
+          { required: true, message: '审核意见不能为空', trigger: 'blur' }
+        ]
+      },
       selectRow: null,
       //附件
       ComPubAttachments: {
@@ -539,23 +543,36 @@ export default {
   },
   methods: {
     updateHt() {
-      //通过
-      this.form.eStatus = 1
-      console.log(this.form)
-      updateContract(this.form).then(response => {
-        console.log(response.msg)
-        this.$message.success("已通过")
-        this.$router.push('/contract/cm')
+      this.$refs.elForm1.validate(valid => {
+        if (valid) {
+          //通过
+          this.form.eStatus = 1
+          console.log(this.form)
+          updateContract(this.form).then(response => {
+            console.log(response.msg)
+            this.$message.success('已通过')
+            this.$router.push('/contract/cm')
+          })
+        } else {
+          this.$message.warning('请先填写审核意见')
+        }
       })
     },
     updateBh() {
-      //驳回
-      this.form.eStatus = 4
-      updateContract(this.form).then(response => {
-        console.log(response.msg)
-        this.$message.error("已驳回")
-        this.$router.push('/contract/cm')
+      this.$refs.elForm1.validate(valid => {
+        if (valid) {
+          //驳回
+          this.form.eStatus = 4
+          updateContract(this.form).then(response => {
+            console.log(response.msg)
+            this.$message.error('已驳回')
+            this.$router.push('/contract/cm')
+          })
+        } else {
+          this.$message.warning('请先填写审核意见')
+        }
       })
+
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
@@ -575,9 +592,9 @@ export default {
         this.form.eType = k.eType
         this.form.eCon = k.eCon
         this.form.sid = k.sid
-        this.form.eOpinion = k.eOpinion
+        this.form.eOpinion = null
         console.log(k.eOpinion)
-        if (k.eImage != null&& k.eImage != '') {
+        if (k.eImage != null && k.eImage != '') {
           //获取第一个文件的名称
           let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
           let fileListData1 = [{
@@ -590,7 +607,7 @@ export default {
           this.fileList1 = []
           this.fileList1.eImage = null
         }
-        if (k.eDocuments != null&& k.eDocuments != '') {
+        if (k.eDocuments != null && k.eDocuments != '') {
           //获取第三个文件的名称
           let imgName2 = (k.eDocuments).substring((k.eDocuments).lastIndexOf('/') + 1)
           let fileListData2 = [{
@@ -609,7 +626,6 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName

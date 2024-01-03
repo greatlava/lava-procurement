@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @SpringBootApplication
 @EnableWebMvc
 @EnableTransactionManagement
-public class HhBasicApplication {
+public class    HhBasicApplication {
     public static void main(String[] args) {
         SpringApplication.run(HhBasicApplication.class, args);
         System.out.println("Hello World!");

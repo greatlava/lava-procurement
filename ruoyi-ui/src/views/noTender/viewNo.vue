@@ -16,13 +16,12 @@
             <el-input v-model="form.eType" clearable class="cInput" readonly/>
           </el-form-item>
           <el-form-item label="密级" prop="eCon" style="width: 45%">
-            <el-select v-model="form.eCon" placeholder="请选择" class="cInput">
+            <el-select v-model="form.eCon" placeholder="请选择" class="cInput" disabled>
               <el-option
-                  disabled
-                  v-for="item in mjOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in mjOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               />
             </el-select>
           </el-form-item>
@@ -70,12 +69,11 @@
       <h3>合同标的清单</h3>
       <div class="cl">
         <el-table
-            :data="lTableData"
-            :row-key="row => row.id"
-            @selection-change="lHandleSelectionChange"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="lTableData"
+          :row-key="row => row.id"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
@@ -83,32 +81,6 @@
               <el-input v-model="scope.row.inName" readonly>
                 <i slot="suffix" class="el-icon-search" @click="" style="margin-top: 10px"/>
               </el-input>
-              <el-dialog title="产品名称" :visible.sync="cpDialog">
-                <el-table
-                    ref="singleTable"
-                    :data="deviceList"
-                    highlight-current-row
-                    style="width: 100%"
-                    @row-click="handleRowClick"
-                >
-                  <el-table-column prop="tName" label="产品名称" width="140"/>
-                  <el-table-column prop="tid" label="产品编号" width="130"/>
-                  <el-table-column prop="tModel" label="规格型号" width="150"/>
-                  <el-table-column prop="tUnit" label="单位" width="85"/>
-                  <el-table-column prop="tPrice" label="单价" width="120"/>
-                  <el-table-column prop="shui" label="税点" width="100"/>
-                </el-table>
-                <pagination
-                    v-show="total>0"
-                    :total="total"
-                    :page.sync="queryParams.pageNum"
-                    :limit.sync="queryParams.pageSize"
-                    @pagination="selectBdList"
-                />
-                <div style="margin-top: 20px">
-                  <el-button @click="closeDialog1">取消</el-button>
-                </div>
-              </el-dialog>
             </template>
           </el-table-column>
           <el-table-column label="产品编码" prop="tid" width="163">
@@ -132,16 +104,16 @@
             </template>
           </el-table-column>
           <el-table-column label="数量" prop="inCount" width="150">
-            <template slot-scope="scope">
+            <template slot-scope="scope" disabled="">
               <el-input-number
-                  v-model="scope.row.inCount"
-                  :min="1"
-                  :precision="0"
-                  controls-position="right"
-                  style="width: 120px;"
-                  @blur="spCountBlur(scope.row)"
-                  @change="spCountChange(scope.row)"
-                  disabled
+                v-model="scope.row.inCount"
+                :min="1"
+                :precision="0"
+                controls-position="right"
+                style="width: 120px;"
+                @blur="spCountBlur(scope.row)"
+                @change="spCountChange(scope.row)"
+                :disabled="true"
               />
             </template>
           </el-table-column>
@@ -153,7 +125,7 @@
         </el-table>
         <div :style="{textAlign:'right'}">
           <span :style="{marginRight:'100px'}">总价:</span>
-          <span :style="{fontWeight:'700'}">{{ lTotalSubtotal.toFixed(2) }}</span>
+          <span :style="{fontWeight:'700'}">{{ lTotalSubtotal }}</span>
         </div>
       </div>
 
@@ -161,23 +133,21 @@
       <h3>合同付款约定</h3>
       <div class="cl">
         <el-table
-            :data="payTableData"
-            :row-key="row => row.id"
-            @selection-change="payHandleSelectionChange"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="payTableData"
+          :row-key="row => row.id"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="款项内容" prop="payContent">
             <template slot-scope="scope">
               <el-select v-model="scope.row.payContent" class="cInput" disabled>
                 <el-option
-                    v-for="item in payTypes"
-                    :key="item.dictValue"
-                    :label="item.dictLabel"
-                    :value="Number(item.dictValue)"
-                    disabled
+                  v-for="item in payTypes"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
                 />
               </el-select>
             </template>
@@ -206,7 +176,7 @@
           </el-table-column>
           <el-table-column label="付款金额" prop="payAmount">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="payHandleInput(scope.row)" readonly/>
+              <el-input v-model="scope.row.payAmount" @blur="payHandleBlur(scope.row)" @input="payHandleInput(scope.row)" :disabled="true"/>
             </template>
           </el-table-column>
           <el-table-column label="违约责任" prop="debty">
@@ -218,16 +188,15 @@
       </div>
 
       <h3>合同签署状态</h3>
-      <h3>合同签署状态</h3>
       <el-form ref="qsForm" :model="qsFormData" :rules="rules2" size="medium" label-width="180px" label-position="left">
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="签署方数" prop="gnSignatorycount" style="width: 45%">
             <el-select v-model="qsFormData.gnSignatorycount" class="cInput" disabled>
               <el-option
-                  v-for="item in qsOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                v-for="item in qsOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
               >
               </el-option>
             </el-select>
@@ -315,54 +284,39 @@
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="合同影像上传" prop="eImage" style="width: 45%">
             <el-upload
-                ref="up1"
-                class="upload-demo"
-                :action="url"
-                :before-remove="beforeRemove1"
-                :auto-upload="false"
-                :limit="1"
-                :on-exceed="handleExceed1"
-                :on-success="success1"
-                :on-change="onchange1"
-                :file-list="fileList1"
-                :on-preview="handlePreview1"
-                disabled
+              ref="up1"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList1"
+              disabled
             >
               <el-button size="small" type="primary">上传合同影像</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
-                ref="up2"
-                class="upload-demo"
-                :action="url"
-                :before-remove="beforeRemove2"
-                :auto-upload="false"
-                :limit="1"
-                :on-exceed="handleExceed2"
-                :on-success="success2"
-                :on-change="onchange2"
-                :file-list="fileList2"
-                :on-preview="handlePreview2"
-                disabled
+              ref="up2"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList2"
+              disabled
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
           </el-form-item>
           <el-form-item label="合同文件" prop="eDocuments" style="width: 45%">
             <el-upload
-                ref="up3"
-                class="upload-demo"
-                :action="url"
-                :before-remove="beforeRemove3"
-                :auto-upload="false"
-                :limit="1"
-                :on-exceed="handleExceed3"
-                :on-success="success3"
-                :on-change="onchange3"
-                :file-list="fileList3"
-                :on-preview="handlePreview3"
-                disabled
+              ref="up3"
+              class="upload-demo"
+              :action="url"
+              :auto-upload="false"
+              :limit="1"
+              :file-list="fileList3"
+              disabled
             >
               <el-button size="small" type="primary">上传合同文件</el-button>
             </el-upload>
@@ -378,10 +332,8 @@
 
 
 <script>
-import { addContract, getAttachments, getContract, listDevice, listInventory, listPayment, SelectSign, updateContract } from '../../../api/system/addContract'
-import { getSupplier, listSupplier } from '../../../api/system/supplier'
-import { getOperator } from '../../../api/system/operator'
-import { getTender } from '../../../api/system/tender/tender'
+import { getAttachments, getContract, listInventory, listPayment, SelectSign, updateContract } from '../../api/system/addContract'
+import { getPro } from '../../api/system/noTender'
 
 export default {
   data() {
@@ -472,11 +424,11 @@ export default {
         eHname: null,
         eHcode: null,
         eType: null,
-        eCon: 1,
-        eStatus: 3,
+        eCon: null,
+        eStatus: null,
         eStartdate: null,
         eEnddate: null,
-        eAmount: 0,
+        eAmount: null,
         eDescription: null,
         tenderName: null,
         tenderNo: null,
@@ -566,11 +518,11 @@ export default {
     }
   },
   mounted() {
-    this.lCalculateTotalSubtotal()
   },
   created() {
     //查询相关项目信息
     this.selectContractByEid()
+    // this.selectSupplier()
     this.selectListInventory()
     this.selectListPayment()
     this.getSign()
@@ -580,217 +532,31 @@ export default {
     })
   },
   methods: {
-    handlePreview1() {
-      window.open(this.fileList1[0].url, '_blank', 'charset=utf-8')
-    },
-    handlePreview2() {
-      window.open(this.fileList2[0].url, '_blank', 'charset=utf-8')
-    },
-    handlePreview3() {
-      window.open(this.fileList3[0].url, '_blank', 'charset=utf-8')
-    },
-    onchange1(files, fileList) {
-      this.fileList1 = fileList
-      console.log(this.fileList1, 'fileList1 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList1.splice(this.fileList1.indexOf(files[0]), 1)
-      }
-    },
-    onchange2(files, fileList) {
-      this.fileList2 = fileList
-      console.log(this.fileList2, 'fileList2 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList2.splice(this.fileList1.indexOf(files[0]), 1)
-      }
-    },
-    onchange3(files, fileList) {
-      this.fileList3 = fileList
-      console.log(this.fileList3, 'fileList3 onchange')
-      if (files.size == 0) {
-        this.$message.error('选择的文件不能为空，请重新选择！')
-        this.fileList3.splice(this.fileList1.indexOf(files[0]), 1)
-      }
-    },
-    //创建合同
-    addXy() {
-      //判断是否上传文件
-      this.submitNextUpload()
-    },
-    add() {
-      console.log('add-----------------')
-      this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
-        delete e.id
-        return e.tid != null;
-      })
-      this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
-        delete e.id
-        return !(e.payContent == null || e.payAmount == null);
-      })
-      this.form.bsSign = this.qsFormData
-      this.form.comPubAttachments = this.ComPubAttachments
-      //修改合同
+    updateHt() {
+      //通过
+      this.form.eStatus = 1
+      console.log(this.form)
       updateContract(this.form).then(response => {
         console.log(response.msg)
-        if (response.msg == '修改成功') {
-          this.$router.push('/contract/cm')
-        }
+        this.$message.success('已通过')
+        this.$router.push('/contract/cm')
       })
     },
-    //上传协议文件-------------------------------------------------
-    handleExceed1(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove1(file) {
-      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList1 = []
-        this.form.eImage = null
+    updateBh() {
+      //驳回
+      this.form.eStatus = 4
+      updateContract(this.form).then(response => {
+        console.log(response.msg)
+        this.$message.error('已驳回')
+        this.$router.push('/contract/cm')
       })
-    },
-    success1(response) {
-      console.log(111)
-      this.form.eImage = response.data.url
-      console.log('打印up1-------------------------')
-      console.log(this.form.eImage)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    handleExceed2(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove2(file) {
-      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList2 = []
-        this.ComPubAttachments.anUrl = null
-        this.ComPubAttachments.anName = null
-        this.ComPubAttachments.anSize = null
-      })
-    },
-    success2(response, fileList) {
-      console.log(222)
-      this.ComPubAttachments.anName = response.data.name
-      this.ComPubAttachments.anUrl = response.data.url
-      this.ComPubAttachments.anSize = fileList.size
-      console.log('打印up2-------------------------')
-      console.log(this.ComPubAttachments)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    handleExceed3(files, fileList) {
-      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-    },
-    beforeRemove3(file) {
-      return this.$modal.confirm(`确定移除 ${file.name}？`).then(() => {
-        this.fileList3 = []
-        this.form.eDocuments
-      })
-    },
-    success3(response) {
-      console.log(333)
-      console.log(response)
-      this.form.eDocuments = response.data.url
-      console.log('打印up3-------------------------')
-      console.log(this.form.eDocuments)
-      //调用下一个上传的方法
-      this.submitNextUpload()
-    },
-    submitNextUpload() {
-      // 根据条件判断调用下一个上传
-
-      console.log('---------------------------打印------------------------------')
-      console.log(this.fileList1.length)
-      console.log(this.form.eImage)
-      console.log(this.fileList2.length)
-      console.log(this.ComPubAttachments.anName)
-      console.log(this.ComPubAttachments.anUrl)
-      console.log(this.ComPubAttachments.anSize)
-      console.log(this.fileList3.length)
-      console.log(this.form.eDocuments)
-      console.log('---------------------------打印------------------------------')
-
-      if (this.fileList1.length > 0 && this.form.eImage == null) {
-        console.log(1)
-        this.$refs.up1.submit()
-      } else if (this.fileList2.length > 0 && this.ComPubAttachments.anUrl == null) {
-        console.log(2)
-        this.$refs.up2.submit()
-      } else if (this.fileList3.length > 0 && this.form.eDocuments == null) {
-        console.log(3)
-        this.$refs.up3.submit()
-      } else {
-        console.log(4)
-        this.add()
-      }
     },
     //上传协议文件-------------------------------------------------
     //产品数量输入框失去焦点时
-    spCountBlur(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
-    //产品数量输入框的值改变时
-    spCountChange(row) {
-      if (row.inVat == null) {
-        row.inVat = 0.00
-      }
-      row.inSubtotal = (row.inCount * row.inVat).toFixed(2)
-      this.lCalculateTotalSubtotal()
-    },
-    // 计算产品总价格方法
-    lCalculateTotalSubtotal() {
-      this.lTotalSubtotal = this.lTableData.reduce((total, row) => {
-        let totalValue = row.inSubtotal ? parseFloat(row.inSubtotal) : 0
-        let kk = total + totalValue // 将每行的小计相加得到总价格
-        this.form.eAmount = kk.toFixed(2)
-        this.qsFormData.gnPbamount = kk.toFixed(2)
-        return kk
-      }, 0)
-    },
-    //查询产品信息
-    selectBdList() {
-      listDevice(this.queryParams).then(response => {
-        this.deviceList = response.rows
-        this.total = response.total
-      })
-    },
-    //产品行点击事件
-    handleRowClick(row) {
-      // 在这里处理行点击事件
-      this.selectRow.inName = row.tName
-      this.selectRow.tid = row.tid
-      this.selectRow.inModel = row.tModel
-      this.selectRow.inUnit = row.tUnit
-      this.selectRow.tid = row.tid
-      this.selectRow.inVat = (row.tPrice * 1.13).toFixed(2)
-      this.selectRow.inCount = 1
-      this.selectRow.inSubtotal = (this.selectRow.inCount * this.selectRow.inVat).toFixed(2)
-      this.cpDialog = false
-      this.lCalculateTotalSubtotal()
-    },
-    //产品行点击事件
-    handleRowClick1(row) {
-      // 在这里处理行点击事件
-      this.selectRow.hName = row.hName
-      this.selectRow.tid = row.tid
-      this.GysDialog = false
-    },
-    //关闭产品名称对话框
-    closeDialog1() {
-      this.cpDialog = false
-    },
-    //关闭产品名称对话框
-    closeDialog2() {
-      this.GysDialog = false
-    },
     //查询合同信息
     selectContractByEid() {
       getContract(this.eid).then(response => {
-        console.log('打印了合同的信息')
-        console.log(response.data)
+        // console.log('打印了合同的信息')
         let k = response.data
         this.form.eid = k.eid
         this.form.eHname = k.eHname
@@ -802,7 +568,9 @@ export default {
         this.form.eAmount = k.eAmount.toFixed(2)
         this.form.eType = k.eType
         this.form.eCon = k.eCon
-        this.form.sid = k.sid
+        this.form.gid = k.gid
+        this.form.eOpinion = k.eOpinion
+        console.log(k.eOpinion)
         if (k.eImage != null && k.eImage != '') {
           //获取第一个文件的名称
           let imgName1 = (k.eImage).substring((k.eImage).lastIndexOf('/') + 1)
@@ -835,27 +603,31 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      getTender(this.form.sid).then(response => {
-        console.log('打印了相关项目信息')
-        console.log(response.data)
-        let k = response.data
-        this.form.tenderName = k.sName
-        this.form.tenderNo = k.sCode
-        if (k.sWay == 1) {
-          this.form.tenderWay = '公开招标'
+      getPro(this.form.gid).then(res => {
+        console.log(res, 'res')
+        let k = res.data
+        //项目名称
+        this.form.tenderName = k.gName
+        //项目编号
+        this.form.tenderNo = k.gCode
+        //采购方式
+        if (k.gTendertype === 3) {
+          this.form.tenderWay = '询价'
+        } else if (k.gTendertype === 5) {
+          this.form.tenderWay = '竞争性谈判'
         } else {
-          this.form.tenderWay = '邀请招标'
+          this.form.tenderWay = '单一来源'
         }
-        if (k.sType == 1) {
-          this.form.tenderType = '办公类型'
-        } else if (k.sType == 1) {
-          this.form.tenderType = '固定资产'
-        } else if (k.sType == 2) {
-          this.form.tenderType = '资讯类'
-        } else if (k.sType == 3) {
-          this.form.tenderType = '服务类'
+        //公开/邀请
+        if (k.gIsPublic === 1) {
+          this.form.tenderType = '公开'
+        } else {
+          this.form.tenderType = '邀请'
         }
         this.form.eType = '一般采购合同'
+        this.aid = k.xyId
+        this.hid = k.hid
+        // this.selectBdList()
       })
     },
     //查询合同内的产品信息
@@ -877,7 +649,6 @@ export default {
           })
         })
         this.loading = false
-        this.lCalculateTotalSubtotal()
       })
     },
     //查询支付信息
@@ -905,6 +676,7 @@ export default {
     getSign() {
       SelectSign({ 'eid': this.eid }).then(response => {
         this.qsFormData = response.data
+        this.lTotalSubtotal = response.data.gnPbamount
       })
     },
     //查询附件信息
@@ -930,141 +702,8 @@ export default {
         }
       })
     },
-    //显示产品对话框
-    openCp(row) {
-      this.selectRow = row
-      this.cpDialog = true
-      this.selectBdList()
-    },
-    /* 签署执行状态 */
-    qsHandleChange(value) {
-      this.qsFormData.gnSignatorycount = value  // 更新选择项的值
-      if (this.gnSignatorycount == 0) {
-        this.qsFormData.gnPccurrency = null
-      } else {
-        this.qsFormData.gnPccurrency = '人民币'
-      }
-    },
     back1() {
       this.$router.back()
-    },
-    /* 合同标的清单 */
-    lAddRow() {
-      const newRow = {}
-      this.lTableColumns.forEach(column => {
-        newRow[column.prop] = ''
-      })
-      newRow.id = this.lTableData.length + 1
-      newRow.inSubtotal = (0).toFixed(2)
-      newRow.inCount = 1
-      this.lTableData.push(newRow)
-    },
-    lDeleteRows() {
-      this.$confirm('确定删除选中的行吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.lTableData = this.lTableData.filter(row => !this.lSelectedRows.includes(row))
-        this.lSelectedRows = []
-        this.lUpdateRowIds()
-        this.lCalculateTotalSubtotal()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    //复制
-    lCopyRows() {
-      const copiedRows = this.lSelectedRows.map(row => ({ ...row }))
-      copiedRows.forEach(row => {
-        row.id = this.lTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
-        this.lTableData.push(row)
-      })
-      this.lCalculateTotalSubtotal()
-    },
-    //行数变化
-    lUpdateRowIds() {
-      this.lTableData.forEach((row, index) => {
-        row.id = index + 1
-      })
-    },
-    //单选多选
-    lHandleSelectionChange(selection) {
-      this.lSelectedRows = selection
-    },
-    /* 合同付款约定 */
-    payAddRow() {
-      const newRow = {}
-      newRow.id = this.payTableData.length + 1
-      newRow.payer = '鸿鹄科技有限公司'
-      newRow.hName = this.qsFormData.gnPbname
-      newRow.hid = this.form.hid
-      this.payTableData.push(newRow)
-    },
-    //删除
-    payDeleteRows() {
-      this.$confirm('确定删除选中的行吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.payTableData = this.payTableData.filter(row => !this.paySelectedRows.includes(row))
-        this.paySelectedRows = []
-        this.payUpdateRowIds()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-    //复制
-    payCopyRows() {
-      const copiedRows = this.paySelectedRows.map(row => ({ ...row }))
-      copiedRows.forEach(row => {
-        row.id = this.payTableData.reduce((maxId, row) => Math.max(row.id, maxId), 0) + 1
-        this.payTableData.push(row)
-      })
-    },
-    //行数变化
-    payUpdateRowIds() {
-      this.payTableData.forEach((row, index) => {
-        row.id = index + 1
-      })
-    },
-    //单选多选
-    payHandleSelectionChange(selection) {
-      this.paySelectedRows = selection
-    },
-    payHandleBlur(row) {
-      if (row.payAmount) {
-        row.payAmount = parseFloat(row.payAmount).toFixed(2)
-      }
-    },
-    payHandleInput(row) {
-      // 只保留数字和一个小数点
-      row.payAmount = row.payAmount.replace(/[^\d.]/g, '')
-      // 只能输入一个小数点
-      let dotIndex = row.payAmount.indexOf('.')
-      if (dotIndex !== -1) {
-        row.payAmount = row.payAmount.slice(0, dotIndex + 1) + row.payAmount.slice(dotIndex + 1).replace(/\./g, '')
-      }
-      // 只能输入到小数点后两位
-      let parts = row.payAmount.split('.')
-      if (parts[1] && parts[1].length > 2) {
-        row.payAmount = parts[0] + '.' + parts[1].slice(0, 2)
-      }
     }
   }
 }

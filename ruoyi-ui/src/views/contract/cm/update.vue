@@ -623,22 +623,13 @@ export default {
     add() {
       console.log('add-----------------')
       this.form.sid = this.sid
-      // alert(this.form.sid)
       this.form['bsInventoryList'] = [...this.lTableData].filter(e => {
         delete e.id
-        if (e.tid == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return e.tid != null;
       })
       this.form['bsPaymentList'] = [...this.payTableData].filter(e => {
         delete e.id
-        if (e.payContent == null || e.payAmount == null) {
-          // 如果存在空的tid，直接跳过当前元素
-          return false
-        }
-        return true
+        return !(e.payContent == null || e.payAmount == null);
       })
       this.form.bsSign = this.qsFormData
       this.form.comPubAttachments = this.ComPubAttachments
@@ -710,18 +701,6 @@ export default {
     },
     submitNextUpload() {
       // 根据条件判断调用下一个上传
-
-      console.log('---------------------------打印------------------------------')
-      console.log(this.fileList1.length)
-      console.log(this.form.eImage)
-      console.log(this.fileList2.length)
-      console.log(this.ComPubAttachments.anName)
-      console.log(this.ComPubAttachments.anUrl)
-      console.log(this.ComPubAttachments.anSize)
-      console.log(this.fileList3.length)
-      console.log(this.form.eDocuments)
-      console.log('---------------------------打印------------------------------')
-
       if (this.fileList1.length > 0 && this.form.eImage == null) {
         console.log(1)
         this.$refs.up1.submit()
@@ -847,7 +826,6 @@ export default {
     },
     //查询相关项目信息
     selectTenderBySid() {
-      alert(this.form.sid)
       getTender(this.form.sid).then(response => {
         let k = response.data
         this.form.tenderName = k.sName

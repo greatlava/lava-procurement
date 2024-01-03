@@ -1,18 +1,18 @@
 package com.hh.nobidding.domain;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.core.annotation.Excel;
-import com.ruoyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.util.Date;
+import com.ruoyi.common.core.annotation.Excel;
+import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
  * 非招标项目对象 nobid_non_pro
  *
  * @author ruoyi
- * @date 2023-12-11
+ * @date 2023-12-28
  */
 public class NobidNonPro extends BaseEntity {
     private static final long serialVersionUID = 1L;
@@ -49,15 +49,22 @@ public class NobidNonPro extends BaseEntity {
     /**
      * 生成时间
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "生成时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gSpawnTime;
 
     /**
-     * 报价截至时间
+     * 报价开始时间
      */
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd kk:mm")
-    @Excel(name = "报价截至时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Excel(name = "报价开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date gTimeon;
+
+    /**
+     * 报价截止时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Excel(name = "报价截止时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date gDeadline;
 
     /**
@@ -83,6 +90,44 @@ public class NobidNonPro extends BaseEntity {
      */
     @Excel(name = "业务类型")
     private Long gTendertype;
+
+    /**
+     * 公司
+     */
+    @Excel(name = "公司")
+    private String gCompany;
+
+    /**
+     * 备注
+     */
+    @Excel(name = "备注")
+    private String gNotes;
+
+    /**
+     * 是否发布
+     */
+    @Excel(name = "是否发布")
+    private Long gRelease;
+
+    private ComPubAttachments comPubAttachments;
+
+    private Long hid;
+
+    public Long getHid() {
+        return hid;
+    }
+
+    public void setHid(Long hid) {
+        this.hid = hid;
+    }
+
+    public ComPubAttachments getComPubAttachments() {
+        return comPubAttachments;
+    }
+
+    public void setComPubAttachments(ComPubAttachments comPubAttachments) {
+        this.comPubAttachments = comPubAttachments;
+    }
 
     public void setGid(Long gid) {
         this.gid = gid;
@@ -132,6 +177,14 @@ public class NobidNonPro extends BaseEntity {
         return gSpawnTime;
     }
 
+    public void setgTimeon(Date gTimeon) {
+        this.gTimeon = gTimeon;
+    }
+
+    public Date getgTimeon() {
+        return gTimeon;
+    }
+
     public void setgDeadline(Date gDeadline) {
         this.gDeadline = gDeadline;
     }
@@ -172,21 +225,61 @@ public class NobidNonPro extends BaseEntity {
         return gTendertype;
     }
 
+    public void setgCompany(String gCompany) {
+        this.gCompany = gCompany;
+    }
+
+    public String getgCompany() {
+        return gCompany;
+    }
+
+    public void setgNotes(String gNotes) {
+        this.gNotes = gNotes;
+    }
+
+    public String getgNotes() {
+        return gNotes;
+    }
+
+    public void setgRelease(Long gRelease) {
+        this.gRelease = gRelease;
+    }
+
+    public Long getgRelease() {
+        return gRelease;
+    }
+
+    private ComQuotation comQuotation;
+
+    public ComQuotation getComQuotation() {
+        return comQuotation;
+    }
+
+    public void setComQuotation(ComQuotation comQuotation) {
+        this.comQuotation = comQuotation;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("gid", getGid())
+                .append("hid", getHid())
                 .append("xyId", getXyId())
                 .append("gCode", getgCode())
                 .append("gName", getgName())
                 .append("gIsPublic", getgIsPublic())
                 .append("gSpawnTime", getgSpawnTime())
+                .append("gTimeon", getgTimeon())
                 .append("gDeadline", getgDeadline())
                 .append("gCount", getgCount())
                 .append("gUnit", getgUnit())
                 .append("gRounds", getgRounds())
                 .append("gTendertype", getgTendertype())
+                .append("gCompany", getgCompany())
+                .append("gNotes", getgNotes())
+                .append("gRelease", getgRelease())
+                .append("ComQuotation", getComQuotation())
+                .append("ComPubAttachments", getComPubAttachments())
                 .toString();
     }
 }

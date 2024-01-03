@@ -95,5 +95,10 @@ public class ComQuotationController extends BaseController {
     public AjaxResult oneQuo(String gfId,Long bjHid) {
         return success(comQuotationService.oneQuotation(gfId,bjHid));
     }
+
+    @GetMapping("/getBjCount")
+    public AjaxResult getBjCount(String gfId) {
+        return success(comQuotationService.selectBjCount(gfId));
+    }
 }
 

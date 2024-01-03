@@ -46,7 +46,7 @@
             签署主体
           </template>
           <template slot="default">
-            <el-input v-model="queryParams.oSubject" readonly class="cll" readonly/>
+            <el-input v-model="queryParams.oSubject" class="cll" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -54,7 +54,7 @@
             相对方
           </template>
           <template slot="default">
-            <el-input v-model="queryParams.hName" readonly class="cll" readonly/>
+            <el-input v-model="queryParams.hName" class="cll" readonly/>
           </template>
         </el-descriptions-item>
         <el-descriptions-item>
@@ -172,7 +172,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="小计" prop="inSubtotal" width="140">
+          <el-table-column label="小计" prop="inSubtotal" >
             <template slot-scope="scope">
               <!--              <el-input v-model="k[scope.$index]" readonly/>-->
               <el-input v-model="scope.row.inSubtotal" readonly/>
@@ -186,26 +186,27 @@
       </div>
     </div>
 
-    <!--    <div v-if="sub.oOpinion!=null">-->
-    <h4><strong>| 审核意见</strong></h4>
-    <el-form ref="elForm" :model="sub" :rules="rules" size="medium" label-width="180px" label-position="left">
-      <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
-        <el-form-item label="" prop="oOpinion" style="width: 100%">
-          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-if="this.view === null"/>
-          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-else readonly/>
-        </el-form-item>
-      </el-row>
-    </el-form>
-    <!--    </div>-->
+    <div v-if="this.queryParams.oHstatus===2">
+      <h4><strong>| 审核意见</strong></h4>
+      <el-form ref="elForm" :model="sub" :rules="rules" size="medium" label-width="180px" label-position="left">
+        <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
+          <el-form-item label="" prop="oOpinion" style="width: 100%">
+            <!--          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-if="this.view === null"/>-->
+            <!--          <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput" v-else readonly/>-->
+            <el-input v-model="sub.oOpinion" type="textarea" :rows="4" clearable class="cInput"/>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </div>
 
     <el-button size="medium" @click="back1">返回</el-button>
-    <el-button size="medium" type="primary" @click="updateHt" v-if="this.view==null">通过</el-button>
-    <el-button size="medium" type="danger" @click="updateBh" v-if="this.view==null">驳回</el-button>
+    <el-button size="medium" type="primary" @click="updateHt" v-if="this.queryParams.oHstatus===2">通过</el-button>
+    <el-button size="medium" type="danger" @click="updateBh" v-if="this.queryParams.oHstatus===2">驳回</el-button>
   </div>
 </template>
 
 <script>
-import { addManagement, getManagement, listDevice, listInventory, SelectSign, updateContract, updateManagement } from '../../../api/system/addContract'
+import { getManagement, listDevice, listInventory, updateManagement } from '../../../api/system/addContract'
 
 export default {
   name: 'AddFa',
@@ -282,7 +283,7 @@ export default {
   methods: {
     //创建合同
     addFa() {
-      //判断是否上传文件
+      //判断是否上传文件供应商
       this.submitNextUpload()
     },
     add() {
@@ -297,7 +298,7 @@ export default {
       })
       updateManagement(this.queryParams).then(response => {
         console.log(response)
-        if (response.msg == '修改成功') {
+        if (response.msg === '修改成功') {
           this.$router.push('/contract/fam')
         }
       })
@@ -305,7 +306,7 @@ export default {
     onchange1(files, fileList) {
       this.fileList = fileList
       console.log(this.fileList, 'fileList onchange')
-      if (files.size == 0) {
+      if (files.size === 0) {
         this.$message.error('选择的文件不能为空，请重新选择！')
         this.fileList.splice(this.fileList.indexOf(files[0]), 1)
       }
@@ -317,7 +318,7 @@ export default {
         this.sub.oid = this.oid
         updateManagement(this.sub).then(response => {
           console.log(response.msg)
-          if (response.msg = '修改成功') {
+          if (response.msg === '修改成功') {
             this.$message.success('已通过')
             this.$router.push('/contract/fam')
           } else {
@@ -336,7 +337,7 @@ export default {
         this.sub.oid = this.oid
         updateManagement(this.sub).then(response => {
           console.log(response.msg)
-          if (response.msg = '修改成功') {
+          if (response.msg === '修改成功') {
             this.$message.error('已驳回')
             this.$router.push('/contract/fam')
           } else {
@@ -355,18 +356,18 @@ export default {
         console.log(response)
         this.queryParams = response.data
         this.view = response.data.oOpinion
-        this.sub.oOpinion = response.data.oOpinion
+        // this.sub.oOpinion = response.data.oOpinion
         let k = response.data.oFile
-        console.log(k)
-        if (k != null || k != '') {
+        if (k != null) {
           //获取第一个文件的名称
-          let imgName1 = (k).substring((k).lastIndexOf('/') + 1)
-          let fileListData = [{
+          let imgName1 = k.substring(k.lastIndexOf('/') + 1)
+          this.fileList = [{
             name: imgName1,
             url: k
           }]
-          this.fileList = fileListData
-          this.form.oFile = k
+          if (!response.data.oFile) {
+            this.form.oFile = response.data.oFile
+          }
         } else {
           this.fileList = []
           this.fileList.oFile = null
@@ -492,9 +493,7 @@ export default {
     handleRowClick(row) {
       // 在这里处理行点击事件
       // this.lTableData.forEach((e, i) => {
-      //   alert(row.tid+e.tid)
       //   if (row.tid === e.tid) {
-      //     alert(1)
       //     e.vCount += 1
       //     e.subtotal = (e.vCount * e.tPrice).toFixed(2)
       //     this.cpDialog = false

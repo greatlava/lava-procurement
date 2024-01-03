@@ -65,12 +65,12 @@
             <el-table-column type="index" label="序号" align="center"/>
             <el-table-column label="框架计划编号" align="center" prop="jhCode"/>
             <el-table-column label="框架计划名称" align="center" prop="jhName"/>
-            <el-table-column label="采购方式" align="center" prop="jhPmethod"/>
+            <el-table-column label="采购方式" align="center" prop="dept"/>
             <el-table-column label="供应商" align="center" prop="bsSupplier.hName"/>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建框架协议-->
-                <router-link :to="'addFa?jhId='+scope.row.jhId">
+                <router-link :to="'faAdd?jhId='+scope.row.jhId">
                   <el-button
                       size="mini"
                       type="text"
@@ -110,7 +110,7 @@
                 <router-link :to="'examineFa?oid='+scope.row.oid">
                   <el-button
                       style="margin-right: 20px"
-                      v-if="scope.row.oHstatus === 5"
+                      v-if="scope.row.oHstatus !==2"
                       size="mini"
                       type="text"
                       @click=""
@@ -176,7 +176,7 @@
 </template>
 
 <script>
-import { getFrameworkPlan1 } from '@/api/system/frameworkPlan'
+import { getFrameworkPlan1 } from '../../../api/system/frameworkPlan'
 import { delXy, HtCancel, listManagement, XyCancel, xYCancel, XyCancelByOid } from '../../../api/system/addContract'
 
 export default {
@@ -253,9 +253,6 @@ export default {
   },
   created() {
     this.getList1()
-    // this.getDicts('ppm_procurement_plan').then(res => {
-    //   this.Pmethod = res.data
-    // })
   },
   methods: {
     //协议作废
@@ -272,8 +269,8 @@ export default {
           k1 = responses[0].msg
           console.log(responses[1])
           k2 = responses[1].msg
-          console.log(k1, k2)
-          if (k1 == '修改成功' && k2 == '修改成功') {
+          // console.log(k1, k2)
+          if (k1 === '修改成功' && k2 === '修改成功') {
             this.$nextTick(() => {
               this.activeName = 'second'
               this.getList2()
@@ -305,7 +302,7 @@ export default {
           console.log(responses[1])
           k2 = responses[1].msg
           console.log(k1, k2)
-          if (k1 == '删除成功' && k2 == '修改成功') {
+          if (k1 === '删除成功' && k2 === '修改成功') {
             this.$nextTick(() => {
               this.activeName = 'second'
               this.getList2()

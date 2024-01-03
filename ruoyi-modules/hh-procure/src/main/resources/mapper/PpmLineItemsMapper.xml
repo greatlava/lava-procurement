@@ -139,7 +139,7 @@
     </resultMap>
 
     <select id="selectItemsDevice" resultMap="ItemsDevice">
-        SELECT s.h_name, p.hid, l.*, d.*
+        SELECT s.h_name, p.hid,p.jh_name, l.*, d.*
         from ppm_line_items l
                  inner join ppm_frame_plan p on l.jh_id = p.jh_id
                  inner join bs_supplier s on p.hid = s.hid

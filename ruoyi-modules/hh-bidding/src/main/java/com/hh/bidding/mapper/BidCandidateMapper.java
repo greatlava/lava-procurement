@@ -61,4 +61,7 @@ public interface BidCandidateMapper
     public int deleteBidCandidateByZids(Long[] zids);
 
     public List<BidCandidate> selectSuppCand(Long sid);
+
+    //查询中标供应商
+    public BidCandidate selectBidCandidateBySid(Long sid);
 }

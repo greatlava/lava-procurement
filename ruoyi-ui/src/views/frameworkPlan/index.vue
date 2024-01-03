@@ -143,6 +143,8 @@
                 <el-input v-model="form.jhName" type="text"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12" class="grid-cell">
               <el-form-item label="业务类型" prop="businessType" class="required label-center-align">
                 <el-select class="input" v-model="form.businessType" placeholder="请选择业务类型">
@@ -156,18 +158,12 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
-              <el-form-item label="采购方式" prop="jhPmethod" class="required label-center-align">
-                <el-select v-model="form.jhPmethod" class="input full-width-input">
-                  <el-option v-for="(item, index) in dict.type.procurement_method" :key="index" :label="item.label"
-                             :value="item.value" :disabled="item.disabled"></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" class="grid-cell">
               <el-form-item label="计划预算" prop="jhYu" class="required label-center-align">
                 <el-input v-model.number="form.jhYu"></el-input>
               </el-form-item>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12" class="grid-cell">
               <el-form-item label="供应商" prop="hid" class="required label-center-align">
                 <el-select filterable v-model="form.hid" class="input full-width-input">
@@ -177,16 +173,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
-              <el-form-item label="创建人" prop="jhFounder" class="required label-center-align">
-                <el-input :disabled="form.jhId!=null" v-model="form.jhFounder" type="text"></el-input>
+              <el-form-item label="创建人" class="required label-center-align">
+                <el-input disabled :value="form.jhFounder || '系统自动生成' " type="text"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12" class="grid-cell">
+              <el-form-item label="创建部门" prop="dept" class="required label-center-align">
+                <el-input :value="form.dept || '系统自动生成' " disabled type="text"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12" class="grid-cell">
-              <el-form-item label="创建部门" prop="dept" class="required label-center-align">
-                <el-input :disabled="form.jhId!=null" v-model="form.dept" type="text"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24" class="grid-cell">
               <el-form-item label="上传附件" prop="annex" class="label-center-align">
                 <el-upload
                   ref="upload"
@@ -207,15 +205,9 @@
                   <el-button style="margin-left: 10px;" size="small" type="success" :loading="upload.isUploading"
                              @click="submitUpload">上传到服务器
                   </el-button>
-                  <!--                  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
                 </el-upload>
               </el-form-item>
             </el-col>
-            <!--            <el-col :span="24" class="grid-cell">-->
-            <!--              <el-form-item label="备注" prop="notes" class="label-center-align">-->
-            <!--                <el-input type="textarea" v-model="form.notes" rows="3"></el-input>-->
-            <!--              </el-form-item>-->
-            <!--            </el-col>-->
           </el-row>
         </div>
         <div class="static-content-item" v-show="false">
@@ -255,7 +247,8 @@
             </el-table-column>
             <el-table-column label="交付时间" align="center" prop="vDeliveryTime" width="200">
               <template slot-scope="scope">
-                <el-input class="borderNone" v-model="scope.row.vDeliveryTime"></el-input>
+                <el-date-picker style="width: 150px" type="date" placeholder="选择日期"
+                                v-model="scope.row.vDeliveryTime"></el-date-picker>
               </template>
             </el-table-column>
             <el-table-column label="交付地点" align="center" prop="vDeliveryArea" width="180">
@@ -329,8 +322,9 @@
         <el-button @click="cancelDevice">关 闭</el-button>
       </div>
     </el-dialog>
+    <!--    查看框架计划   -->
     <el-dialog :visible.sync="openFrameworkDetails">
-      <el-descriptions direction="vertical" class="margin-top" title="查看框架详情" :column="4" size="medium" border>
+      <el-descriptions direction="vertical" class="margin-top" title="查看框架详情" :column="3" size="medium" border>
         <el-descriptions-item>
           <template slot="label">
             框架计划名称
@@ -353,20 +347,22 @@
           <template slot="label">
             框架计划状态
           </template>
-          {{ form.jhStatus }}
+          <el-tag v-if="form.jhStatus == 0">待提交</el-tag>
+          <el-tag v-if="form.jhStatus == 1">待审核</el-tag>
+          <el-tag v-if="form.jhStatus == 2">已生效</el-tag>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">
             审批人
           </template>
-          {{ form.jhPerson }}
+          <span v-if="form.jhPerson != null && form.jhPerson != ''">
+            {{ form.jhPerson }}
+          </span>
+          <span style="color: #cccccc" v-else>
+            未审核
+          </span>
         </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            采购方式
-          </template>
-          <el-tag size="small">{{ form.jhPmethod }}</el-tag>
-        </el-descriptions-item>
+
         <el-descriptions-item>
           <template slot="label">
             创建人
@@ -533,10 +529,6 @@ export default {
           required: true,
           message: '业务类型值不可为空',
         }],
-        jhPmethod: [{
-          required: true,
-          message: '采购方式值不可为空',
-        }],
         jhYu: [
           {
             required: true,
@@ -554,10 +546,6 @@ export default {
         jhFounder: [{
           required: true,
           message: '创建人不可为空',
-        }],
-        dept: [{
-          required: true,
-          message: '创建部门不可为空',
         }],
       },
     };
@@ -903,7 +891,7 @@ export default {
             this.$modal.loading("添加中.......")
             this.form['items'] = this.items;
             AddPlanAndOther(this.form).then(res => {
-              this.$modal.msgSuccess("操作成功");
+              this.$modal.msgSuccess("添加成功");
               this.open = false;
               this.$modal.closeLoading();
 

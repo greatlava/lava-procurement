@@ -92,7 +92,7 @@
     </select>
 
     <select id="selectBidTenderBySid" parameterType="Long" resultMap="BidTenderResult">
-        <include refid="selectBidTenderVo"/>
+        select * from bid_tender
         where sid = #{sid}
     </select>
 
@@ -100,7 +100,7 @@
     <select id="selectNoEidTenderList" resultMap="BidTenderResult">
         select * from bid_tender
         <where>
-            eid is null
+            eid is null and s_project_state=#{sProjectState}
             <if test="sCode != null  and sCode != ''">
                 and s_code like concat('%', #{sCode}, '%')
             </if>

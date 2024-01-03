@@ -64,17 +64,29 @@
         <el-tab-pane label="待创建" name="first">
           <el-table stripe v-loading="loading" :data="contractList1">
             <el-table-column type="index" label="序号" align="center"/>
-            <el-table-column label="项目编号" align="center" prop="sCode"/>
-            <el-table-column label="项目名称" align="center" prop="sName"/>
+            <el-table-column label="项目编号" align="center" prop="gCode"/>
+            <el-table-column label="项目名称" align="center" prop="gName"/>
+            <el-table-column label="采购方式" align="center" prop="gTendertype">
+              <template slot-scope="scope">
+                <span v-if="scope.row.gTendertype===3">询价</span>
+                <span v-else-if="scope.row.gTendertype===5">竞争性谈判</span>
+                <span v-else-if="scope.row.gTendertype===6">单一来源</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="公开/邀请" align="center" prop="gIsPublic">
+              <template slot-scope="scope">
+                <span v-if="scope.row.gIsPublic===1">公开</span>
+                <span v-else>邀请</span>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
                 <!--创建合同-->
-                <router-link :to="'add?sid='+scope.row.sid">
+                <router-link :to="'addNoTender?gid='+scope.row.gid">
                   <el-button
                     size="mini"
                     type="text"
                     icon="el-icon-folder-add"
-                    v-hasPermi="['system:contract:add']"
                   >创建合同
                   </el-button>
                 </router-link>
@@ -119,7 +131,7 @@
                 </el-button>
                 <!--状态2-->
                 <!--进入合同-->
-                <router-link :to="'update?eid='+scope.row.eid">
+                <router-link :to="'upNoTender?eid='+scope.row.eid">
                   <el-button
                     style="margin-right: 20px"
                     v-if="scope.row.eStatus === 2|| scope.row.eStatus === 4"
@@ -141,7 +153,7 @@
                 >删除
                 </el-button>
                 <!--状态3-->
-                <router-link :to="'examine?eid='+scope.row.eid">
+                <router-link :to="'examineNo?eid='+scope.row.eid">
                   <el-button
                     v-if="scope.row.eStatus === 3"
                     size="mini"
@@ -187,7 +199,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
               <template slot-scope="scope">
-                <router-link :to="'details?eid='+scope.row.eid">
+                <router-link :to="'viewNo?eid='+scope.row.eid">
                   <el-button
                     style="margin-right: 20px"
                     size="mini"
@@ -224,9 +236,8 @@
 </template>
 
 <script>
-import { listContract, listNoContract, listNoContract2, listTender } from '../../../api/system/cm'
-import { delContract, updateoHstatus, HtCancel } from '../../../api/system/addContract'
-import { delContract1 } from '../../../api/system/noTender'
+import { delContract, updateoHstatus, HtCancel } from '../../api/system/addContract'
+import { delContract1, listNoContract, listNoContract1, listNoTender, listPro1 } from '../../api/system/noTender'
 
 export default {
   name: 'Contract',
@@ -260,28 +271,32 @@ export default {
       queryParams1: {
         pageNum: 1,
         pageSize: 10,
-        sid: null,
-        sCode: null,
-        sName: null,
-        sProjectState: 7
+        gid: null,
+        xyId: null,
+        gCode: null,
+        gName: null,
+        gIsPublic: null,
+        oHstatus: 1,
+        gTendertype: null
       },
       queryParams2: {
         pageNum: 1,
         pageSize: 10,
         hid: null,
+        gid: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
         eDeliveryTime: null,
         oHstatus: 2,
         createBy: null,
-        createTime: null,
-        sProjectState: 7
+        createTime: null
       },
       queryParams3: {
         pageNum: 1,
         pageSize: 10,
         hid: null,
+        gid: null,
         eHcode: null,
         eHname: null,
         eStatus: null,
@@ -289,8 +304,7 @@ export default {
         oHstatus: 3,
         createBy: null,
         createTime: null,
-        eCancel: null,
-        sProjectState: 7
+        eCancel: null
       },
       // 表单参数
       formData: {
@@ -315,6 +329,7 @@ export default {
   methods: {
     //合同作废
     cancel(row) {
+      console.log(row)
       this.$confirm('确定使该合同作废?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -344,7 +359,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        delContract(eid).then(response => {
+        delContract1(eid).then(response => {
           console.log(response)
           if (response.msg === '删除成功') {
             this.activeName = 'third'
@@ -352,8 +367,7 @@ export default {
               message: '删除成功',
               type: 'success'
             })
-            this.activeName = 'first'
-            this.getList1()
+            this.getList3()
           } else {
             this.$message.error('删除异常')
           }
@@ -386,32 +400,27 @@ export default {
       if (tab.name === 'first') {
         this.change = 1
         // 执行标签页first的查询操作
-        this.getList1(),
-          console.log('执行标签页1的查询操作')
+        this.getList1()
       } else if (tab.name === 'second') {
         this.change = 2
         // 执行标签页second的查询操作
-        this.getList2(),
-          console.log('执行标签页2的查询操作')
+        this.getList2()
       } else {
         // 执行标签页third的查询操作
         this.change = 2
-        this.getList3(),
-          console.log('执行标签页3的查询操作')
+        this.getList3()
       }
     },
     query() {
       // 模糊查询按钮点击时的处理逻辑
-      console.log('执行模糊查询')
-      this.queryParams1.sCode = this.formData.field101
-      this.queryParams1.sName = this.formData.field102
+      this.queryParams1.gCode = this.formData.field101
+      this.queryParams1.gName = this.formData.field102
       this.queryParams1.pageNum = 1
       // 在这里执行模糊查询操作,
       this.getList1()
     },
     query1() {
       // 模糊查询按钮点击时的处理逻辑
-      console.log('执行模糊查询')
       this.queryParams2.eHcode = this.formData1.field101
       this.queryParams2.eHname = this.formData1.field102
       this.queryParams3.eHcode = this.formData1.field101
@@ -427,14 +436,16 @@ export default {
      */
     resetForm() {
       this.$refs.elForm.resetFields()
+      this.query()
     },
     resetForm1() {
       this.$refs.elForm1.resetFields()
+      this.query1()
     },
     /** 查询待创建合同列表 */
     getList1() {
       this.loading = true
-      listTender(this.queryParams1).then(response => {
+      listPro1(this.queryParams1).then(response => {
         this.contractList1 = response.rows
         this.total1 = response.total
         this.loading = false
@@ -444,7 +455,6 @@ export default {
     getList2() {
       this.loading = true
       listNoContract(this.queryParams2).then(response => {
-        console.log(response.rows)
         this.contractList2 = response.rows
         this.total2 = response.total
         this.loading = false

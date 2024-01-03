@@ -1,8 +1,8 @@
 package com.hh.nobidding.util;
 
 import com.hh.nobidding.domain.CodeRulesResult;
-import com.hh.pms.domain.ComCodeRules;
-import com.hh.pms.service.IComCodeRulesService;
+import com.hh.nobidding.domain.ComCodeRules;
+import com.hh.nobidding.service.IComCodeRulesService;
 
 import java.util.Calendar;
 

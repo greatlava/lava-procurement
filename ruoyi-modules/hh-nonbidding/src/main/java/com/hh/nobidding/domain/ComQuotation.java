@@ -113,6 +113,7 @@ public class ComQuotation extends BaseEntity {
                 .append("bjId", getBjId())
                 .append("gfId", getGfId())
                 .append("bjSecond", getBjSecond())
+                .append("bjHid", getBjHid())
                 .append("bjTotal", getBjTotal())
                 .toString();
     }

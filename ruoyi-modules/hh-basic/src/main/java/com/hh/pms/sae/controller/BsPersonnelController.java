@@ -59,7 +59,6 @@ public class BsPersonnelController extends BaseController {
     /**
      * 获取核心技术人员详细信息
      */
-    @RequiresPermissions("system:personnel:query")
     @GetMapping(value = "/{jsId}")
     public AjaxResult getInfo(@PathVariable("jsId") Long jsId) {
         return success(bsPersonnelService.selectBsPersonnelByJsId(jsId));
@@ -68,7 +67,6 @@ public class BsPersonnelController extends BaseController {
     /**
      * 新增核心技术人员
      */
-    @RequiresPermissions("system:personnel:add")
     @Log(title = "核心技术人员", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsPersonnel bsPersonnel) {
@@ -78,7 +76,6 @@ public class BsPersonnelController extends BaseController {
     /**
      * 修改核心技术人员
      */
-    @RequiresPermissions("system:personnel:edit")
     @Log(title = "核心技术人员", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsPersonnel bsPersonnel) {
@@ -88,7 +85,6 @@ public class BsPersonnelController extends BaseController {
     /**
      * 删除核心技术人员
      */
-    @RequiresPermissions("system:personnel:remove")
     @Log(title = "核心技术人员", businessType = BusinessType.DELETE)
     @DeleteMapping("/{jsIds}")
     public AjaxResult remove(@PathVariable Long[] jsIds) {

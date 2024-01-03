@@ -23,6 +23,11 @@ public class NobidNonPro extends BaseEntity {
     private Long gid;
 
     /**
+     * 合同ID
+     */
+    private Long eid;
+
+    /**
      * 采购计划序号
      */
     @Excel(name = "采购计划序号")
@@ -198,11 +203,19 @@ public class NobidNonPro extends BaseEntity {
         return gTendertype;
     }
 
+    public Long getEid() {
+        return eid;
+    }
+
+    public void setEid(Long eid) {
+        this.eid = eid;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("gid", getGid())
+                .append("eid", getEid())
                 .append("xyId", getXyId())
                 .append("gCode", getgCode())
                 .append("gName", getgName())

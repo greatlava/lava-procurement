@@ -3,10 +3,12 @@ server:
   port: 9211
 
 # Spring
-spring: 
+spring:
   application:
     # 应用名称
     name: hh-nonbidding
+#  main:
+#    allow-bean-definition-overriding: true
   profiles:
     # 环境配置
     active: dev

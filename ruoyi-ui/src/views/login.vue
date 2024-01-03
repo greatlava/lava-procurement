@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
+    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" >
       <h3 class="title">登 录</h3>
       <el-form-item prop="username">
         <el-input
@@ -163,7 +163,8 @@ export default {
   align-items: center;
   height: 100%;
   background-size: cover;
-  background-color: #8497f3;
+  background: url("../assets/images/backgroud.jpg") no-repeat center center;
+  background-size: 100% 100%;
 }
 
 .title {

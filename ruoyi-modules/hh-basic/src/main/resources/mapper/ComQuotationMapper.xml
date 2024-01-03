@@ -85,4 +85,10 @@
           and bj_hid = #{bjHid}
           and is_delete = 0
     </select>
+
+    <select id="selectBjCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        from com_quotation
+        where gf_id = #{gfId}
+    </select>
 </mapper>
