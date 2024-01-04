@@ -180,9 +180,8 @@
                     <el-descriptions-item label="审核状态">
                       <el-tag size="mini" v-if="item.aAstate == 0" type="info">待提交</el-tag>
                       <el-tag size="mini" v-if="item.aAstate == 1" type="small">待审核</el-tag>
-                      <el-tag size="mini" v-if="item.aAstate == 2" type="success">已审核</el-tag>
-                      <el-tag size="mini" v-if="item.aAstate == 3" type="danger">待寻源</el-tag>
-                      <el-tag size="mini" v-if="item.aAstate == 4" type="warning">待寻源</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 2" type="success">待寻源</el-tag>
+                      <el-tag size="mini" v-if="item.aAstate == 3" type="danger">已寻源</el-tag>
                     </el-descriptions-item>
                   </el-descriptions>
                 </el-card>

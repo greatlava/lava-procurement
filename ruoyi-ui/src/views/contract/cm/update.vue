@@ -114,27 +114,27 @@
               </el-dialog>
             </template>
           </el-table-column>
-          <el-table-column label="产品编码" prop="tid" width="163">
+          <el-table-column label="产品编码" prop="tid" width="200">
             <template slot-scope="scope">
               <el-input v-model="scope.row.tid" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="规格型号" prop="inModel" width="140">
+          <el-table-column label="规格型号" prop="inModel" width="200">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inModel" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="单位" prop="inUnit" width="120">
+          <el-table-column label="单位" prop="inUnit" width="200">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inUnit" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="含税单价" prop="inVat" width="130">
+          <el-table-column label="含税单价" prop="inVat" width="200">
             <template slot-scope="scope">
               <el-input v-model="scope.row.inVat" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="数量" prop="inCount" width="150">
+          <el-table-column label="数量" prop="inCount" width="200">
             <template slot-scope="scope">
               <el-input-number
                   v-model="scope.row.inCount"
@@ -147,7 +147,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="小计" prop="inSubtotal" width="140">
+          <el-table-column label="小计" prop="inSubtotal" >
             <template slot-scope="scope">
               <el-input v-model="scope.row.inSubtotal" readonly/>
             </template>

@@ -126,7 +126,6 @@
                   type="text"
                   icon="el-icon-upload"
                   @click="UploadHt(scope.row.eid)"
-                  v-hasPermi="['system:contract:upload']"
                 >上传签订合同
                 </el-button>
                 <!--状态2-->
@@ -139,7 +138,6 @@
                     type="text"
                     icon="el-icon-edit"
                     @click=""
-                    v-hasPermi="['system:contract:edit']"
                   >编辑
                   </el-button>
                 </router-link>
@@ -149,7 +147,6 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="delectHt(scope.row.eid)"
-                  v-hasPermi="['system:contract:delete']"
                 >删除
                 </el-button>
                 <!--状态3-->
@@ -205,7 +202,6 @@
                     size="mini"
                     type="text"
                     icon="el-icon-edit"
-                    v-hasPermi="['system:contract:edit']"
                   >查看
                   </el-button>
                 </router-link>
@@ -215,7 +211,6 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="cancel(scope.row)"
-                  v-hasPermi="['system:contract:delete']"
                 >作废
                 </el-button>
               </template>

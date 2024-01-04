@@ -246,22 +246,12 @@ export default {
             required: true,
             message: '请选择报价开始时间',
             trigger: 'blur'
-          },
-          {
-            pattern: /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]) (?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
-            message: '时间格式不正确，正确格式为YYYY-MM-DD HH:MM',
-            trigger: 'blur'
           }
         ],
         gDeadline: [
           {
             required: true,
             message: '请选择报价截止时间',
-            trigger: 'blur'
-          },
-          {
-            pattern: /^(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01]) (?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
-            message: '时间格式不正确，正确格式为YYYY-MM-DD HH:MM',
             trigger: 'blur'
           }
         ]
@@ -371,10 +361,18 @@ export default {
         }
       )
     },
+    //转换日期
+    convertAndFormatDate(originalDate) {
+      const dateObj = new Date(originalDate)
+      const formattedDate = dateObj.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      return formattedDate.replace(/(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) (AM|PM)/, function(match, month, day, year, hours, minutes, seconds, ampm) {
+        const hours24 = (ampm === 'PM' && hours < 12) ? parseInt(hours, 10) + 12 : hours
+        return `${year}-${month}-${day} ${hours24}:${minutes}:${seconds}`
+      })
+    },
     add() {
-      console.log(4)
-      this.info.gTimeon = this.form.gTimeon
-      this.info.gDeadline = this.form.gDeadline
+      this.info.gTimeon = this.convertAndFormatDate(this.form.gTimeon)
+      this.info.gDeadline = this.convertAndFormatDate(this.form.gDeadline)
       this.info.gRelease = 1
       console.log(this.chuan, 'chuan')
       this.info.comPubAttachments.anUrl = this.chuan.map(item => item.response ? item.response.data.url : item.url).join(',')

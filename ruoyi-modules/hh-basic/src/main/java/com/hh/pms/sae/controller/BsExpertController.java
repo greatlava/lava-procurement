@@ -78,7 +78,6 @@ public class BsExpertController extends BaseController {
     /**
      * 修改专家
      */
-    @RequiresPermissions("system:expert:edit")
     @Log(title = "专家", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsExpert bsExpert) {

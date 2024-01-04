@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.hh.nobidding.domain.BsInventory;
 import com.hh.nobidding.service.IBsInventoryService;
 import com.ruoyi.common.core.web.controller.BaseController;
@@ -39,7 +38,6 @@ public class BsInventoryController extends BaseController
     /**
      * 查询产品表列表
      */
-    @RequiresPermissions("system:inventory:list")
     @GetMapping("/list")
     public TableDataInfo list(BsInventory bsInventory)
     {
@@ -51,7 +49,6 @@ public class BsInventoryController extends BaseController
     /**
      * 导出产品表列表
      */
-    @RequiresPermissions("system:inventory:export")
     @Log(title = "产品表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsInventory bsInventory)
@@ -64,7 +61,6 @@ public class BsInventoryController extends BaseController
     /**
      * 获取产品表详细信息
      */
-    @RequiresPermissions("system:inventory:query")
     @GetMapping(value = "/{inId}")
     public AjaxResult getInfo(@PathVariable("inId") Long inId)
     {
@@ -74,7 +70,6 @@ public class BsInventoryController extends BaseController
     /**
      * 新增产品表
      */
-    @RequiresPermissions("system:inventory:add")
     @Log(title = "产品表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsInventory bsInventory)
@@ -85,7 +80,6 @@ public class BsInventoryController extends BaseController
     /**
      * 修改产品表
      */
-    @RequiresPermissions("system:inventory:edit")
     @Log(title = "产品表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsInventory bsInventory)
@@ -96,7 +90,6 @@ public class BsInventoryController extends BaseController
     /**
      * 删除产品表
      */
-    @RequiresPermissions("system:inventory:remove")
     @Log(title = "产品表", businessType = BusinessType.DELETE)
     @DeleteMapping("/{inIds}")
     public AjaxResult remove(@PathVariable Long[] inIds)

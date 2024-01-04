@@ -10,7 +10,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 查询非招标项目列表
      */
-    @RequiresPermissions("system:pro:list")
     @GetMapping("/list")
     public TableDataInfo list(NobidNonPro nobidNonPro) {
         startPage();
@@ -55,7 +53,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 导出非招标项目列表
      */
-    @RequiresPermissions("system:pro:export")
     @Log(title = "非招标项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, NobidNonPro nobidNonPro) {
@@ -67,7 +64,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 获取非招标项目详细信息
      */
-    @RequiresPermissions("system:pro:query")
     @GetMapping(value = "/{gid}")
     public AjaxResult getInfo(@PathVariable("gid") Long gid) {
         return success(nobidNonProService.selectNobidNonProByGid(gid));
@@ -76,7 +72,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 新增非招标项目
      */
-    @RequiresPermissions("system:pro:add")
     @Log(title = "非招标项目", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody NobidNonPro nobidNonPro) {
@@ -86,7 +81,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 修改非招标项目
      */
-    @RequiresPermissions("system:pro:edit")
     @Log(title = "非招标项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody NobidNonPro nobidNonPro) {
@@ -118,7 +112,6 @@ public class NobidNonProController extends BaseController {
     /**
      * 删除非招标项目
      */
-    @RequiresPermissions("system:pro:remove")
     @Log(title = "非招标项目", businessType = BusinessType.DELETE)
     @DeleteMapping("/{gids}")
     public AjaxResult remove(@PathVariable Long[] gids) {

@@ -8,7 +8,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,6 @@ public class BsPaymentController extends BaseController
     /**
      * 查询支付约定列表
      */
-    @RequiresPermissions("system:payment:list")
     @GetMapping("/list")
     public TableDataInfo list(BsPayment bsPayment)
     {
@@ -43,7 +41,6 @@ public class BsPaymentController extends BaseController
     /**
      * 导出支付约定列表
      */
-    @RequiresPermissions("system:payment:export")
     @Log(title = "支付约定", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsPayment bsPayment)
@@ -56,7 +53,6 @@ public class BsPaymentController extends BaseController
     /**
      * 获取支付约定详细信息
      */
-    @RequiresPermissions("system:payment:query")
     @GetMapping(value = "/{payId}")
     public AjaxResult getInfo(@PathVariable("payId") Long payId)
     {
@@ -66,7 +62,6 @@ public class BsPaymentController extends BaseController
     /**
      * 新增支付约定
      */
-    @RequiresPermissions("system:payment:add")
     @Log(title = "支付约定", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsPayment bsPayment)
@@ -77,7 +72,6 @@ public class BsPaymentController extends BaseController
     /**
      * 修改支付约定
      */
-    @RequiresPermissions("system:payment:edit")
     @Log(title = "支付约定", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsPayment bsPayment)
@@ -88,7 +82,6 @@ public class BsPaymentController extends BaseController
     /**
      * 删除支付约定
      */
-    @RequiresPermissions("system:payment:remove")
     @Log(title = "支付约定", businessType = BusinessType.DELETE)
     @DeleteMapping("/{payIds}")
     public AjaxResult remove(@PathVariable Long[] payIds)
