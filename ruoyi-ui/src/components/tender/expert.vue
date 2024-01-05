@@ -705,9 +705,9 @@
         if(!isYes){
           this.selectRow.jName = row.jName;
           if (row.jSex == 1) {
-            this.selectRow.jSex = "男"
-          } else {
             this.selectRow.jSex = "女"
+          } else {
+            this.selectRow.jSex = "男"
           }
           this.selectRow.jIdentity = row.jIdentity
           this.selectRow.jPhone = row.jPhone
