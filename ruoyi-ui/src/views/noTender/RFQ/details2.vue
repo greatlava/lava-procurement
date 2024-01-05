@@ -103,22 +103,23 @@
         <el-table
           :data="ComQuotation"
           :row-key="row => row.id"
-          @selection-change="lHandleSelectionChange"
+          @selection-change="cHandleSelectionChange"
           border
           stripe
           :style="{marginTop:'10px'}"
         >
+          <el-table-column type="selection"/>
           <el-table-column label="序号" type="index" width="80"/>
           <el-table-column label="供应商名称" prop="hName" width="300">
             <template slot-scope="scope">
               <el-input v-model="scope.row.hName" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="报价次数" prop="bjSecond" width="200">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.bjSecond" readonly/>
-            </template>
-          </el-table-column>
+          <!--          <el-table-column label="报价次数" prop="bjSecond" width="200">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <el-input v-model="scope.row.bjSecond" readonly/>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <el-table-column label="报价金额" prop="bjTotal">
             <template slot-scope="scope">
               <el-input v-model="(scope.row.bjTotal).toFixed(2)" readonly/>
@@ -159,8 +160,8 @@
 
     <div style="margin-top: 20px">
       <el-button size="medium" @click="back1">返回</el-button>
-      <el-button size="medium" type="primary" @click="addXy" v-if="show">发布</el-button>
-      <el-button size="medium" type="primary" @click="faBu" v-if="form.gRelease===1&&this.ComQuotation.length>0">完成</el-button>
+      <el-button size="medium" type="primary" @click="addXy" v-if="show">提交</el-button>
+      <el-button size="medium" type="primary" @click="faBu" v-if="form.gRelease===1">完成</el-button>
     </div>
   </div>
 </template>
@@ -177,6 +178,8 @@ import router from '../../../router'
 export default {
   data() {
     return {
+      xzCount: null,
+      selectedRows: [],
       show: false,
       //业务类型字典数据
       gTenderTypes: [],
@@ -314,16 +317,24 @@ export default {
     },
     //发布项目
     faBu() {
-      this.info1.gid = this.gid
-      this.info1.gRelease = 2
-      this.info1.hid = this.ComQuotation[0].hid
-      console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
-      upePro(this.info1).then((res) => {
-        this.$message.success(res.msg)
-        this.$router.push('/noTender/project')
-      }).catch((error) => {
-        this.$message.error('发布失败')
-      })
+      if (this.ComQuotation.length === 0) {
+        this.$message.warning('供应商未报价')
+        return false
+      }
+      if (this.xzCount !== 1) {
+        this.$message.warning('请选择单个供应商！')
+      } else {
+        this.info1.gid = this.gid
+        this.info1.gRelease = 2
+        this.info1.hid = this.selectedRows[0].hid
+        console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
+        upePro(this.info1).then((res) => {
+          this.$message.success(res.msg)
+          this.$router.push('/noTender/project')
+        }).catch((error) => {
+          this.$message.error('发布失败')
+        })
+      }
     },
     //创建合同
     addXy() {
@@ -411,16 +422,16 @@ export default {
         if (response.data.gRelease === 0) {
           this.show = true
         }
-        if (response.data.gTendertype == 3) {
+        if (response.data.gTendertype === 3) {
           this.form.gTendertype = '询价'
-        } else if (response.data.gTendertype == 5) {
+        } else if (response.data.gTendertype === 5) {
           this.form.gTendertype = '竞争性谈判'
-        } else if (response.data.gTendertype == 4) {
+        } else if (response.data.gTendertype === 4) {
           this.form.gTendertype = '委托'
-        } else if (response.data.gTendertype == 6) {
+        } else if (response.data.gTendertype === 6) {
           this.form.gTendertype = '单一来源'
         }
-        if (response.data.gIsPublic == 1) {
+        if (response.data.gIsPublic === 1) {
           this.form.gIsPublic = '公开'
         } else {
           this.form.gIsPublic = '邀请'
@@ -465,7 +476,7 @@ export default {
     getComPubAttachments() {
       getAttachmentsByAid(this.aid).then(res => {
         console.log(res, 'res')
-        if(!res.data){
+        if (!res.data) {
           return
         }
         this.info.comPubAttachments.anId = res.data.anId
@@ -591,6 +602,11 @@ export default {
     //单选多选
     lHandleSelectionChange(selection) {
       this.lSelectedRows = selection
+    },
+    //供应商单选多选
+    cHandleSelectionChange(selection) {
+      this.selectedRows = selection
+      this.xzCount = selection.length
     }
   }
 }

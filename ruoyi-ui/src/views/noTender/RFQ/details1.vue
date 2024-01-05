@@ -51,12 +51,12 @@
       <h3>合同标的清单</h3>
       <div class="cl">
         <el-table
-            :data="lTableData"
-            :row-key="row => row.id"
-            @selection-change="lHandleSelectionChange"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="lTableData"
+          :row-key="row => row.id"
+          @selection-change="lHandleSelectionChange"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
         >
           <el-table-column label="序号" prop="id" width="60"/>
           <el-table-column label="产品名称" prop="inName" width="170">
@@ -105,24 +105,26 @@
       <h3 v-if="!show">供应商报价信息</h3>
       <div class="cl" v-if="!show">
         <el-table
-            :data="ComQuotation"
-            :row-key="row => row.id"
-            @selection-change="lHandleSelectionChange"
-            border
-            stripe
-            :style="{marginTop:'10px'}"
+          :data="ComQuotation"
+          :row-key="row => row.id"
+          @selection-change="cHandleSelectionChange"
+          border
+          stripe
+          :style="{marginTop:'10px'}"
+          ref="singleTable"
         >
+          <el-table-column type="selection" width="55"/>
           <el-table-column label="序号" type="index" width="80"/>
           <el-table-column label="供应商名称" prop="hName" width="300">
             <template slot-scope="scope">
               <el-input v-model="scope.row.hName" readonly/>
             </template>
           </el-table-column>
-          <el-table-column label="报价次数" prop="bjSecond" width="200">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.bjSecond" readonly/>
-            </template>
-          </el-table-column>
+          <!--          <el-table-column label="报价次数" prop="bjSecond" width="200">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <el-input v-model="scope.row.bjSecond" readonly/>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <el-table-column label="报价金额" prop="bjTotal">
             <template slot-scope="scope">
               <el-input v-model="(scope.row.bjTotal).toFixed(2)" readonly/>
@@ -142,17 +144,17 @@
         <el-row type="flex" justify="space-between" align="top" :gutter="15" style="flex-wrap: wrap;">
           <el-form-item label="附件上传" prop="ComPubAttachments" style="width: 45%">
             <el-upload
-                ref="up2"
-                class="upload-demo"
-                :action="url"
-                :before-remove="beforeRemove2"
-                :auto-upload="false"
-                :limit="3"
-                :on-exceed="handleExceed2"
-                :on-success="success2"
-                :on-change="onchange2"
-                :file-list="fileList2"
-                :disabled="form.gRelease === 1"
+              ref="up2"
+              class="upload-demo"
+              :action="url"
+              :before-remove="beforeRemove2"
+              :auto-upload="false"
+              :limit="3"
+              :on-exceed="handleExceed2"
+              :on-success="success2"
+              :on-change="onchange2"
+              :file-list="fileList2"
+              :disabled="form.gRelease === 1"
             >
               <el-button size="small" type="primary">上传附件</el-button>
             </el-upload>
@@ -176,11 +178,14 @@ import {
   upePro
 } from '../../../api/system/noTender'
 import { listDevice } from '../../../api/system/addContract'
+
 import router from '../../../router'
 
 export default {
   data() {
     return {
+      xzCount: null,
+      selectedRows: [],
       show: false,
       //业务
       //
@@ -271,10 +276,6 @@ export default {
       },
       selectRow: null,
       fileList2: [],
-      // fileList1: {
-      //   anName: [],
-      //   anUrl: []
-      // },
       //附件
       ComPubAttachments: {
         anSize: null,
@@ -306,7 +307,13 @@ export default {
         gid: null,
         gRelease: null,
         hid: null
-      }
+      },
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true
     }
   },
   mounted() {
@@ -354,41 +361,41 @@ export default {
     //创建合同
     addXy() {
       this.$refs.elForm.validate(valid => {
-            if (valid) {
-              // 获取当前时间
-              let currentTime = new Date()
-              // 获取报价开始时间和截止时间
-              let startTime = new Date(this.form.gTimeon)
-              let deadline = new Date(this.form.gDeadline)
-              // 验证时间是否大于当前时间
-              if (startTime < currentTime || deadline < currentTime) {
-                this.$message.error('报价开始时间和截止时间不能小于当前时间')
+          if (valid) {
+            // 获取当前时间
+            let currentTime = new Date()
+            // 获取报价开始时间和截止时间
+            let startTime = new Date(this.form.gTimeon)
+            let deadline = new Date(this.form.gDeadline)
+            // 验证时间是否大于当前时间
+            if (startTime < currentTime || deadline < currentTime) {
+              this.$message.error('报价开始时间和截止时间不能小于当前时间')
+            } else {
+              // 时间验证通过，继续验证时间间隔和文件上传
+              let timeDiff = Math.abs(deadline.getTime() - startTime.getTime())
+              let diffHours = timeDiff / (1000 * 3600) // 计算相差的小时数
+              if (diffHours < 24) {
+                this.$message.error('报价开始时间和截止时间的间隔不能小于24小时')
               } else {
-                // 时间验证通过，继续验证时间间隔和文件上传
-                let timeDiff = Math.abs(deadline.getTime() - startTime.getTime())
-                let diffHours = timeDiff / (1000 * 3600) // 计算相差的小时数
-                if (diffHours < 24) {
-                  this.$message.error('报价开始时间和截止时间的间隔不能小于24小时')
+                // 时间间隔验证通过，继续验证文件上传
+                if (this.fileList2.length === 0) {
+                  this.$message.warning('请上传附件')
                 } else {
-                  // 时间间隔验证通过，继续验证文件上传
-                  if (this.fileList2.length === 0) {
-                    this.$message.warning('请上传附件')
+                  if (this.hasNewFiles()) {
+                    console.log(1)
+                    this.chuan.push(...this.fileList2)
+                    this.$refs.up2.submit()
                   } else {
-                    if (this.hasNewFiles()) {
-                      console.log(1)
-                      this.chuan.push(...this.fileList2)
-                      this.$refs.up2.submit()
-                    } else {
-                      this.add()
-                    }
+                    this.add()
                   }
                 }
               }
-            } else {
-              this.$message.error('请填写完整信息')
-              return false
             }
+          } else {
+            this.$message.error('请填写完整信息')
+            return false
           }
+        }
       )
     },
     hasNewFiles() {
@@ -406,16 +413,20 @@ export default {
         this.$message.warning('供应商未报价')
         return false
       }
-      this.info1.gid = this.gid
-      this.info1.gRelease = 2
-      this.info1.hid = this.ComQuotation[0].hid
-      console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
-      upePro(this.info1).then((res) => {
-        this.$message.success(res.msg)
-        this.$router.push('/noTender/project')
-      }).catch((error) => {
-        this.$message.error('发布失败')
-      })
+      if (this.xzCount !== 1) {
+        this.$message.warning('请选择单个供应商！')
+      } else {
+        this.info1.gid = this.gid
+        this.info1.gRelease = 2
+        this.info1.hid = this.selectedRows[0].hid
+        console.log(this.ComQuotation[0].hid, 'this.ComQuotation[0].hid')
+        upePro(this.info1).then((res) => {
+          this.$message.success(res.msg)
+          this.$router.push('/noTender/project')
+        }).catch((error) => {
+          this.$message.error('发布失败')
+        })
+      }
     },
     //转换日期
     convertAndFormatDate(originalDate) {
@@ -648,6 +659,11 @@ export default {
     //单选多选
     lHandleSelectionChange(selection) {
       this.lSelectedRows = selection
+    },
+    //供应商单选多选
+    cHandleSelectionChange(selection) {
+      this.selectedRows = selection
+      this.xzCount = selection.length
     }
   }
 }
