@@ -42,6 +42,7 @@ public class BidCommitteeController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BidCommittee bidCommittee)
     {
+//        System.out.println("打印。。。。。");
         startPage();
         List<BidCommittee> list = bidCommitteeService.selectBidCommitteeList(bidCommittee);
         return getDataTable(list);
