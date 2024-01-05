@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
@@ -38,7 +37,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 查询行项目列表
      */
-    @RequiresPermissions("system:items:list")
     @GetMapping("/list")
     public TableDataInfo list(PpmLineItems ppmLineItems) {
         startPage();
@@ -49,7 +47,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 导出行项目列表
      */
-    @RequiresPermissions("system:items:export")
     @Log(title = "行项目", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PpmLineItems ppmLineItems) {
@@ -61,7 +58,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 获取行项目详细信息
      */
-    @RequiresPermissions("system:items:query")
     @GetMapping(value = "/{vid}")
     public AjaxResult getInfo(@PathVariable("vid") Integer vid) {
         return success(ppmLineItemsService.selectPpmLineItemsByVid(vid));
@@ -70,7 +66,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 新增行项目
      */
-    @RequiresPermissions("system:items:add")
     @Log(title = "行项目", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PpmLineItems ppmLineItems) {
@@ -80,7 +75,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 修改行项目
      */
-    @RequiresPermissions("system:items:edit")
     @Log(title = "行项目", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PpmLineItems ppmLineItems) {
@@ -90,7 +84,6 @@ public class PpmLineItemsController extends BaseController {
     /**
      * 删除行项目
      */
-    @RequiresPermissions("system:items:remove")
     @Log(title = "行项目", businessType = BusinessType.DELETE)
     @DeleteMapping("/{vids}")
     public AjaxResult remove(@PathVariable Integer[] vids) {

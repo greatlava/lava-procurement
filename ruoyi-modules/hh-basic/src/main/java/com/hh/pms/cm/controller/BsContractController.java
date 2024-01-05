@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
@@ -57,7 +56,6 @@ public class BsContractController extends BaseController {
     /**
      * 查询合同列表
      */
-//    @RequiresPermissions("system:contract:list")
     @GetMapping("/list")
     public TableDataInfo list(BsContract bsContract) {
         startPage();
@@ -68,7 +66,6 @@ public class BsContractController extends BaseController {
     /**
      * 导出合同列表
      */
-    @RequiresPermissions("system:contract:export")
     @Log(title = "合同", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsContract bsContract) {
@@ -80,7 +77,6 @@ public class BsContractController extends BaseController {
     /**
      * 获取合同详细信息
      */
-    @RequiresPermissions("system:contract:query")
     @GetMapping(value = "/{eid}")
     public AjaxResult getInfo(@PathVariable("eid") Long eid) {
         BsContract bsContract = bsContractService.selectBidTenderBySid(eid);
@@ -93,7 +89,6 @@ public class BsContractController extends BaseController {
     /**
      * 新增招标合同
      */
-    @RequiresPermissions("system:contract:add")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsContract bsContract) {
@@ -159,7 +154,6 @@ public class BsContractController extends BaseController {
     /**
      * 修改合同
      */
-    @RequiresPermissions("system:contract:edit")
     @Log(title = "合同", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsContract bsContract) {
@@ -274,7 +268,6 @@ public class BsContractController extends BaseController {
      * ------------------------------------------------------------------------
      * 新增非招标合同
      */
-    @RequiresPermissions("system:contract:add")
     @Log(title = "合同", businessType = BusinessType.INSERT)
     @PostMapping("/noTender")
     public AjaxResult add1(@RequestBody BsContract bsContract) {
@@ -342,7 +335,6 @@ public class BsContractController extends BaseController {
     /**
      * 查询非招标签订中合同列表
      */
-//    @RequiresPermissions("system:contract:list")
     @GetMapping("/list1")
     public TableDataInfo list1(BsContract bsContract) {
         startPage();

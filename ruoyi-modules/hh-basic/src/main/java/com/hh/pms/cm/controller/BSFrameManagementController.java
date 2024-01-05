@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.hh.pms.cm.service.IBSFrameManagementService;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
@@ -52,7 +51,6 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 查询框架协议管理列表
      */
-    @RequiresPermissions("system:management:list")
     @GetMapping("/list")
     public TableDataInfo list(BSFrameManagement bSFrameManagement) {
         startPage();
@@ -63,7 +61,6 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 导出框架协议管理列表
      */
-    @RequiresPermissions("system:management:export")
     @Log(title = "框架协议管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BSFrameManagement bSFrameManagement) {
@@ -75,7 +72,6 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 获取框架协议管理详细信息
      */
-    @RequiresPermissions("system:management:query")
     @GetMapping(value = "/{oid}")
     public AjaxResult getInfo(@PathVariable("oid") Long oid) {
         return success(bSFrameManagementService.selectBSFrameManagementByOid(oid));
@@ -84,7 +80,6 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 新增框架协议管理
      */
-    @RequiresPermissions("system:management:add")
     @Log(title = "框架协议管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BSFrameManagement bSFrameManagement) {
@@ -117,7 +112,6 @@ public class BSFrameManagementController extends BaseController {
     /**
      * 修改框架协议管理
      */
-    @RequiresPermissions("system:management:edit")
     @Log(title = "框架协议管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BSFrameManagement bSFrameManagement) {

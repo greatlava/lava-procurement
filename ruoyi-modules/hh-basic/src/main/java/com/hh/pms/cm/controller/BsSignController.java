@@ -9,7 +9,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,6 @@ public class BsSignController extends BaseController {
     /**
      * 查询签署执行状态列表
      */
-    @RequiresPermissions("system:sign:list")
     @GetMapping("/list")
     public TableDataInfo list(BsSign bsSign) {
         startPage();
@@ -40,7 +38,6 @@ public class BsSignController extends BaseController {
     }
 
     //根据合同查看签署执行状态信息
-    @RequiresPermissions("system:sign:list1")
     @GetMapping(value = "/list1")
     public AjaxResult getBsSign(Long eid) {
         return success(bsSignService.selectBsSignByEid(eid));
@@ -49,7 +46,6 @@ public class BsSignController extends BaseController {
     /**
      * 导出签署执行状态列表
      */
-    @RequiresPermissions("system:sign:export")
     @Log(title = "签署执行状态", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BsSign bsSign) {
@@ -61,7 +57,6 @@ public class BsSignController extends BaseController {
     /**
      * 获取签署执行状态详细信息
      */
-    @RequiresPermissions("system:sign:query")
     @GetMapping(value = "/{gnId}")
     public AjaxResult getInfo(@PathVariable("gnId") Long gnId) {
         return success(bsSignService.selectBsSignByGnId(gnId));
@@ -70,7 +65,6 @@ public class BsSignController extends BaseController {
     /**
      * 新增签署执行状态
      */
-    @RequiresPermissions("system:sign:add")
     @Log(title = "签署执行状态", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BsSign bsSign) {
@@ -80,7 +74,6 @@ public class BsSignController extends BaseController {
     /**
      * 修改签署执行状态
      */
-    @RequiresPermissions("system:sign:edit")
     @Log(title = "签署执行状态", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BsSign bsSign) {
@@ -90,7 +83,6 @@ public class BsSignController extends BaseController {
     /**
      * 删除签署执行状态
      */
-    @RequiresPermissions("system:sign:remove")
     @Log(title = "签署执行状态", businessType = BusinessType.DELETE)
     @DeleteMapping("/{gnIds}")
     public AjaxResult remove(@PathVariable Long[] gnIds) {

@@ -171,7 +171,7 @@
           <el-radio :label="6">单一来源</el-radio>
         </el-radio-group>
       </div>
-      <el-card shadow="never" v-if="typeRadio != 1 && typeRadio != 2" class="box-card">
+      <el-card shadow="never" v-if="typeRadio == 5 || typeRadio == 3" class="box-card">
         <div slot="header" class="clearfix">
           <span>是否公开/邀请</span>
           <!--          <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>-->

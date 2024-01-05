@@ -38,7 +38,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 查询采购计划列表
      */
-    @RequiresPermissions("system:plan:list")
     @GetMapping("/list")
     public TableDataInfo list(PpmProcurementPlan ppmProcurementPlan) {
         startPage();
@@ -49,7 +48,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 导出采购计划列表
      */
-    @RequiresPermissions("system:plan:export")
     @Log(title = "采购计划", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PpmProcurementPlan ppmProcurementPlan) {
@@ -61,7 +59,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 获取采购计划详细信息
      */
-    @RequiresPermissions("system:plan:query")
     @GetMapping(value = "/{aid}")
     public AjaxResult getInfo(@PathVariable("aid") Long aid) {
         return success(ppmProcurementPlanService.selectPpmProcurementPlanByAid(aid));
@@ -70,7 +67,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 新增采购计划
      */
-    @RequiresPermissions("system:plan:add")
     @Log(title = "采购计划", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
@@ -80,7 +76,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 修改采购计划
      */
-    @RequiresPermissions("system:plan:edit")
     @Log(title = "采购计划", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
@@ -90,7 +85,6 @@ public class PpmProcurementPlanController extends BaseController {
     /**
      * 删除采购计划
      */
-    @RequiresPermissions("system:plan:remove")
     @Log(title = "采购计划", businessType = BusinessType.DELETE)
     @DeleteMapping("/{aids}")
     public AjaxResult remove(@PathVariable Long[] aids) {
