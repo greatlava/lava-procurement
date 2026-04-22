@@ -17,10 +17,10 @@
         <result property="jhFounder" column="jh_founder"/>
         <result property="hid" column="hid"/>
         <result property="businessType" column="business_type"/>
-        <association property="bsSupplier">
+        <!-- <association property="bsSupplier">
             <result property="hid" column="hid"/>
             <result property="hName" column="h_name"/>
-        </association>
+        </association> -->
     </resultMap>
 
     <resultMap id="threeTables" type="com.hh.pms.domain.PpmFramePlan">
