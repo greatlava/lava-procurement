@@ -337,6 +337,7 @@ public class AuthLogic
         try
         {
             LoginUser loginUser = getLoginUser();
+            System.out.println(loginUser.getPermissions());
             return loginUser.getPermissions();
         }
         catch (Exception e)
