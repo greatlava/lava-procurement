@@ -1,4 +1,4 @@
-package com.hh.pms.domain;
+package com.hh.procure.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -10,106 +10,56 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
-/**
- * 框架协议管理对象 ppm_frame_management
- *
- * @author ruoyi
- * @date 2023-12-18
- */
 public class PpmFrameManagement extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 框架协议ID
-     */
     private Long oid;
 
-    /**
-     * 框架计划ID
-     */
     @Excel(name = "框架计划ID")
     private Long jhId;
 
-    /**
-     * 框架协议编号
-     */
     @Excel(name = "框架协议编号")
     private String oCode;
 
-    /**
-     * 框架协议名称
-     */
     @Excel(name = "框架协议名称")
     private String oName;
 
-    /**
-     * 签署主体
-     */
     @Excel(name = "签署主体")
     private String oSubject;
 
-    /**
-     * 相对方ID
-     */
     @Excel(name = "相对方ID")
     private Long hid;
 
-    /**
-     * 相对方名称
-     */
     @Excel(name = "相对方名称")
     private String hName;
 
-    /**
-     * 签署时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "签署时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date oStartdate;
 
-    /**
-     * 失效时间
-     */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "失效时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date oEnddate;
 
-    /**
-     * 协议文件
-     */
     @Excel(name = "协议文件")
     private String oFile;
 
-    /**
-     * 协议状态
-     */
     @Excel(name = "协议状态")
     private Long oHstatus;
 
-    /**
-     * 协议类型
-     */
     @Excel(name = "协议类型")
     private String oType;
 
-    /**
-     * 说明
-     */
     @Excel(name = "说明")
     private String oDescribe;
 
-    /**
-     * 审核意见
-     */
     @Excel(name = "审核意见")
     private String oOpinion;
 
-    /** 总价 */
     @Excel(name = "总价")
     private BigDecimal oTotalprice;
 
     private List lTableData;
-
 
     public BigDecimal getoTotalprice() {
         return oTotalprice;

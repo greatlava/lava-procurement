@@ -1,10 +1,10 @@
-package com.hh.pms.controller;
+package com.hh.procure.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.hh.pms.domain.PpmFrameManagement;
-import com.hh.pms.service.IPpmFrameManagementService;
+import com.hh.procure.domain.PpmFrameManagement;
+import com.hh.procure.service.IPpmFrameManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +22,6 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 
-/**
- * 框架协议管理Controller
- * 
- * @author ruoyi
- * @date 2023-11-19
- */
 @RestController
 @RequestMapping("/management")
 public class PpmFrameManagementController extends BaseController
@@ -35,9 +29,6 @@ public class PpmFrameManagementController extends BaseController
     @Autowired
     private IPpmFrameManagementService ppmFrameManagementService;
 
-    /**
-     * 查询框架协议管理列表
-     */
     @RequiresPermissions("system:management:list")
     @GetMapping("/list")
     public TableDataInfo list(PpmFrameManagement ppmFrameManagement)
@@ -47,9 +38,6 @@ public class PpmFrameManagementController extends BaseController
         return getDataTable(list);
     }
 
-    /**
-     * 导出框架协议管理列表
-     */
     @RequiresPermissions("system:management:export")
     @Log(title = "框架协议管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -60,9 +48,6 @@ public class PpmFrameManagementController extends BaseController
         util.exportExcel(response, list, "框架协议管理数据");
     }
 
-    /**
-     * 获取框架协议管理详细信息
-     */
     @RequiresPermissions("system:management:query")
     @GetMapping(value = "/{oid}")
     public AjaxResult getInfo(@PathVariable("oid") Long oid)
@@ -70,9 +55,6 @@ public class PpmFrameManagementController extends BaseController
         return success(ppmFrameManagementService.selectPpmFrameManagementByOid(oid));
     }
 
-    /**
-     * 新增框架协议管理
-     */
     @RequiresPermissions("system:management:add")
     @Log(title = "框架协议管理", businessType = BusinessType.INSERT)
     @PostMapping
@@ -81,9 +63,6 @@ public class PpmFrameManagementController extends BaseController
         return toAjax(ppmFrameManagementService.insertPpmFrameManagement(ppmFrameManagement));
     }
 
-    /**
-     * 修改框架协议管理
-     */
     @RequiresPermissions("system:management:edit")
     @Log(title = "框架协议管理", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -92,9 +71,6 @@ public class PpmFrameManagementController extends BaseController
         return toAjax(ppmFrameManagementService.updatePpmFrameManagement(ppmFrameManagement));
     }
 
-    /**
-     * 删除框架协议管理
-     */
     @RequiresPermissions("system:management:remove")
     @Log(title = "框架协议管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{oids}")
@@ -102,6 +78,4 @@ public class PpmFrameManagementController extends BaseController
     {
         return toAjax(ppmFrameManagementService.deletePpmFrameManagementByOids(oids));
     }
-
-
 }
