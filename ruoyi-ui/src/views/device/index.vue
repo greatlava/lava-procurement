@@ -129,7 +129,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="产品编码" prop="tid">
-              <el-input v-model="form.tid" placeholder="请输入产品编码" :disabled="form.tid != undefined" />
+              <el-input v-model="form.tid" placeholder="请输入产品编码" :disabled="isEdit" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -153,7 +153,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="税率" prop="shui">
-              <el-input-number v-model="form.shui" :min="0" :max="100" :precision="0" placeholder="请输入税率" style="width: 100%" />
+              <el-input-number v-model="form.shui" :min="0" :max="100" :precision="2" placeholder="请输入税率" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -205,6 +205,7 @@ export default {
       deviceList: [],
       title: "",
       open: false,
+      isEdit: false,
       queryParams: {
         pageNum: 1,
         pageSize: 10,
@@ -272,11 +273,13 @@ export default {
     },
     handleAdd() {
       this.reset();
+      this.isEdit = false;
       this.open = true;
       this.title = "添加物料";
     },
     handleUpdate(row) {
       this.reset();
+      this.isEdit = true;
       const tid = row.tid || this.ids
       getDevice(tid).then(response => {
         this.form = response.data;
@@ -289,7 +292,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.tid != undefined && this.form.tid != '') {
+          if (this.isEdit) {
             updateDevice(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
