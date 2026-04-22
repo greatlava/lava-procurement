@@ -80,7 +80,7 @@ public class PpmProcurementPlanController extends BaseController {
      * 获取采购计划详细信息
      */
     @RequiresPermissions("system:plan:query")
-    @GetMapping(value = "/{aid}")
+    @GetMapping(value = "/{aid:\\d+}")
     public AjaxResult getInfo(@PathVariable("aid") Integer aid) {
         return success(ppmProcurementPlanService.selectPpmProcurementPlanByAid(aid));
     }
@@ -146,7 +146,7 @@ public class PpmProcurementPlanController extends BaseController {
     @RequiresPermissions("system:plan:remove")
     @Log(title = "采购计划", businessType = BusinessType.DELETE)
     @Transactional
-    @DeleteMapping("/{aids}")
+    @DeleteMapping("/{aids:^\\d+(,\\d+)*$}")
     public AjaxResult remove(@PathVariable Integer[] aids) {
         ppmLineItemsService.deletePpmLineItemsByAid(aids[0]);
         comPubAttachmentsService.deleteComPubAttamentsByAid(aids[0]);
@@ -243,8 +243,8 @@ public class PpmProcurementPlanController extends BaseController {
     }
 
     @RequiresPermissions("system:plan:list")
-    @PostMapping("/PpmProcurementPlanAndComPubAttament")
-    public TableDataInfo selectePpmProcurementPlanAndComPubAttamentByAid(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
+    @GetMapping("/PpmProcurementPlanAndComPubAttament")
+    public TableDataInfo selectePpmProcurementPlanAndComPubAttamentByAid(PpmProcurementPlan ppmProcurementPlan) {
         System.out.println("执行了PpmProcurementPlanAndComPubAttament：" + ppmProcurementPlan);
         startPage();
         List<PpmProcurementPlan> list = ppmProcurementPlanService.selectePpmProcurementPlanAndComPubAttamentByAid(ppmProcurementPlan);
