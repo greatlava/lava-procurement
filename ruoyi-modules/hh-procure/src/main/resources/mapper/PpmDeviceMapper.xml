@@ -34,7 +34,9 @@
     <select id="selectPpmDeviceList" parameterType="com.hh.procure.domain.PpmDevice" resultMap="PpmDeviceResult">
         <include refid="selectPpmDeviceVo"/>
         <where>
-            <if test="tid != null">tid = #{tid}</if>
+            <if test="tid != null and tid != ''">tid = #{tid}</if>
+            <if test="tName != null and tName != ''">and t_name like concat('%', #{tName}, '%')</if>
+            <if test="category != null and category != ''">and category like concat('%', #{category}, '%')</if>
         </where>
     </select>
 
