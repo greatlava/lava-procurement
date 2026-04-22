@@ -80,8 +80,8 @@
             <artifactId>ruoyi-common-swagger</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.hh.pms</groupId>
-            <artifactId>hh-ppm</artifactId>
+            <groupId>com.hh.procure</groupId>
+            <artifactId>hh-procure</artifactId>
             <version>3.6.3</version>
             <scope>compile</scope>
         </dependency>
