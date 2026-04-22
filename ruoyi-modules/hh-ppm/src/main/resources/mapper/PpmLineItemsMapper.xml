@@ -129,9 +129,9 @@
         <id column="vid" property="vid"/>
         <association property="ppmFramePlan">
             <id property="jhId" column="jh_id"/>
-            <association property="bsSupplier">
+            <!-- <association property="bsSupplier">
                 <id property="hid" column="hid"/>
-            </association>
+            </association> -->
         </association>
         <association property="ppmDevice">
             <id property="tid" column="tid"/>
