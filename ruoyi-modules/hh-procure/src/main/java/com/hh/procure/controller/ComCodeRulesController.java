@@ -31,7 +31,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 查询【请填写功能名称】列表
      */
-    @RequiresPermissions("system:rules:list")
+    @RequiresPermissions("business:rules:list")
     @GetMapping("/list")
     public TableDataInfo list(ComCodeRules comCodeRules) {
         startPage();
@@ -42,7 +42,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 导出【请填写功能名称】列表
      */
-    @RequiresPermissions("system:rules:export")
+    @RequiresPermissions("business:rules:export")
     @Log(title = "编号规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ComCodeRules comCodeRules) {
@@ -54,7 +54,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @RequiresPermissions("system:rules:query")
+    @RequiresPermissions("business:rules:query")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(comCodeRulesService.selectComCodeRulesById(id));
@@ -63,7 +63,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 新增【请填写功能名称】
      */
-    @RequiresPermissions("system:rules:add")
+    @RequiresPermissions("business:rules:add")
     @Log(title = "编号规则", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ComCodeRules comCodeRules) {
@@ -74,7 +74,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 修改【请填写功能名称】
      */
-    @RequiresPermissions("system:rules:edit")
+    @RequiresPermissions("business:rules:edit")
     @Log(title = "编号规则", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ComCodeRules comCodeRules) {
@@ -84,7 +84,7 @@ public class ComCodeRulesController extends BaseController {
     /**
      * 删除【请填写功能名称】
      */
-    @RequiresPermissions("system:rules:remove")
+    @RequiresPermissions("business:rules:remove")
     @Log(title = "编号规则", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {

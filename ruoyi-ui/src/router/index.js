@@ -101,7 +101,7 @@ export const dynamicRoutes = [
     path: '/system/user-auth',
     component: Layout,
     hidden: true,
-    permissions: ['system:user:edit'],
+    permissions: ['business:user:edit'],
     children: [
       {
         path: 'role/:userId(\\d+)',
@@ -115,7 +115,7 @@ export const dynamicRoutes = [
     path: '/system/role-auth',
     component: Layout,
     hidden: true,
-    permissions: ['system:role:edit'],
+    permissions: ['business:role:edit'],
     children: [
       {
         path: 'user/:roleId(\\d+)',

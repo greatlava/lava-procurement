@@ -40,7 +40,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:rules:add']"
+          v-hasPermi="['business:rules:add']"
         >新增
         </el-button>
       </el-col>
@@ -51,7 +51,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:rules:export']"
+          v-hasPermi="['business:rules:export']"
         >导出
         </el-button>
       </el-col>
@@ -78,7 +78,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:rules:edit']"
+            v-hasPermi="['business:rules:edit']"
           >修改
           </el-button>
         </template>
