@@ -207,11 +207,20 @@ import {addBudget} from "@/api/system/budget";
         </el-table>
       </div>
     </div>
+    <!--    业务操作提示区域    -->
+    <div class="operation-tips">
+      <el-alert
+        :title="operationTips"
+        :type="tipsType"
+        :closable="false"
+        show-icon>
+      </el-alert>
+    </div>
     <!--    底部按钮  -->
     <div slot="footer" class="button">
-      <el-button type="primary" @click="sumbitPlan" v-if="this.form.aid==null">提 交
+      <el-button type="primary" @click="sumbitPlan" v-if="!form.aid" :disabled="!canSubmit">提 交
       </el-button>
-      <el-button type="warning" v-loading.fullscreen.lock="fullscreenLoading" @click="updatePlanByAid" v-else>修 改
+      <el-button type="warning" v-loading.fullscreen.lock="fullscreenLoading" @click="updatePlanByAid" v-else :disabled="!canSubmit">修 改
       </el-button>
       <el-button @click="goBack">返 回</el-button>
     </div>
@@ -405,6 +414,28 @@ export default {
         tid: null
       },
       selectedIndex: 0
+    }
+  },
+  computed: {
+    hasUploadedFiles() {
+      if (this.form.aid) {
+        return this.upload.fileList.length > 0;
+      } else {
+        return this.upload.fileSecuss.length > 0;
+      }
+    },
+    canSubmit() {
+      return this.hasUploadedFiles;
+    },
+    operationTips() {
+      if (this.hasUploadedFiles) {
+        return "附件上传成功，可提交采购计划";
+      } else {
+        return "请上传附件后再提交采购计划";
+      }
+    },
+    tipsType() {
+      return this.hasUploadedFiles ? "success" : "warning";
     }
   },
   created() {
@@ -838,5 +869,11 @@ export default {
   border: none;
   text-align: center;
 //box-shadow: none;
+}
+
+.operation-tips {
+  width: 1300px;
+  margin: 20px auto 10px auto;
+  padding: 0 40px;
 }
 </style>
