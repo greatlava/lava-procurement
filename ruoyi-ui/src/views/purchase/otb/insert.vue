@@ -208,19 +208,13 @@ import {addBudget} from "@/api/system/budget";
       </div>
     </div>
     <!--    业务操作提示区域    -->
-    <div class="operation-tips">
-      <el-alert
-        :title="operationTips"
-        :type="tipsType"
-        :closable="false"
-        show-icon>
-      </el-alert>
+    <div class="top">
+      <h1 class="title">业务操作提示</h1>
+      <span class="describe" :class="tipsClass">{{ operationTips }}</span>
     </div>
     <!--    底部按钮  -->
     <div slot="footer" class="button">
-      <el-button type="primary" @click="sumbitPlan" v-if="!form.aid" :disabled="!canSubmit">提 交
-      </el-button>
-      <el-button type="warning" v-loading.fullscreen.lock="fullscreenLoading" @click="updatePlanByAid" v-else :disabled="!canSubmit">修 改
+      <el-button type="primary" @click="submitHandler" :disabled="!canSubmit" v-loading.fullscreen.lock="fullscreenLoading">提 交
       </el-button>
       <el-button @click="goBack">返 回</el-button>
     </div>
@@ -434,8 +428,8 @@ export default {
         return "请上传附件后再提交采购计划";
       }
     },
-    tipsType() {
-      return this.hasUploadedFiles ? "success" : "warning";
+    tipsClass() {
+      return this.hasUploadedFiles ? "tips-success" : "tips-warning";
     }
   },
   created() {
@@ -697,6 +691,13 @@ export default {
     goBack() {
       this.$router.back();
     },
+    submitHandler() {
+      if (this.form.aid) {
+        this.updatePlanByAid();
+      } else {
+        this.sumbitPlan();
+      }
+    },
     sumbitPlan() {
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -871,9 +872,13 @@ export default {
 //box-shadow: none;
 }
 
-.operation-tips {
-  width: 1300px;
-  margin: 20px auto 10px auto;
-  padding: 0 40px;
+.tips-success {
+  color: #67c23a;
+  font-weight: bold;
+}
+
+.tips-warning {
+  color: #e6a23c;
+  font-weight: bold;
 }
 </style>
