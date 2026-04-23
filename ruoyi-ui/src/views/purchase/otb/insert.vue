@@ -493,24 +493,24 @@ export default {
           obj["anUrl"] = obj["url"];
           this.$modal.loading("上传中.....");
           updateComPubAttamentsByAid(obj, "insert").then(res => {
+            this.$modal.closeLoading();
             if (res.code == 200) {
               this.$modal.msgSuccess(res.msg);
-              return 1;
             } else {
-              this.$modal.msgSuccess("文件上传失败");
+              this.$modal.msgError("文件上传失败");
             }
-            this.$modal.closeLoading();
           }).catch(err => {
             this.$modal.closeLoading();
             this.$modal.msgError("服务器出错，请联系管理员！！！");
           })
         } else {
           this.upload.fileSecuss.push(response.data.data);
-          this.$modal.msgSuccess("文件上成功，需要点击提交按钮才可生效！！");
+          this.$modal.msgSuccess("文件上传成功，需要点击提交按钮才可生效！！");
         }
+      } else {
+        this.$modal.msgError("文件上传失败：" + (response.msg || "未知错误"));
       }
       this.upload.isUploading = false;
-
     },
     handleAdd() {
       this.upload.fileList = [];
@@ -747,15 +747,20 @@ export default {
         this.$modal.msgError("服务器出错，请联系管理员！！！" + err);
       })
       selectedComPubAttamentsByAid(this.form.aid).then(res => {
-        if (res.data) {
-          let names = res.data.anName.split(",");
-          let urls = res.data.anUrl.split(",");
-          urls.forEach((e, i) => {
-            this.upload.fileList.push({
-              name: names[i],
-              url: urls[i]
-            })
-          })
+        if (res.data && res.data.anName && res.data.anUrl) {
+          this.upload.fileList = [];
+          let names = res.data.anName.split(",").filter(name => name && name.trim());
+          let urls = res.data.anUrl.split(",").filter(url => url && url.trim());
+          if (names.length === urls.length) {
+            names.forEach((name, i) => {
+              if (name && urls[i]) {
+                this.upload.fileList.push({
+                  name: name,
+                  url: urls[i]
+                });
+              }
+            });
+          }
         }
       }).catch(err => {
         this.$modal.msgError("文件加载失败，请联系管理员！！")
