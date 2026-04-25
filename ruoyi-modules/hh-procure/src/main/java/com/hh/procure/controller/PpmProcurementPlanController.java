@@ -119,14 +119,49 @@ public class PpmProcurementPlanController extends BaseController {
     @Transactional
     public AjaxResult edit(@RequestBody PpmProcurementPlan ppmProcurementPlan) {
         System.out.println("ppmProcurementPlan:" + ppmProcurementPlan);
+        
+        if (ppmProcurementPlan == null || ppmProcurementPlan.getAid() == null) {
+            return AjaxResult.error("参数错误，缺少采购计划ID");
+        }
+        
         PpmProcurementPlan result = ppmProcurementPlanService.selectPpmProcurementPlanByAid(ppmProcurementPlan.getAid());
-        if (!result.getaAstate().equals(ppmProcurementPlan.getaAstate())) {
+        if (result == null) {
+            return AjaxResult.error("未找到对应的采购计划");
+        }
+        
+        if (ppmProcurementPlan.getaAstate() == null) {
+            return AjaxResult.error("参数错误，缺少状态信息");
+        }
+        
+        if (!ppmProcurementPlan.getaAstate().equals(result.getaAstate())) {
             PpmApprovalRecord obj = ppmProcurementPlan.getEditor();
-            obj.setProcessedBy(tokenService.getLoginUser().getSysUser().getNickName());
+            if (obj == null) {
+                obj = new PpmApprovalRecord();
+            }
+            
+            // 获取当前用户信息，添加空指针防护
+            String nickName = "系统管理员";
+            String deptName = "系统部门";
+            try {
+                if (tokenService.getLoginUser() != null && tokenService.getLoginUser().getSysUser() != null) {
+                    if (tokenService.getLoginUser().getSysUser().getNickName() != null) {
+                        nickName = tokenService.getLoginUser().getSysUser().getNickName();
+                    }
+                    if (tokenService.getLoginUser().getSysUser().getDept() != null 
+                        && tokenService.getLoginUser().getSysUser().getDept().getDeptName() != null) {
+                        deptName = tokenService.getLoginUser().getSysUser().getDept().getDeptName();
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("获取当前用户信息异常：" + e.getMessage());
+            }
+            
+            obj.setProcessedBy(nickName);
             obj.setAid(ppmProcurementPlan.getAid());
-            obj.setDepnt(SecurityUtils.getLoginUser().getSysUser().getDept().getDeptName());
+            obj.setDepnt(deptName);
             obj.setUpdateTime(DateUtils.getNowDate());
             ppmProcurementPlan.setUpdateTime(DateUtils.getNowDate());
+            
             switch (ppmProcurementPlan.getaAstate()) {
                 case 0:
                     obj.setNode("部门主管审批");
@@ -135,6 +170,9 @@ public class PpmProcurementPlanController extends BaseController {
                 case 1:
                     obj.setNode("提交采购计划");
                     obj.setOpinion("发起申请");
+                    if (obj.getOpinionDetails() == null || obj.getOpinionDetails().isEmpty()) {
+                        obj.setOpinionDetails("提交采购计划");
+                    }
                     break;
                 case 2:
                     obj.setNode("采购计划通过审核");

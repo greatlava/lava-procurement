@@ -476,9 +476,13 @@ export default {
             this.loading = false;
             this.form = res.data;
             if (res.data.items) {
+              let budgetMap = {};
               res.data.items.forEach((e, i) => {
-                if (e.ppmBudget.duId) {
-                  this.budgetData.push(e.ppmBudget);
+                if (e.ppmBudget && e.ppmBudget.duId) {
+                  if (!budgetMap[e.ppmBudget.duId]) {
+                    budgetMap[e.ppmBudget.duId] = true;
+                    this.budgetData.push(e.ppmBudget);
+                  }
                 }
               })
             }

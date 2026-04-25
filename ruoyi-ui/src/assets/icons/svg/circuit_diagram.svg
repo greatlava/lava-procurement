@@ -1,0 +1,141 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="800" height="600" fill="#f8f9fa" rx="10" ry="10"/>
+  
+  <!-- 标题 -->
+  <text x="400" y="40" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">伏安法测电阻电路图</text>
+  
+  <!-- 电路符号定义 -->
+  <defs>
+    <!-- 电池符号 -->
+    <symbol id="battery" viewBox="0 0 60 40">
+      <rect x="5" y="10" width="20" height="20" fill="none" stroke="#333" stroke-width="2"/>
+      <rect x="35" y="10" width="20" height="20" fill="none" stroke="#333" stroke-width="2"/>
+      <line x1="25" y1="15" x2="35" y2="15" stroke="#333" stroke-width="2"/>
+      <line x1="25" y1="25" x2="35" y2="25" stroke="#333" stroke-width="2"/>
+      <line x1="28" y1="10" x2="28" y2="30" stroke="#333" stroke-width="2"/>
+      <line x1="32" y1="10" x2="32" y2="30" stroke="#333" stroke-width="2"/>
+      <line x1="0" y1="20" x2="5" y2="20" stroke="#333" stroke-width="2"/>
+      <line x1="55" y1="20" x2="60" y2="20" stroke="#333" stroke-width="2"/>
+      <text x="30" y="35" font-family="Arial" font-size="10" text-anchor="middle" fill="#333">E</text>
+    </symbol>
+    
+    <!-- 电流表符号 -->
+    <symbol id="ammeter" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="25" fill="white" stroke="#333" stroke-width="2"/>
+      <text x="30" y="35" font-family="Arial" font-size="20" font-weight="bold" text-anchor="middle" fill="#333">A</text>
+      <line x1="0" y1="30" x2="5" y2="30" stroke="#333" stroke-width="2"/>
+      <line x1="55" y1="30" x2="60" y2="30" stroke="#333" stroke-width="2"/>
+    </symbol>
+    
+    <!-- 开关符号（闭合） -->
+    <symbol id="switch_closed" viewBox="0 0 60 40">
+      <circle cx="10" cy="20" r="4" fill="#333"/>
+      <circle cx="50" cy="20" r="4" fill="#333"/>
+      <line x1="10" y1="20" x2="50" y2="20" stroke="#333" stroke-width="2"/>
+      <line x1="0" y1="20" x2="6" y2="20" stroke="#333" stroke-width="2"/>
+      <line x1="54" y1="20" x2="60" y2="20" stroke="#333" stroke-width="2"/>
+    </symbol>
+    
+    <!-- 开关符号（断开） -->
+    <symbol id="switch_open" viewBox="0 0 60 40">
+      <circle cx="10" cy="20" r="4" fill="#333"/>
+      <circle cx="50" cy="20" r="4" fill="#333"/>
+      <line x1="10" y1="20" x2="45" y2="5" stroke="#333" stroke-width="2"/>
+      <line x1="0" y1="20" x2="6" y2="20" stroke="#333" stroke-width="2"/>
+      <line x1="54" y1="20" x2="60" y2="20" stroke="#333" stroke-width="2"/>
+    </symbol>
+    
+    <!-- 定值电阻符号 -->
+    <symbol id="resistor" viewBox="0 0 80 40">
+      <rect x="15" y="12" width="50" height="16" fill="none" stroke="#333" stroke-width="2"/>
+      <line x1="0" y1="20" x2="15" y2="20" stroke="#333" stroke-width="2"/>
+      <line x1="65" y1="20" x2="80" y2="20" stroke="#333" stroke-width="2"/>
+    </symbol>
+    
+    <!-- 滑动变阻器符号 -->
+    <symbol id="rheostat" viewBox="0 0 100 60">
+      <rect x="10" y="10" width="80" height="40" fill="none" stroke="#333" stroke-width="2"/>
+      <line x1="20" y1="30" x2="80" y2="30" stroke="#333" stroke-width="3"/>
+      <line x1="50" y1="10" x2="50" y2="50" stroke="#333" stroke-width="2" stroke-dasharray="5,3"/>
+      <circle cx="50" cy="30" r="5" fill="#333"/>
+      <line x1="0" y1="30" x2="10" y2="30" stroke="#333" stroke-width="2"/>
+      <line x1="90" y1="30" x2="100" y2="30" stroke="#333" stroke-width="2"/>
+    </symbol>
+    
+    <!-- 未知电阻符号（圆盘状） -->
+    <symbol id="unknown_resistor" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="35" fill="#e9ecef" stroke="#333" stroke-width="2"/>
+      <circle cx="40" cy="40" r="15" fill="none" stroke="#333" stroke-width="1"/>
+      <line x1="0" y1="40" x2="5" y2="40" stroke="#333" stroke-width="2"/>
+      <line x1="75" y1="40" x2="80" y2="40" stroke="#333" stroke-width="2"/>
+      <circle cx="10" cy="25" r="3" fill="#333"/>
+      <circle cx="70" cy="25" r="3" fill="#333"/>
+      <circle cx="10" cy="55" r="3" fill="#333"/>
+      <circle cx="70" cy="55" r="3" fill="#333"/>
+    </symbol>
+  </defs>
+  
+  <!-- 主电路布局 -->
+  <!-- 电源线 -->
+  <line x1="100" y1="200" x2="160" y2="200" stroke="#dc3545" stroke-width="3"/>
+  
+  <!-- 电源 E -->
+  <use href="#battery" x="160" y="180" transform="scale(1.2)"/>
+  <text x="220" y="230" font-family="Arial" font-size="14" text-anchor="middle" fill="#333">E</text>
+  
+  <!-- 导线连接 -->
+  <line x1="232" y1="200" x2="280" y2="200" stroke="#dc3545" stroke-width="3"/>
+  
+  <!-- 电流表 A -->
+  <use href="#ammeter" x="280" y="170" transform="scale(1.1)"/>
+  <text x="310" y="240" font-family="Arial" font-size="14" text-anchor="middle" fill="#333">A</text>
+  
+  <!-- 导线连接 -->
+  <line x1="346" y1="200" x2="400" y2="200" stroke="#dc3545" stroke-width="3"/>
+  <line x1="400" y1="200" x2="400" y2="300" stroke="#dc3545" stroke-width="3"/>
+  
+  <!-- 开关 S0 -->
+  <use href="#switch_closed" x="340" y="80" transform="scale(1.2)"/>
+  <text x="370" y="140" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">S₀</text>
+  
+  <!-- 未知电阻 Rx 分支 -->
+  <line x1="400" y1="100" x2="400" y2="150" stroke="#dc3545" stroke-width="3"/>
+  <use href="#unknown_resistor" x="400" y="150" transform="scale(0.8)"/>
+  <text x="440" y="230" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">Rₓ</text>
+  <line x1="480" y1="190" x2="580" y2="190" stroke="#dc3545" stroke-width="3"/>
+  
+  <!-- 定值电阻 R0 分支 -->
+  <line x1="400" y1="300" x2="400" y2="350" stroke="#000" stroke-width="3"/>
+  <use href="#resistor" x="400" y="350" transform="scale(1.0)"/>
+  <text x="440" y="400" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">R₀</text>
+  <line x1="480" y1="370" x2="580" y2="370" stroke="#000" stroke-width="3"/>
+  
+  <!-- 分支汇合 -->
+  <line x1="580" y1="190" x2="580" y2="370" stroke="#000" stroke-width="3"/>
+  <line x1="580" y1="280" x2="650" y2="280" stroke="#000" stroke-width="3"/>
+  
+  <!-- 滑动变阻器 R -->
+  <use href="#rheostat" x="650" y="250" transform="scale(1.0)"/>
+  <text x="700" y="320" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">R</text>
+  
+  <!-- 导线连接到开关 S -->
+  <line x1="750" y1="280" x2="750" y2="400" stroke="#000" stroke-width="3"/>
+  <line x1="750" y1="400" x2="600" y2="400" stroke="#000" stroke-width="3"/>
+  
+  <!-- 开关 S -->
+  <use href="#switch_closed" x="500" y="380" transform="scale(1.2)"/>
+  <text x="530" y="450" font-family="Arial" font-size="16" font-weight="bold" text-anchor="middle" fill="#333">S</text>
+  
+  <!-- 导线连接回电源 -->
+  <line x1="500" y1="400" x2="220" y2="400" stroke="#000" stroke-width="3"/>
+  <line x1="220" y1="400" x2="220" y2="200" stroke="#000" stroke-width="3"/>
+  
+  <!-- 功能说明 -->
+  <text x="400" y="520" font-family="Arial" font-size="12" text-anchor="middle" fill="#666">
+    电路说明：通过开关S₀切换Rₓ和R₀支路，测量未知电阻Rₓ的阻值
+  </text>
+  <text x="400" y="540" font-family="Arial" font-size="12" text-anchor="middle" fill="#666">
+    滑动变阻器R用于调节电路中的电流，保护电路元件
+  </text>
+</svg>

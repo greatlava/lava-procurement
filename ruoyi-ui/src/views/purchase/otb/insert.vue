@@ -214,7 +214,10 @@ import {addBudget} from "@/api/system/budget";
     </div>
     <!--    底部按钮  -->
     <div slot="footer" class="button">
-      <el-button type="primary" @click="submitHandler" :disabled="!canSubmit" v-loading.fullscreen.lock="fullscreenLoading">提 交
+      <el-button v-if="form.aid" type="primary" @click="submitPlan" :disabled="!canSubmit"
+                 v-loading.fullscreen.lock="fullscreenLoading">提 交
+      </el-button>
+      <el-button type="primary" @click="saveHandler" v-loading.fullscreen.lock="fullscreenLoading">保 存
       </el-button>
       <el-button @click="goBack">返 回</el-button>
     </div>
@@ -325,6 +328,7 @@ import {
 } from '@/api/system/plan'
 import {Message} from "element-ui";
 import {selectedComPubAttamentsByAid, updateComPubAttamentsByAid} from "@/api/file/attachments";
+import {delItems} from "@/api/system/items";
 import log from "@/views/monitor/job/log.vue";
 
 export default {
@@ -544,15 +548,85 @@ export default {
       this.upload.fileList = [{name: this.form.fileName, url: this.form.filePath}];
     },
     handleDelete(row, index) {
-      this.device.splice(index, 1)
+      if (row.vCode) {
+        this.$modal.confirm("删除该行后即便未保存也无法恢复，是否确认删除？").then(() => {
+          this.$modal.loading("删除中.....");
+          delItems(row.vCode).then(res => {
+            this.$modal.closeLoading();
+            if (res.code == 200) {
+              this.$modal.msgSuccess("删除成功");
+              this.device.splice(index, 1);
+            } else {
+              this.$modal.msgError(res.msg || "删除失败");
+            }
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
+          })
+        }).catch(() => {
+        });
+      } else {
+        this.device.splice(index, 1);
+        this.$modal.msgSuccess("删除成功");
+      }
     },
     addMaterial() {
       this.device.push({})
     },
     delMaterial() {
-      let table = this.$refs.elTable.selection;
-      console.log("t", table)
-      console.log("index", table[0])
+      let selection = this.$refs.elTable.selection;
+      if (selection.length == 0) {
+        this.$modal.msgWarning("请先选择要删除的行");
+        return;
+      }
+      let hasDbItems = selection.some(item => item.vCode);
+      if (hasDbItems) {
+        this.$modal.confirm("删除选中的行后，已保存的数据即便未保存也无法恢复，是否确认删除？").then(() => {
+          this.deleteSelectedItems(selection);
+        }).catch(() => {
+        });
+      } else {
+        this.deleteSelectedItems(selection);
+      }
+    },
+    deleteSelectedItems(selection) {
+      let deletePromises = [];
+      let localDeleteIndices = [];
+      selection.forEach(selectedItem => {
+        let index = this.device.findIndex(item => item === selectedItem);
+        if (index !== -1) {
+          if (selectedItem.vCode) {
+            deletePromises.push(delItems(selectedItem.vCode));
+          }
+          localDeleteIndices.push(index);
+        }
+      });
+      if (deletePromises.length > 0) {
+        this.$modal.loading("删除中.....");
+        Promise.all(deletePromises).then(results => {
+          this.$modal.closeLoading();
+          let allSuccess = results.every(res => res.code == 200);
+          if (allSuccess) {
+            this.removeItemsByIndices(localDeleteIndices);
+            this.$modal.msgSuccess("删除成功");
+          } else {
+            this.$modal.msgError("部分数据删除失败，请重试");
+          }
+        }).catch(err => {
+          this.$modal.closeLoading();
+          this.$modal.msgError("服务器出错，请联系管理员！！！");
+        });
+      } else {
+        this.removeItemsByIndices(localDeleteIndices);
+        this.$modal.msgSuccess("删除成功");
+      }
+    },
+    removeItemsByIndices(indices) {
+      indices.sort((a, b) => b - a);
+      indices.forEach(index => {
+        this.device.splice(index, 1);
+      });
+      this.$refs.elTable.clearSelection();
     },
     //搜索icon 显示搜索窗口
     search(index) {
@@ -691,14 +765,14 @@ export default {
     goBack() {
       this.$router.back();
     },
-    submitHandler() {
+    saveHandler() {
       if (this.form.aid) {
         this.updatePlanByAid();
       } else {
-        this.sumbitPlan();
+        this.savePlan();
       }
     },
-    sumbitPlan() {
+    submitPlan() {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.device.length == 0) {
@@ -707,56 +781,65 @@ export default {
           }
           if (this.device.some(e => !e.tid)) {
             this.$modal.msgError("所有行项目设备不能为空");
-            return; // 跳出整个函数
+            return;
           }
-          if (this.upload.fileSecuss.length == 0) {
-            this.$modal.confirm("系统检测到你还未上传附件是否需要继续提交？").then(() => {
-              this.$modal.loading("添加中！！");
-              this.form['items'] = this.device;
-              this.form["aCode"] = localStorage.getItem("procurementPlanID");
-              addPlan(this.form).then(res => {
-                this.$modal.closeLoading();
-                Message.success("添加成功");
+          if (!this.hasUploadedFiles) {
+            this.$modal.msgError("请上传附件后再提交采购计划");
+            return;
+          }
+          this.$modal.confirm("确定要提交采购计划吗？").then(() => {
+            this.savePlanData().then(() => {
+              this.submitStatusChange().then(() => {
+                this.$modal.msgSuccess("提交成功！！");
                 setTimeout(() => {
                   this.$router.back();
-                }, 1000)
+                }, 1000);
               }).catch(err => {
-                this.$modal.closeLoading();
-                this.$modal.msgError("服务器出错，请联系管理员！！！");
-              })
-            }).catch(() => {
-              this.$modal.msgError("请上传附件！！");
-              window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
+                this.$modal.msgError("提交状态失败，请联系管理员！！！");
               });
-            })
-          } else {
-            let url = "";
-            let fileName = "";
-            this.upload.fileSecuss.forEach((e, i) => {
-              url += e.url + ",";
-              fileName += e.name + ",";
-            })
+            }).catch(err => {
+            });
+          });
+        }
+      })
+    },
+    savePlan() {
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.device.length == 0) {
+            this.$modal.msgError("请至少添加一条物料信息");
+            return false;
+          }
+          if (this.device.some(e => !e.tid)) {
+            this.$modal.msgError("所有行项目设备不能为空");
+            return;
+          }
+          let url = "";
+          let fileName = "";
+          this.upload.fileSecuss.forEach((e, i) => {
+            url += e.url + ",";
+            fileName += e.name + ",";
+          })
+          if (url) {
             let files = {
               anUrl: url,
               anName: fileName
             }
-            this.form['items'] = this.device;
             this.form["file"] = files;
-            this.form["aCode"] = localStorage.getItem("procurementPlanID");
-            this.$modal.loading("添加中！！");
-            addPlan(this.form).then(res => {
-              this.$modal.closeLoading();
-              Message.success("添加成功");
-              setTimeout(() => {
-                this.$router.back();
-              }, 1000)
-            }).catch(err => {
-              this.$modal.closeLoading();
-              this.$modal.msgError("服务器出错，请联系管理员！！！");
-            })
           }
+          this.form['items'] = this.device;
+          this.form["aCode"] = localStorage.getItem("procurementPlanID");
+          this.$modal.loading("保存中！！");
+          addPlan(this.form).then(res => {
+            this.$modal.closeLoading();
+            Message.success("保存成功");
+            setTimeout(() => {
+              this.$router.back();
+            }, 1000)
+          }).catch(err => {
+            this.$modal.closeLoading();
+            this.$modal.msgError("服务器出错，请联系管理员！！！");
+          })
         } else {
           window.scrollTo({
             top: 0,
@@ -799,30 +882,73 @@ export default {
       })
     },
     updatePlanByAid() {
-      this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.device.length == 0) {
-            this.$modal.msgError("请至少添加一条物料信息");
-            return false;
+      this.savePlanData().then(() => {
+        this.$modal.msgSuccess("操作成功！！");
+        setTimeout(() => {
+          this.$router.back();
+        }, 1000);
+      }).catch(err => {
+        this.$modal.msgError("服务器出错，请联系管理员！！！");
+      });
+    },
+    savePlanData() {
+      return new Promise((resolve, reject) => {
+        this.$refs['form'].validate(valid => {
+          if (valid) {
+            if (this.device.length == 0) {
+              this.$modal.msgError("请至少添加一条物料信息");
+              reject(new Error("请至少添加一条物料信息"));
+              return false;
+            }
+            if (this.device.some(e => !e.tid)) {
+              this.$modal.msgError("所有行项目设备不能为空");
+              reject(new Error("所有行项目设备不能为空"));
+              return;
+            }
+            this.form['items'] = this.device;
+            this.fullscreenLoading = true;
+            ModifyPlanAndOtherInformation(this.form).then(res => {
+              this.fullscreenLoading = false;
+              if (res.code == 200) {
+                resolve(res);
+              } else {
+                this.$modal.msgError(res.msg || "保存失败");
+                reject(new Error(res.msg || "保存失败"));
+              }
+            }).catch(err => {
+              this.fullscreenLoading = false;
+              reject(err);
+            });
+          } else {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+            reject(new Error("表单验证失败"));
           }
-          if (this.device.some(e => !e.tid)) {
-            this.$modal.msgError("所有行项目设备不能为空");
-            return; // 跳出整个函数
+        });
+      });
+    },
+    submitStatusChange() {
+      return new Promise((resolve, reject) => {
+        let submitData = {
+          aid: this.form.aid,
+          aAstate: 1
+        };
+        this.fullscreenLoading = true;
+        updatePlan(submitData).then(res => {
+          this.fullscreenLoading = false;
+          if (res.code == 200) {
+            resolve(res);
+          } else {
+            this.$modal.msgError(res.msg || "提交失败");
+            reject(new Error(res.msg || "提交失败"));
           }
-          this.form['items'] = this.device;
-          this.fullscreenLoading = true;
-          ModifyPlanAndOtherInformation(this.form).then(res => {
-            this.fullscreenLoading = false;
-            this.$modal.msgSuccess("操作成功！！")
-            setTimeout(() => {
-              this.$router.back();
-            }, 1000)
-          }).catch(err => {
-            this.fullscreenLoading = false;
-            this.$modal.msgError("服务器出错，请联系管理员！！！");
-          })
-        }
-      })
+        }).catch(err => {
+          this.fullscreenLoading = false;
+          reject(err);
+        });
+      });
     }
   }
 }

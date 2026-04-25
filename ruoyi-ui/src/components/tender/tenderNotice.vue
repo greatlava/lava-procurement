@@ -49,7 +49,7 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row,1)"
             :disabled="status"
-            v-has-role="['common']"
+            v-hasPermi="['system:notice:edit']"
           >编辑</el-button>
           <el-button v-if="scope.row.fjStatus === 1 || scope.row.fjStatus === 4"
             size="mini"
@@ -57,7 +57,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             :disabled="status"
-            v-has-role="['common']"
+            v-hasPermi="['system:notice:remove']"
           >删除</el-button>
           <el-button v-if="scope.row.fjStatus === 2 || scope.row.fjStatus === 3 || scope.row.fjStatus === 5"
             size="mini"
@@ -71,7 +71,7 @@
             icon="el-icon-s-promotion"
             @click="handleUpdateState(scope.row)"
             :disabled="status"
-            v-has-role="['common']"
+            v-hasPermi="['system:notice:edit']"
           >发布</el-button>
         </template>
       </el-table-column>
@@ -157,7 +157,7 @@
         <el-button type="success"  @click="handleUpdateState2(form,2)" :disabled="status" v-if="form.fjStatus == 2" v-has-role="['controller']">通 过</el-button>
         <el-button v-show="showPass" type="danger" @click="handleUpdateState2(form ,3)" :disabled="status"  v-if="form.fjStatus == 2" v-has-role="['controller']">驳 回</el-button>
 <!--        v-show="showBtn"-->
-        <el-button type="primary"  @click="submitForm" v-has-role="['common']" :disabled="status">确 定</el-button>
+        <el-button type="primary" @click="submitForm" v-hasPermi="['system:notice:add','system:notice:edit']" :disabled="status">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
